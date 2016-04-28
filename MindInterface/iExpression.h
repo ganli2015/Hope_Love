@@ -8,14 +8,13 @@ namespace Mind
 
 namespace LogicSystem
 {
-	class _LOGICSYSTEMINOUT Expression
+	class _MINDINTERFACEINOUT iExpression
 	{
 	public:
-		Expression(void);
-		virtual ~Expression(void);
+		iExpression(void);
+		virtual ~iExpression(void);
 
 		virtual shared_ptr<Mind::iConceptInteractTable> GetInteractTable() const =0;
 	};
 }
-
 
