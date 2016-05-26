@@ -11,20 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{894AE4B6-30FF-493E-85A5-D115DF29C848}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>UnitTest</RootNamespace>
+    <ProjectGuid>{0174F226-8548-412C-BEB5-93E3C167217A}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>UTFacility</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -39,84 +41,67 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\gTest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\gTest\lib;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\gTest\include;..\TinyXml\include;$(IncludePath)</IncludePath>
-    <ReferencePath />
-    <LibraryPath>..\gTest\lib;..\TinyXml\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\gTest\include;..\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\gTest\lib;..\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\gTest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\gTest\lib;$(LibraryPath)</LibraryPath>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <CallingConvention>StdCall</CallingConvention>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtest_maind.lib;gtestd.lib;tinyxml.lib;gmock_main.lib;gmock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gmock_main.lib;gmock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CallingConvention>StdCall</CallingConvention>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest_main.lib;gtest.lib;tinyxml.lib;gmock_mainr.lib;gmockr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gmock_mainr.lib;gmockr.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="FuncForTest.h" />
-    <ClInclude Include="MyTest.h" />
-    <ClInclude Include="PublicHeader.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestClass.h" />
-    <ClInclude Include="Test_CommonTool.h" />
-    <ClInclude Include="Test_iRelation.h" />
-    <ClInclude Include="Test_LogicSystem.h" />
-    <ClInclude Include="Test_Mathmatic.h" />
-    <ClInclude Include="Test_Mind.h" />
-    <ClInclude Include="Test_NeuralNetworkDesign.h" />
-    <ClInclude Include="Test_ReactionAnalysisAlgorithm.h" />
-    <ClInclude Include="Test_SentenceAnalysisAlgorithm.h" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FuncForTest.cpp" />
-    <ClCompile Include="MyTest.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClInclude Include="ConceptCreator.h" />
+    <ClInclude Include="ConceptTableCreator.h" />
+    <ClInclude Include="LeafCreator.h" />
+    <ClInclude Include="MockExpression.h" />
+    <ClInclude Include="PublicHeader.h" />
+    <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="SymbolCreator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ConceptCreator.cpp" />
+    <ClCompile Include="ConceptTableCreator.cpp" />
+    <ClCompile Include="LeafCreator.cpp" />
+    <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestClass.cpp" />
-    <ClCompile Include="Test_CommonTool.cpp" />
-    <ClCompile Include="Test_iRelation.cpp" />
-    <ClCompile Include="Test_LogicSystem.cpp" />
-    <ClCompile Include="Test_Mathmatic.cpp" />
-    <ClCompile Include="Test_Mind.cpp" />
-    <ClCompile Include="Test_NeuralNetworkDesign.cpp" />
-    <ClCompile Include="Test_ReactionAnalysisAlgorithm.cpp" />
-    <ClCompile Include="Test_SentenceAnalysisAlgorithm.cpp" />
-    <ClCompile Include="UnitTest.cpp" />
+    <ClCompile Include="SymbolCreator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonTools\CommonTools.vcxproj">
@@ -128,9 +113,6 @@
     <ProjectReference Include="..\LogicSystem\LogicSystem.vcxproj">
       <Project>{9f99884f-7129-4bf4-af3f-98daeab5224c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Mathmatic\Mathmatic.vcxproj">
-      <Project>{e077393a-a460-43cf-869e-d4b3ea36dc3b}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\MindElement\MindElement.vcxproj">
       <Project>{0270e5bd-21c1-4423-9969-0ef1ce1b0274}</Project>
     </ProjectReference>
@@ -139,18 +121,6 @@
     </ProjectReference>
     <ProjectReference Include="..\Mind\Mind.vcxproj">
       <Project>{b4e0ed6d-cac1-4881-bee1-c154ba5c7df4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Neural Network Design\Neural Network Design.vcxproj">
-      <Project>{0f9d9851-7103-4ca2-977f-266020313baf}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ReactionAnalysisAlgorithm\ReactionAnalysisAlgorithm.vcxproj">
-      <Project>{2d055626-ad7e-4938-b59e-fe1b8851aa32}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SentenceAnalysisAlgorithm\SentenceAnalysisAlgorithm.vcxproj">
-      <Project>{347b0dc1-09b3-43e1-8ed4-43a85a3dcc7f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\UTFacility\UTFacility.vcxproj">
-      <Project>{0174f226-8548-412c-beb5-93e3c167217a}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
