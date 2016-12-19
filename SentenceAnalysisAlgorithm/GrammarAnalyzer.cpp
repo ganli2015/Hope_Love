@@ -13,6 +13,8 @@
 
 #include "../MindInterface/iCerebrum.h"
 
+#include "../Mathmatic/FindSequence.h"
+
 #include <functional>
 
 using namespace std;
@@ -240,6 +242,72 @@ vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousToEvery
 	return res;
 }
 
+vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousWithLocalGrammar(const vector<shared_ptr<Word>> words)
+{
+	//Each element of <wordsCandidates> represents several possible words of the ith element.
+	vector<vector<shared_ptr<Word>>> wordsCandidates(words.size());
+
+	//Collect U and A status.
+	vector<bool> isUandA;
+	isUandA.reserve(words.size());
+	for (unsigned int i=0;i<words.size();++i)
+	{
+		if (words[i]->Type() == Unknown || words[i]->Type() == Ambiguous)
+		{
+			isUandA.push_back(true);
+		}
+		else
+		{
+			isUandA.push_back(false);
+		}
+		//Store origin information.
+		vector<shared_ptr<Word>> oneWord;
+		oneWord.push_back(words[i]);
+		wordsCandidates.push_back(oneWord);
+	}
+
+	if (isUandA.size() == 1 || isUandA.front() == true || isUandA.back() == true)
+	{
+		//If the last or the first word is U and A, do not span and return empty vector,as they have not enough local information.
+		return vector<vector<shared_ptr<Word>>>();
+	}
+
+
+	//The number of candidates for select.
+	int numSelect = 3;
+	//Find candidates of U and A words.
+	for (unsigned int i = 1; i < isUandA.size() - 1; ++i)
+	{
+		if (isUandA[i])
+		{
+			if (!isUandA[i - 1] && !isUandA[i + 1])
+			{
+				//Only if we have knowledge of the right and left words, then we can deduce information of the middle word.
+				auto possiTable = Mind::iCerebrum::Instance()->ComputePossibilityTable(words[i - 1]->Type(), words[i + 1]->Type());
+				//Get last three POS as most possible candidates.
+				vector<shared_ptr<Word>> candidate;
+				candidate.reserve(numSelect);
+				for (map<double,PartOfSpeech>::const_reverse_iterator it=possiTable.rbegin();it!=possiTable.rend();++it)
+				{
+					candidate.push_back(DataCollection::LanguageFunc::GetParticularWord(words[i]->GetString(), it->second));
+					if (candidate.size() == numSelect)
+					{
+						break;
+					}
+				}
+				wordsCandidates[i] = candidate;
+			}
+			else
+			{
+				return vector<vector<shared_ptr<Word>>>();
+			}
+		}
+	}
+
+
+	return Math::GetAllCombinations<shared_ptr<Word>>::Get(wordsCandidates);
+}
+
 
 void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr<Word>>>& combination, vector<shared_ptr<Word>>& optimal)
 {
@@ -247,7 +315,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 
 	//The object value to select the most optimal combination.
 	//The value equals to sum of frequencies of incorporated grammar patterns as well as local grammar confidence.
-	//It means that the optimal combinatin must satisfy grammar statistic information.
+	//It means that the optimal combination must satisfy grammar statistic information.
 	double maxValueFun(-1);
 	for (unsigned int i=0;i<combination.size();++i)
 	{
@@ -354,7 +422,8 @@ GrammarAnalyzer::AnalyzeResult GrammarAnalyzer::AnalyzeEachSegmented(const vecto
 		//For each U_A word, I consider its POS arbitrary and go through every POS.
 		for (unsigned int j = 0; j < possi_Combine.size(); ++j)
 		{
-			vector<vector<shared_ptr<Word>>> spannedCombination = SpanUnknownAndAmbiguousToEveryPOS(possi_Combine[j]);//Let the unknown word span over every POS.
+//			vector<vector<shared_ptr<Word>>> spannedCombination = SpanUnknownAndAmbiguousToEveryPOS(possi_Combine[j]);//Let the unknown word span over every POS.
+			vector<vector<shared_ptr<Word>>> spannedCombination = SpanUnknownAndAmbiguousWithLocalGrammar(possi_Combine[j]);
 			allCombinations.insert(allCombinations.end(), spannedCombination.begin(), spannedCombination.end());
 		}
 

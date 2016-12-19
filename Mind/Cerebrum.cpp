@@ -225,6 +225,11 @@ namespace Mind
 		return _grammaset->ComputePossibility(pattern);
 	}
 
+	map<double, DataCollection::PartOfSpeech> Cerebrum::ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const
+	{
+		return _grammaset->ComputePossibilityTable(forwardPos, backwardPos);
+	}
+
 	vector<shared_ptr<LogicSystem::iDeduceResult>> Cerebrum::Deduce(const shared_ptr<LogicSystem::iExpression> expre) const
 	{
 		return _logicKnowledge->Deduce(expre);

@@ -495,6 +495,19 @@ namespace Mind
 		return res;
 	}
 
+	map<double, PartOfSpeech> GrammarSet::ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const
+	{
+		map<double, PartOfSpeech> res;
+
+		for (int i=0;i<NUM_PARTOFSPEECH;++i)
+		{
+			double possi = ComputeP_GrammarLocal((PartOfSpeech)i, forwardPos, backwardPos);
+			res[possi]= (PartOfSpeech)i;
+		}
+
+		return res;
+	}
+
 	double GrammarSet::ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const
 	{
 		vector<PartOfSpeech> poses = pattern.GetPattern();

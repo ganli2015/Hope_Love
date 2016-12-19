@@ -152,6 +152,8 @@ namespace Mind
 		///Compute the possibility of <pattern> in grammar sense.
 		//////////////////////////////////////////////////////////////////////////
 		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const =0;
+		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
+		virtual map<double, DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const =0;
 
 		//Concept React System Functions
 		

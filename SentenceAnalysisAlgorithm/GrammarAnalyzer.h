@@ -66,6 +66,9 @@ private:
 	///If there are U_A words in <words>, I consider each U_A word's POS range from Noun to Interjection.
 	///And get all possible combinations according to U_A words.
 	vector<vector<shared_ptr<DataCollection::Word>>> SpanUnknownAndAmbiguousToEveryPOS(const vector<shared_ptr<DataCollection::Word>> words);
+	///Span U_A words according to its right and left words. If one of its neighbour is U_A too, then return empty vector.
+	///Otherwise we will select several most possible candidate for U_A words to reduce computation cost.
+	vector<vector<shared_ptr<DataCollection::Word>>> SpanUnknownAndAmbiguousWithLocalGrammar(const vector<shared_ptr<DataCollection::Word>> words);
 	///Select the most optimal combination according to grammar patterns.
 	void SelectOptimalGrammarPattern(const vector<vector<shared_ptr<DataCollection::Word>>>& combination, vector<shared_ptr<DataCollection::Word>>& optimal);
 

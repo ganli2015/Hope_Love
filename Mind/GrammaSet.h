@@ -94,6 +94,7 @@ namespace Mind
 		///Compute the possibility of <pattern> in grammar sense.
 		//////////////////////////////////////////////////////////////////////////
 		double ComputePossibility(const DataCollection::GrammarPattern& pattern) const;
+		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
 	private:
 		void Initialize();
 		std::vector<GrammarAttribute> InputGrammaPatterns(std::string filename);

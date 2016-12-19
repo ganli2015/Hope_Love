@@ -80,6 +80,7 @@ namespace Mind
 		MOCK_CONST_METHOD2(GetP_Forward,double(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& forward));
 		MOCK_CONST_METHOD2(GetP_Backward,double(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward));
 		MOCK_CONST_METHOD1(ComputePossibility, double(const DataCollection::GrammarPattern& pattern));
+		MOCK_CONST_METHOD2(ComputePossibilityTable, map<double, DataCollection::PartOfSpeech>(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos));
 
 		MOCK_METHOD1(React,vector<ConceptChainProperty>(const shared_ptr<iConceptChain> chain));
 
