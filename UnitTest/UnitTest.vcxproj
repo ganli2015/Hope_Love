@@ -14,6 +14,7 @@
     <ProjectGuid>{894AE4B6-30FF-493E-85A5-D115DF29C848}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UnitTest</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,14 +43,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\gTest\include;..\TinyXml\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
     <ReferencePath />
-    <LibraryPath>..\gTest\lib;..\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\gTest\include;..\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\gTest\lib;..\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

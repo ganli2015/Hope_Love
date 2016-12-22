@@ -90,3 +90,4 @@ Hope_Love.suo
 *.asm
 Release/UnitTest.ipdb
 *.VC.db
+*.conv

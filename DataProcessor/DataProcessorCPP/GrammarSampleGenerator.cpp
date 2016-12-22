@@ -63,7 +63,9 @@ void GrammarSampleGenerator::POSTaggingAndOutput(const vector<string>& sentences
 		cout << e.what() << endl;
 	}
 
-//	auto tt=HopeLove::POSTagging(sentences[5]);
+	auto tt=HopeLove::POSTagging("沿江地区是沟通中国联系的纽带");
+
+
 	ofstream out("POSTagging.txt");
 	for (unsigned int i = 0; i < sentences.size(); ++i)
 	{

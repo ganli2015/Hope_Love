@@ -135,7 +135,7 @@ namespace DataProcessor
 
         private void OutputPOSDict(Dictionary<string, List<PartOfSpeech>> posDict)
         {
-            string filename = appDataDir + "BaseConceptsString2.txt";
+            string filename = Dir.outdir + "BaseConceptsString2.txt";
             StreamWriter sw = new StreamWriter(filename,false, Encoding.Default);
 
             foreach(var dict in posDict)

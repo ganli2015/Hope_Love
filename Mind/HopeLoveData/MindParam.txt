@@ -1,0 +1,6 @@
+<Root>
+  <DoubleParam>
+     <wPattern value="0.83536905578834819"/>
+     <wLocal value="7.9749666082057793"/>
+  </DoubleParam>
+</Root>
