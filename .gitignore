@@ -82,7 +82,7 @@ DataWrapperCS/obj/*.*
 *.force
 Debug/ManageWrapper.dll.metagen
 GlobalInterface/obj/Release/GlobalInterface.csproj.FileListAbsolute.txt
-HopeLove/app.config
+
 HopeLove/bin/Release/HopeLove.exe.config
 HopeLove/bin/Release/HopeLove.vshost.exe.config
 *.db
