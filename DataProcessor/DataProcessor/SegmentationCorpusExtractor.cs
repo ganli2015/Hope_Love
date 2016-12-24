@@ -15,13 +15,13 @@ namespace DataProcessor
             
         }
 
-        public void Run()
+        public void Run(string indexWord,string indexWordChi)
         {
             //Extract_DGK_Shooter();
-            YuLiaoKuZaiXian ylkzx = new YuLiaoKuZaiXian() { };
-            //            ylkzx.Extract();
-            //           ylkzx.ExtractGrammarSample();
-            ylkzx.StatWordsCountDistribution();
+            YuLiaoKuZaiXian ylkzx = new YuLiaoKuZaiXian() { indexWord=indexWord,indexWordChinese=indexWordChi };
+            ylkzx.Extract();
+            //ylkzx.ExtractGrammarSample();
+            //ylkzx.StatWordsCountDistribution();
         }
 
         private void Extract_DGK_Shooter()
@@ -98,6 +98,9 @@ namespace DataProcessor
 
         Dictionary<string, POSInfo> POSTable = new Dictionary<string, POSInfo>();
 
+        public string indexWord = "wo";
+        public string indexWordChinese = "我";
+
         public YuLiaoKuZaiXian()
         {
             _puncEndofSentence.Add("。");
@@ -133,14 +136,14 @@ namespace DataProcessor
 
         private void GenerateSegementFile()
         {
-            string filename_raw = Dir.rawdir + "corpus_de_raw.txt";
+            string filename_raw = Dir.rawdir + "corpus_"+ indexWord+"_raw.txt";
             StreamReader sr = new StreamReader(filename_raw, Encoding.UTF8);
 
-            string filename_tag = Dir.rawdir + "corpus_de_segmented.txt";
+            string filename_tag = Dir.rawdir + "corpus_" + indexWord + "_segmented.txt";
             StreamReader sr_tag = new StreamReader(filename_tag, Encoding.UTF8);
 
-            StreamWriter sw = new StreamWriter(Dir.newdir + "corpus_de.txt", false, Encoding.Unicode);
-            StreamWriter sw_pos = new StreamWriter(Dir.newdir + "corpus_de_pos.txt", false, Encoding.Unicode);
+            StreamWriter sw = new StreamWriter(Dir.newdir + "corpus_" + indexWord + ".txt", false, Encoding.Unicode);
+            StreamWriter sw_pos = new StreamWriter(Dir.newdir + "corpus_" + indexWord + "_pos.txt", false, Encoding.Unicode);
 
             int count = 0;
             while (!sr.EndOfStream && !sr_tag.EndOfStream)
@@ -234,7 +237,7 @@ namespace DataProcessor
 
         private void ReplaceDe(ref string line)
         {
-            line=line.Replace(" [的] ", "的");
+            line=line.Replace(" [" + indexWordChinese + "] ", indexWordChinese);
         }
 
         private void CheckTableTag(string line)
@@ -247,7 +250,7 @@ namespace DataProcessor
 
         private void CheckDe(string line)
         {
-            if (line.Contains("[的]"))
+            if (line.Contains("[" + indexWordChinese+"]"))
             {
                 throw new Exception(line);
             }
@@ -392,8 +395,8 @@ namespace DataProcessor
         //Generate grammar sequences based on "corpus_de_pos.txt".
         public void ExtractGrammarSample()
         {
-            string filename = Dir.newdir + "corpus_de_pos.txt";
-            string outFile = "str_sample_corpus_de.txt";
+            string filename = Dir.newdir + "corpus_" + indexWord + "_pos.txt";
+            string outFile = "str_sample_corpus_" + indexWord + ".txt";
             StreamReader sr = new StreamReader(filename, Encoding.Unicode);
             StreamWriter sw = new StreamWriter(outFile, false, Encoding.ASCII);
 
@@ -440,7 +443,7 @@ namespace DataProcessor
 
         public void StatWordsCountDistribution()
         {
-            string filename = Dir.newdir + "corpus_de_pos.txt";
+            string filename = Dir.newdir + "corpus_" + indexWord + "_pos.txt";
             string outFile = "WordCountDistribtion.csv";
             StreamReader sr = new StreamReader(filename, Encoding.Unicode);
             StreamWriter sw = new StreamWriter(outFile, false, Encoding.ASCII);

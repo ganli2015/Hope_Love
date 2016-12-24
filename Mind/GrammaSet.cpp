@@ -154,7 +154,7 @@ namespace Mind
 			vector<GrammarPattern> _sub;
 			GrammarPattern _input;
 		public:
-			ExtractSubsequences(const GrammarPattern& pattern):_input(pattern){}
+			ExtractSubsequences(const GrammarPattern& pattern) :_input(pattern) {  }
 			~ExtractSubsequences(){}
 
 			vector<GrammarPattern> GetResult()const {return _sub;}

@@ -71,6 +71,12 @@ private:
 	vector<vector<shared_ptr<DataCollection::Word>>> SpanUnknownAndAmbiguousWithLocalGrammar(const vector<shared_ptr<DataCollection::Word>> words);
 	///Select the most optimal combination according to grammar patterns.
 	void SelectOptimalGrammarPattern(const vector<vector<shared_ptr<DataCollection::Word>>>& combination, vector<shared_ptr<DataCollection::Word>>& optimal);
+	//////////////////////////////////////////////////////////////////////////
+	///If the number of <combination> is larger than uplimit,
+	///then compute local probability and select most optimal combinations.
+	///Finally compute probability of sub grammar pattern.
+	//////////////////////////////////////////////////////////////////////////
+	void SelectOptimalGrammarPatternWithUplimit(const vector<vector<shared_ptr<DataCollection::Word>>>& combination, vector<shared_ptr<DataCollection::Word>>& optimal);
 
 	GrammarAnalyzer::AnalyzeResult AnalyzeEachSegmented(const vector<shared_ptr<DataCollection::Word>>& segmented, vector<shared_ptr<DataCollection::Word>> &optimal);
 	vector<WordRep> SearchAllWordRep(const vector<shared_ptr<DataCollection::Word>>& segmented_withNoPunc);

@@ -17,7 +17,7 @@ public:
 	TestSegmentation();
 	~TestSegmentation();
 
-	void Run();
+	void Run(const string filename);
 
 private:
 

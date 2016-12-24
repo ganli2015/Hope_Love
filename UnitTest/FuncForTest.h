@@ -174,4 +174,3 @@ namespace FuncForTest
 		}
 	}
 }
-

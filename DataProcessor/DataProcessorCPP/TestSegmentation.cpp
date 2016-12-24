@@ -17,10 +17,9 @@ TestSegmentation::~TestSegmentation()
 {
 }
 
-void TestSegmentation::Run()
+void TestSegmentation::Run(const string filename)
 {
 	//string filename = "dgk_shooter_z.conv";
-	string filename = "corpus_de.txt";
 
 	try
 	{

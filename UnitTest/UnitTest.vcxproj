@@ -71,7 +71,8 @@
     <PostBuildEvent>
       <Command>copy  "$(SolutionDir)Mind\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData\"
 copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
-copy  "$(SolutionDir)HopeLove\bin\Debug\HopeLoveData\IDF of Common Words.txt" "$(ProjectDir)HopeLoveData"</Command>
+if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 
@@ -100,7 +101,8 @@ If NOT exist "Log" mkdir "Log" </Command>
     <PostBuildEvent>
       <Command>copy  "$(SolutionDir)Mind\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData\"
 copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
-copy  "$(SolutionDir)HopeLove\bin\Debug\HopeLoveData\IDF of Common Words.txt" "$(ProjectDir)HopeLoveData"</Command>
+if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 

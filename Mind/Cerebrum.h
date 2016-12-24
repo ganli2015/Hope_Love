@@ -98,6 +98,8 @@ namespace Mind
 		virtual double GetP_Backward(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward) const;
 
 		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const ;
+		virtual double ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const;
+
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
 		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
 

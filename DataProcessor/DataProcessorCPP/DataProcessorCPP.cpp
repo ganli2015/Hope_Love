@@ -35,7 +35,7 @@ int main()
 
 #ifdef TEST_SEGMENTATION
 	TestSegmentation ts;
-	ts.Run();
+	ts.Run("corpus_wo.txt");
 #endif
 
 #ifdef TEST_POSTAGGING

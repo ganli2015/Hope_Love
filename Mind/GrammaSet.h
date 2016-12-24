@@ -95,6 +95,14 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		double ComputePossibility(const DataCollection::GrammarPattern& pattern) const;
 		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
+
+		//////////////////////////////////////////////////////////////////////////
+		///Compute confidence of <curPOS> when its previous POS is <forwardPos> and its next POS is <backwardPos>.
+		///The returned value is 0 to 1.
+		//////////////////////////////////////////////////////////////////////////
+		double ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const;
+
+	
 	private:
 		void Initialize();
 		std::vector<GrammarAttribute> InputGrammaPatterns(std::string filename);
@@ -129,12 +137,6 @@ namespace Mind
 		///Compute confidence of <pattern> considering confidence of each POS with local grammar analysis.
 		//////////////////////////////////////////////////////////////////////////
 		double ComputeP_GrammarLocal(const DataCollection::PartOfSpeech& curPos, const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
-		
-		//////////////////////////////////////////////////////////////////////////
-		///Compute confidence of <curPOS> when its previous POS is <forwardPos> and its next POS is <backwardPos>.
-		///The returned value is 0 to 1.
-		//////////////////////////////////////////////////////////////////////////
-		double ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		///Compute the weights of possibilities of grammar patterns and possibilities of local grammar.

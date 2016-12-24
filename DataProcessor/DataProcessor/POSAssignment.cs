@@ -33,8 +33,13 @@ namespace DataProcessor
             var ChineseDict = ReadChineseDict();
             var wordPOS = GeneratePOSDict(commonWords, ChineseDict);
             OutputPOSDict(wordPOS);
+        }
 
-
+        public void GenerateLargeVocabulary()
+        {
+            var ChineseDict = ReadChineseDict();
+            var wordPOS = GeneratePOSDict(ChineseDict);
+            OutputPOSDict(wordPOS);
         }
 
         private void InitPOSTable()
@@ -42,7 +47,13 @@ namespace DataProcessor
             posTable = new Dictionary<string, PartOfSpeech>();
 
             posTable.Add("n", PartOfSpeech.Noun);
+            posTable.Add("nr", PartOfSpeech.Noun);
+            posTable.Add("ns", PartOfSpeech.Noun);
+            posTable.Add("nt", PartOfSpeech.Noun);
+            posTable.Add("nz", PartOfSpeech.Noun);
+            posTable.Add("vn", PartOfSpeech.Noun);
             posTable.Add("v", PartOfSpeech.Verb);
+            posTable.Add("vg", PartOfSpeech.Verb);
             posTable.Add("i", PartOfSpeech.Adjective);
             posTable.Add("a", PartOfSpeech.Adjective);
             posTable.Add("m", PartOfSpeech.Numeral);
@@ -50,6 +61,7 @@ namespace DataProcessor
             posTable.Add("r", PartOfSpeech.Pronoun);
             posTable.Add("d", PartOfSpeech.Adverb);
             posTable.Add("t", PartOfSpeech.Adverb);
+            posTable.Add("vd", PartOfSpeech.Adverb);
             posTable.Add("p", PartOfSpeech.Preposition);
             posTable.Add("c", PartOfSpeech.Conjunction);
             posTable.Add("u", PartOfSpeech.Auxiliary);
@@ -74,6 +86,10 @@ namespace DataProcessor
             return res;
         }
 
+        /// <summary>
+        /// Key is word and value is all POS.
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<string,List<string>> ReadChineseDict()
         {
             string filename = appDataDir + "ChineseDict.txt";
@@ -168,5 +184,41 @@ namespace DataProcessor
             File.Copy(filename, mindDataDir + "BaseConceptsString2.txt", true);
         }
 
+        private Dictionary<string, List<PartOfSpeech>> GeneratePOSDict(Dictionary<string, List<string>> ChineseDict)
+        {
+            Dictionary<string, List<PartOfSpeech>> res = new Dictionary<string, List<PartOfSpeech>>();
+            foreach (var word in ChineseDict)
+            {
+                if (!ChineseDict.ContainsKey(word.Key))
+                {
+                    Console.WriteLine("Cannot find {0} in ChineseDict.", word.Key);
+                    continue;
+                }
+
+                List<string> posesStr = word.Value;
+                List<PartOfSpeech> poses = new List<PartOfSpeech>();
+                //Find corresponding POS from POS string.
+                posesStr.ForEach(pos =>
+                {
+                    if (posTable.ContainsKey(pos))
+                    {
+                        poses.Add(posTable[pos]);
+                    }
+                });
+
+                if (poses.Count == 0)
+                {
+                    Console.WriteLine("Cannot find POS of {0} .", word);
+                    continue;
+                }
+
+                res.Add(word.Key, poses);
+            }
+
+            return res;
+        }
+
     }
+
+    
 }

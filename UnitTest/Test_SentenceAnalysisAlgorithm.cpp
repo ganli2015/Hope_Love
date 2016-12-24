@@ -251,8 +251,6 @@ INSTANTIATE_TEST_CASE_P(Test_SentenceAnalysisAlgorithm, Test_Grammar, testing::V
 
 TEST_P(Test_Grammar,Analyze)
 {
-	//test
-	//Mind::SetHopeLoveMindPath("D:\\Projects\\Deep\\Hope_Love\\HopeLove\\bin\\Debug\\HopeLoveData\\large\\");
 	Cerebrum* brain = Cerebrum::Instance();
 	iCerebrum::SetInstance(brain);
 
@@ -282,19 +280,19 @@ TEST_P(Test_Grammar,Analyze)
 vector<Param_Grammar> Test_Grammar::GenerateSamples()
 {
 	vector<Param_Grammar> res;
-
-
-
-	//{
-	//	Param_Grammar param;
-	//	param.raw = "没有啊，我是说一个学法的，做软件测试，是她男朋友把她弄进去的";
-	//	param.segSentence = "没有/啊/，/我/是/说/一/个/学/法/的/，/做/软件/测试/，/是/她/男朋友/把/她/弄/进去/的";
-	//	vector<PartOfSpeech> expect{ Numeral,Verb,Numeral,Verb,Pronoun };
-
-	//	param.expectedPOS = expect;
-
-	//	res.push_back(param);
-	//}
+// 
+// 
+// 
+// 	{
+// 		Param_Grammar param;
+// 		param.raw = "没有啊，我是说一个学法的，做软件测试，是她男朋友把她弄进去的";
+// 		param.segSentence = "没有/啊/，/我/是/说/一/个/学/法/的/，/做/软件/测试/，/是/她/男朋友/把/她/弄/进去/的";
+// 		vector<PartOfSpeech> expect{ Numeral,Verb,Numeral,Verb,Pronoun };
+// 
+// 		param.expectedPOS = expect;
+// 
+// 		res.push_back(param);
+// 	}
 
 	{
 		Param_Grammar param;

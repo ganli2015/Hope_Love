@@ -333,6 +333,35 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 }
 
 
+void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector<shared_ptr<DataCollection::Word>>>& combination, vector<shared_ptr<DataCollection::Word>>& optimal)
+{
+	Mind::iCerebrum *brain = Mind::iCerebrum::Instance();
+
+	int uplimitCombination = 1000;
+	if (combination.size() > uplimitCombination)
+	{
+		map<double, int, greater<double>> prob_index;
+		for (unsigned int i = 0; i < combination.size(); ++i)
+		{
+			GrammarPattern pattern = LanguageFunc::ConvertToPattern(combination[i]);
+			double value = brain->ComputeLocalPossibility(pattern);
+			prob_index[value] = i;
+		}
+
+		vector<vector<shared_ptr<DataCollection::Word>>> highProbCombinations(uplimitCombination);
+		int i = 0;
+		for (map<double, int, greater<double>>::iterator it = prob_index.begin(); i < uplimitCombination; ++it, ++i)
+		{
+			highProbCombinations[i] = combination[it->second];
+		}
+		SelectOptimalGrammarPattern(highProbCombinations, optimal);
+	}
+	else
+	{
+		SelectOptimalGrammarPattern(combination, optimal);
+	}
+}
+
 bool GrammarAnalyzer::Analyze()
 {
 	OptimizePOSofWords();
@@ -360,7 +389,7 @@ void GrammarAnalyzer::OptimizePOSofWords()
 	//After go through segmented sentences, there are several candidates for final sentence.
 	//And now I continue to select one of them for convenience of following computation.
 	vector<shared_ptr<Word>> mostOptimal;
-	SelectOptimalGrammarPattern(candidates,mostOptimal);
+	SelectOptimalGrammarPatternWithUplimit(candidates,mostOptimal);
 	_raw_sen->SetGrammard(mostOptimal);
 }
 
@@ -428,11 +457,11 @@ GrammarAnalyzer::AnalyzeResult GrammarAnalyzer::AnalyzeEachSegmented(const vecto
 			allCombinations.insert(allCombinations.end(), spannedCombination.begin(), spannedCombination.end());
 		}
 
-		SelectOptimalGrammarPattern(allCombinations, optimal);
+		SelectOptimalGrammarPatternWithUplimit(allCombinations, optimal);
 	}
 	else
 	{
-		SelectOptimalGrammarPattern(possi_Combine, optimal);
+		SelectOptimalGrammarPatternWithUplimit(possi_Combine, optimal);
 	}
 
 	//Convert punctuations from Type word to Type punctuation.

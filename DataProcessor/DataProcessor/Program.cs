@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HopeLove;
 
 namespace DataProcessor
 {
@@ -33,14 +32,15 @@ namespace DataProcessor
         {
 
 
-            //             POSAssignment posAssign = new POSAssignment();
-            //             posAssign.AssignPOSofCommonWords();
+  //          POSAssignment posAssign = new POSAssignment();
+ //           posAssign.AssignPOSofCommonWords();
+//            posAssign.GenerateLargeVocabulary();
 
-            //             SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();
-            //             sce.Run();
+                        SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();
+                        sce.Run("wo","我");
 
-            ReduceGrammarPatternDistribution rgpd = new ReduceGrammarPatternDistribution();
-            rgpd.Run(Dir.outdir+"GrammaPatterns_Initial_corpus_de.txt", Dir.outdir + "GrammaPatterns_Initial_corpus_de_reduced.txt");
+            //             ReduceGrammarPatternDistribution rgpd = new ReduceGrammarPatternDistribution();
+            //             rgpd.Run(Dir.outdir+"GrammaPatterns_Initial_corpus_de.txt", Dir.outdir + "GrammaPatterns_Initial_corpus_de_reduced.txt");
         }
     }
 }
