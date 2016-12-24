@@ -5,3 +5,10 @@ E:\Artificial Intelligence\Project\Hope_Love\DataWrapperCS\bin\Debug\GlobalInter
 E:\Artificial Intelligence\Project\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.csprojResolveAssemblyReference.cache
 E:\Artificial Intelligence\Project\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.dll
 E:\Artificial Intelligence\Project\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.pdb
+D:\Projects\Deep\Hope_Love\DataWrapperCS\bin\Debug\DataWrapperCS.dll
+D:\Projects\Deep\Hope_Love\DataWrapperCS\bin\Debug\DataWrapperCS.pdb
+D:\Projects\Deep\Hope_Love\DataWrapperCS\bin\Debug\GlobalInterface.dll
+D:\Projects\Deep\Hope_Love\DataWrapperCS\bin\Debug\GlobalInterface.pdb
+D:\Projects\Deep\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.csprojResolveAssemblyReference.cache
+D:\Projects\Deep\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.dll
+D:\Projects\Deep\Hope_Love\DataWrapperCS\obj\Debug\DataWrapperCS.pdb

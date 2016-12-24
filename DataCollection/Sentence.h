@@ -25,8 +25,10 @@ namespace DataCollection
 		bool InSentence(const shared_ptr<Word> word) const;
 	};
 
+	//////////////////////////////////////////////////////////////////////////
 	///SegmentedSentence indicates the segmentation structure of a certain sentence.
 	///Words in SegmentedSentence are probably of no definite POS.
+	//////////////////////////////////////////////////////////////////////////
 	class _DATACOLLECTIONINOUT SegmentedSentence : public Obj<SegmentedSentence>
 	{
 		std::vector<shared_ptr<DataCollection::Word>> _seg;

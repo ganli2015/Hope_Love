@@ -260,10 +260,11 @@ vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousWithLoc
 		{
 			isUandA.push_back(false);
 		}
-		//Store origin information.
+		//Store origin information mainly for known words
+		//as they don't need to span.
 		vector<shared_ptr<Word>> oneWord;
 		oneWord.push_back(words[i]);
-		wordsCandidates.push_back(oneWord);
+		wordsCandidates[i] = oneWord;
 	}
 
 	if (isUandA.size() == 1 || isUandA.front() == true || isUandA.back() == true)
