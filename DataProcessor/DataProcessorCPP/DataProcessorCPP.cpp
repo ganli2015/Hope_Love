@@ -10,7 +10,9 @@
 #include "TestSegmentation.h"
 #include "TestPOSTagging.h"
 
-#define GENERATE_GRAMMA_SAMPLES
+#include <tbb/tbb.h>
+
+//#define GENERATE_GRAMMA_SAMPLES
 //#define GENERATE_GRAMMA_DISTRIBUTION
 //#define EXTRACT_GRAMMARLOCAL_DISTRIBUTION
 //#define TEST_SEGMENTATION
