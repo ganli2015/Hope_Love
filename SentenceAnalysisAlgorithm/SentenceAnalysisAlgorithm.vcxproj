@@ -158,8 +158,6 @@
     <ClInclude Include="GrammarAnalyzer.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="Punctuator.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
     <ClInclude Include="SentenceAnalyzer.h" />
     <ClInclude Include="SentenceParser.h" />
     <ClInclude Include="Stdafx.h" />

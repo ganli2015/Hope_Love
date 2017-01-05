@@ -136,6 +136,12 @@ namespace Mind
 			GrammarPattern pattern(pattern_enum);
 			pattern.SetID(id++);
 
+			if (pattern.Size() <= 1)
+			{
+				//the pattern is too small that contains less information.
+				continue;
+			}
+
 			GrammarAttribute ga;
 			ga.pattern=pattern;
 			ga.frequency=frequency;

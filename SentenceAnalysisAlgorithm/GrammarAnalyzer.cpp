@@ -489,6 +489,11 @@ void GrammarAnalyzer::BuildGrammarAssociationOfWords()
 	//They provide informatin about which words are related.
 	GrammarPattern pattern=LanguageFunc::ConvertToPattern(grammard);
 	vector<GrammarPattern> matchedPattern=brain->ContainSubsequence(pattern);
+	if (matchedPattern.empty())
+	{
+		//If empty, we think the size of pattern is small and is a pattern self.
+		matchedPattern.push_back(pattern);
+	}
 	_raw_sen->BuildGrammarAssociation(matchedPattern);
 }
 

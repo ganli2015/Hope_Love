@@ -6,17 +6,17 @@
 #include "GrammarSampleGenerator.h"
 #include "GrammarPatternExtractor.h"
 #include "GrammarLocalDistributionExtractor.h"
+#include "ExtractChainFromSentence.h"
 
 #include "TestSegmentation.h"
 #include "TestPOSTagging.h"
-
-#include <tbb/tbb.h>
 
 //#define GENERATE_GRAMMA_SAMPLES
 //#define GENERATE_GRAMMA_DISTRIBUTION
 //#define EXTRACT_GRAMMARLOCAL_DISTRIBUTION
 //#define TEST_SEGMENTATION
 //#define TEST_POSTAGGING
+#define EXTRACT_CHAIN
 int main()
 {
 #ifdef GENERATE_GRAMMA_SAMPLES
@@ -44,6 +44,11 @@ int main()
 	TestPOSTagging tpt;
 	tpt.Run(newdir + "corpus_de_pos.txt");
 #endif // TEST_POSTAGGING
+
+#ifdef EXTRACT_CHAIN
+	ExtractChainFromSentence ecfs;
+	ecfs.Run("");
+#endif
 
 	logfile.close();
 

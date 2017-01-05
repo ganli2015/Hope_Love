@@ -45,6 +45,9 @@
     <ClInclude Include="TestPOSTagging.h">
       <Filter>TestCorpus</Filter>
     </ClInclude>
+    <ClInclude Include="ExtractChainFromSentence.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="TestPOSTagging.cpp">
       <Filter>TestCorpus</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtractChainFromSentence.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

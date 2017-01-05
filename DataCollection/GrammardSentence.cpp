@@ -52,10 +52,10 @@ namespace DataCollection
 		GrammarPattern raw=LanguageFunc::ConvertToPattern(_gra);
 		for (unsigned int i=0;i<grammarPatterns.size();++i)
 		{
-			if(grammarPatterns[i].GetID()<0)
-			{
-				throw runtime_error("Error in BuildGrammarAssociation:The ID of Pattern is incorrect!");
-			}
+// 			if(grammarPatterns[i].GetID()<0)
+// 			{
+// 				throw runtime_error("Error in BuildGrammarAssociation:The ID of Pattern is incorrect!");
+// 			}
 
 			//For each grammar pattern , compute indexes of words that matching the grammar pattern.
 			vector<vector<int>> indexes;
