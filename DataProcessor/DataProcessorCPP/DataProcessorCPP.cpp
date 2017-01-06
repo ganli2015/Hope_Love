@@ -47,7 +47,7 @@ int main()
 
 #ifdef EXTRACT_CHAIN
 	ExtractChainFromSentence ecfs;
-	ecfs.Run("");
+	ecfs.Run("Small Conversation Pairs Sample.txt");
 #endif
 
 	logfile.close();

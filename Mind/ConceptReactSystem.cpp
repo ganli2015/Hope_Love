@@ -11,6 +11,7 @@
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/ConfigureInfoManager.h"
+#include "../CommonTools/LogWriter.h"
 
 #include "../Mathmatic/Rand.h"
 #include "../Mathmatic/Vector.h"
@@ -54,6 +55,7 @@ namespace Mind
 			InitNetworkFromFile();
 		);
 	}
+
 
 	void ConceptReactSystem::InitNetworkFromFile()
 	{
@@ -127,7 +129,9 @@ namespace Mind
 			dataInfos.push_back(info);
 		}
 
+		LOG("Begin train reaction network.");
 		Train(dataInfos);
+		LOG("Finish train reaction network.");
 
 		_network->Write(GetHopeLoveMindPath()+ConceptReactorNetworkFilename);
 	}
