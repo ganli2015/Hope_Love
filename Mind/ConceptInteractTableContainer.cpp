@@ -3,11 +3,14 @@
 #include "../MindInterface/iMindElementCreator.h"
 #include "../MindInterface/iConceptInteractTable.h"
 
+#include "../CommonTools/LogWriter.h"
+
 
 namespace Mind
 {
 	ConceptInteractTableContainer::ConceptInteractTableContainer(void)
 	{
+		LOG("Initialized ConceptInteractTableContainer");
 	}
 
 

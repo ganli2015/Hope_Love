@@ -9,6 +9,7 @@
 
 #include "../CommonTools/IOFunction.h"
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/LogWriter.h"
 
 #include "../DataCollection/Character.h"
 #include "../DataCollection/Word.h"
@@ -34,6 +35,7 @@ namespace Mind
 	ConceptSet::ConceptSet(void)
 	{
 		Initialize();
+		LOG("Initialized ConceptSet.");
 	}
 
 

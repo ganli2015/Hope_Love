@@ -39,6 +39,7 @@ namespace Mind
 	ConceptReactSystem::ConceptReactSystem(ConceptSet* val):ioTag('&'),conceptTag('#'),idStrTag(' '),_conceptSet(val)
 	{
 		Initialize();
+		LOG("Initialized ConceptReactSystem.");
 	}
 
 	ConceptReactSystem::~ConceptReactSystem(void)
@@ -165,6 +166,7 @@ namespace Mind
 		int dimension=_conceptSet->BaseConceptCount();
 //		int interDim=30;
 		shared_ptr<iNeuron> neu1=InitNeuron(dimension,dimension);
+		LOG("Neuron initialized.");
 //		shared_ptr<iNeuron> neu2=InitNeuron(interDim,dimension);
 
 // 		int interDim=50;

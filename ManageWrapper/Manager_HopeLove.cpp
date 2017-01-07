@@ -51,6 +51,7 @@ namespace ManageWrapper
 		Command* acommand=new SpeakCommand(_datawrappercpp);
 		acommand->Update();
 		LOG("Output sentence: "+_datawrappercpp->GetNewOutSentence());
+		LOG("\n\n\n");
 
 		UpdateDataWrapperCS(data);
 		Notify(data);

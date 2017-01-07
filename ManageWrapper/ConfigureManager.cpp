@@ -10,6 +10,7 @@
 #include "../LogicSystem/LogicKnowledgeInitializer.h"
 
 #include "../CommonTools/ConfigureInfoManager.h"
+#include "../CommonTools/LogWriter.h"
 
 namespace ManageWrapper
 {
@@ -39,6 +40,7 @@ namespace ManageWrapper
 		LogicSystem::LogicKnowledge* knowledge=new LogicSystem::LogicKnowledge();
 		LogicSystem::LogicKnowledgeInitializer knowledgeInit;
 		knowledgeInit.Initialize("HopeLoveData\\LogicStatements.txt",knowledge);
+		LOG("Initialized LogicKnowledge.");
 		brain->SetLogicKnowledge(knowledge);
 	}
 }

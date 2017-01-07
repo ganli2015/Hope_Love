@@ -31,7 +31,9 @@ namespace Mind
 	GrammarSet::GrammarSet(void)
 	{
 		Initialize();
-	}
+		LOG("Initialized GrammarSet");
+	}		
+
 
 
 	GrammarSet::~GrammarSet(void)

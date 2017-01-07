@@ -26,6 +26,7 @@ namespace CommonTool
 			void operator()(const T& obj)
 			{
 				_currentLog<<obj.GetString()<<"		"<<GetDuration()<<endl;
+				cout << obj.GetString() << "		" << GetDuration() << endl;
 			}
 		};
 
@@ -36,6 +37,7 @@ namespace CommonTool
 			void operator()(const T& obj)
 			{
 				_currentLog<<obj->GetString()<<"		"<<GetDuration()<<endl;
+				cout << obj->GetString() << "		" << GetDuration() << endl;
 			}
 		};
 
@@ -56,6 +58,7 @@ namespace CommonTool
 		static void Output(const string str)
 		{
 			_currentLog<<str<<"		"<<GetDuration()<<endl;
+			cout << str << "		" << GetDuration() << endl;
 		}
 
 		///For const char
@@ -146,6 +149,9 @@ namespace CommonTool
 
 ///Write information of object as well as its description.
 #define LOG_DESC(desc,object) CommonTool::LogWriter::Output(desc);CommonTool::LogWriter::Output(object);
+
+//Log under some condition.
+#define LOG_IF(condition,object) if(condition) CommonTool::LogWriter::Output(object)
 
 #define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
 

@@ -10,6 +10,8 @@
 #include "../Mathmatic/Vector.h"
 #include "../Mathmatic/iMatrix.h"
 
+#include "../CommonTools/LogWriter.h"
+
 namespace NeuralNetwork
 {
 	using namespace Math;
@@ -52,6 +54,8 @@ namespace NeuralNetwork
 				result=Max_Reached;
 				break;
 			}
+
+			LOG_IF(iteration % 10 == 0, "Iteration count is " + iteration);
 		} while (mytrain.NeuronChanged());//If the neuron is changed after one iteration, process the proto patterns again to make sure that all errors are zero!
 
 		_curInteationCount=iteration;

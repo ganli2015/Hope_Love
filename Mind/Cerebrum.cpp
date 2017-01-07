@@ -6,6 +6,8 @@
 #include "ConceptInteractTableContainer.h"
 #include "ConceptReactSystem.h"
 
+#include "../CommonTools/LogWriter.h"
+
 #include "../DataCollection/Word.h"
 #include "../DataCollection/Character.h"
 
@@ -48,6 +50,7 @@ namespace Mind
 		{
 			_instance=new Cerebrum;
 			_instance->PostInitialize();
+			LOG("Initialized Cereburm.");
 		}
 		return _instance;
 	}
