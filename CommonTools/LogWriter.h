@@ -98,6 +98,18 @@ namespace CommonTool
 			for_each(objects.begin(),objects.end(),OutputObjectPointer<shared_ptr<T>>());
 		}
 
+		///Output with format.
+		template<class T>
+		static void OutFormat(const char *format,T var1)
+		{
+			int bufferSize = 255;
+			char* ch = new char[bufferSize];
+			sprintf_s(ch, bufferSize, format, var1);
+			Output(string(ch));
+
+			delete ch;
+		}
+
 
 		static void ResetStartTime();
 
@@ -147,11 +159,15 @@ namespace CommonTool
 ///Output object.<Object> must have a method of GetString().
 #define LOG(object) CommonTool::LogWriter::Output(object) 
 
+#define LOG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,var) 
+
 ///Write information of object as well as its description.
 #define LOG_DESC(desc,object) CommonTool::LogWriter::Output(desc);CommonTool::LogWriter::Output(object);
 
 //Log under some condition.
 #define LOG_IF(condition,object) if(condition) CommonTool::LogWriter::Output(object)
+
+#define LOG_IF_FORMAT(condition,format,var) if(condition) CommonTool::LogWriter::OutFormat(format,var)
 
 #define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
 

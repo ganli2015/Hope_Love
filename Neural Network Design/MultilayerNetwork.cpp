@@ -55,7 +55,7 @@ namespace NeuralNetwork
 				break;
 			}
 
-			LOG_IF(iteration % 10 == 0, "Iteration count is " + iteration);
+			LOG_IF_FORMAT(iteration % 10 == 0, "Iteration count is %d" , iteration);
 		} while (mytrain.NeuronChanged());//If the neuron is changed after one iteration, process the proto patterns again to make sure that all errors are zero!
 
 		_curInteationCount=iteration;

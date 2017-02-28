@@ -24,6 +24,9 @@ namespace Math
 		const int _i;
 		const int _j; //Two dimensions,both count from 1,i rows,j column
 	public:
+		//////////////////////////////////////////////////////////////////////////
+		///Create a matrix with i rows and j columns.
+		//////////////////////////////////////////////////////////////////////////
 		Matrix(const int i, const int j);
 		~Matrix(void);
 		Matrix(const std::vector<std::vector<double>> val);

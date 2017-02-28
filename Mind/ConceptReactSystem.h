@@ -1,6 +1,6 @@
 #pragma once
 #include "InOut.h"
-#include "../MindElement/ConceptChain.h"
+#include "../MindInterface/iConceptChain.h"
 
 namespace NeuralNetwork
 {
@@ -9,10 +9,16 @@ namespace NeuralNetwork
 	class Network;
 }
 
+namespace Math
+{
+	class Matrix;
+}
+
 namespace Mind
 {
 	class ConceptSet;
 	class iConcept;
+	class ConceptChain;
 
 	class ConceptReactSystem : public Obj<ConceptReactSystem>
 	{
@@ -53,7 +59,8 @@ namespace Mind
 		shared_ptr<ConceptChain> ParseChain(const string str) const;
 
 		void Train(const vector<DataInfo>& dataInfos);
-		shared_ptr<NeuralNetwork::iNeuron> ConceptReactSystem::InitNeuron(const int i,const int j);
+		Math::Matrix CreateRandomNeuronMatrix(const int i, const int j);
+		shared_ptr<NeuralNetwork::iNeuron> ConceptReactSystem::InitNeuron(const int i, const int j);
 		double ConceptReactSystem::ComputeStandardDeviation(const DataInfo& data,shared_ptr<NeuralNetwork::Network> network);
 
 		void NormalizeConfidence(vector<ConceptChainProperty>& vec);
