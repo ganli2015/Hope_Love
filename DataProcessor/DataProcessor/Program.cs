@@ -32,15 +32,15 @@ namespace DataProcessor
         {
 
 
-  //          POSAssignment posAssign = new POSAssignment();
- //           posAssign.AssignPOSofCommonWords();
-//            posAssign.GenerateLargeVocabulary();
+            POSAssignment posAssign = new POSAssignment();
+            posAssign.AssignPOSofCommonWords();
+            //            posAssign.GenerateLargeVocabulary();
 
-                        SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();
-                        sce.Run("wo","我");
+            //                         SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();
+            //                         sce.Run("wo","我");
 
             //             ReduceGrammarPatternDistribution rgpd = new ReduceGrammarPatternDistribution();
-            //             rgpd.Run(Dir.outdir+"GrammaPatterns_Initial_corpus_de.txt", Dir.outdir + "GrammaPatterns_Initial_corpus_de_reduced.txt");
+            //             rgpd.Run(Dir.outdir + "GrammaPatterns_Initial_corpus_de.txt", Dir.outdir + "GrammaPatterns_Initial_corpus_de_reduced.txt");
         }
     }
 }

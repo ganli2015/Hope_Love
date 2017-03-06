@@ -9,6 +9,7 @@
 #include "../CommonTools/MyObject.h"
 
 using namespace std;
+using std::tr1::shared_ptr;
 
 #ifdef MATHMATICAPI
 #define _MATHMATICINOUT _declspec(dllexport)

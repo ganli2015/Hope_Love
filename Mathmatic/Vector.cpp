@@ -35,7 +35,7 @@ namespace Math
 
 	}
 
-	const std::vector<double>& Math::Vector::GetVector() const
+	std::vector<double> Math::Vector::GetVector() const
 	{
 		return _r;
 	}

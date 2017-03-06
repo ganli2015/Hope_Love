@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="imp">
+      <UniqueIdentifier>{82b3c721-a898-46ae-90c7-a3fb38cabdfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -35,6 +38,15 @@
     <ClInclude Include="MyInt.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorEigen.h">
+      <Filter>imp</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorImp.h">
+      <Filter>imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -57,6 +69,12 @@
     </ClCompile>
     <ClCompile Include="MyInt.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorEigen.cpp">
+      <Filter>imp</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorImp.cpp">
+      <Filter>imp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

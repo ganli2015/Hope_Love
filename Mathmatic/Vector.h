@@ -7,16 +7,6 @@ namespace Math
 {
 	using namespace std;
 
-// 	class _MATHMATICINOUT iVector
-// 	{
-// 	public: 
-// 		iVector(){}
-// 		virtual ~iVector(){}
-// 
-// 		virtual unsigned int Dimension() const =0;
-// 	};
-
-
 	class _MATHMATICINOUT Vector : public Obj<Vector>
 	{
 		const unsigned int _d; //dimension,count from 1.
@@ -32,7 +22,7 @@ namespace Math
 
 		Vector(const int d,const double val);
 
-		const std::vector<double>& GetVector() const;
+		std::vector<double> GetVector() const;
 
 		unsigned int Dimension() const;
 
@@ -64,7 +54,6 @@ namespace Math
 		Vector& operator+=(const Vector& right);
 
 		_MATHMATICINOUT friend Vector operator/(const Vector& left,const double& right);
-		
 	};
 
 	_MATHMATICINOUT Vector operator+(const Vector& left,const Vector& right) ;

@@ -8,6 +8,9 @@ using System.Diagnostics;
 
 namespace DataProcessor
 {
+    /// <summary>
+    /// Transform raw corpus file to a well accepted format for further analysis.
+    /// </summary>
     public class SegmentationCorpusExtractor
     {
         public SegmentationCorpusExtractor()

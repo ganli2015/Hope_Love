@@ -73,12 +73,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
+    <IncludePath>..\thirdpart\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\thirdpart\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -155,8 +157,11 @@
     <ClInclude Include="MathTool.h" />
     <ClInclude Include="MyInt.h" />
     <ClInclude Include="Rand.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="VectorEigen.h" />
+    <ClInclude Include="VectorImp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FindSequence.cpp" />
@@ -171,6 +176,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="VectorEigen.cpp" />
+    <ClCompile Include="VectorImp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
