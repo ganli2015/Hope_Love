@@ -7,10 +7,11 @@ namespace Math
 {
 	using namespace std;
 
+	class VectorImp;
+
 	class _MATHMATICINOUT Vector : public Obj<Vector>
 	{
-		const unsigned int _d; //dimension,count from 1.
-		std::vector<double> _r;
+		VectorImp *_imp;
 	public:
 		Vector(const unsigned int d);
 
@@ -45,7 +46,7 @@ namespace Math
 
 		Vector Negate() const ;
 
-		double& operator[]( unsigned int i);
+		float& operator[]( unsigned int i);
 
 		const double operator[]( unsigned int i) const;
 
@@ -54,6 +55,10 @@ namespace Math
 		Vector& operator+=(const Vector& right);
 
 		_MATHMATICINOUT friend Vector operator/(const Vector& left,const double& right);
+
+	private:
+		Vector(VectorImp* imp);
+		VectorImp* ConstructVectorImp(Vector vec);
 	};
 
 	_MATHMATICINOUT Vector operator+(const Vector& left,const Vector& right) ;

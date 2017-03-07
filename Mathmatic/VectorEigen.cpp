@@ -6,14 +6,39 @@ using namespace Eigen;
 
 namespace Math
 {
-	VectorEigen::VectorEigen()
-	{
-	}
-
 
 	VectorEigen::VectorEigen(Eigen::VectorXf vec):_vec(vec)
 	{
 
+	}
+
+	VectorEigen::VectorEigen(const unsigned int d)
+	{
+		_vec = VectorXf(d);
+		for (unsigned int i = 0; i < d; ++i)
+		{
+			_vec[i] = 0;
+		}
+	}
+
+	VectorEigen::VectorEigen(std::vector<double> r)
+	{
+		if (r.empty()) return;
+
+		_vec = VectorXf(r.size());
+		for (unsigned int i=0;i<r.size();++i)
+		{
+			_vec[i] = (float)r[i];
+		}
+	}
+
+	VectorEigen::VectorEigen(const int d, const double val)
+	{
+		_vec = VectorXf(d);
+		for (int i = 0; i < d; ++i)
+		{
+			_vec[i] = (float)val;
+		}
 	}
 
 	VectorEigen::~VectorEigen()
@@ -34,7 +59,7 @@ namespace Math
 
 	unsigned int VectorEigen::Dimension() const
 	{
-		return _vec.cols();
+		return _vec.rows();
 	}
 
 	double VectorEigen::Norm() const
@@ -44,7 +69,7 @@ namespace Math
 
 	void VectorEigen::Set_ithVal(unsigned int i, double val)
 	{
-		_vec[i] = val;
+		_vec[i] = (float)val;
 	}
 
 	double VectorEigen::Get_ithVal(unsigned int i) const
@@ -52,9 +77,9 @@ namespace Math
 		return _vec[i];
 	}
 
-	std::tr1::shared_ptr<VectorImp> VectorEigen::Normalized() const
+	VectorImp* VectorEigen::Normalized() const
 	{
-		return std::tr1::shared_ptr<VectorEigen>(new VectorEigen(_vec.normalized()));
+		return new VectorEigen(_vec.normalized());
 	}
 
 	void VectorEigen::Normalize()
@@ -62,14 +87,20 @@ namespace Math
 		_vec.normalize();
 	}
 
-	std::tr1::shared_ptr<VectorImp> VectorEigen::Negate() const
+	VectorImp* VectorEigen::Negate() const
 	{
-		shared_ptr<VectorImp> res(new VectorEigen(_vec));
+		VectorImp* res(new VectorEigen(_vec));
 		for (unsigned int i=0;i<Dimension();++i)
 		{
 			res->Set_ithVal(i, -res->Get_ithVal(i));
 		}
 
+		return res;
+	}
+
+	float& VectorEigen::Get_ithValRef(unsigned int i)
+	{
+		float& res = (float&)_vec[i];
 		return res;
 	}
 

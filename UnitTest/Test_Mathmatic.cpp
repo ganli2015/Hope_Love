@@ -42,7 +42,7 @@ TEST(Test_Matrix,Multiply)
 	expect.Set_ithRow(3,r4,5);
 	expect.Set_ithRow(4,r5,5);
 
-	ASSERT_TRUE(res.Same(expect));
+	ASSERT_TRUE(res.Same(expect,1e-4));
 }
 
 TEST(Test_Matrix,Multiply2)
@@ -72,7 +72,7 @@ TEST(Test_Matrix,Multiply2)
 	expect.Set_ithRow(1,r2,rowLength);
 	expect.Set_ithRow(2,r3,rowLength);
 
-	ASSERT_TRUE(res.Same(expect));
+	ASSERT_TRUE(res.Same(expect, 1e-4));
 }
 
 TEST(Test_Matrix,Multiply3)
@@ -99,7 +99,7 @@ TEST(Test_Matrix,Multiply3)
 	expect.Set_ithRow(0,r1,rowLength);
 	expect.Set_ithRow(1,r2,rowLength);
 
-	ASSERT_TRUE(res.Same(expect));
+	ASSERT_TRUE(res.Same(expect, 1e-4));
 }
 
 TEST(Test_SubSequence,FindLongestCommonSubsequence)

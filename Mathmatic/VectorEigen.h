@@ -13,8 +13,13 @@ namespace Math
 	{
 		Eigen::VectorXf _vec;
 	public:
-		VectorEigen();
-		~VectorEigen();
+		VectorEigen(const unsigned int d);
+
+		~VectorEigen(void);
+
+		VectorEigen(std::vector<double> r);
+
+		VectorEigen(const int d, const double val);
 
 		virtual std::vector<double> GetVector() const ;
 
@@ -24,12 +29,13 @@ namespace Math
 
 		virtual void Set_ithVal(unsigned int i, double val);
 		virtual double Get_ithVal(unsigned int i) const ;
+		virtual float& Get_ithValRef(unsigned int i);
 
-		virtual shared_ptr<VectorImp> Normalized() const;
+		virtual VectorImp* Normalized() const;
 
 		virtual void Normalize() ;
 
-		virtual std::tr1::shared_ptr<VectorImp> Negate() const;
+		virtual VectorImp* Negate() const;
 
 	private:
 		VectorEigen(Eigen::VectorXf vec);

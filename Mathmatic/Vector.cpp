@@ -1,153 +1,129 @@
 #include "StdAfx.h"
 #include "Vector.h"
-
+#include "VectorEigen.h"
 
 namespace Math
 {
-	Math::Vector::Vector( const unsigned int d ) :_d(d),_r(_d)
+	Math::Vector::Vector( const unsigned int d ) :_imp(new VectorEigen(d))
 	{
 
 	}
 
-	Math::Vector::Vector( std::vector<double> r ) :_d(r.size()),_r(r)
+	Math::Vector::Vector( std::vector<double> r ) : _imp(new VectorEigen(r))
 	{
 
 	}
 
-	Math::Vector::Vector( const int d,const double val ) :_d(d)
+	Math::Vector::Vector( const int d,const double val ) : _imp(new VectorEigen(d,val))
 	{
-		_r.reserve(d);
-		for (int i=0;i<d;++i)
+
+	}
+
+
+	Vector::Vector( const Vector& vec ) 
+	{
+		_imp = new VectorEigen(vec.Dimension());
+
+		for (unsigned int i = 0; i < vec.Dimension(); ++i)
 		{
-			_r.push_back(val);
+			_imp->Set_ithVal(i, vec.Get_ithVal(i));
 		}
 	}
 
 
-	Vector::Vector( const Vector& vec ) :_d(vec._d),_r(vec._r)
+	Vector::Vector(VectorImp* imp)
 	{
-
+		_imp = imp;
 	}
 
-
-	Math::Vector::~Vector( void )
+	Math::Vector::~Vector(void)
 	{
-
+		delete _imp;
 	}
 
 	std::vector<double> Math::Vector::GetVector() const
 	{
-		return _r;
+		return _imp->GetVector();
 	}
 
 	unsigned int Math::Vector::Dimension() const
 	{
-		return _d;
+		return _imp->Dimension();
 	}
 
 	double Math::Vector::Norm() const
 	{
-		return sqrt(this->Dot(*this));
+		return _imp->Norm();
 	}
 
 	double Math::Vector::Angle( const Vector& vec )
 	{
-		assert_same_int(_d,vec.Dimension());
-		return acos(this->Dot(vec)/this->Norm()/vec.Norm());
+		return _imp->Angle(vec._imp);
 	}
 
 	bool Math::Vector::IsOrthogonoality( const Vector& vec,double tol/*=1e-6*/ )
 	{
-		assert_same_int(_d,vec.Dimension());
-		if(DoubleCompare(this->Dot(vec),0)==0)
-			return true;
-		else return false;
+		return _imp->IsOrthogonoality(vec._imp, tol);
 	}
 
 	void Math::Vector::Set_ithVal( unsigned int i,double val )
 	{
-		assert_less(i,_d);_r[i]=val;
+		_imp->Set_ithVal(i, val);
 	}
 
 	double Math::Vector::Get_ithVal(unsigned int i ) const
 	{
-		assert_less(i,_d);return _r[i];
+		return _imp->Get_ithVal(i);
 	}
 
 	double Math::Vector::Dot( const Vector& val ) const
 	{
-		assert_same_int(_d,val.Dimension());
-		double result(0);
-		for (size_t i=0;i<Dimension();++i)
-		{
-			result+=_r[i]*val[i];
-		}
-		return result;
+		return _imp->Dot(val._imp);
 	}
 
 	Vector& Math::Vector::operator=( const Vector& vec )
 	{
-		assert_same_int(_d,vec.Dimension());
-		_r=vec._r;
-		// 			_r.clear();
-		// 			_r.reserve(_d);
-		// 			for (size_t i=0;i<vec.Dimension();++i)
-		// 			{
-		// 				_r.push_back(vec[i]);
-		// 			}
+		_imp = ConstructVectorImp(vec);
 		return *this;
 	}
 
-	double& Vector::operator[](unsigned int i)
+	float& Vector::operator[](unsigned int i)
 	{
-		assert_less(i,_d);
-		assert_less_equal(0,i);
-		return _r.at(i);
+		return _imp->Get_ithValRef(i);
+	}
+
+	VectorImp* Vector::ConstructVectorImp(Vector vec)
+	{
+		VectorImp* imp = new VectorEigen(vec.Dimension());
+
+		for (unsigned int i = 0; i < vec.Dimension(); ++i)
+		{
+			imp->Set_ithVal(i, vec.Get_ithVal(i));
+		}
+
+		return imp;
 	}
 
 	Vector Vector::Normalized() const
 	{
-		vector<double> vec(_r);
-		double norm=Norm();
-		for (unsigned int i=0;i<vec.size();++i)
-		{
-			vec[i]/=norm;
-		}
-		return Vector(vec);
+		VectorImp* imp= _imp->Normalized();
+		Vector res(imp);
+		return res;
 	}
 
 	const double Vector::operator[](unsigned int i) const
 	{
-		assert_less(i,_d);
-		assert_less_equal(0,i);
-		return _r.at(i);
+		return _imp->Get_ithVal(i);
 	}
 
 	void Vector::Normalize()
 	{
-		double norm=Norm();
-		for (unsigned int i=0;i<_d;++i)
-		{
-			_r[i]/=norm;
-		}
+		_imp->Normalize();
 	}
 
 	bool Vector::Same( const Vector& v ,const double tol) const
 	{
-		if(v._d!=_d)
-		{
-			return false;
-		}
-
-		for (unsigned int i=0;i<_d;++i)
-		{
-			if(DoubleCompare(_r[i],v._r[i],tol)!=0)
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return _imp->Same(v._imp, tol);
 	}
 
 	Vector& Vector::operator+=( const Vector& right )
@@ -156,7 +132,8 @@ namespace Math
 
 		for (unsigned int i=0;i<Dimension();++i)
 		{
-			_r[i]+=right.Get_ithVal(i);
+			double old = _imp->Get_ithVal(i);
+			_imp->Set_ithVal(i, old + right.Get_ithVal(i));
 		}
 
 		return *this;
@@ -164,16 +141,8 @@ namespace Math
 
 	Math::Vector Vector::Negate() const
 	{
-		Vector res(Dimension());
-		for (unsigned int i=0;i<Dimension();++i)
-		{
-			res[i]=-_r[i];
-		}
-
-		return res;
+		return _imp->Negate();
 	}
-
-
 
 	Vector operator+(const Vector& left,const Vector& right) 
 	{
