@@ -32,4 +32,17 @@ namespace CommonTool
 
 		int DoubleCompare( double left,double right,double tol=1e-6 ) const;
 	};
+
+	template<class CheckType,class InputType>
+	bool IsType(InputType* ptr)
+	{
+		if (typeid(*ptr) == typeid(CheckType))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

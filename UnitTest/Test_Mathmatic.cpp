@@ -102,6 +102,50 @@ TEST(Test_Matrix,Multiply3)
 	ASSERT_TRUE(res.Same(expect, 1e-4));
 }
 
+TEST(Test_Matrix, VecMultiplyMatrix)
+{
+	Matrix mat1(2, 3);
+	double m1r1[] = { 1,2,3 };
+	double m1r2[] = { 4,5,6 };
+	int rowLength = 3;
+	mat1.Set_ithRow(0, m1r1, rowLength);
+	mat1.Set_ithRow(1, m1r2, rowLength);
+
+	Vector vec(2);
+	vec.Set_ithVal(0, 1);
+	vec.Set_ithVal(1, 2);
+
+	Vector res = vec*mat1;
+	Vector expect(3);
+	expect.Set_ithVal(0,9);
+	expect.Set_ithVal(1, 12);
+	expect.Set_ithVal(2, 15);
+
+	ASSERT_TRUE(res.Same(expect, 1e-4));
+}
+
+TEST(Test_Matrix, MatrixMultiplyVec)
+{
+	Matrix mat1(2, 3);
+	double m1r1[] = { 1,2,3 };
+	double m1r2[] = { 4,5,6 };
+	int rowLength = 3;
+	mat1.Set_ithRow(0, m1r1, rowLength);
+	mat1.Set_ithRow(1, m1r2, rowLength);
+
+	Vector vec(3);
+	vec.Set_ithVal(0, 1);
+	vec.Set_ithVal(1, 2);
+	vec.Set_ithVal(2, 3);
+
+	Vector res = mat1*vec;
+	Vector expect(2);
+	expect.Set_ithVal(0, 14);
+	expect.Set_ithVal(1, 32);
+
+	ASSERT_TRUE(res.Same(expect, 1e-4));
+}
+
 TEST(Test_SubSequence,FindLongestCommonSubsequence)
 {
 	int a[9]={1,2,6,3,7,8,9,3,2};

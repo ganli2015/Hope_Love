@@ -12,6 +12,8 @@ namespace Math
 	class _MATHMATICINOUT Vector : public Obj<Vector>
 	{
 		VectorImp *_imp;
+
+		friend class Matrix;
 	public:
 		Vector(const unsigned int d);
 
@@ -45,6 +47,8 @@ namespace Math
 		bool Same(const Vector& v ,const double tol=1e-6) const ;
 
 		Vector Negate() const ;
+
+		Vector Multiply(const Matrix& mat) const;
 
 		float& operator[]( unsigned int i);
 

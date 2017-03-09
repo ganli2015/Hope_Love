@@ -8,14 +8,17 @@ using namespace std::tr1;
 
 namespace Math
 {
+	class MatrixImp;
 
 	class VectorEigen : public VectorImp
 	{
 		Eigen::VectorXf _vec;
+
+		friend class MatrixEigen;
 	public:
 		VectorEigen(const unsigned int d);
 
-		~VectorEigen(void);
+		virtual ~VectorEigen(void);
 
 		VectorEigen(std::vector<double> r);
 
@@ -36,6 +39,8 @@ namespace Math
 		virtual void Normalize() ;
 
 		virtual VectorImp* Negate() const;
+
+		virtual VectorImp* Multiply(const MatrixImp* mat) const;
 
 	private:
 		VectorEigen(Eigen::VectorXf vec);

@@ -155,6 +155,8 @@
     <ClInclude Include="iMatrix.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="MathTool.h" />
+    <ClInclude Include="MatrixEigen.h" />
+    <ClInclude Include="MatrixImp.h" />
     <ClInclude Include="MyInt.h" />
     <ClInclude Include="Rand.h" />
     <ClInclude Include="resource.h" />
@@ -167,6 +169,8 @@
     <ClCompile Include="FindSequence.cpp" />
     <ClCompile Include="iMatrix.cpp" />
     <ClCompile Include="MathTool.cpp" />
+    <ClCompile Include="MatrixEigen.cpp" />
+    <ClCompile Include="MatrixImp.cpp" />
     <ClCompile Include="MyInt.cpp" />
     <ClCompile Include="Rand.cpp" />
     <ClCompile Include="Stdafx.cpp">

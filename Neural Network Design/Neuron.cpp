@@ -116,7 +116,7 @@ namespace NeuralNetwork
 	{
 		assert(_transferfun!=NULL);
 
-		vector<double> vec(val->GetVector());
+		vector<double> vec=val->GetVector();
 		std::vector<double> newvec(_j);
 		for (int n=0;n<_j;++n)
 		{

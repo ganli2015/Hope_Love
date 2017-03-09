@@ -26,7 +26,7 @@ namespace NeuralNetwork
 		_vec=data._vec;
 	}
 
-	const std::vector<double>& DataArray::GetVector() const 
+	const std::vector<double> DataArray::GetVector() const 
 	{
 		return _vec->GetVector();
 	}

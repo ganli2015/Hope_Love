@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "Vector.h"
 #include "VectorEigen.h"
+#include "iMatrix.h"
+
 
 namespace Math
 {
@@ -144,9 +146,16 @@ namespace Math
 		return _imp->Negate();
 	}
 
+
+	Math::Vector Vector::Multiply(const Matrix& mat) const
+	{
+		auto res=_imp->Multiply(mat._imp);
+		return res;
+	}
+
 	Vector operator+(const Vector& left,const Vector& right) 
 	{
-		assert_same_int(left.Dimension(),right.Dimension());
+		assert_same_int(left.Dimension(), right.Dimension());
 		int n=left.Dimension();
 		vector<double> newvec;
 		newvec.reserve(n);

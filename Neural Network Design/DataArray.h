@@ -41,7 +41,7 @@ namespace NeuralNetwork
 
 		const Math::Vector GetArray() const {return *_vec;}
 
-		const std::vector<double>& GetVector() const ;
+		const std::vector<double> GetVector() const ;
 
 		double Norm();
 

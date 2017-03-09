@@ -4,12 +4,13 @@
 namespace Math
 {
 	class Vector;
+	class MatrixImp;
 
 	class VectorImp
 	{
 	public:
 		VectorImp();
-		~VectorImp();
+		virtual ~VectorImp();
 
 	public:
 		virtual std::vector<double> GetVector() const =0;
@@ -38,6 +39,9 @@ namespace Math
 		virtual double Angle(const VectorImp* vec);
 
 		virtual bool IsOrthogonoality(const VectorImp* vec, double tol = 1e-6);
+
+		virtual VectorImp* Multiply(const MatrixImp* mat) const =0;
+
 	};
 }
 

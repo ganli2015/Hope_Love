@@ -17,12 +17,13 @@ namespace Math
 		}
 	};
 
+	class MatrixImp;
  
 	class _MATHMATICINOUT Matrix : public Obj<Matrix>
 	{
-		std::vector<Vector> _m;
-		const int _i;
-		const int _j; //Two dimensions,both count from 1,i rows,j column
+		MatrixImp* _imp;
+
+		friend class Vector;
 	public:
 		//////////////////////////////////////////////////////////////////////////
 		///Create a matrix with i rows and j columns.
@@ -73,6 +74,11 @@ namespace Math
 		_MATHMATICINOUT friend Matrix operator*(const Matrix& left,const double& right);
 
 		_MATHMATICINOUT friend Matrix operator*(const Matrix& left,const Matrix& right);
+
+	private:
+
+		Matrix(MatrixImp* imp);
+		MatrixImp* ConstructMat(const Matrix& mat) const;
 	};
 
 	_MATHMATICINOUT Vector  operator*(const Matrix& mat,const Vector& vec);

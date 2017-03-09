@@ -1,94 +1,68 @@
 #include "StdAfx.h"
 #include "iMatrix.h"
 
+#include "MatrixEigen.h"
+#include "Vector.h"
+
 namespace Math
 {
-	Math::Matrix::Matrix( const int i, const int j ) :_i(i),_j(j)
+	Math::Matrix::Matrix( const int i, const int j ) :_imp(new MatrixEigen(i,j))
 	{
-		_m.assign(j,Vector(i));
 	}
 
-	Math::Matrix::Matrix( const std::vector<std::vector<double>> val ) :_i(val[0].size()),_j(val.size())
+	Math::Matrix::Matrix( const std::vector<std::vector<double>> val ):_imp(new MatrixEigen(val))
 	{
-		assert(val.size()==_j);
-		_m.clear();
-		for (std::vector<std::vector<double>>::const_iterator it=val.begin();it!=val.end();++it)
-		{
-			assert(it->size()==_i);
-			Vector vec(*it);
-			_m.push_back(vec);
-		}
+
 	}
 
-	Math::Matrix::Matrix( const std::vector<Vector>& val ) :_i(val[0].Dimension()),_j(val.size())
+	Math::Matrix::Matrix( const std::vector<Vector>& val ) :_imp(new MatrixEigen(val))
 	{
-		for (unsigned int i=0;i<val.size();++i)
-		{
-			assert(val[i].Dimension()==_i);
-		}
-		_m=val;
+
 	}
 
-	Math::Matrix::Matrix( const Matrix& mat ) :_i(mat.Rows()),_j(mat.Columns())
+	Math::Matrix::Matrix( const Matrix& mat )
 	{
-		_m=mat._m;
+		_imp = ConstructMat(mat);
 	}
 
 	Math::Matrix::~Matrix( void )
 	{
-
+		delete _imp;
 	}
 
 	Math::Vector Math::Matrix::nthColumn( unsigned int col ) const
 	{
-		assert(col<=_m.size() && col>=0);return _m[col];
+		return _imp->nthColumn(col);
 	}
 
 	Math::Vector Math::Matrix::nthRow( unsigned int row ) const
 	{
-		std::vector<double> rowvec(_j);
-		transform(_m.begin(),_m.end(),rowvec.begin(),get_nthElemOfVector(row));
-		return Vector(rowvec);
+		return _imp->nthRow(row);
 	}
 
 	void Math::Matrix::SetElem( int row,int col,double val )
 	{
-		assert(row<=_i&&col<=_j);
-		Vector vec=nthColumn(col);
-		vec.Set_ithVal(row,val);
-		_m[col]=vec;
+		_imp->SetElem(row, col, val);
 	}
 
 	double Math::Matrix::GetElem( int row,int col ) const
 	{
-		return nthColumn(col)[row];
+		return _imp->GetElem(row, col);
 	}
 
 	void Math::Matrix::Set_jthColumn( int n, Vector vec )
 	{
-		assert(n<_j);_m[n]=vec;
+		_imp->Set_jthColumn(n, vec._imp);
 	}
 
 	Math::Vector Math::Matrix::Multiply( const Vector& right ) const
 	{
-		assert(right.Dimension()==_j);
-		Vector result(_i);
-		for (int t=0;t<_i;++t)
-		{
-			result.Set_ithVal(t,nthRow(t)*right);
-		}
-		return result;
+		return _imp->Multiply(right._imp);
 	}
 
 	Matrix& Math::Matrix::operator=( const Matrix& mat )
 	{
-		assert(mat.Columns()==_j && mat.Rows()==_i);
-		_m.clear();
-		for (int t=0;t<_j;++t)
-		{
-			Vector tmpvec=mat.nthColumn(t);
-			_m.push_back( tmpvec );
-		}
+		_imp = ConstructMat(mat);
 		return *this;
 	}
 
@@ -100,41 +74,22 @@ namespace Math
 	Vector  operator*(const Vector& vec,const Matrix& mat)
 	{
 		assert(vec.Dimension()==mat.Rows());
-		int j=mat.Columns();
-		Vector result(j);
-		for (int t=0;t<j;++t)
-		{
-			result.Set_ithVal(t,mat.nthColumn(t)*vec);
-		}
-		return result;
+		return vec.Multiply(mat);
 	}
 
 	bool Matrix::Same( const Matrix& mat,const double tol/*=1e-6*/ ) const
 	{
-		if(_i!=mat._i || _j!=mat._j)
-		{
-			return false;
-		}
-
-		for (unsigned int i=0;i<_m.size();++i)
-		{
-			if(!_m[i].Same(mat._m[i],tol))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return _imp->Same(mat._imp, tol);
 	}
 
 	unsigned int Matrix::Columns() const
 	{
-		return (size_t)_j;
+		return _imp->Columns();
 	}
 
 	unsigned int Matrix::Rows() const
 	{
-		return (size_t)_i;
+		return _imp->Rows();
 	}
 
 	Matrix operator+( const Matrix& left,const Matrix& right )
@@ -167,55 +122,48 @@ namespace Math
 		return *this;
 	}
 
-	Matrix Matrix::Negate() const
+	Matrix::Matrix(MatrixImp* imp):_imp(imp)
 	{
-		Matrix res(Rows(),Columns());
 
-		for (unsigned int i=0;i<Columns();++i)
+	}
+
+	MatrixImp* Matrix::ConstructMat(const Matrix& mat) const
+	{
+		MatrixEigen* res = new MatrixEigen(mat.Rows(), mat.Columns());
+		for (unsigned int i = 0; i < mat.Rows(); ++i)
 		{
-			res.Set_jthColumn(i,_m[i].Negate());
+			for (unsigned int j = 0; j < mat.Columns(); ++j)
+			{
+				res->SetElem(i, j, mat.GetElem(i, j));
+			}
 		}
 
 		return res;
+	}
+
+	Matrix Matrix::Negate() const
+	{
+		return _imp->Negate();
 	}
 
 	void Matrix::Set_jthColumn( int n, const double val[],const int length )
 	{
-		Vector vec(Tovector(val,length));
-		this->Set_jthColumn(n,vec);
+		_imp->Set_jthColumn(n, val, length);
 	}
 
 	void Matrix::Set_ithRow( int n, Vector vec )
 	{
-		for (unsigned int i=0;i<vec.Dimension();++i)
-		{
-			this->SetElem(n,i,vec[i]);
-		}
+		_imp->Set_ithRow(n, vec._imp);
 	}
 
 	void Matrix::Set_ithRow( int n, const double val[] ,const int length)
 	{
-		vector<double> vec=Tovector(val,length);
-		for (unsigned int i=0;i<vec.size();++i)
-		{
-			this->SetElem(n,i,vec[i]);
-		}
+		_imp->Set_ithRow(n, val, length);
 	}
 
 	Matrix operator*( const Matrix& left,const Matrix& right )
 	{
-		Matrix res(left.Rows(),right.Columns());
-		for (unsigned int i=0;i<left.Rows();++i)
-		{
-			for (unsigned int j=0;j<right.Columns();++j)
-			{
-				Vector row=left.nthRow(i);
-				double elem=row*right.nthColumn(j);
-				res.SetElem(i,j,elem);
-			}		
-		}
-
-		return res;
+		return left._imp->Multiply(right._imp);
 	}
 
 	Matrix operator*( const Matrix& left,const double& right )

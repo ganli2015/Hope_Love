@@ -47,6 +47,12 @@
     <ClInclude Include="VectorImp.h">
       <Filter>imp</Filter>
     </ClInclude>
+    <ClInclude Include="MatrixImp.h">
+      <Filter>imp</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixEigen.h">
+      <Filter>imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -74,6 +80,12 @@
       <Filter>imp</Filter>
     </ClCompile>
     <ClCompile Include="VectorImp.cpp">
+      <Filter>imp</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixImp.cpp">
+      <Filter>imp</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixEigen.cpp">
       <Filter>imp</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,7 +22,7 @@ namespace NeuralNetwork
 
 		virtual const Math::Vector GetArray() const =0;
 
-		virtual const std::vector<double>& GetVector() const =0;
+		virtual const std::vector<double> GetVector() const =0;
 
 		virtual double Norm()=0;
 
