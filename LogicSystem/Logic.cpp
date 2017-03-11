@@ -86,8 +86,6 @@ namespace LogicSystem
 
 	vector<shared_ptr<iDeduceResult>> Logic::FinalDeduce( const shared_ptr<iExpression> condition ) const
 	{
-		CREATELOG("FinalDeduce");
-
 		vector<shared_ptr<iDeduceResult>> res;
 		shared_ptr<iConceptInteractTable> conditionTable=condition->GetProtoInteractTable();
 		LOG_DESC("conditionTable:",conditionTable);

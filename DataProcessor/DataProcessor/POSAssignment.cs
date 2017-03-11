@@ -15,7 +15,7 @@ namespace DataProcessor
         const string appDataDir = @"..\..\..\..\HopeLove\bin\Debug\HopeLoveData\";
         const string mindDataDir = @"..\..\..\..\Mind\HopeLoveData\";
 
-        
+        double maxIDF=14;
 
         /// <summary>
         /// Mapping from some string letters to POS. Used for reading "ChineseDict.txt"
@@ -30,9 +30,18 @@ namespace DataProcessor
         public void AssignPOSofCommonWords()
         {
             var commonWords = ReadCommonWords();
+            Console.WriteLine("Common words count: " + commonWords.Count);
             var ChineseDict = ReadChineseDict();
             var wordPOS = GeneratePOSDict(commonWords, ChineseDict);
             OutputPOSDict(wordPOS);
+        }
+
+        /// <summary>
+        /// Only words with IDF less then <maxIDF> will be generated.
+        /// </summary>
+        public void SetMaxIDFOfCommonWords(double maxIDF)
+        {
+            this.maxIDF = maxIDF;
         }
 
         public void GenerateLargeVocabulary()
@@ -80,7 +89,20 @@ namespace DataProcessor
             while(!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
-                res.Add(line.Split(' ')[0]);
+                var split = line.Split(' ');
+
+                double idf;
+                if (split[1] == "")
+                {
+                    idf = Convert.ToDouble(split[2]);
+                }
+                else
+                    idf = Convert.ToDouble(split[1]);
+
+                if(idf<maxIDF)
+                {
+                     res.Add(split[0]);
+                }
             }
 
             return res;

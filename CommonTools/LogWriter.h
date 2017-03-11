@@ -4,16 +4,23 @@
 #include <list>
 #include <time.h>
 
+namespace log4cpp
+{
+	class Category;
+}
+
 namespace CommonTool
 {
 	///Write log file.
 	class _COMMONTOOLSINOUT LogWriter
 	{
 	private:
-		const static string _defaultLogFilename;
-
 		///The default time when pushing enter key.
 		static double _startTime;
+
+		static LogWriter* _instance;
+
+		log4cpp::Category* _root;
 
 	private:
 		///The current log file.
@@ -25,8 +32,7 @@ namespace CommonTool
 		public:
 			void operator()(const T& obj)
 			{
-				_currentLog<<obj.GetString()<<"		"<<GetDuration()<<endl;
-				cout << obj.GetString() << "		" << GetDuration() << endl;
+				LogWriter::GetInstance()->Info(obj.GetString());
 			}
 		};
 
@@ -36,13 +42,12 @@ namespace CommonTool
 		public:
 			void operator()(const T& obj)
 			{
-				_currentLog<<obj->GetString()<<"		"<<GetDuration()<<endl;
-				cout << obj->GetString() << "		" << GetDuration() << endl;
+				LogWriter::GetInstance()->Info(obj->GetString());
 			}
 		};
 
 	public:
-		LogWriter(const string filename);
+		static LogWriter* GetInstance();
 		~LogWriter(void);
 
 		///General
@@ -57,8 +62,7 @@ namespace CommonTool
 		template<> 
 		static void Output(const string str)
 		{
-			_currentLog<<str<<"		"<<GetDuration()<<endl;
-			cout << str << "		" << GetDuration() << endl;
+			LogWriter::GetInstance()->Info(str);
 		}
 
 		///For const char
@@ -115,6 +119,22 @@ namespace CommonTool
 
 	private:
 
+		//////////////////////////////////////////////////////////////////////////
+		//Create default LogWriter.
+		//////////////////////////////////////////////////////////////////////////
+		LogWriter();
+
+		void Initialize();
+
+		void Debug(const string str);
+		void Warn(const string str);
+		void Error(const string str);
+		void Info(const string str);
+		void DebugFormat(const char* str,...);
+		void WarnFormat(const char* str, ...);
+		void ErrorFormat(const char* str, ...);
+		void InfoFormat(const char* str, ...);
+
 		static double GetDuration() ;
 	};
 
@@ -169,7 +189,7 @@ namespace CommonTool
 
 #define LOG_IF_FORMAT(condition,format,var) if(condition) CommonTool::LogWriter::OutFormat(format,var)
 
-#define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
+//#define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
 
 ///Create a section and record the time consuming of it.
 #define SECTION_TIME(tag) CommonTool::CodeSection tag##CodeSection(#tag)

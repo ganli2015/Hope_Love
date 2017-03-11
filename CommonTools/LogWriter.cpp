@@ -1,30 +1,98 @@
 #include "StdAfx.h"
 #include "LogWriter.h"
 
+#include "log4cpp/Category.hh"
+#include "log4cpp/Appender.hh"
+#include "log4cpp/FileAppender.hh"
+#include "log4cpp/OstreamAppender.hh"
+#include "log4cpp/Layout.hh"
+#include "log4cpp/BasicLayout.hh"
+#include "log4cpp/Priority.hh"
+#include <log4cpp/PatternLayout.hh>
 
 namespace CommonTool
 {
-	const string LogWriter::_defaultLogFilename("Log\\DefaultLog.log");
-
-	std::ofstream LogWriter::_currentLog(LogWriter::_defaultLogFilename);
-
 	double LogWriter::_startTime=(double)clock()/CLOCKS_PER_SEC;
+	LogWriter* LogWriter::_instance = NULL;
 
-	LogWriter::LogWriter(const string filename)
+	LogWriter::LogWriter()
 	{
-		_currentLog.close();
-		_currentLog.open("Log\\"+filename+".log");
+		Initialize();
+	}
+
+	LogWriter* LogWriter::GetInstance()
+	{
+		if (_instance == NULL)
+		{
+			_instance = new LogWriter();
+		}
+
+		return _instance;
 	}
 
 	LogWriter::~LogWriter(void)
 	{
-		_currentLog.close();
-		_currentLog.open(_defaultLogFilename,ios::app);
 	}
 
 	void LogWriter::ResetStartTime()
 	{
 		_startTime=clock()/CLOCKS_PER_SEC;
+	}
+
+	void LogWriter::Initialize()
+	{
+		//Initialize me with log4cpp.Referenced from http://log4cpp.sourceforge.net.
+		log4cpp::Appender *appender1 = new log4cpp::OstreamAppender("console", &std::cout);
+		appender1->setLayout(new log4cpp::BasicLayout());
+
+		log4cpp::Appender *appender2 = new log4cpp::FileAppender("default", "Log\\loginfo.log");
+		auto fileLayout = new log4cpp::PatternLayout();
+		fileLayout->setConversionPattern("%d [%p] %m%n");
+		appender2->setLayout(fileLayout);
+
+		_root = &log4cpp::Category::getRoot();
+		_root->setPriority(log4cpp::Priority::DEBUG);
+		_root->addAppender(appender1);
+		_root->addAppender(appender2);
+	}
+
+	void LogWriter::Debug(const string str)
+	{
+		_root->debug(str);
+	}
+
+	void LogWriter::Warn(const string str)
+	{
+		_root->warn(str);
+	}
+
+	void LogWriter::Error(const string str)
+	{
+		_root->error(str);
+	}
+
+	void LogWriter::Info(const string str)
+	{
+		_root->info(str);
+	}
+
+	void LogWriter::DebugFormat(const char* str, ...)
+	{
+		
+	}
+	void LogWriter::WarnFormat(const char* str, ...)
+	{
+
+	}
+
+	void LogWriter::ErrorFormat(const char* str, ...)
+	{
+
+	}
+
+	void LogWriter::InfoFormat(const char* str, ...)
+	{
+
 	}
 
 	double LogWriter::GetDuration()
