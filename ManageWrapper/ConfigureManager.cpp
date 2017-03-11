@@ -20,6 +20,7 @@ namespace ManageWrapper
 
 	void ConfigureManager::Configure()
 	{
+		LOG("--------------------------Start-----------------------");
 		///ConfigureInfoManager
 		shared_ptr<CommonTool::ConfigureInfoManager> cfgInfo=CommonTool::ConfigureInfoManager::GetInstance();
 		cfgInfo->UpdateConfigure();

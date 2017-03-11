@@ -10,6 +10,8 @@
 #include "log4cpp/Priority.hh"
 #include <log4cpp/PatternLayout.hh>
 
+#include "StackWalker.h"
+
 namespace CommonTool
 {
 	double LogWriter::_startTime=(double)clock()/CLOCKS_PER_SEC;
@@ -34,6 +36,15 @@ namespace CommonTool
 	{
 	}
 
+	void LogWriter::OutputException(const exception& ex)
+	{
+		StackWalker sw;
+		string meesage = ex.what();
+		meesage += "\n";
+		meesage += sw.ShowCallstack();
+		Log(meesage,CommonTool::Error);
+	}
+
 	void LogWriter::ResetStartTime()
 	{
 		_startTime=clock()/CLOCKS_PER_SEC;
@@ -54,6 +65,27 @@ namespace CommonTool
 		_root->setPriority(log4cpp::Priority::DEBUG);
 		_root->addAppender(appender1);
 		_root->addAppender(appender2);
+	}
+
+	void LogWriter::Log(string str, LogLevel level)
+	{
+		switch (level)
+		{
+		case CommonTool::Debug:
+			LogWriter::GetInstance()->Debug(str);
+			break;
+		case CommonTool::Information:
+			LogWriter::GetInstance()->Info(str);
+			break;
+		case CommonTool::Warn:
+			LogWriter::GetInstance()->Warn(str);
+			break;
+		case CommonTool::Error:
+			LogWriter::GetInstance()->Error(str);
+			break;
+		default:
+			break;
+		}
 	}
 
 	void LogWriter::Debug(const string str)

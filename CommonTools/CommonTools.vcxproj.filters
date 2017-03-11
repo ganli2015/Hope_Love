@@ -50,6 +50,9 @@
     <ClInclude Include="MyException.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -85,5 +88,11 @@
     <ClCompile Include="MyException.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CommonTools.vcxproj.user" />
   </ItemGroup>
 </Project>

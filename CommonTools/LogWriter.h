@@ -11,6 +11,14 @@ namespace log4cpp
 
 namespace CommonTool
 {
+	enum LogLevel
+	{
+		Debug,
+		Information,
+		Warn,
+		Error
+	};
+
 	///Write log file.
 	class _COMMONTOOLSINOUT LogWriter
 	{
@@ -29,20 +37,26 @@ namespace CommonTool
 		template<class T>
 		class OutputObjectVal
 		{
+			LogLevel _level;
+
 		public:
+			OutputObjectVal(LogLevel val):_level(val){}
+
 			void operator()(const T& obj)
 			{
-				LogWriter::GetInstance()->Info(obj.GetString());
+				LogWriter::GetInstance()->Log(obj.GetString(), _level);
 			}
 		};
 
 		template<class T>
 		class OutputObjectPointer
 		{
+			LogLevel _level;
 		public:
+			OutputObjectPointer(LogLevel val) :_level(val) {}
 			void operator()(const T& obj)
 			{
-				LogWriter::GetInstance()->Info(obj->GetString());
+				LogWriter::GetInstance()->Log(obj->GetString(),_level);
 			}
 		};
 
@@ -52,54 +66,58 @@ namespace CommonTool
 
 		///General
 		template<class T> 
-		static void Output(const T object)
+		static void Output(const T object,LogLevel level)
 		{
-			OutputObjectVal<T> output;
+			OutputObjectVal<T> output(level);
 			output(object);
 		}
 
 		///For string
 		template<> 
-		static void Output(const string str)
+		static void Output(const string str, LogLevel level)
 		{
-			LogWriter::GetInstance()->Info(str);
+			LogWriter::GetInstance()->Log(str,level);
 		}
 
 		///For const char
 		template<> 
-		static void Output(const char* str)
+		static void Output(const char* str, LogLevel level)
 		{
 			string chStr(str);
-			Output(chStr);
+			Output(chStr,level);
 		}
 
 		///For shared_ptr
 		template<class T> 
-		static void Output(const shared_ptr<T> object)
+		static void Output(const shared_ptr<T> object, LogLevel level)
 		{
-			OutputObjectPointer<shared_ptr<T>> output;
+			OutputObjectPointer<shared_ptr<T>> output(level);
 			output(object);
 		}
 
 		///For vector
 		template<class T> 
-		static void Output(const vector<T> objects)
+		static void Output(const vector<T> objects, LogLevel level)
 		{
-			for_each(object.begin(),object.end(),OutputObjectVal<T>());
+			OutputObjectVal<T> output(level);
+
+			for_each(object.begin(),object.end(), output);
 		}
 
 		///For list shared_ptr
 		template<class T> 
-		static void Output(const list<shared_ptr<T>> objects)
+		static void Output(const list<shared_ptr<T>> objects, LogLevel level)
 		{
-			for_each(objects.begin(),objects.end(),OutputObjectPointer<shared_ptr<T>>());
+			OutputObjectPointer<shared_ptr<T>> output(level);
+			for_each(objects.begin(), objects.end(), output);
 		}
 
 		///For vector shared_ptr
 		template<class T> 
-		static void Output(const vector<shared_ptr<T>> objects)
+		static void Output(const vector<shared_ptr<T>> objects, LogLevel level)
 		{
-			for_each(objects.begin(),objects.end(),OutputObjectPointer<shared_ptr<T>>());
+			OutputObjectPointer<shared_ptr<T>> output(level);
+			for_each(objects.begin(), objects.end(), output);
 		}
 
 		///Output with format.
@@ -109,11 +127,13 @@ namespace CommonTool
 			int bufferSize = 255;
 			char* ch = new char[bufferSize];
 			sprintf_s(ch, bufferSize, format, var1);
-			Output(string(ch));
+			Output(string(ch),CommonTool::Information);
 
 			delete ch;
 		}
 
+
+		static void OutputException(const exception& ex);
 
 		static void ResetStartTime();
 
@@ -125,6 +145,8 @@ namespace CommonTool
 		LogWriter();
 
 		void Initialize();
+
+		static void Log(string str, LogLevel level);
 
 		void Debug(const string str);
 		void Warn(const string str);
@@ -176,18 +198,34 @@ namespace CommonTool
 
 #ifdef _USE_LOG
 
+/************************************************************************/
+/* Log information                                                                     */
+
 ///Output object.<Object> must have a method of GetString().
-#define LOG(object) CommonTool::LogWriter::Output(object) 
+#define LOG(object) CommonTool::LogWriter::Output(object,CommonTool::Information) 
 
 #define LOG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,var) 
 
 ///Write information of object as well as its description.
-#define LOG_DESC(desc,object) CommonTool::LogWriter::Output(desc);CommonTool::LogWriter::Output(object);
+#define LOG_DESC(desc,object) CommonTool::LogWriter::Output(desc,CommonTool::Information);CommonTool::LogWriter::Output(object,CommonTool::Information);
 
 //Log under some condition.
-#define LOG_IF(condition,object) if(condition) CommonTool::LogWriter::Output(object)
+#define LOG_IF(condition,object) if(condition) CommonTool::LogWriter::Output(object,CommonTool::Information)
 
 #define LOG_IF_FORMAT(condition,format,var) if(condition) CommonTool::LogWriter::OutFormat(format,var)
+
+/************************************************************************/
+//Log Debug
+
+#define DEBUGLOG(object) CommonTool::LogWriter::Output(object,CommonTool::Debug) 
+
+#define DEBUG_DESC(desc,object) CommonTool::LogWriter::Output(desc,CommonTool::Debug);CommonTool::LogWriter::Output(object,CommonTool::Debug);
+
+#define DEBUG_IF(condition,desc,object) if(condition) {DEBUG_DESC(desc,object);}
+
+/************************************************************************/
+
+#define LOG_EXCEPTION(ex) CommonTool::LogWriter::OutputException(ex);
 
 //#define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
 

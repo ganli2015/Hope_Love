@@ -37,6 +37,8 @@ namespace Mind
 		///Check whether <me> is a sub sequence (not necessary continuous) of <parentChain>.
 		//////////////////////////////////////////////////////////////////////////
 		virtual bool IsSubSequenceOf(const shared_ptr<iConceptChain> parentChain) const =0;
+
+		virtual string GetString() const;
 	};
 
 	struct ConceptChainProperty

@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/LogWriter.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
@@ -54,6 +55,7 @@ namespace Mind
 				shared_ptr<BaseConcept> base=dynamic_pointer_cast<BaseConcept>(conceptSequence[i]);
 				if(base==NULL)
 				{
+					LOG_DESC("Some concept is not a base concept in this chain.", chain);
 					throw runtime_error("Error in ToDataArray");
 				}
 

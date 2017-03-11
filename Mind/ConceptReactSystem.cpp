@@ -135,10 +135,16 @@ namespace Mind
 		}
 
 		LOG("Begin train reaction network.");
-		Train(dataInfos);
-		LOG("Finish train reaction network.");
-
-		_network->Write(GetHopeLoveMindPath() + ConceptReactorNetworkFilename);
+		try
+		{
+			Train(dataInfos);
+			LOG("Finish train reaction network.");
+			_network->Write(GetHopeLoveMindPath() + ConceptReactorNetworkFilename);
+		}
+		catch (const std::exception& ex)
+		{
+			LOG_EXCEPTION(ex);
+		}
 	}
 
 	shared_ptr<ConceptChain> ConceptReactSystem::ParseChain(const string str) const
@@ -157,6 +163,8 @@ namespace Mind
 			}
 
 			shared_ptr<iConcept> concept = _conceptSet->GetConceptPtr(CommonFunction::TransformToIdentity(split[0], split[1]));
+			DEBUG_IF(concept == NULL, "Fail to get concept.", split[1]);
+
 			conceptVec.push_back(concept);
 		}
 
