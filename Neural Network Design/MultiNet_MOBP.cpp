@@ -7,8 +7,6 @@
 #include "../Mathmatic/Vector.h"
 #include "../Mathmatic/MathTool.h"
 
-#define _Output_Network_Obj
-
 using namespace Math;
 
 namespace NeuralNetwork
@@ -67,10 +65,7 @@ namespace NeuralNetwork
 		_prevDeltaBias=filteredDeltaBias;
 		myTrain.AdjustNeuron(filteredDeltaMat,filteredDeltaBias);
 		
-#ifdef _Output_Network_Obj
 		OutputDebugInfo();
-#endif // _DEBUG
-		
 	}
 
 	void MultiNet_MOBP::ComputeNeuronCorrection(const vector<shared_ptr<Network::MyData>> mydata,

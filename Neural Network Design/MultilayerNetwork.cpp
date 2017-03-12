@@ -29,6 +29,9 @@ namespace NeuralNetwork
 
 	TrainResult MultilayerNetwork::Training()
 	{
+		LOG_FORMAT("Max iteration count is %d.", _maxiter);
+		LOG_FORMAT("Training implementation is %s.", typeid(*_trainImp.get()).name());
+
 		TrainResult result=Success;
 
 		int iteration(0);//max iteration number
@@ -55,7 +58,8 @@ namespace NeuralNetwork
 				break;
 			}
 
-			LOG_IF_FORMAT(iteration % 10 == 0, "Iteration count is %d" , iteration);
+			LOG_IF_FORMAT(iteration % 5 == 0, "Iteration count is %d" , iteration);
+			DEBUG_FORMAT("The count of objects is %d.", MyObject::GetObjectCount());
 		} while (mytrain.NeuronChanged());//If the neuron is changed after one iteration, process the proto patterns again to make sure that all errors are zero!
 
 		_curInteationCount=iteration;

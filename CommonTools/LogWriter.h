@@ -122,14 +122,14 @@ namespace CommonTool
 
 		///Output with format.
 		template<class T>
-		static void OutFormat(const char *format,T var1)
+		static void OutFormat(const char *format,const LogLevel level, T var1)
 		{
 			int bufferSize = 255;
 			char* ch = new char[bufferSize];
 			sprintf_s(ch, bufferSize, format, var1);
-			Output(string(ch),CommonTool::Information);
+			Output(string(ch), level);
 
-			delete ch;
+			delete[] ch;
 		}
 
 
@@ -204,24 +204,26 @@ namespace CommonTool
 ///Output object.<Object> must have a method of GetString().
 #define LOG(object) CommonTool::LogWriter::Output(object,CommonTool::Information) 
 
-#define LOG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,var) 
+#define LOG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Information,var) 
 
 ///Write information of object as well as its description.
-#define LOG_DESC(desc,object) CommonTool::LogWriter::Output(desc,CommonTool::Information);CommonTool::LogWriter::Output(object,CommonTool::Information);
+#define LOG_DESC(desc,object) LOG(desc);LOG(object)
 
 //Log under some condition.
-#define LOG_IF(condition,object) if(condition) CommonTool::LogWriter::Output(object,CommonTool::Information)
+#define LOG_IF(condition,object) if(condition) LOG(object)
 
-#define LOG_IF_FORMAT(condition,format,var) if(condition) CommonTool::LogWriter::OutFormat(format,var)
+#define LOG_IF_FORMAT(condition,format,var) if(condition) {LOG_FORMAT(format,var);}
 
 /************************************************************************/
 //Log Debug
 
 #define DEBUGLOG(object) CommonTool::LogWriter::Output(object,CommonTool::Debug) 
 
-#define DEBUG_DESC(desc,object) CommonTool::LogWriter::Output(desc,CommonTool::Debug);CommonTool::LogWriter::Output(object,CommonTool::Debug);
+#define DEBUG_DESC(desc,object) DEBUGLOG(desc);DEBUGLOG(object)
 
 #define DEBUG_IF(condition,desc,object) if(condition) {DEBUG_DESC(desc,object);}
+
+#define DEBUG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Debug,var) 
 
 /************************************************************************/
 

@@ -6,9 +6,7 @@
 #include <stdlib.h>  
 #include <fstream>
 
-#ifdef _DEBUG
-//#define _RECORD_OBJECTS
-#endif // _DEBUG
+#define _RECORD_OBJECTS
 
 ///MyObject contains information of total objects.
 class _COMMONTOOLSINOUT MyObject
@@ -53,7 +51,7 @@ public:
 
 ///An Object contains type information.
 template<class T>
-class Obj : private MyObject
+class Obj : public MyObject
 {
 public:
 
@@ -67,11 +65,11 @@ void Obj<T>::operator delete( void* p )
 {
 #ifdef _RECORD_OBJECTS
 
-	vector<MyObjectInfo>::iterator it=find_if(objectsVec.begin(),objectsVec.end(),SamePointer(p));
-	objectsVec.erase(it);
+// 	vector<MyObjectInfo>::iterator it=find_if(objectsVec.begin(),objectsVec.end(),SamePointer(p));
+// 	objectsVec.erase(it);
 
 	MyObject::count--;
-	out<<MyObject::count<<" "<<typeid(T).name()<<"-"<<endl;
+//	out<<MyObject::count<<" "<<typeid(T).name()<<"-"<<endl;
 #endif // _DEBUG
 
 	free(p);
@@ -84,12 +82,12 @@ void* Obj<T>::operator new( size_t size )
 
 #ifdef _RECORD_OBJECTS
 	MyObject::count++;
-	MyObjectInfo info;
-	info.pointer=reinterpret_cast<MyObject*>(p);
-	info.classname=typeid(T).name();
-
-	objectsVec.push_back(info);
-	out<<MyObject::count<<" "<<info.classname<<"+"<<endl;
+// 	MyObjectInfo info;
+// 	info.pointer=reinterpret_cast<MyObject*>(p);
+// 	info.classname=typeid(T).name();
+// 
+// 	objectsVec.push_back(info);
+// 	out<<MyObject::count<<" "<<info.classname<<"+"<<endl;
 #endif // _DEBUG
 
 	return p;

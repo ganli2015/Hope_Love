@@ -1101,8 +1101,14 @@ std::string StackWalker::ShowCallstack(HANDLE hThread, const CONTEXT *context, P
     this->OnCallstackEntry(et, csEntry);
 
 	//test
-	if (frameNum!=0)
-		result += std::string(csEntry.lineFileName) + "  " + csEntry.undFullName + "\n";
+	if (frameNum != 0 && csEntry.lineFileName!="(filename not available)")
+	{
+		char buffer[1024];
+		sprintf_s(buffer, "%s  %d  %s\n", csEntry.lineFileName, csEntry.lineNumber, csEntry.undFullName);
+		std::string line(buffer);
+		if(line.find("filename not available")==std::string::npos)
+			result += line;
+	}
     
     if (s.AddrReturn.Offset == 0)
     {

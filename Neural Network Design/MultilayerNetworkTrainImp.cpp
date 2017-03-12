@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "MultilayerNetworkTrainImp.h"
 
+#include "../CommonTools/LogWriter.h"
+
 #include <fstream>
 
 namespace NeuralNetwork
@@ -16,7 +18,7 @@ namespace NeuralNetwork
 
 	void MultilayerNetworkTrainImp::OutputDebugInfo() 
 	{
-		_out<<_obj<<endl;
+		DEBUG_FORMAT("The object function value is %f", _obj);
 	}
 
 }
