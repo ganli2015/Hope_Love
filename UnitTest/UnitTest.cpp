@@ -13,6 +13,7 @@ using namespace std;
 #include "UTInitializer.h"
 #include "IntegrationTest.h"
 
+#include "../Mind/FilePath.h"
 
 class MyGlobal: public testing::Environment
 {
@@ -40,7 +41,7 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-//	RunFilter("Test_Matrix*");
+	RunFilter("Test_iRelation*");
 
 #ifdef _RUN_INTEGRATION_TEST
 

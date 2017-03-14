@@ -8,11 +8,13 @@
 #include "../LogicSystem/LogicKnowledge.h"
 
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/MemoryDetector.h"
 
 #include <Windows.h>
 
 using namespace Mind;
 using namespace LogicSystem;
+using namespace CommonTool;
 
 TEST(MemoryLeak,ConceptSet)
 {
@@ -65,4 +67,32 @@ TEST(Test_CommonStringFunction,TrimBeginEndBlank)
 	CommonTool::TrimBeginEndBlank(origin);
 
 	ASSERT_EQ("°¡°¡°¡",origin);
+}
+
+TEST(Test_MemoryDetector, Snapshot)
+{
+	//Detect a pointer which is not deleted.
+	MemoryDetector detector;
+	detector.Snapshot();
+	//create a pointer.
+	int* ptr = new int(10);
+
+	detector.Snapshot();
+	ASSERT_FALSE(detector.UnchangedSnapshot());
+
+	delete ptr;
+}
+
+TEST(Test_MemoryDetector, Snapshot2)
+{
+	//Detect a pointer which is deleted.
+	MemoryDetector detector;
+	detector.Snapshot();
+	//create a pointer.
+	int* ptr = new int(10);
+	delete ptr;
+
+	detector.Snapshot();
+	ASSERT_FALSE(detector.UnchangedSnapshot());
+
 }

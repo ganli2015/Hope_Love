@@ -51,11 +51,11 @@ TEST_F(Test_iRelation,GetString1)
 	MemoryChecker mc;
 
 	Test_iRelation::ClearArbNum();
-	shared_ptr<iRelationNode> node=iRelationSample::RelationSample1();
+	shared_ptr<iRelationNode> node = iRelationSample::RelationSample1();
 
-	string result=node->GetString();
-	string expect="(S0->大,大->于,于->S1)&&(S1->大,大->于,于->S2)";
-	ASSERT_EQ(result,expect);
+	string result = node->GetString();
+	string expect = "(S0->大,大->于,于->S1)&&(S1->大,大->于,于->S2)";
+	ASSERT_EQ(result, expect);
 }
 
 TEST_F(Test_iRelation,GetString2)

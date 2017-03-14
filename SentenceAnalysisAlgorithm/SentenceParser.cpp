@@ -49,9 +49,7 @@ void SentenceParser::Execute()
 	_conceptTable->Absorb(baseConceptTable);
 	LOG("WordRelationTableBuilder");
 
-#ifdef _COUT_DEBUG_INFO //≤‚ ‘WordRelationTableBuilder
 	Cout_WordRelations();
-#endif
 }
 
 void SentenceParser::Cout_WordRelations()
@@ -59,10 +57,6 @@ void SentenceParser::Cout_WordRelations()
 	Mind::iCerebrum* brain=Mind::iCerebrum::Instance();
 	vector<pair<shared_ptr<Mind::iConcept>,shared_ptr<Mind::iConcept>>> relations=_conceptTable->GetAllRelations();
 
-	cout<<"Test Word Relations"<<endl;
-
+	DEBUGLOG("Test Word Relations");
 	CommonFunction::OutputConceptPairs(relations,cout);
-
-	cout<<endl;
-	
 }

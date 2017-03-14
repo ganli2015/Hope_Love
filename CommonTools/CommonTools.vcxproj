@@ -153,6 +153,7 @@
     <ClInclude Include="InOut.h" />
     <ClInclude Include="IOFunction.h" />
     <ClInclude Include="LogWriter.h" />
+    <ClInclude Include="MemoryDetector.h" />
     <ClInclude Include="MyException.h" />
     <ClInclude Include="MyObject.h" />
     <ClInclude Include="StackWalker.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="ConfigureInfoManager.cpp" />
     <ClCompile Include="IOFunction.cpp" />
     <ClCompile Include="LogWriter.cpp" />
+    <ClCompile Include="MemoryDetector.cpp" />
     <ClCompile Include="MyException.cpp" />
     <ClCompile Include="MyObject.cpp" />
     <ClCompile Include="StackWalker.cpp" />

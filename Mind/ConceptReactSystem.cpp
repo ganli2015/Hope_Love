@@ -106,6 +106,8 @@ namespace Mind
 		}
 		else
 		{
+			LOG("The dimention of network in the file are not equal to count of base concepts.");
+			LOG_FORMAT("The count of base concepts is %d", baseConceptCount);
 			return false;
 		}
 	}
@@ -139,12 +141,14 @@ namespace Mind
 		{
 			Train(dataInfos);
 			LOG("Finish train reaction network.");
-			_network->Write(GetHopeLoveMindPath() + ConceptReactorNetworkFilename);
 		}
 		catch (const std::exception& ex)
 		{
 			LOG_EXCEPTION(ex);
 		}
+
+		_network->Write(GetHopeLoveMindPath() + ConceptReactorNetworkFilename);
+
 	}
 
 	shared_ptr<ConceptChain> ConceptReactSystem::ParseChain(const string str) const

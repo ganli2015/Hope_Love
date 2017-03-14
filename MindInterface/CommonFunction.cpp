@@ -12,6 +12,7 @@
 #include "../DataCollection/Word.h"
 
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/LogWriter.h"
 
 using namespace DataCollection;
 
@@ -120,7 +121,15 @@ namespace Mind
 			out<<endl;
 		}
 
-		bool SameConcept::operator()( const shared_ptr<iConcept> val )
+		void _MINDINTERFACEINOUT LogConcepts(const vector<shared_ptr<iConcept>>& vec)
+		{
+			for (unsigned int j = 0; j < vec.size(); ++j)
+			{
+				DEBUGLOG(vec[j]);
+			}
+		}
+
+		bool SameConcept::operator()(const shared_ptr<iConcept> val)
 		{
 			if(val->Same(_me))
 			{

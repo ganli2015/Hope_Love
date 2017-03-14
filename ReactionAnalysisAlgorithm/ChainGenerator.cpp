@@ -32,10 +32,8 @@ void ChainGenerator::Generate(const shared_ptr<Mind::iConceptInteractTable> inte
 	vector<shared_ptr<iConceptChain>> allChains=ExtractConceptChains::Extract(allPairs);
 	CommonFunction::RemoveSameChain(allChains);
 
-#ifdef _COUT_DEBUG_INFO
 	CheckDuplicatedConceptInChains(allChains);
 	//DisplayChains(allChains);
-#endif // _DEBUG
 
 	_reactChains=ChainReact(allChains);
 }

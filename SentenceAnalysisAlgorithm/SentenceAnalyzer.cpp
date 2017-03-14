@@ -15,6 +15,7 @@
 #include "../MindElement/Concept.h"
 
 #include "../CommonTools/LogWriter.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 #include <iostream>
 
@@ -62,20 +63,16 @@ void SentenceAnalyzer::Analyze()
 	grammarAnalyzer.Analyze();
 	LOG("GrammarAnalyzer");
 
-#ifdef _COUT_DEBUG_INFO //≤‚ ‘GrammarAnalyzer
-		cout<<"The raw sentence is "<<LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence())<<endl;
-		Cout_GrammardSentence(sentence);
-#endif // _DEBUG
+	DEBUG_DESC("The raw sentence is ", LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence()));
+	Cout_GrammardSentence(sentence);
 
 	//Compute the relationship between words in the sentence.
 	StructureAnalyzer structureAnalyzer(sentence);
 	structureAnalyzer.Analyze();
 	LOG("StructureAnalyzer");
 
-#ifdef _COUT_DEBUG_INFO //≤‚ ‘StructureAnalyzer
-		cout<<"The raw sentence is "<<LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence())<<endl;
-		Cout_WordConnectionIntensity(sentence);
-#endif
+	DEBUG_DESC("The raw sentence is ", LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence()));
+	Cout_WordConnectionIntensity(sentence);
 
 	//Count unknown words.
 	_unknownWords=CountUnknownWords(sentence);
@@ -86,31 +83,25 @@ void SentenceAnalyzer::Analyze()
 void SentenceAnalyzer::Cout_GrammardSentence(const shared_ptr<Sentence> grammard)
 {
 	vector<shared_ptr<Word>> instance=grammard->GetGrammard();
-	cout<<"Grammar "<<":"<<endl;
+	DEBUGLOG("Grammar :");
 
 	for(unsigned int j=0;j<instance.size();++j)
 	{
 		shared_ptr<Word> word=instance[j];
-		cout<<word->GetString()<<" :"<<word->Type()<<endl;
+		DEBUGLOG(word->GetString() + " :" + CommonTool::ToString(word->Type()));
 	}
-	
-	cout<<endl;
-
 }
 
 void SentenceAnalyzer::Cout_WordConnectionIntensity( const shared_ptr<DataCollection::Sentence> sentence )
 {
-		int wordCount=sentence->GrammarWordCount();
-		for (int j=0;j<wordCount;++j)
+	int wordCount = sentence->GrammarWordCount();
+	for (int j = 0; j < wordCount; ++j)
+	{
+		for (int k = 0; k < wordCount; ++k)
 		{
-			for (int k=0;k<wordCount;++k)
-			{
-				cout<<sentence->GetWordIntensity(j,k)<<" ";
-			}
-			cout<<endl;
+			//DEBUGLOG(sentence->GetWordIntensity(j, k));
 		}
-
-	cout<<endl;
+	}
 }
 
 vector<shared_ptr<DataCollection::Word>> SentenceAnalyzer::CountUnknownWords( const shared_ptr<Sentence>& sentences ) const

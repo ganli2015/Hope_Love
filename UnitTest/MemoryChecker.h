@@ -5,12 +5,14 @@
 #define MEMOCHECK MemoryChecker mc(__FUNCTION__)
 #define RELEASE_MEMOCHECK mc.~MemoryChecker()
 
+namespace CommonTool
+{
+	class MemoryDetector;
+}
+
 class MemoryChecker
 {
-	int _startObjCount;
-	std::string _functionName;
-
-	static std::ofstream out;
+	CommonTool::MemoryDetector* _detector;
 public:
 	MemoryChecker(void);
 	MemoryChecker(const std::string function);
