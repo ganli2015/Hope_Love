@@ -91,8 +91,9 @@ TEST(Test_MemoryDetector, Snapshot2)
 	//create a pointer.
 	int* ptr = new int(10);
 	delete ptr;
+	ptr = NULL;
 
 	detector.Snapshot();
-	ASSERT_FALSE(detector.UnchangedSnapshot());
+	ASSERT_TRUE(detector.UnchangedSnapshot());
 
 }

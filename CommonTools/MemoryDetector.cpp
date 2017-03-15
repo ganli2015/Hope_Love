@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "MemoryDetector.h"
 
-#define _CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
+
 
 namespace CommonTool
 {
@@ -20,28 +18,22 @@ namespace CommonTool
 	{
 		_CrtMemState tmp;
 		_CrtMemCheckpoint(&tmp);
-		_stateVec.push_back(tmp);
+		
+
+		_s1 = _s2;
+		_s2 = tmp;
 	}
 
 	bool MemoryDetector::UnchangedSnapshot() const
 	{
-		if (_stateVec.size() < 2)
+		_CrtMemState diff;
+		if (_CrtMemDifference(&diff, &_s1, &_s2))
 		{
 			return false;
 		}
 		else
 		{
-			auto lastState = _stateVec.back();
-			auto lastSecondState = _stateVec[_stateVec.size() - 2];
-			_CrtMemState diff;
-			if (_CrtMemDifference(&diff, &lastState, &lastSecondState))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 

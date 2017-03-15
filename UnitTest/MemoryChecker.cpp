@@ -25,7 +25,6 @@ MemoryChecker::~MemoryChecker(void)
 	_detector->Snapshot();
 	if (!_detector->UnchangedSnapshot())
 	{
-		//throw runtime_error("Memory leak!!");
 		cout << "Memory leak!!" << endl;
 	}
 	delete _detector;

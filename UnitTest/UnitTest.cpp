@@ -15,6 +15,8 @@ using namespace std;
 
 #include "../Mind/FilePath.h"
 
+#include "../CommonTools/MemoryDetector.h"
+
 class MyGlobal: public testing::Environment
 {
 	int _startObjCount;
@@ -41,7 +43,7 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-	RunFilter("Test_iRelation*");
+	RunFilter("Test_iRelation.RelationLeafSatisfy");
 
 #ifdef _RUN_INTEGRATION_TEST
 
@@ -50,9 +52,12 @@ void RunUnitTest(int argc, _TCHAR* argv[])
 #endif // !_RUN_INTEGRATION_TEST
 
 	testing::InitGoogleTest(&argc, argv);
-	MEMOCHECK;
+
+	CommonTool::MemoryDetector md;
+	md.Snapshot();
 	RUN_ALL_TESTS();
-	RELEASE_MEMOCHECK;
+	md.Snapshot();
+	cout << md.UnchangedSnapshot() << endl;
 
 }
 

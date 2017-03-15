@@ -1,13 +1,17 @@
 #pragma once
 #include "InOut.h"
 
-struct _CrtMemState;
+#define _CRTDBG_MAP_ALLOC  
+#include <stdlib.h>  
+#include <crtdbg.h>  
+
 
 namespace CommonTool
 {
 	class _COMMONTOOLSINOUT MemoryDetector
 	{
-		vector<_CrtMemState> _stateVec;
+		_CrtMemState _s1;
+		_CrtMemState _s2;
 
 	public:
 		MemoryDetector();

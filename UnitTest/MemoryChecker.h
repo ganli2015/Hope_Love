@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 
+#include "PublicHeader.h"
+
 #define MEMOCHECK MemoryChecker mc(__FUNCTION__)
 #define RELEASE_MEMOCHECK mc.~MemoryChecker()
 

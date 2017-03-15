@@ -104,22 +104,23 @@ TEST_F(Test_iRelation,RelationLeafSatisfy)
 {
 	MemoryChecker mc;
 
-	//InterTableSatisfyRelation
-	shared_ptr<iConcept> san=_conceptCreator->Create("三");
-	shared_ptr<iConcept> da=_conceptCreator->Create("大");
-	shared_ptr<iConcept> yu=_conceptCreator->Create("于");
-	shared_ptr<iConcept> er=_conceptCreator->Create("二");
+	{
+		//InterTableSatisfyRelation
+		shared_ptr<iConcept> san = _conceptCreator->Create("三");
+		shared_ptr<iConcept> da = _conceptCreator->Create("大");
+		shared_ptr<iConcept> yu = _conceptCreator->Create("于");
+		shared_ptr<iConcept> er = _conceptCreator->Create("二");
 
-	string leafStr="三-大,大-于,于-二";
-	shared_ptr<RelationLeaf> leaf1=LeafCreator::SimpleCreate(leafStr);
+		string leafStr = "三-大,大-于,于-二";
+		shared_ptr<RelationLeaf> leaf1 = LeafCreator::SimpleCreate(leafStr);
 
-	shared_ptr<iConceptInteractTable> interTable=iMindElementCreator::CreateConceptInteractTable();
-	interTable->Add(san,da);
-	interTable->Add(da,yu);
-	interTable->Add(yu,er);
+		shared_ptr<iConceptInteractTable> interTable = iMindElementCreator::CreateConceptInteractTable();
+		interTable->Add(san, da);
+		interTable->Add(da, yu);
+		interTable->Add(yu, er);
 
-	ASSERT_TRUE(InterTableSatisfyRelation(leaf1,interTable));
-
+		ASSERT_TRUE(InterTableSatisfyRelation(leaf1, interTable));
+	}
 }
 
 TEST_F(Test_iRelation,RelationLeafSatisfy2)
