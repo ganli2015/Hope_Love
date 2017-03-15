@@ -46,8 +46,11 @@ private:
 	vector<shared_ptr<Mind::iConceptChain>> ComputeProperCombination(const vector<shared_ptr<Mind::iConcept>>& combination,const shared_ptr<Mind::iConceptChain> baseChain) const;
 	///From the <startIndex>th concept of <checkChain> compute the longest continuous chain which is a sub chain of <testChain>.
 	int OverlappedCount(const int startIndex,const vector<shared_ptr<Mind::iConcept>>& checkChain,const vector<shared_ptr<Mind::iConcept>>& testChain) const;
+	
 	///Check whether base concepts of <hyperChain> cover concepts in <baseChain>.
 	bool CoverBase(const vector<shared_ptr<Mind::iConcept>>& hyperChain,const shared_ptr<Mind::iConceptChain>& baseChain) const;
+	bool OneConceptCoverBase(const shared_ptr<Mind::iConcept> hyperChain, const shared_ptr<Mind::iConceptChain>& baseChain) const;
+
 	///Compute levels from <hyperchains> to <baseChain>.
 	///Each level is recorded in <levels>.
 	void ComputeHyperChainLevels(const vector<shared_ptr<Mind::iConceptChain>>& hyperChains,const shared_ptr<Mind::iConceptChain> baseChain,vector<double>& levels) const;

@@ -6,6 +6,8 @@
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
 
+#include "../CommonTools/LogWriter.h"
+
 using namespace DataCollection;
 using namespace std;
 namespace Mind
@@ -276,7 +278,7 @@ namespace Mind
 
 	bool Concept::Same( const shared_ptr<iConcept> concept ) const
 	{
-		if(_identity.str==concept->GetString() && _identity.id==concept->GetId())
+		if (_identity.str == concept->GetString() && _identity.id == concept->GetId())
 		{
 			return true;
 		}
@@ -371,6 +373,20 @@ namespace Mind
 		for (unsigned int i=0;i<_forward.size();++i)
 		{
 			if(_forward[i]->MatchWithConceptTable(description,toConcept))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool Concept::IsBaseOf(const shared_ptr<iConcept> concept) const
+	{
+		auto bases = concept->GetBase();
+		for (unsigned int i=0;i<bases.size();++i)
+		{
+			if (Same(bases[i]))
 			{
 				return true;
 			}

@@ -11,6 +11,7 @@
 #include "../Mathmatic/iMatrix.h"
 
 #include "../CommonTools/LogWriter.h"
+#include "../CommonTools/MemoryDetector.h"
 
 namespace NeuralNetwork
 {
@@ -46,6 +47,8 @@ namespace NeuralNetwork
 			{
 				if(ErrorConverge(prev_errors,cur_errors,_tol))
 				{
+					//Errors are not changed any more which means
+					//we can hardly make errors approach zero and we stop iteration.
 					result=DeviationConverge;
 					break;
 				}

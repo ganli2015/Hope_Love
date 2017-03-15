@@ -82,6 +82,8 @@ namespace Mind
 		virtual bool MatchWithDescription(const shared_ptr<iConceptInteractTable> description) const ;
 		virtual bool MatchWithDescription(const shared_ptr<iConceptInteractTable> description,shared_ptr<iConcept>& toConcept) const ;
 
+		virtual bool IsBaseOf(const shared_ptr<iConcept> concept) const ;
+
 	private:
 		shared_ptr<DataCollection::Word> GetParticularWord(DataCollection::PartOfSpeech partofspeech) const;
 		void Recursive_GetBase(const iConcept* concept,vector<shared_ptr<iConcept>>& result) const;

@@ -4,8 +4,12 @@
 
 #include "PublicHeader.h"
 
+#ifdef _DEBUG
+#define MEMOCHECK
+#else
 #define MEMOCHECK MemoryChecker mc(__FUNCTION__)
-#define RELEASE_MEMOCHECK mc.~MemoryChecker()
+#endif // _DEBUG
+
 
 namespace CommonTool
 {

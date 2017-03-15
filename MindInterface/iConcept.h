@@ -102,6 +102,11 @@ namespace Mind
 		///Only if <description> and modification are totally the same, then return true.
 		///Return the first matched <toConcept>.
 		virtual bool MatchWithDescription(const shared_ptr<iConceptInteractTable> description,shared_ptr<iConcept>& toConcept) const =0;
+
+		//////////////////////////////////////////////////////////////////////////
+		///Check if <me> is a base concept of <concept>.
+		//////////////////////////////////////////////////////////////////////////
+		virtual bool IsBaseOf(const shared_ptr<iConcept> concept) const = 0;
 protected:
 	};
 }

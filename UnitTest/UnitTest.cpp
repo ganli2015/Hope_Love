@@ -43,7 +43,7 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-	RunFilter("Test_iRelation.RelationLeafSatisfy");
+	RunFilter("Test_MemoryDetector.*");
 
 #ifdef _RUN_INTEGRATION_TEST
 
@@ -53,12 +53,8 @@ void RunUnitTest(int argc, _TCHAR* argv[])
 
 	testing::InitGoogleTest(&argc, argv);
 
-	CommonTool::MemoryDetector md;
-	md.Snapshot();
+	MEMOCHECK;
 	RUN_ALL_TESTS();
-	md.Snapshot();
-	cout << md.UnchangedSnapshot() << endl;
-
 }
 
 //#define _RUN_PERFORMANCE

@@ -4,6 +4,8 @@
 #include <list>
 #include <time.h>
 
+#include "CommonStringFunction.h"
+
 namespace log4cpp
 {
 	class Category;
@@ -85,6 +87,22 @@ namespace CommonTool
 		{
 			string chStr(str);
 			Output(chStr,level);
+		}
+
+		///For int
+		template<>
+		static void Output(const int val, LogLevel level)
+		{
+			auto str=ToString(val);
+			_instance->Log(str, level);
+		}
+
+		///For double
+		template<>
+		static void Output(const double val, LogLevel level)
+		{
+			auto str = ToString(val);
+			_instance->Log(str, level);
 		}
 
 		///For shared_ptr

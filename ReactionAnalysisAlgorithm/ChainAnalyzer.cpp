@@ -97,8 +97,6 @@ vector<shared_ptr<iConceptChain>> ChainAnalyzer::ComputeProperCombination( const
 	//All sub sequences of combinations are taken into consideration
 	//as sub sequences may be enough and proper to express a complete sentence if they cover the base chain. 
 	vector<vector<shared_ptr<iConcept>>> subSequences=GetAllSubSequence<shared_ptr<iConcept>>::Get(combination);
-	DEBUG_FORMAT("subSequences size: %d", subSequences.size());
-	DEBUG_FORMAT("combination size: %d", combination.size());
 	for (unsigned int i = 0; i < subSequences.size(); ++i)
 	{
 		if(CoverBase(subSequences[i],baseChain))
@@ -112,6 +110,13 @@ vector<shared_ptr<iConceptChain>> ChainAnalyzer::ComputeProperCombination( const
 
 bool ChainAnalyzer::CoverBase(const vector<shared_ptr<iConcept>>& hyperChain,const shared_ptr<iConceptChain>& baseChain) const
 {
+	if (hyperChain.size() == 1)
+	{
+		//Handle the case that there is only on concept in the <hyperChain>.
+		//In this case, we cannot compute interaction in the <hyperChain>.
+		return OneConceptCoverBase(hyperChain[0], baseChain);
+	}
+	
 	typedef pair<shared_ptr<Mind::iConcept>,shared_ptr<Mind::iConcept>> ConceptPair;
 
 	//Compute interactions of adjacent concepts in <hyperChain>.
@@ -146,7 +151,25 @@ bool ChainAnalyzer::CoverBase(const vector<shared_ptr<iConcept>>& hyperChain,con
 	return false;
 }
 
-int ChainAnalyzer::OverlappedCount( const int startIndex,const vector<shared_ptr<iConcept>>& checkChain,const vector<shared_ptr<iConcept>>& testChain ) const
+bool ChainAnalyzer::OneConceptCoverBase(const shared_ptr<Mind::iConcept> hyperChain,
+	const shared_ptr<Mind::iConceptChain>& baseChain) const
+{
+	DEBUGLOG("Only one concept in hyperChain.");
+	//Only if all of concepts in <baseChain> are base of <hyperChain>, return true.
+
+	auto baseChainConceptVec = baseChain->GetConceptVec();
+	for (unsigned int i=0;i<baseChainConceptVec.size();++i)
+	{
+		if (!baseChainConceptVec[i]->IsBaseOf(hyperChain))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+int ChainAnalyzer::OverlappedCount(const int startIndex, const vector<shared_ptr<iConcept>>& checkChain, const vector<shared_ptr<iConcept>>& testChain) const
 {
 	int count=0;
 	for (unsigned int i=startIndex;i<checkChain.size();++i)

@@ -69,31 +69,31 @@ TEST(Test_CommonStringFunction,TrimBeginEndBlank)
 	ASSERT_EQ("°¡°¡°¡",origin);
 }
 
-TEST(Test_MemoryDetector, Snapshot)
-{
-	//Detect a pointer which is not deleted.
-	MemoryDetector detector;
-	detector.Snapshot();
-	//create a pointer.
-	int* ptr = new int(10);
-
-	detector.Snapshot();
-	ASSERT_FALSE(detector.UnchangedSnapshot());
-
-	delete ptr;
-}
-
-TEST(Test_MemoryDetector, Snapshot2)
-{
-	//Detect a pointer which is deleted.
-	MemoryDetector detector;
-	detector.Snapshot();
-	//create a pointer.
-	int* ptr = new int(10);
-	delete ptr;
-	ptr = NULL;
-
-	detector.Snapshot();
-	ASSERT_TRUE(detector.UnchangedSnapshot());
-
-}
+// TEST(Test_MemoryDetector, Snapshot)
+// {
+// 	//Detect a pointer which is not deleted.
+// 	MemoryDetector detector;
+// 	detector.Snapshot();
+// 	//create a pointer.
+// 	int* ptr = new int(10);
+// 
+// 	detector.Snapshot();
+// 	ASSERT_FALSE(detector.UnchangedSnapshot())<<detector.PrintDiff();
+// 
+// 	delete ptr;
+// }
+// 
+// TEST(Test_MemoryDetector, Snapshot2)
+// {
+// 	//Detect a pointer which is deleted.
+// 	MemoryDetector detector;
+// 	detector.Snapshot();
+// 	//create a pointer.
+// 	int* ptr = new int(10);
+// 	delete ptr;
+// 	ptr = NULL;
+// 
+// 	detector.Snapshot();
+// 	ASSERT_TRUE(detector.UnchangedSnapshot()) << detector.PrintDiff();
+// 
+// }
