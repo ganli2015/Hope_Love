@@ -55,7 +55,7 @@ namespace CommonTool
 
 	void MemoryDetector::OutputLatestStat() const
 	{
-		_CrtMemDumpStatistics(_s2);
+		_CrtMemDumpStatistics(&_s2);
 	}
 
 }

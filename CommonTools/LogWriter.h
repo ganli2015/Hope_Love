@@ -150,6 +150,18 @@ namespace CommonTool
 			delete[] ch;
 		}
 
+		///Output with format.
+		template<class T1,class T2>
+		static void OutFormat(const char *format, const LogLevel level, T1 var1, T2 var2)
+		{
+			int bufferSize = 1024;
+			char* ch = new char[bufferSize];
+			sprintf_s(ch, bufferSize, format, var1,var2);
+			Output(string(ch), level);
+
+			delete[] ch;
+		}
+
 
 		static void OutputException(const exception& ex);
 
@@ -224,6 +236,8 @@ namespace CommonTool
 
 #define LOG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Information,var) 
 
+#define LOG_FORMAT2(format,var1,var2) CommonTool::LogWriter::OutFormat(format,CommonTool::Information,var1,var2) 
+
 ///Write information of object as well as its description.
 #define LOG_DESC(desc,object) LOG(desc);LOG(object)
 
@@ -242,6 +256,8 @@ namespace CommonTool
 #define DEBUG_IF(condition,desc,object) if(condition) {DEBUG_DESC(desc,object);}
 
 #define DEBUG_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Debug,var) 
+
+#define DEBUG_FORMAT2(format,var1,var2) CommonTool::LogWriter::OutFormat(format,CommonTool::Debug,var1,var2) 
 
 /************************************************************************/
 

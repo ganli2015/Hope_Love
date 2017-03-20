@@ -3,6 +3,7 @@
 
 #include "../CommonTools/CommonTranslateFunction.h"
 #include "../CommonTools/CommonDeleteFunction.h"
+#include "../CommonTools/LogWriter.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/Sentence.h"
@@ -318,6 +319,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 	//The value equals to sum of frequencies of incorporated grammar patterns as well as local grammar confidence.
 	//It means that the optimal combination must satisfy grammar statistic information.
 	double maxValueFun(-1);
+	map<double, vector<shared_ptr<Word>>, greater<double>> combinationForLog;//Used for log.
 	for (unsigned int i=0;i<combination.size();++i)
 	{
 		GrammarPattern pattern=LanguageFunc::ConvertToPattern(combination[i]);
@@ -329,6 +331,27 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 			maxValueFun=value;
 			optimal=combination[i];
 		}
+
+		combinationForLog[value] = combination[i];
+	}
+
+	//Select five or less combinations for log.
+	vector <vector<shared_ptr<Word>>> mostOptimalCombinations;
+	vector<double> mostOptimalValues;
+	int i = 0;
+	for (map<double, vector<shared_ptr<Word>>, greater<double>>::const_iterator it = combinationForLog.begin();
+		it != combinationForLog.end() && i < 5; ++it, ++i)
+	{
+		mostOptimalCombinations.push_back(it->second);
+		mostOptimalValues.push_back(it->first);
+	}
+	try
+	{
+		LogOptimalCombinations(mostOptimalCombinations, mostOptimalValues);
+	}
+	catch (exception ex)
+	{
+		LOG_EXCEPTION(ex);
 	}
 }
 
@@ -337,9 +360,11 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 {
 	Mind::iCerebrum *brain = Mind::iCerebrum::Instance();
 
-	int uplimitCombination = 1000;
+	unsigned int uplimitCombination = 1000;
 	if (combination.size() > uplimitCombination)
 	{
+		LOG_FORMAT("Combination size is %u which is larger than uplimit.", combination.size());
+		//Compute local possibility of each combination and order from large to small.
 		map<double, int, greater<double>> prob_index;
 		for (unsigned int i = 0; i < combination.size(); ++i)
 		{
@@ -348,8 +373,9 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 			prob_index[value] = i;
 		}
 
+		//Select first 1000 combinations to select optimal one.
 		vector<vector<shared_ptr<DataCollection::Word>>> highProbCombinations(uplimitCombination);
-		int i = 0;
+		unsigned int i = 0;
 		for (map<double, int, greater<double>>::iterator it = prob_index.begin(); i < uplimitCombination; ++it, ++i)
 		{
 			highProbCombinations[i] = combination[it->second];
@@ -358,6 +384,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 	}
 	else
 	{
+		LOG_FORMAT("Combination size is %u.", combination.size());
 		SelectOptimalGrammarPattern(combination, optimal);
 	}
 }
@@ -386,6 +413,7 @@ void GrammarAnalyzer::OptimizePOSofWords()
 		//_raw_sen->AddGrammard(optimal);
 	}
 	
+	DEBUGLOG("Finish analyzing grammar of each segmentation.");
 	//After go through segmented sentences, there are several candidates for final sentence.
 	//And now I continue to select one of them for convenience of following computation.
 	vector<shared_ptr<Word>> mostOptimal;
@@ -404,6 +432,24 @@ vector<WordRep> GrammarAnalyzer::SearchAllWordRep(const vector<shared_ptr<Word>>
 	}
 
 	return segmente_allRep;
+}
+
+void GrammarAnalyzer::LogOptimalCombinations(const vector<vector<shared_ptr<Word>>>& combinations,const vector<double>& values) const
+{
+	DEBUGLOG("***Combinations***");
+	for (unsigned int i=0;i<combinations.size();++i)
+	{
+		auto combi = combinations[i];
+		//Collect word string.
+		string wordStr = "";
+		for (unsigned int j=0;j<combi.size();++j)
+		{
+			wordStr += combi[j]->GetString() + " "+ToString(combi[j]->Type())+" ";
+		}
+
+		DEBUG_FORMAT2("Combination: %s ; Value: %lf.", wordStr.c_str(), values[i]);
+	}
+	DEBUGLOG("***Combinations***");
 }
 
 GrammarAnalyzer::AnalyzeResult GrammarAnalyzer::AnalyzeEachSegmented(const vector<shared_ptr<Word>>& segmented, vector<shared_ptr<Word>> &optimal)

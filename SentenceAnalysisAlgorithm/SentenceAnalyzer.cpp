@@ -45,31 +45,36 @@ void SentenceAnalyzer::Analyze()
 	//Punctuate the sentence into several sub sentence.
 	Punctuator punctuator(_rawSentenceString);
 	shared_ptr<DataCollection::Sentence> sentence(new Sentence(_rawSentenceString));
+
+	LOG("Begin punctuate sentence.");
 	punctuator.Punctuate(sentence);
-	LOG("Punctuator");
+	LOG("Finish punctuate sentence.");
 
 	//Segment the sentence and get all manners of segmented sentences.
 	WordSegmentator wordsegmentor(sentence);
+	LOG("Begin segment sentence.");
 	wordsegmentor.Segment();
 	vector<shared_ptr<SegmentedSentence>> segmented=wordsegmentor.GetAllSegementedSentence();
-	LOG("WordSegmentator");
+	LOG("Finish segment sentence.");
 
 	//Compute the optimal POS of each words in the sentence.
 	GrammarAnalyzer grammarAnalyzer(sentence);
-	for (unsigned int i=0;i<segmented.size();++i)
+	LOG("Begin analyze grammar of sentence.");
+	for (unsigned int i = 0; i < segmented.size(); ++i)
 	{
 		grammarAnalyzer.AddSegment(segmented[i]);
 	}
 	grammarAnalyzer.Analyze();
-	LOG("GrammarAnalyzer");
+	LOG("Finish analyze grammar of sentence.");
 
 	DEBUG_DESC("The raw sentence is ", LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence()));
 	Cout_GrammardSentence(sentence);
 
 	//Compute the relationship between words in the sentence.
 	StructureAnalyzer structureAnalyzer(sentence);
+	LOG("Begin analyze structure of sentence.");
 	structureAnalyzer.Analyze();
-	LOG("StructureAnalyzer");
+	LOG("Finish analyze structure of sentence.");
 
 	DEBUG_DESC("The raw sentence is ", LanguageFunc::ConvertCharacterToString(sentence->GetRawSentence()));
 	Cout_WordConnectionIntensity(sentence);

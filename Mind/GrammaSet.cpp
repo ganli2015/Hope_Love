@@ -494,6 +494,7 @@ namespace Mind
 		MyInt totalFreq = GetTotalFrequency();
 		double localP = ComputeP_GrammarLocalAnalysis(pattern);
 		double patternP = ComputePossibilityGrammarPattern(pattern, totalFreq);
+		//DEBUG_FORMAT2("Local grammar possibility is %.10lf.Grammar pattern possibility is %.10lf.", localP, patternP);
 		double res = _wPattern*patternP + _wLocal*localP;
 		
 		//Adjust the possibility such that it is in the interval of 0 to 1.

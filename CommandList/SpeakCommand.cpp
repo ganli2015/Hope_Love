@@ -43,6 +43,8 @@ void SpeakCommand::Update()
 	shared_ptr<DataCollection::Sentence> reactSentence=reaction->GetReactSentence();
 	if(reactSentence==NULL)
 	{
+		//Add nothing to output when we have no react sentence.
+		_datawrapper->AddOutputSentence("");
 		return;
 	}
 	string reactStr=reactSentence->GetString();

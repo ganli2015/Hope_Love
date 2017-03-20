@@ -104,7 +104,7 @@ namespace Mind
 		virtual vector<shared_ptr<iConcept>> FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description) const = 0;
 		//////////////////////////////////////////////////////////////////////////
 		///Find a concept which has the same meaning with the concept pairs in  <description>.
-		///Output information fo matched concept.
+		///Output information of matched concept.
 		//////////////////////////////////////////////////////////////////////////
 		virtual void FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description, vector<DescMatchedConceptInfo>& matchedInfos) const = 0;
 
