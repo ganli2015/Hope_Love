@@ -160,6 +160,8 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="GrammaPattern.h" />
     <ClInclude Include="GrammardSentence.h" />
+    <ClInclude Include="GrammarFeature.h" />
+    <ClInclude Include="GrammarFeatureTemplate.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="Punctuations.h" />
     <ClInclude Include="Sentence.h" />
@@ -172,6 +174,8 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="GrammaPattern.cpp" />
     <ClCompile Include="GrammardSentence.cpp" />
+    <ClCompile Include="GrammarFeature.cpp" />
+    <ClCompile Include="GrammarFeatureTemplate.cpp" />
     <ClCompile Include="Punctuations.cpp" />
     <ClCompile Include="Sentence.cpp" />
     <ClCompile Include="Stdafx.cpp">

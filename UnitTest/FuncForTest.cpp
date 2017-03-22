@@ -18,6 +18,7 @@
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/GrammaPattern.h"
+#include "../DataCollection/LanguageFunc.h"
 
 #include "../CommonTools/MyObject.h"
 
@@ -28,7 +29,12 @@ using namespace LogicSystem;
 namespace FuncForTest
 {
 
-	shared_ptr<iConcept> SimpleConcept( const string str )
+	shared_ptr<Word> ToWord(const string str, const PartOfSpeech pos)
+	{
+		return LanguageFunc::GetParticularWord(str, pos);
+	}
+
+	shared_ptr<iConcept> SimpleConcept(const string str)
 	{
 		shared_ptr<Word> w(new Word(str));
 		shared_ptr<iConcept> res=iMindElementCreator::CreateConcept(w); 

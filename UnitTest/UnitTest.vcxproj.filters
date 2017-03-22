@@ -30,6 +30,9 @@
     <Filter Include="CommonTool">
       <UniqueIdentifier>{d78b37a9-8617-42ca-88b0-cc23b8e919aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataCollection">
+      <UniqueIdentifier>{7bb132c4-b054-444e-a31f-ffe63c548f3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -92,6 +95,9 @@
     <ClInclude Include="IntegrationTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Test_GrammarFeature.h">
+      <Filter>DataCollection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -150,6 +156,9 @@
     </ClCompile>
     <ClCompile Include="IntegrationTest.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_GrammarFeature.cpp">
+      <Filter>DataCollection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

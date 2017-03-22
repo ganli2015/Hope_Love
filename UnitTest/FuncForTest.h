@@ -8,6 +8,12 @@ namespace Mind
 	class iConceptInteractTable;
 }
 
+namespace DataCollection
+{
+	class Word;
+	enum PartOfSpeech;
+}
+
 namespace LogicSystem
 {
 	class iReduceResult;
@@ -32,6 +38,8 @@ protected:
 namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
+
+	shared_ptr<DataCollection::Word> ToWord(const string str, const DataCollection::PartOfSpeech pos);
 
 	shared_ptr<Mind::iConcept> SimpleConcept(const string str);
 
