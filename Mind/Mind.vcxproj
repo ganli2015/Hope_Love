@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -86,6 +88,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,9 +117,11 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -126,7 +132,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\$(Configuration)\"</Command>
@@ -141,9 +147,11 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
