@@ -89,7 +89,7 @@ namespace Mind
 			adjConcepts=concept->GetBackwardConcepts();
 		}
 
-		for (unsigned int i=0;i<adjConcepts.size();++i)
+		for (size_t i=0;i<adjConcepts.size();++i)
 		{
 			//·ÀÖ¹±Õ»·
 			if(adjConcepts[i]->Same(_initialConcept))

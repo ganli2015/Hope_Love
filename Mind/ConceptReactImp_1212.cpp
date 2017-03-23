@@ -36,13 +36,13 @@ namespace Mind
 
 		vector<shared_ptr<iDataArray>> splitArray=ConvertTo1212Sequence(chain,iCerebrum::Instance()->BaseConceptCount());
 		vector<shared_ptr<iDataArray>> outArray;
-		for (unsigned int i=0;i<splitArray.size();++i)
+		for (size_t i=0;i<splitArray.size();++i)
 		{
 			outArray.push_back(_network->GetResult(splitArray[i]));
 		}
 
 		vector<vector<ConceptInfo>> conceptInfoSequence;
-		for (unsigned int i=0;i<outArray.size();++i)
+		for (size_t i=0;i<outArray.size();++i)
 		{
 			vector<vector<ConceptInfo>> tmpInfoSequence=ExtractConceptInfoSequence(outArray[i]);
 			if(tmpInfoSequence.empty()) continue;
@@ -80,7 +80,7 @@ namespace Mind
 		shared_ptr<BaseConcept> firstBase=dynamic_pointer_cast<BaseConcept>(conceptSequence.front());
 		assert(firstBase!=NULL);
 		int prevBaseID=firstBase->GetBaseId();
-		for (unsigned int i=1;i<conceptSequence.size();++i)//Convert each adjacent concepts to a data array with the first one equal to 1 and the next one equal to 2 and other 0.
+		for (size_t i=1;i<conceptSequence.size();++i)//Convert each adjacent concepts to a data array with the first one equal to 1 and the next one equal to 2 and other 0.
 		{
 			shared_ptr<iDataArray> array(new DataArray(arrayDimension));
 
@@ -100,10 +100,10 @@ namespace Mind
 
 	void ConceptReactImp_1212::ResetArrayComponent(vector<vector<ConceptInfo>>& infoSequence)
 	{
-		for (unsigned int i=0;i<infoSequence.size();++i)
+		for (size_t i=0;i<infoSequence.size();++i)
 		{
 			vector<ConceptInfo> &seq=infoSequence[i];
-			for (unsigned int j=0;j<seq.size();++j)
+			for (size_t j=0;j<seq.size();++j)
 			{
 				seq[j].arrayComponent=i+1;
 			}
@@ -114,7 +114,7 @@ namespace Mind
 	{
 		//key是input的某个元素值，value是该元素的序号。要求key是1、2、3...的自然数
 		map<int,int> indexMap;
-		for (unsigned int i=0;i<input->Dimension();++i)
+		for (size_t i=0;i<input->Dimension();++i)
 		{
 			double val=input->Get_ithVal(i);
 			int val_round=(int)Round(val);
@@ -126,7 +126,7 @@ namespace Mind
 		Check(indexMap.size()==indexMap.rbegin()->first);
 
 		vector<shared_ptr<iDataArray>> res;
-		for (unsigned int i=1;i<indexMap.size();++i)
+		for (size_t i=1;i<indexMap.size();++i)
 		{
 			shared_ptr<iDataArray> newArray(new DataArray(input->Dimension()));
 			newArray->Set_ithVal(indexMap[i],1.);

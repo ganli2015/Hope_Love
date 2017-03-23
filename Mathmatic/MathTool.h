@@ -24,7 +24,7 @@ namespace Math
 
 	Vector _MATHMATICINOUT ToVector(const double val[], const int n);
 
-	Matrix _MATHMATICINOUT CreateRandomMatrix(unsigned int i,unsigned int j);
+	Matrix _MATHMATICINOUT CreateRandomMatrix(size_t i,size_t j);
 
 	double _MATHMATICINOUT ComputeDeviation(const vector<double>& vec1,const vector<double>& vec2);
 
@@ -50,7 +50,7 @@ namespace Math
 	double MeanValue(const vector<T>& vec)
 	{
 		double res=0;
-		for (unsigned int i=0;i<vec.size();++i)
+		for (size_t i=0;i<vec.size();++i)
 		{
 			res+=vec[i];
 		}

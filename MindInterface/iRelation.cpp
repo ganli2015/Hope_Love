@@ -30,7 +30,7 @@ namespace LogicSystem
 
 			void Do()
 			{
-				for (unsigned int i=0;i<_constraints.size();++i)
+				for (size_t i=0;i<_constraints.size();++i)
 				{
 					if(!_constraints[i]->Satisfy())
 					{

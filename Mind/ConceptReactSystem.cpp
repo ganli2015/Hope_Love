@@ -156,7 +156,7 @@ namespace Mind
 		vector<shared_ptr<iConcept>> conceptVec;
 		//解析为多个Identity
 		vector<string> conceptStr = CommonTool::SplitString(str, conceptTag);
-		for (unsigned int i = 0; i < conceptStr.size(); ++i)
+		for (size_t i = 0; i < conceptStr.size(); ++i)
 		{
 			//解析每个Identity
 			vector<string> split = CommonTool::SplitString(conceptStr[i], idStrTag);
@@ -198,7 +198,7 @@ namespace Mind
 		multiNetwork->SetMyNeuron(0, neu1);
 		//		multiNetwork->SetMyNeuron(1,neu2);
 
-		for (unsigned int i = 0; i < dataInfos.size(); ++i)
+		for (size_t i = 0; i < dataInfos.size(); ++i)
 		{
 			shared_ptr<iDataArray> proto = CommonFunction::ToDataArray(dataInfos[i].input, _conceptSet);
 			shared_ptr<iDataArray> expect = CommonFunction::ToDataArray(dataInfos[i].expect, _conceptSet);
@@ -212,7 +212,7 @@ namespace Mind
 		if (result != Success)
 		{
 			vector<double> residuals;
-			for (unsigned int i = 0; i < dataInfos.size(); ++i)
+			for (size_t i = 0; i < dataInfos.size(); ++i)
 			{
 				residuals.push_back(ComputeStandardDeviation(dataInfos[i], multiNetwork));
 			}
@@ -240,9 +240,9 @@ namespace Mind
 		//Assign one random value to one piece and then construct all pieces to the large matrix.
 
 		//Generate a list of random double.
-		const unsigned int randomSize = 1000;
+		const size_t randomSize = 1000;
 		vector<double> randomList(randomSize);
-		for (unsigned int i = 0; i < randomSize; ++i)
+		for (size_t i = 0; i < randomSize; ++i)
 		{
 			randomList[i] = Rand::GetRandDecimal();
 		}
@@ -289,13 +289,13 @@ namespace Mind
 	{
 		vector<double> dev_unnormalized;
 		dev_unnormalized.reserve(vec.size());
-		for (unsigned int i = 0; i < vec.size(); ++i)
+		for (size_t i = 0; i < vec.size(); ++i)
 		{
 			dev_unnormalized.push_back(vec[i].confidence);
 		}
 
 		vector<double> dev_normalized = Normalized(dev_unnormalized);
-		for (unsigned int i = 0; i < dev_normalized.size(); ++i)
+		for (size_t i = 0; i < dev_normalized.size(); ++i)
 		{
 			vec[i].confidence = dev_normalized[i];
 		}

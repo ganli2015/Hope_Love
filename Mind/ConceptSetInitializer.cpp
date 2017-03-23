@@ -110,7 +110,7 @@ namespace Mind
 				Identity meID=connection_info.me;
 				shared_ptr<Word> word_me=_val->SearchWord(meID);
 
-				for (unsigned int i=0;i<connection_info.edge_infos.size();++i)
+				for (size_t i=0;i<connection_info.edge_infos.size();++i)
 				{
 					//找到依赖单词对应的Word（含有词性）
 					Identity toID=connection_info.edge_infos[i].to;
@@ -169,7 +169,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::ExistDuplicatedIDAndPOS(const Word_ID word_id,const int index,const vector<Word_ID>& list,Word_ID& duplicated)
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(i==index) continue;
 
@@ -188,7 +188,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::IdentityExist(const Identity identity,const vector<Word_ID>& list)
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(list[i].id==identity.id && list[i].word->GetString()==identity.str)
 			{
@@ -211,7 +211,7 @@ namespace Mind
 
 	void ConceptSetInitializer::CheckNonBaseConceptString(const vector<Word_ID>& wholeConcepts, ofstream& out )
 	{
-		for (unsigned int i=0;i<wholeConcepts.size();++i)
+		for (size_t i=0;i<wholeConcepts.size();++i)
 		{
 			Word_ID duplicated;
 			if(ExistDuplicatedIDAndPOS(wholeConcepts[i],i,wholeConcepts,duplicated))
@@ -231,7 +231,7 @@ namespace Mind
 	void ConceptSetInitializer::CheckConceptConnection(const vector<Connection_Info>& connectionInfos, const vector<Word_ID>& wholeConcepts,const vector<Word_ID>& baseConcepts, ofstream& out )
 	{
 		//检查ConceptConnection里的concept是否存在于读取的word_id中。
-		for (unsigned int i=0;i<connectionInfos.size();++i)
+		for (size_t i=0;i<connectionInfos.size();++i)
 		{
 			if(!IdentityExist(connectionInfos[i].me,wholeConcepts))
 			{
@@ -254,7 +254,7 @@ namespace Mind
 
 
 			//检查Edge
-			for (unsigned int j=0;j<connectionInfos[i].edge_infos.size();++j)
+			for (size_t j=0;j<connectionInfos[i].edge_infos.size();++j)
 			{
 				if(!IdentityExist(connectionInfos[i].edge_infos[j].to,wholeConcepts))
 				{
@@ -269,7 +269,7 @@ namespace Mind
 				shared_ptr<iConceptInteractTable> modTable=connectionInfos[i].edge_infos[j].modifications;
 				if(modTable==NULL) continue;
 				vector<MindType::ConceptPair> pairs=modTable->GetAllRelations();
-				for (unsigned int k=0;k<pairs.size();++k)
+				for (size_t k=0;k<pairs.size();++k)
 				{
 					Identity fromID=pairs[k].first->GetIdentity();
 					Identity toD=pairs[k].second->GetIdentity();
@@ -298,7 +298,7 @@ namespace Mind
 
 	void ConceptSetInitializer::CheckBaseConcept( const vector<Word_ID>& base,const vector<Word_ID>& nonBaseConcepts,ofstream& out )
 	{
-		for (unsigned int i=0;i<base.size();++i)
+		for (size_t i=0;i<base.size();++i)
 		{
 			Word_ID duplicated;
 			if(ExistDuplicatedIDAndPOS(base[i],i,base,duplicated))
@@ -330,7 +330,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::WordIDExist( const Word_ID word_id,const vector<Word_ID>& list )
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(list[i].id==word_id.id && list[i].word->IsSame(word_id.word))
 			{
@@ -347,7 +347,7 @@ namespace Mind
 
 		//split ','
 		vector<string> pariStr=CommonTool::SplitString(str,',');
-		for (unsigned int i=0;i<pariStr.size();++i)
+		for (size_t i=0;i<pariStr.size();++i)
 		{
 			//split '-'
 			vector<string> fromTo=CommonTool::SplitString(pariStr[i],'-');

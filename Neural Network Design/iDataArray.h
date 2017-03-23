@@ -18,7 +18,7 @@ namespace NeuralNetwork
 		iDataArray(void);
 		virtual ~iDataArray(void);
 
-		virtual unsigned int Dimension() const =0;
+		virtual size_t Dimension() const =0;
 
 		virtual const Math::Vector GetArray() const =0;
 

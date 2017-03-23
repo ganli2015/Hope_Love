@@ -84,13 +84,13 @@ namespace Math
 		return vec;
 	}
 
-	Math::Matrix CreateRandomMatrix(unsigned  int i,unsigned int j )
+	Math::Matrix CreateRandomMatrix(size_t i,size_t j )
 	{	
 		vector<Vector> mat;
-		for (unsigned int n=0;n<j;++n)
+		for (size_t n=0;n<j;++n)
 		{
 			Vector vec(i);
-			for (unsigned int m=0;m<i;++m)
+			for (size_t m=0;m<i;++m)
 			{
 				double val=Rand::GetRandDecimal();
 				vec.Set_ithVal(m,val);
@@ -107,7 +107,7 @@ namespace Math
 		Check(vec1.size()==vec2.size());
 
 		double sqSum=0.;
-		for (unsigned int i=0;i<vec2.size();++i)
+		for (size_t i=0;i<vec2.size();++i)
 		{
 			sqSum+=pow(vec1[i]-vec2[i],2);
 		}
@@ -119,7 +119,7 @@ namespace Math
 	{
 		if(vec1.size()!=vec2.size()) return false;
 
-		for (unsigned int i=0;i<vec1.size();++i)
+		for (size_t i=0;i<vec1.size();++i)
 		{
 			if(DoubleCompare(vec1[i],vec2[i])!=0)
 			{
@@ -134,7 +134,7 @@ namespace Math
 	{
 		if(vec1.size()!=vec2.size()) return false;
 
-		for (unsigned int i=0;i<vec1.size();++i)
+		for (size_t i=0;i<vec1.size();++i)
 		{
 			if(vec1[i]!=vec2[i])
 			{
@@ -150,7 +150,7 @@ namespace Math
 		Check(!mats.empty());
 
 		Matrix sum(mats[0].Rows(),mats[0].Columns());
-		for (unsigned int i=0;i<mats.size();++i)
+		for (size_t i=0;i<mats.size();++i)
 		{
 			sum+=mats[i];
 		}
@@ -163,7 +163,7 @@ namespace Math
 		Check(!vecs.empty());
 
 		Vector sum(vecs[0].Dimension());
-		for (unsigned int i=0;i<vecs.size();++i)
+		for (size_t i=0;i<vecs.size();++i)
 		{
 			sum+=vecs[i];
 		}
@@ -176,7 +176,7 @@ namespace Math
 		vector<Matrix> res;
 		res.reserve(mats.size());
 
-		for (unsigned int i=0;i<mats.size();++i)
+		for (size_t i=0;i<mats.size();++i)
 		{
 			res.push_back(mats[i].Negate());
 		}
@@ -189,7 +189,7 @@ namespace Math
 		vector<Vector> res;
 		res.reserve(vecs.size());
 
-		for (unsigned int i=0;i<vecs.size();++i)
+		for (size_t i=0;i<vecs.size();++i)
 		{
 			res.push_back(vecs[i].Negate());
 		}

@@ -62,7 +62,7 @@ namespace Mind
 		}
 
 		//Add patterns to <me>.
-		for (unsigned int i=0;i<patterns.size();++i)
+		for (size_t i=0;i<patterns.size();++i)
 		{
 			GrammarPattern pattern=patterns[i].pattern;
 			_patterns.push_back(patterns[i]);
@@ -105,7 +105,7 @@ namespace Mind
 // 
 // 			vector<PartOfSpeech> pattern_enum;
 // 			pattern_enum.reserve(pattern_int.size());
-// 			for (unsigned int i=0;i<pattern_int.size();++i)
+// 			for (size_t i=0;i<pattern_int.size();++i)
 // 			{
 // 				pattern_enum.push_back((PartOfSpeech)pattern_int[i]);
 // 			}
@@ -120,7 +120,7 @@ namespace Mind
 			vector<string> splits_withBlanks = CommonTool::SplitString(line, ' ');
 			//Erase null strings
 			vector<string> splits;
-			for (unsigned int i=0;i<splits_withBlanks.size();++i)
+			for (size_t i=0;i<splits_withBlanks.size();++i)
 			{
 				if (splits_withBlanks[i] != "")
 				{
@@ -129,7 +129,7 @@ namespace Mind
 			}
 
 			vector<PartOfSpeech> pattern_enum;
-			for (unsigned int i = 0; i < splits.size() - 1; ++i)
+			for (size_t i = 0; i < splits.size() - 1; ++i)
 			{
 				pattern_enum.push_back((PartOfSpeech)atoi(splits[i].c_str()));
 			}
@@ -276,7 +276,7 @@ namespace Mind
 
 	void GrammarSet::AddPatternToTree( const DataCollection::GrammarPattern& pattern )
 	{
-		for (unsigned int j=-1;j<pattern.Size();++j)
+		for (size_t j=-1;j<pattern.Size();++j)
 		{
 			pair<GrammarPattern,GrammarPattern> pattern_pair=pattern.Divide(j);
 			GrammarPattern former=pattern_pair.first;
@@ -453,10 +453,10 @@ namespace Mind
 		}
 
 		//Statistic the distribution of frequencies of POS from <samples>.
-		for (unsigned int i=0;i<samples.size();++i)
+		for (size_t i=0;i<samples.size();++i)
 		{
 			vector<int> gra=samples[i].gra;
-			for (unsigned int j=0;j<gra.size();++j)
+			for (size_t j=0;j<gra.size();++j)
 			{
 				PartOfSpeech curPos=PartOfSpeech(gra[j]);
 				if(j==0)
@@ -536,7 +536,7 @@ namespace Mind
 		if (poses.size() <= 1) return 0.;
 
 		double res = 0.;
-		for (unsigned int i = 0; i<poses.size(); ++i)
+		for (size_t i = 0; i<poses.size(); ++i)
 		{
 			PartOfSpeech curPos = poses[i];
 			if (i == 0)//第一个词性只考虑与第二个词性之间的置信度.
@@ -568,7 +568,7 @@ namespace Mind
 		MyInt totalFreq = GetTotalFrequency();
 		vector<double> localPVec;
 		vector<double> patternPVec;
-		for (unsigned int i = 0; i < samples.size(); ++i)
+		for (size_t i = 0; i < samples.size(); ++i)
 		{
 			//Compute the possibility of local grammar.
 			GrammarPattern pattern=LanguageFunc::ConvertToPattern(samples[i].gra);
@@ -699,7 +699,7 @@ namespace Mind
 		assert(patternP.size() == localP.size());
 
 		double res = 0;
-		for (unsigned int i=0;i<patternP.size();++i)
+		for (size_t i=0;i<patternP.size();++i)
 		{
 			//Each element of <patternP> and the element in <localP> of the same index correspond to one grammar pattern.
 			//Sum possibilities of each grammar patterns and compute the deviation from one.
@@ -717,7 +717,7 @@ namespace Mind
 
 		double sumFreq = 0.;
 		vector<GrammarPattern> matchedPattern = ContainSubsequence(pattern);
-		for (unsigned int j = 0; j < matchedPattern.size(); ++j)
+		for (size_t j = 0; j < matchedPattern.size(); ++j)
 		{
 			MyInt curFreq ( GetFreqencyofPattern(matchedPattern[j]));
 			sumFreq += curFreq / totalFreq;

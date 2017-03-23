@@ -262,7 +262,7 @@ TEST_P(Test_Grammar,Analyze)
 
 	vector<string> split = CommonTool::SplitString(param.segSentence, '/');
 	vector<shared_ptr<Word>> segWords;
-	for (unsigned int i=0;i<split.size();++i)
+	for (size_t i=0;i<split.size();++i)
 	{
 		segWords.push_back(shared_ptr<Word>(new Word(split[i])));
 	}
@@ -366,9 +366,9 @@ TEST_F(Test_StructureAnalyzer,Analyze)
 	SentenceAnalyzer analyzer("二大于一");
 	analyzer.Analyze();
 	shared_ptr<Sentence> sen=analyzer.GetAnalyzedSentences();
-	for (unsigned int i=0;i<sen->GrammarWordCount();++i)
+	for (size_t i=0;i<sen->GrammarWordCount();++i)
 	{
-		for (unsigned int j=0;j<sen->GrammarWordCount();++j)
+		for (size_t j=0;j<sen->GrammarWordCount();++j)
 		{
 			double inten=sen->GetWordIntensity(i,j);
 			if(j-i==1 || i-j==1)
@@ -392,7 +392,7 @@ bool SameSentence( const vector<string> expect,const shared_ptr<SegmentedSentenc
 		return false;
 	}
 
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		if(words[i]->GetString()!=expect[i])
 		{
@@ -410,7 +410,7 @@ bool SameGrammar( const vector<PartOfSpeech>& expect,const vector<shared_ptr<Wor
 		return false;
 	}
 
-	for (unsigned int i=0;i<expect.size();++i)
+	for (size_t i=0;i<expect.size();++i)
 	{
 		if(expect[i]!=words[i]->Type())
 		{

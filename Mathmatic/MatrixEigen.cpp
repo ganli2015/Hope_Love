@@ -16,12 +16,12 @@ namespace Math
 
 	MatrixEigen::MatrixEigen(const std::vector<std::vector<double>> val)
 	{
-		unsigned int i = val[0].size();
-		unsigned int j = val.size();
+		size_t i = val[0].size();
+		size_t j = val.size();
 		_mat = MatrixXf(i, j);
-		for (unsigned int m=0;m<j;++m)
+		for (size_t m=0;m<j;++m)
 		{
-			for (unsigned int n=0;n<i;++i)
+			for (size_t n=0;n<i;++i)
 			{
 				_mat(n, m) = (float)val[m][n];
 			}
@@ -30,13 +30,13 @@ namespace Math
 
 	MatrixEigen::MatrixEigen(const std::vector<Vector>& val)
 	{
-		unsigned int i = val[0].Dimension();
-		unsigned int j = val.size();
+		size_t i = val[0].Dimension();
+		size_t j = val.size();
 		_mat = MatrixXf(i, j);
 
-		for (unsigned int m = 0; m < j; ++m)
+		for (size_t m = 0; m < j; ++m)
 		{
-			for (unsigned int n = 0; n < i; ++n)
+			for (size_t n = 0; n < i; ++n)
 			{
 				_mat(n, m) = (float)val[m][n];
 			}
@@ -52,24 +52,24 @@ namespace Math
 	{
 	}
 
-	unsigned int MatrixEigen::Columns() const
+	size_t MatrixEigen::Columns() const
 	{
 		return _mat.cols();
 	}
 
-	unsigned int MatrixEigen::Rows() const
+	size_t MatrixEigen::Rows() const
 	{
 		return _mat.rows();
 	}
 
-	Math::VectorImp* MatrixEigen::nthColumn(unsigned int col) const
+	Math::VectorImp* MatrixEigen::nthColumn(size_t col) const
 	{
 		auto column = _mat.col(col);
 		VectorEigen* vecEigen = new VectorEigen(column);
 		return vecEigen;
 	}
 
-	VectorImp* MatrixEigen::nthRow(unsigned int row) const
+	VectorImp* MatrixEigen::nthRow(size_t row) const
 	{
 		auto rowVec = _mat.row(row);
 		return new VectorEigen(rowVec);

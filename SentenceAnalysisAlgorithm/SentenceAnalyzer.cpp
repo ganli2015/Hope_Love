@@ -60,7 +60,7 @@ void SentenceAnalyzer::Analyze()
 	//Compute the optimal POS of each words in the sentence.
 	GrammarAnalyzer grammarAnalyzer(sentence);
 	LOG("Begin analyze grammar of sentence.");
-	for (unsigned int i = 0; i < segmented.size(); ++i)
+	for (size_t i = 0; i < segmented.size(); ++i)
 	{
 		grammarAnalyzer.AddSegment(segmented[i]);
 	}
@@ -90,7 +90,7 @@ void SentenceAnalyzer::Cout_GrammardSentence(const shared_ptr<Sentence> grammard
 	vector<shared_ptr<Word>> instance=grammard->GetGrammard();
 	DEBUGLOG("Grammar :");
 
-	for(unsigned int j=0;j<instance.size();++j)
+	for(size_t j=0;j<instance.size();++j)
 	{
 		shared_ptr<Word> word=instance[j];
 		DEBUGLOG(word->GetString() + " :" + CommonTool::ToString(word->Type()));
@@ -116,7 +116,7 @@ vector<shared_ptr<DataCollection::Word>> SentenceAnalyzer::CountUnknownWords( co
 	vector<shared_ptr<DataCollection::Word>> res;
 
 	vector<shared_ptr<Word>> words=sentences->GetGrammard();
-	for (unsigned int j=0;j<words.size();++j)
+	for (size_t j=0;j<words.size();++j)
 	{
 		if(words[j]->Type()==Punctuation)
 		{

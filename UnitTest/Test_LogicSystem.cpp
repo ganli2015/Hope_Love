@@ -271,7 +271,7 @@ namespace LogicSystem
 		mockBrain->AddExpectCall_FindConceptWithMatchedDisc(param.matchedConceptParam);
 
 		//Prepare data for iCerebrum::Deduce
-		for (unsigned int i=0;i<param.condition_deduce.size();++i)
+		for (size_t i=0;i<param.condition_deduce.size();++i)
 		{
 			mockBrain->AddExpectCall_Deduce(param.condition_deduce[i].first,param.condition_deduce[i].second);
 		}
@@ -317,7 +317,7 @@ namespace LogicSystem
 		vector<shared_ptr<iReduceResult>> results=logic.Reduce(param.inputTable);
 
 		ASSERT_EQ(results.size(),param.results.size());
-		for (unsigned int i=0;i<results.size();++i)
+		for (size_t i=0;i<results.size();++i)
 		{
 			ASSERT_TRUE(FuncForTest::SameLogicResult(param.results[i].tablePairs,param.results[i].conceptStr,results[i]))
 				<<"expect: \n"+FuncForTest::TablePairToString(param.results[i].tablePairs)

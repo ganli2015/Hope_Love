@@ -40,10 +40,10 @@ void ChainGenerator::Generate(const shared_ptr<Mind::iConceptInteractTable> inte
 
 void ChainGenerator::DisplayChains( const vector<shared_ptr<iConceptChain>>& chains ) const
 {
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		vector<shared_ptr<iConcept> > concepts=chains[i]->GetConceptVec();
-		for (unsigned int j=0;j<concepts.size();++j)
+		for (size_t j=0;j<concepts.size();++j)
 		{
 			cout<<concepts[j]->GetString()<<" ";
 		}
@@ -55,10 +55,10 @@ void ChainGenerator::DisplayChains( const vector<shared_ptr<iConceptChain>>& cha
 
 void ChainGenerator::CheckDuplicatedConceptInChains( const vector<shared_ptr<Mind::iConceptChain>>& chains ) const
 {
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		vector<shared_ptr<iConcept>> vec=chains[i]->GetConceptVec();
-		for (unsigned int j=0;j<vec.size();++j)
+		for (size_t j=0;j<vec.size();++j)
 		{
 			if(find_if(vec.begin()+j+1,vec.end(),CommonFunction::SameConcept(vec[j]))!=vec.end())
 			{
@@ -75,7 +75,7 @@ vector<ConceptChainProperty> ChainGenerator::ChainReact( const vector<shared_ptr
 	//Compute react chains based on the data from Cerebrum.
 	//Chains are experimental and each of them have some confidence which stores in <ConceptChainProperty>.
 	ofstream out("DebugInfo//ChainReact.txt");
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		vector<ConceptChainProperty> properties=_brain->React(chains[i]);
 		if(properties.empty()) continue;
@@ -92,7 +92,7 @@ void ChainGenerator::OutputChainProperty( const shared_ptr<Mind::iConceptChain> 
 	out<<"input chain: "<<endl;
 	CommonFunction::WriteConcepts(chain->GetConceptVec(),out);
 	out<<"output chains: "<<endl;
-	for (unsigned int j=0;j<properties.size();++j)
+	for (size_t j=0;j<properties.size();++j)
 	{
 		CommonFunction::WriteConcepts(properties[j].chain->GetConceptVec(),out);
 		out<<properties[j].confidence<<endl;
@@ -104,7 +104,7 @@ void ChainGenerator::OutputChainProperty( const shared_ptr<Mind::iConceptChain> 
 vector<shared_ptr<Mind::iConceptChain>> ChainGenerator::RandomSelectChains( const vector<Mind::ConceptChainProperty>& chainProperties ) const
 {
 	vector<shared_ptr<Mind::iConceptChain>> res;
-	for (unsigned int i=0;i<chainProperties.size();++i)
+	for (size_t i=0;i<chainProperties.size();++i)
 	{
 		if(Math::Rand::RandTrue(chainProperties[i].confidence))
 		{

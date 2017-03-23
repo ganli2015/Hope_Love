@@ -7,14 +7,14 @@ namespace Math
 {
 	_MATHMATICINOUT void FindLongestCommonSubsequence( const std::vector<int>& seq1, const std::vector<int>& seq2, std::vector<int>& common_seq )
 	{
-		unsigned int m=seq1.size();
-		unsigned int n=seq2.size();
+		size_t m=seq1.size();
+		size_t n=seq2.size();
 		state_sequence **b=new state_sequence *[m+1];
 		ConstructSequenceTable(seq1,seq2,b);
 		common_seq.clear();
 		PrintLCS(b,seq1,0,0,m,n,common_seq);
 
-		for (unsigned int i=0;i<m+1;++i)
+		for (size_t i=0;i<m+1;++i)
 		{
 			delete[] b[i];
 		}
@@ -23,30 +23,30 @@ namespace Math
 
 	void ConstructSequenceTable( const std::vector<int>& seq1, const std::vector<int>& seq2,state_sequence **b )
 	{
-		unsigned int m=seq1.size();
-		unsigned int n=seq2.size();
-		unsigned int **c;
-		c=new unsigned int *[m+1];
+		size_t m=seq1.size();
+		size_t n=seq2.size();
+		size_t **c;
+		c=new size_t *[m+1];
 		
 		for (unsigned i=0;i<=m;++i)
 		{
-			c[i]=new unsigned int[n+1];
+			c[i]=new size_t[n+1];
 			b[i]=new state_sequence[n+1];
 		}
-		for(unsigned int row = 0;row <= m;row++) 
+		for(size_t row = 0;row <= m;row++) 
 		{  
 			c[row][0] = 0; 
 			b[row][0] = none;
 		}
-		for(unsigned int col = 0;col <= n;col++) 
+		for(size_t col = 0;col <= n;col++) 
 		{  
 			c[0][col] = 0; 
 			b[0][col] = none;
 		}
 
-		for (unsigned int i=1;i<=m;++i)
+		for (size_t i=1;i<=m;++i)
 		{
-			for (unsigned int j=1;j<=n;++j)
+			for (size_t j=1;j<=n;++j)
 			{
 				if(seq1[i-1]==seq2[j-1])
 				{
@@ -66,7 +66,7 @@ namespace Math
 			}
 		}
 
-		for (unsigned int i=0;i<m+1;++i)
+		for (size_t i=0;i<m+1;++i)
 		{
 			delete[] c[i];
 		}
@@ -95,15 +95,15 @@ namespace Math
 
 	_MATHMATICINOUT void FindAllCommonSubsequence( const std::vector<int>& seq1, const std::vector<int>& seq2, std::vector<std::vector<int>>& common_seqs )
 	{
-		unsigned int m=seq1.size();
-		unsigned int n=seq2.size();
+		size_t m=seq1.size();
+		size_t n=seq2.size();
 		state_sequence **b=new state_sequence *[m+1];
 		ConstructSequenceTable(seq1,seq2,b);
 		
 		common_seqs.clear();
-		for (unsigned int i=1;i<=m;++i)
+		for (size_t i=1;i<=m;++i)
 		{
-			for (unsigned int j=1;j<=n;++j)
+			for (size_t j=1;j<=n;++j)
 			{
 				if(b[i][j]==diagonal)
 				{
@@ -115,7 +115,7 @@ namespace Math
 			}
 		}
 
-		for (unsigned int i = 0; i < m + 1; ++i)
+		for (size_t i = 0; i < m + 1; ++i)
 		{
 			delete[] b[i];
 		}
@@ -124,12 +124,12 @@ namespace Math
 
 	_MATHMATICINOUT bool IsMatch( string P,string T )
 	{
-		unsigned int n=T.length();
-		unsigned int m=P.length();
+		size_t n=T.length();
+		size_t m=P.length();
 		vector<int> pi=ComputePrefixFunction(P);
 
 		int q=0;
-		for (unsigned int i=0;i<n;++i)
+		for (size_t i=0;i<n;++i)
 		{
 			while(q>0 && P[q]!=T[i])
 			{
@@ -151,13 +151,13 @@ namespace Math
 
 	_MATHMATICINOUT int MatchCount( string P,string T )
 	{
-		unsigned int n=T.length();
-		unsigned int m=P.length();
+		size_t n=T.length();
+		size_t m=P.length();
 		vector<int> pi=ComputePrefixFunction(P);
 
 		int q=0;
 		int count(0);
-		for (unsigned int i=0;i<n;++i)
+		for (size_t i=0;i<n;++i)
 		{
 			while(q>0 && P[q]!=T[i])
 			{

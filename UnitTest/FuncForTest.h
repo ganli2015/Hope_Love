@@ -70,11 +70,11 @@ namespace FuncForTest
 		if(v1.size()!=v2.size()) return false;
 
 		vector<vector<T>> v2Copy=v2;
-		for (unsigned int i=0;i<v1.size();++i)
+		for (size_t i=0;i<v1.size();++i)
 		{
 			bool exist=false;
 			int existIndex=-1;
-			for (unsigned int j=0;j<v2Copy.size();++j)
+			for (size_t j=0;j<v2Copy.size();++j)
 			{
 				if(ContainSameElements(v1[i],v2Copy[j]))
 				{
@@ -106,7 +106,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<v1.size();++i)
+		for (size_t i=0;i<v1.size();++i)
 		{
 			if(v1[i]!=v2[i])
 			{

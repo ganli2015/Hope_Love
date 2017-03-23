@@ -41,14 +41,14 @@ DataCollection::GrammarPattern GrammarPatternSelector::SelectReactPattern( const
 
 	vector<shared_ptr<Word>> randWords;
 	vector<PartOfSpeech> pos=randPattern.GetPattern();
-	for (unsigned int i=0;i<pos.size();++i)
+	for (size_t i=0;i<pos.size();++i)
 	{
 		vector<shared_ptr<DataCollection::Word>> words=brain->GetAllWordsOfPOS(pos[i]);
 		int randIndex=rand()%(words.size());
 		randWords.push_back(words[randIndex]);
 	}
 
-	for (unsigned int i=0;i<randWords.size();++i)
+	for (size_t i=0;i<randWords.size();++i)
 	{
 		cout<<randWords[i]->GetString();
 	}
@@ -81,7 +81,7 @@ vector<DataCollection::GrammarPattern> GrammarPatternSelector::GetParentPatterns
 	};
 
 	vector<GrammarPattern> totalParentPatterns;
-	for (unsigned int i=0;i<patterns.size();++i)
+	for (size_t i=0;i<patterns.size();++i)
 	{
 		vector<GrammarPattern> parentPatterns=brain->ContainedSubsequence(patterns[i]);
 		//把parentPatterns拷贝到totalParentPatterns，去掉重复的。

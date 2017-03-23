@@ -132,7 +132,7 @@ namespace Mind
 
 		if(res!=NULL)
 		{
-			for (unsigned int i=0;i<pairs.size();++i)
+			for (size_t i=0;i<pairs.size();++i)
 			{
 				res->Add(pairs[i].first,pairs[i].second);
 			}

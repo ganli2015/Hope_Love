@@ -18,7 +18,7 @@ namespace DataCollection
 	vector<shared_ptr<GrammarFeature>> GrammarFeatureTemplate::FindFeatures(const vector<shared_ptr<Word>>& words)
 	{
 		vector<shared_ptr<GrammarFeature>> res;
-		for (unsigned int i = 0; i < words.size(); ++i)
+		for (size_t i = 0; i < words.size(); ++i)
 		{
 			auto feature = FindOneFeature(i, words);
 			//If find no feature, return null.

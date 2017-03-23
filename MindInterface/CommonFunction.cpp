@@ -25,9 +25,9 @@ namespace Mind
 		{
 			if(table==NULL) return;
 
-			for (unsigned int i=0;i<from.size();++i)
+			for (size_t i=0;i<from.size();++i)
 			{
-				for (unsigned int j=0;j<to.size();++j)
+				for (size_t j=0;j<to.size();++j)
 				{
 					table->Add(from[i],to[j]);
 				}
@@ -36,7 +36,7 @@ namespace Mind
 
 		void _MINDINTERFACEINOUT AppendToInteractTable(const vector<MindType::ConceptPair>& pairs, shared_ptr<iConceptInteractTable> table)
 		{
-			for (unsigned int j = 0; j < pairs.size(); ++j)
+			for (size_t j = 0; j < pairs.size(); ++j)
 			{
 				table->Add(pairs[j].first, pairs[j].second);
 			}
@@ -114,7 +114,7 @@ namespace Mind
 
 		void WriteConcepts(const vector<shared_ptr<iConcept>>& vec,ofstream& out )
 		{
-			for (unsigned int j=0;j<vec.size();++j)
+			for (size_t j=0;j<vec.size();++j)
 			{
 				out<<vec[j]->GetString()<<" ";
 			}
@@ -123,7 +123,7 @@ namespace Mind
 
 		void _MINDINTERFACEINOUT LogConcepts(const vector<shared_ptr<iConcept>>& vec)
 		{
-			for (unsigned int j = 0; j < vec.size(); ++j)
+			for (size_t j = 0; j < vec.size(); ++j)
 			{
 				DEBUGLOG(vec[j]);
 			}
@@ -145,12 +145,12 @@ namespace Mind
 		{
 			vector<shared_ptr<iConceptChain>> removedChains;
 
-			for (unsigned int i=0;i<chains.size();++i)
+			for (size_t i=0;i<chains.size();++i)
 			{
 				shared_ptr<iConceptChain> curChain=chains[i];
 
 				bool duplicated=false;
-				for (unsigned int j=i+1;j<chains.size();++j)
+				for (size_t j=i+1;j<chains.size();++j)
 				{
 					if(chains[j]->Same(curChain))
 					{
@@ -169,7 +169,7 @@ namespace Mind
 
 		void OutputConceptPairs( const vector<MindType::ConceptPair>& pairs,ostream& out )
 		{
-			for (unsigned int i=0;i<pairs.size();++i)
+			for (size_t i=0;i<pairs.size();++i)
 			{
 				out<<pairs[i].first->GetString();
 				out<<" ";
@@ -195,7 +195,7 @@ namespace Mind
 		{
 			vector<MindType::ConceptPair> res(total);
 
-			for (unsigned int i=0;i<partial.size();++i)
+			for (size_t i=0;i<partial.size();++i)
 			{
 				vector<MindType::ConceptPair>::iterator samePairIter=find_if(res.begin(),res.end(),CommonFunction::SameConceptPair(partial[i].first,partial[i].second));
 				assert(samePairIter!=res.end());
@@ -227,11 +227,11 @@ namespace Mind
 		{
 			static string integerStr="ÕûÊý";
 
-			for (unsigned int i=0;i<conceptVec.size();++i)
+			for (size_t i=0;i<conceptVec.size();++i)
 			{
 				vector<shared_ptr<Mind::iConcept>> forward=conceptVec[i]->GetForwardConcepts();
 				//Find a concept of <integerStr> and imply conceptVec[i] is an integer.
-				for (unsigned int j=0;j<forward.size();++j)
+				for (size_t j=0;j<forward.size();++j)
 				{
 					if(forward[j]->GetString()==integerStr)
 					{

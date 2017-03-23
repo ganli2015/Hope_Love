@@ -26,7 +26,7 @@ namespace DataCollection
 	{
 		//TO Chinese characters, each character contains two chars
 		//and convert string to characters two by two.
-		for (unsigned int i=0;i<word.size();i+=2)
+		for (size_t i=0;i<word.size();i+=2)
 		{
 			string aword;
 			aword.push_back(word[i]);
@@ -43,7 +43,7 @@ namespace DataCollection
 	Word::Word(const Word& word)
 	{
 		_word.clear();
-		for (unsigned int i=0;i<word._word.size();++i)
+		for (size_t i=0;i<word._word.size();++i)
 		{
 			_word.push_back(word._word[i]);
 		}
@@ -61,7 +61,7 @@ namespace DataCollection
 		}
 
 		long long sumIndex=0;
-		for (unsigned int i=0;i<indexset.size();++i)
+		for (size_t i=0;i<indexset.size();++i)
 		{
 			sumIndex+=sumIndex*i*10000+indexset[i];
 		}
@@ -82,7 +82,7 @@ namespace DataCollection
 	std::string Word::GetString() const
 	{
 		string str("");
-		for (unsigned int i=0;i<_word.size();++i)
+		for (size_t i=0;i<_word.size();++i)
 		{
 			str+=_word[i]->GetString();
 		}

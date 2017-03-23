@@ -6,7 +6,7 @@
 
 namespace Math
 {
-	Math::Vector::Vector( const unsigned int d ) :_imp(new VectorEigen(d))
+	Math::Vector::Vector( const size_t d ) :_imp(new VectorEigen(d))
 	{
 
 	}
@@ -26,7 +26,7 @@ namespace Math
 	{
 		_imp = new VectorEigen(vec.Dimension());
 
-		for (unsigned int i = 0; i < vec.Dimension(); ++i)
+		for (size_t i = 0; i < vec.Dimension(); ++i)
 		{
 			_imp->Set_ithVal(i, vec.Get_ithVal(i));
 		}
@@ -48,7 +48,7 @@ namespace Math
 		return _imp->GetVector();
 	}
 
-	unsigned int Math::Vector::Dimension() const
+	size_t Math::Vector::Dimension() const
 	{
 		return _imp->Dimension();
 	}
@@ -68,12 +68,12 @@ namespace Math
 		return _imp->IsOrthogonoality(vec._imp, tol);
 	}
 
-	void Math::Vector::Set_ithVal( unsigned int i,double val )
+	void Math::Vector::Set_ithVal( size_t i,double val )
 	{
 		_imp->Set_ithVal(i, val);
 	}
 
-	double Math::Vector::Get_ithVal(unsigned int i ) const
+	double Math::Vector::Get_ithVal(size_t i ) const
 	{
 		return _imp->Get_ithVal(i);
 	}
@@ -89,7 +89,7 @@ namespace Math
 		return *this;
 	}
 
-	float& Vector::operator[](unsigned int i)
+	float& Vector::operator[](size_t i)
 	{
 		return _imp->Get_ithValRef(i);
 	}
@@ -98,7 +98,7 @@ namespace Math
 	{
 		VectorImp* imp = new VectorEigen(vec.Dimension());
 
-		for (unsigned int i = 0; i < vec.Dimension(); ++i)
+		for (size_t i = 0; i < vec.Dimension(); ++i)
 		{
 			imp->Set_ithVal(i, vec.Get_ithVal(i));
 		}
@@ -113,7 +113,7 @@ namespace Math
 		return res;
 	}
 
-	const double Vector::operator[](unsigned int i) const
+	const double Vector::operator[](size_t i) const
 	{
 		return _imp->Get_ithVal(i);
 	}
@@ -132,7 +132,7 @@ namespace Math
 	{
 		Check(Dimension()==right.Dimension());
 
-		for (unsigned int i=0;i<Dimension();++i)
+		for (size_t i=0;i<Dimension();++i)
 		{
 			double old = _imp->Get_ithVal(i);
 			_imp->Set_ithVal(i, old + right.Get_ithVal(i));
@@ -209,7 +209,7 @@ namespace Math
 		Check(DoubleCompare(right,0)!=0);
 
 		Vector res(left);
-		for (unsigned int i=0;i<res.Dimension();++i)
+		for (size_t i=0;i<res.Dimension();++i)
 		{
 			res.Set_ithVal(i,res.Get_ithVal(i)/right);
 		}

@@ -116,7 +116,7 @@ namespace Mind
 				}
 
 				bool isAdj(true);//ÅÐ¶ÏÊÇ·ñÍ¬¸ù
-				for (unsigned int i=0;i<str.size();++i)
+				for (size_t i=0;i<str.size();++i)
 				{
 					if(str[i]!=str_next[i])
 					{
@@ -205,7 +205,7 @@ namespace Mind
 		vector<Word> adjword;
 		GetForwardAdjWord(word,adjword);
 		int maxLength(0);
-		for (unsigned int i=0;i<adjword.size();++i)
+		for (size_t i=0;i<adjword.size();++i)
 		{
 			int curlength=adjword[i].NumOfChara();
 			if(curlength>maxLength)

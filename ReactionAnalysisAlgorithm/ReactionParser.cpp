@@ -86,7 +86,7 @@ void ReactionParser::Execute()
 void ReactionParser::DisplayReactChains( const vector<ConceptChainProperty>& chains ) const
 {
 	DEBUGLOG("React Chains:");
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		DisplayChain(chains[i].chain);
 	}
@@ -95,7 +95,7 @@ void ReactionParser::DisplayReactChains( const vector<ConceptChainProperty>& cha
 void ReactionParser::DisplayChain( const shared_ptr<Mind::iConceptChain>& chain ) const
 {
 	vector<shared_ptr<iConcept> > concepts=chain->GetConceptVec();
-	for (unsigned int j=0;j<concepts.size();++j)
+	for (size_t j=0;j<concepts.size();++j)
 	{
 		DEBUGLOG(concepts[j]->GetString());
 	}
@@ -104,7 +104,7 @@ void ReactionParser::DisplayChain( const shared_ptr<Mind::iConceptChain>& chain 
 void ReactionParser::DisplayHyperChains( const vector<shared_ptr<Mind::iConceptChain>>& chains ) const
 {
 	DEBUGLOG("Hyper Chains:");
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		DisplayChain(chains[i]);
 	}
@@ -126,10 +126,10 @@ vector<shared_ptr<DataCollection::Word>> ReactionParser::CountUnknownWords( cons
 
 	vector<shared_ptr<DataCollection::Word>> res;
 
-	for (unsigned int i=0;i<sentences.size();++i)
+	for (size_t i=0;i<sentences.size();++i)
 	{
 		vector<shared_ptr<Word>> words=sentences[i]->GetGrammard();
-		for (unsigned int j=0;j<words.size();++j)
+		for (size_t j=0;j<words.size();++j)
 		{
 			if(words[j]->Type()==Punctuation)
 			{

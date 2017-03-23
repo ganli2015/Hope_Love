@@ -70,7 +70,7 @@ WordRep GrammarAnalyzer::GetWordRep(shared_ptr<Word> word)
 	}
 
 
-	for(unsigned int i=0;i<rep.size();++i)
+	for(size_t i=0;i<rep.size();++i)
 	{
 		wordrep.Add(rep[i]);
 	}
@@ -83,7 +83,7 @@ int GrammarAnalyzer::CheckUnknownWords(const vector<shared_ptr<Word>>& words)
 	Mind::iCerebrum *brain=Mind::iCerebrum::Instance();
 
 	int count(0);
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		if(!brain->IsInMind(words[i]))
 		{
@@ -97,7 +97,7 @@ int GrammarAnalyzer::CheckUnknownWords(const vector<shared_ptr<Word>>& words)
 int GrammarAnalyzer::CheckAmbiguousWords(const vector<WordRep>& words)
 {
 	int count(0);
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		///If it is an ambiguous word , its WordRep must contain only one element.
 		if(words[i].Size()!=1) continue;
@@ -135,7 +135,7 @@ void GrammarAnalyzer::GetAllPossibleCombine(const int index, const vector<WordRe
 	vector<vector<shared_ptr<Word>>> newout;
 	//Go through each POS of the current word.
 	//For each POS, connect the word with the old combination.
-	for (unsigned int i=0;i<rep.size();++i)
+	for (size_t i=0;i<rep.size();++i)
 	{
 		if(index!=wordRepSet.size()-1)
 		{
@@ -159,7 +159,7 @@ vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUandAWords(const vector<sh
 	const vector<vector<shared_ptr<Word>>>& latterCombinations)
 {
 	vector<vector<shared_ptr<Word>>> newout;
-	for (unsigned int i = 0; i < DataCollection::NUM_PARTOFSPEECH; ++i)
+	for (size_t i = 0; i < DataCollection::NUM_PARTOFSPEECH; ++i)
 	{
 		shared_ptr<Word> newword = LanguageFunc::GetParticularWord(words[index]->GetString(), PartOfSpeech(i));
 		if (index != words.size() - 1)
@@ -221,7 +221,7 @@ void GrammarAnalyzer::GetAllUnknownAmbiguousCombine(const vector<shared_ptr<Word
 vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousToEveryPOS(const vector<shared_ptr<Word>> words)
 {
 	vector<int> unknown_ambiguous_vec;
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		if(words[i]->Type()==Unknown ||words[i]->Type()==Ambiguous )
 		{
@@ -251,7 +251,7 @@ vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousWithLoc
 	//Collect U and A status.
 	vector<bool> isUandA;
 	isUandA.reserve(words.size());
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		if (words[i]->Type() == Unknown || words[i]->Type() == Ambiguous)
 		{
@@ -278,7 +278,7 @@ vector<vector<shared_ptr<Word>>> GrammarAnalyzer::SpanUnknownAndAmbiguousWithLoc
 	//The number of candidates for select.
 	int numSelect = 3;
 	//Find candidates of U and A words.
-	for (unsigned int i = 1; i < isUandA.size() - 1; ++i)
+	for (size_t i = 1; i < isUandA.size() - 1; ++i)
 	{
 		if (isUandA[i])
 		{
@@ -320,7 +320,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 	//It means that the optimal combination must satisfy grammar statistic information.
 	double maxValueFun(-1);
 	map<double, vector<shared_ptr<Word>>, greater<double>> combinationForLog;//Used for log.
-	for (unsigned int i=0;i<combination.size();++i)
+	for (size_t i=0;i<combination.size();++i)
 	{
 		GrammarPattern pattern=LanguageFunc::ConvertToPattern(combination[i]);
 
@@ -360,13 +360,13 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 {
 	Mind::iCerebrum *brain = Mind::iCerebrum::Instance();
 
-	unsigned int uplimitCombination = 1000;
+	size_t uplimitCombination = 1000;
 	if (combination.size() > uplimitCombination)
 	{
 		LOG_FORMAT("Combination size is %u which is larger than uplimit.", combination.size());
 		//Compute local possibility of each combination and order from large to small.
 		map<double, int, greater<double>> prob_index;
-		for (unsigned int i = 0; i < combination.size(); ++i)
+		for (size_t i = 0; i < combination.size(); ++i)
 		{
 			GrammarPattern pattern = LanguageFunc::ConvertToPattern(combination[i]);
 			double value = brain->ComputeLocalPossibility(pattern);
@@ -375,7 +375,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 
 		//Select first 1000 combinations to select optimal one.
 		vector<vector<shared_ptr<DataCollection::Word>>> highProbCombinations(uplimitCombination);
-		unsigned int i = 0;
+		size_t i = 0;
 		for (map<double, int, greater<double>>::iterator it = prob_index.begin(); i < uplimitCombination; ++it, ++i)
 		{
 			highProbCombinations[i] = combination[it->second];
@@ -403,7 +403,7 @@ void GrammarAnalyzer::OptimizePOSofWords()
 
 	//Go through all segmented sentences and find the most optimal.
 	//There will be only one sentence survive!
-	for (unsigned int i=0;i<_segments.size();++i)
+	for (size_t i=0;i<_segments.size();++i)
 	{
 		vector<shared_ptr<Word>> segmented = _segments[i]->Get();
 		vector<shared_ptr<Word>> optimal;
@@ -426,7 +426,7 @@ vector<WordRep> GrammarAnalyzer::SearchAllWordRep(const vector<shared_ptr<Word>>
 	//Search all words in Cerebrum and
 	//find all known POS of each word for every possible combination.
 	vector<WordRep> segmente_allRep(segmented_withNoPunc.size());
-	for (unsigned int j = 0; j < segmented_withNoPunc.size(); ++j)
+	for (size_t j = 0; j < segmented_withNoPunc.size(); ++j)
 	{
 		segmente_allRep[j] = GetWordRep(segmented_withNoPunc[j]);
 	}
@@ -437,12 +437,12 @@ vector<WordRep> GrammarAnalyzer::SearchAllWordRep(const vector<shared_ptr<Word>>
 void GrammarAnalyzer::LogOptimalCombinations(const vector<vector<shared_ptr<Word>>>& combinations,const vector<double>& values) const
 {
 	DEBUGLOG("***Combinations***");
-	for (unsigned int i=0;i<combinations.size();++i)
+	for (size_t i=0;i<combinations.size();++i)
 	{
 		auto combi = combinations[i];
 		//Collect word string.
 		string wordStr = "";
-		for (unsigned int j=0;j<combi.size();++j)
+		for (size_t j=0;j<combi.size();++j)
 		{
 			wordStr += combi[j]->GetString() + " "+ToString(combi[j]->Type())+" ";
 		}
@@ -496,7 +496,7 @@ GrammarAnalyzer::AnalyzeResult GrammarAnalyzer::AnalyzeEachSegmented(const vecto
 		vector<vector<shared_ptr<Word>>> allCombinations;
 
 		//For each U_A word, I consider its POS arbitrary and go through every POS.
-		for (unsigned int j = 0; j < possi_Combine.size(); ++j)
+		for (size_t j = 0; j < possi_Combine.size(); ++j)
 		{
 //			vector<vector<shared_ptr<Word>>> spannedCombination = SpanUnknownAndAmbiguousToEveryPOS(possi_Combine[j]);//Let the unknown word span over every POS.
 			vector<vector<shared_ptr<Word>>> spannedCombination = SpanUnknownAndAmbiguousWithLocalGrammar(possi_Combine[j]);
@@ -511,7 +511,7 @@ GrammarAnalyzer::AnalyzeResult GrammarAnalyzer::AnalyzeEachSegmented(const vecto
 	}
 
 	//Convert punctuations from Type word to Type punctuation.
-// 	for (unsigned int i=0;i<punc.size();++i)
+// 	for (size_t i=0;i<punc.size();++i)
 // 	{
 // 		punc[i] = shared_ptr<puncture>(new puncture(punc[i]->GetString()));
 // 	}

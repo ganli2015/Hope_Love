@@ -70,7 +70,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			vector<pair<shared_ptr<iConcept>,shared_ptr<iConcept>>>::iterator iter=find_if(relations.begin(),relations.end(),FindRelation(expect[i]));
 			if(iter==relations.end())
@@ -95,10 +95,10 @@ namespace FuncForTest
 
 		vector<shared_ptr<iConceptChain>> resCopy=result;
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			bool hasSameChain=false;
-			for (unsigned int j=0;j<resCopy.size();++j)
+			for (size_t j=0;j<resCopy.size();++j)
 			{
 				if(SameChain(expect[i],resCopy[j]))
 				{
@@ -125,7 +125,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			if(expect[i]!=conVec[i]->GetString())
 			{
@@ -138,10 +138,10 @@ namespace FuncForTest
 
 	void DisplayChains( const vector<shared_ptr<Mind::iConceptChain>>& chains )
 	{
-		for (unsigned int i=0;i<chains.size();++i)
+		for (size_t i=0;i<chains.size();++i)
 		{
 			vector<shared_ptr<iConcept>> cons=chains[i]->GetConceptVec();
-			for (unsigned int j=0;j<cons.size();++j)
+			for (size_t j=0;j<cons.size();++j)
 			{
 				cout<<cons[j]->GetString()<<" ";
 			}
@@ -184,7 +184,7 @@ namespace FuncForTest
 		//Convert table to vector<pair<string,string>>.
 		vector<MindType::ConceptPair> pairs=left->GetAllRelations();
 		vector<pair<string,string>> stringPairs;
-		for (unsigned int i=0;i<pairs.size();++i)
+		for (size_t i=0;i<pairs.size();++i)
 		{
 			stringPairs.push_back(make_pair(pairs[i].first->GetString(),pairs[i].second->GetString()));
 		}
@@ -196,7 +196,7 @@ namespace FuncForTest
 	{
 		string res="";
 
-		for (unsigned int i=0;i<tablePairs.size();++i)
+		for (size_t i=0;i<tablePairs.size();++i)
 		{
 			res+=tablePairs[i].first+" "+tablePairs[i].second+"\n";
 		}

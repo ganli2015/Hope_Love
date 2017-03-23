@@ -18,7 +18,7 @@ namespace Mind
 		string res="";
 
 		vector<MindType::ConceptPair> pairs=GetAllRelations();
-		for (unsigned int i=0;i<pairs.size();++i)
+		for (size_t i=0;i<pairs.size();++i)
 		{
 			res+=pairs[i].first->GetString()+" "+pairs[i].second->GetString()+"\n";
 		}

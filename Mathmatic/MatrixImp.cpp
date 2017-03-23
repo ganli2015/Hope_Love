@@ -23,9 +23,9 @@ namespace Math
 		}
 
 
-		for (unsigned int i=0;i<mat->Rows();++i)
+		for (size_t i=0;i<mat->Rows();++i)
 		{
-			for (unsigned int j=0;j<mat->Columns();++j)
+			for (size_t j=0;j<mat->Columns();++j)
 			{
 				if (DoubleCompare(mat->GetElem(i, j), GetElem(i, j), tol) != 0)
 				{
@@ -39,9 +39,9 @@ namespace Math
 	MatrixImp* MatrixImp::Negate() const
 	{
 		MatrixEigen* res = new MatrixEigen(Rows(), Columns());
-		for (unsigned int i = 0; i < Rows(); ++i)
+		for (size_t i = 0; i < Rows(); ++i)
 		{
-			for (unsigned int j = 0; j < Columns(); ++j)
+			for (size_t j = 0; j < Columns(); ++j)
 			{
 				res->SetElem(i, j, -GetElem(i, j));
 			}

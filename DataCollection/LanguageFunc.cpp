@@ -61,12 +61,12 @@ namespace DataCollection
 		vector<shared_ptr<Character>>::const_iterator chara_it=find_if(raw.begin(),raw.end(),IsPuncEndofSentence);
 		int index=distance(raw.begin(),chara_it);
 		vector<shared_ptr<Character>> sentenceWithNoPunctures;
-		for (unsigned int i=0;i<(size_t)index;++i)
+		for (size_t i=0;i<(size_t)index;++i)
 		{
 			sentenceWithNoPunctures.push_back(raw[i]);
 		}
 		vector<shared_ptr<Character>> endPunctures;
-		for (unsigned int i=index;i<raw.size();++i)
+		for (size_t i=index;i<raw.size();++i)
 		{
 			endPunctures.push_back(raw[i]);
 		}
@@ -77,18 +77,18 @@ namespace DataCollection
 	pair<vector<Character>,vector<Character>> LanguageFunc::TrimEndPunctures( const vector<Character>& raw )
 	{
 		vector<shared_ptr<Character>> sptr_raw;
-		for (unsigned int i=0;i<raw.size();++i)
+		for (size_t i=0;i<raw.size();++i)
 		{
 			sptr_raw.push_back(shared_ptr<Character>(new Character(raw[i])));
 		}
 		pair<vector<shared_ptr<Character>>,vector<shared_ptr<Character>>> pair= TrimEndPunctures(sptr_raw);
 		vector<Character> sen;
-		for (unsigned int i=0;i<pair.first.size();++i)
+		for (size_t i=0;i<pair.first.size();++i)
 		{
 			sen.push_back(*pair.first[i]);
 		}
 		vector<Character> punc;
-		for (unsigned int i=0;i<pair.second.size();++i)
+		for (size_t i=0;i<pair.second.size();++i)
 		{
 			punc.push_back(*pair.second[i]);
 		}
@@ -101,7 +101,7 @@ namespace DataCollection
 	{
 		vector<shared_ptr<Word>> res;
 		res.reserve(puncs.size());
-		for (unsigned int i=0;i<puncs.size();++i)
+		for (size_t i=0;i<puncs.size();++i)
 		{
 			string puncStr=puncs[i].GetString();
 			shared_ptr<Character> chara(new Character(puncStr));
@@ -114,8 +114,8 @@ namespace DataCollection
 
 	pair<vector<shared_ptr<Word>>,vector<shared_ptr<Word>>> LanguageFunc::TrimEndPunctures( const vector<shared_ptr<Word>>& raw )
 	{
-		unsigned int index=raw.size();
-		for (unsigned int i=0;i<raw.size();++i)
+		size_t index=raw.size();
+		for (size_t i=0;i<raw.size();++i)
 		{
 			shared_ptr<Character> chara(new Character(raw[i]->GetString()));
 			if(IsPuncEndofSentence(chara))
@@ -126,12 +126,12 @@ namespace DataCollection
 		}
 
 		vector<shared_ptr<Word>> sentenceWithNoPunctures;
-		for (unsigned int i=0;i<index;++i)
+		for (size_t i=0;i<index;++i)
 		{
 			sentenceWithNoPunctures.push_back(raw[i]);
 		}
 		vector<shared_ptr<Word>> endPunctures;
-		for (unsigned int i=index;i<raw.size();++i)
+		for (size_t i=index;i<raw.size();++i)
 		{
 			endPunctures.push_back(raw[i]);
 		}
@@ -142,18 +142,18 @@ namespace DataCollection
 	pair<vector<Word>,vector<Word>> LanguageFunc::TrimEndPunctures( const vector<Word>& raw )
 	{
 		vector<shared_ptr<Word>> sptr_raw;
-		for (unsigned int i=0;i<raw.size();++i)
+		for (size_t i=0;i<raw.size();++i)
 		{
 			sptr_raw.push_back(shared_ptr<Word>(new Word(raw[i])));
 		}
 		pair<vector<shared_ptr<Word>>,vector<shared_ptr<Word>>> pair= TrimEndPunctures(sptr_raw);
 		vector<Word> sen;
-		for (unsigned int i=0;i<pair.first.size();++i)
+		for (size_t i=0;i<pair.first.size();++i)
 		{
 			sen.push_back(*pair.first[i]);
 		}
 		vector<Word> punc;
-		for (unsigned int i=0;i<pair.second.size();++i)
+		for (size_t i=0;i<pair.second.size();++i)
 		{
 			punc.push_back(*pair.second[i]);
 		}
@@ -164,7 +164,7 @@ namespace DataCollection
 	std::string LanguageFunc::ConvertCharacterToString( std::vector<shared_ptr<Character>> charas )
 	{
 		string res="";
-		for (unsigned int i=0;i<charas.size();++i)
+		for (size_t i=0;i<charas.size();++i)
 		{
 			res+=charas[i]->GetString();
 		}
@@ -175,7 +175,7 @@ namespace DataCollection
 	DataCollection::GrammarPattern LanguageFunc::ConvertToPattern( const vector<shared_ptr<DataCollection::Word>> words )
 	{
 		vector<PartOfSpeech> ps(words.size());
-		for (unsigned int i=0;i<words.size();++i)
+		for (size_t i=0;i<words.size();++i)
 		{
 			ps[i]=words[i]->Type();
 		}
@@ -300,7 +300,7 @@ namespace DataCollection
 	std::string LanguageFunc::ConvertWordsToString( const vector<shared_ptr<Word>> words )
 	{
 		string res="";
-		for (unsigned int i=0;i<words.size();++i)
+		for (size_t i=0;i<words.size();++i)
 		{
 			res+=words[i]->GetString();
 		}

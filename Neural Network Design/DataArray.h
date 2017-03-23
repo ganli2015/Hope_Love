@@ -13,14 +13,14 @@
 
 namespace NeuralNetwork
 {
-// 	template<unsigned int n>
+// 	template<size_t n>
 // 	class _NEURALNETWORKDESIGNINOUT iDataArray
 // 	{
 // 	public:
 // 		iDataArray(){}
 // 		~iDataArray(){}
 // 
-// 		unsigned int Dimension() const=0;
+// 		size_t Dimension() const=0;
 // 	};
 
 	class _NEURALNETWORKDESIGNINOUT DataArray: public iDataArray
@@ -37,7 +37,7 @@ namespace NeuralNetwork
 
 		DataArray(const DataArray& data);
 
-		unsigned int Dimension() const {return (unsigned int)_n;}
+		size_t Dimension() const {return (size_t)_n;}
 
 		const Math::Vector GetArray() const {return *_vec;}
 
@@ -57,7 +57,7 @@ namespace NeuralNetwork
 		DataArray& operator=(const DataArray& data);
 
 		//Read only
-		double operator[](unsigned int i) const;
+		double operator[](size_t i) const;
 
 		virtual bool Same(const std::shared_ptr<iDataArray> val);
 	};

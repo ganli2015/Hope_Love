@@ -45,9 +45,9 @@ namespace Math
 		if(sub.empty()) return true;
 		if(full.empty()) return false;
 
-		unsigned int subIndex(0);
+		size_t subIndex(0);
 		T curElem=sub[subIndex];
-		for (unsigned int i=0;i<full.size();++i)
+		for (size_t i=0;i<full.size();++i)
 		{
 			if(curElem==full[i])
 			{
@@ -95,7 +95,7 @@ namespace Math
 		}
 
 	private:
-		static void Recursive(const unsigned int index, const vector<vector<T>>& in, vector<vector<T>>& out)
+		static void Recursive(const size_t index, const vector<vector<T>>& in, vector<vector<T>>& out)
 		{
 			if(index>=in.size()) return;
 
@@ -106,7 +106,7 @@ namespace Math
 			}
 
 			vector<vector<T>> newout;
-			for (unsigned int i=0;i<curElem.size();++i)
+			for (size_t i=0;i<curElem.size();++i)
 			{
 				if(out.empty())//对于第一次递归，只需要添加in的第一列到out中
 				{
@@ -116,7 +116,7 @@ namespace Math
 				}
 				else//在之前已经创建的组合的基础上添加当前元素，组合的个数会乘以curElem.size()倍（除了0）。
 				{
-					for (unsigned int j=0;j<out.size();++j)
+					for (size_t j=0;j<out.size();++j)
 					{
 						vector<T> newSeq=out[j];
 						newSeq.push_back(curElem[i]);
@@ -139,7 +139,7 @@ namespace Math
 		static vector<vector<T>> Get(const vector<T>& seq)
 		{
 			vector<vector<T>> res;
-			for (unsigned int i=1;i<=seq.size();++i)
+			for (size_t i=1;i<=seq.size();++i)
 			{
 				vector<vector<T>> subs;
 				FindSubSequence(seq,i,0,subs);
@@ -149,13 +149,13 @@ namespace Math
 			return res;
 		}
 	private:
-		static void FindSubSequence(const vector<T>& raw,const unsigned int length,const unsigned int startIndex,vector<vector<T>>& out)
+		static void FindSubSequence(const vector<T>& raw,const size_t length,const size_t startIndex,vector<vector<T>>& out)
 		{
 			if(raw.size()-startIndex<length) return;
 			if(length<=0) return;
 
 			out.clear();
-			for (unsigned int i=startIndex;i<raw.size();++i)
+			for (size_t i=startIndex;i<raw.size();++i)
 			{			
 				//从raw的第i+1到结尾处，寻找长度等于length-1的子序列。
 				vector<vector<T>> subsubs;
@@ -170,7 +170,7 @@ namespace Math
 				}
 
 				//把当前的元素和子结构里的length-1长度的子序列连接起来，形成长度为length的子序列。
-				for (unsigned int j=0;j<subsubs.size();++j)
+				for (size_t j=0;j<subsubs.size();++j)
 				{
 					vector<T> sub;
 					sub.reserve(length);

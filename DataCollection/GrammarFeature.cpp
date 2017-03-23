@@ -17,7 +17,7 @@ namespace DataCollection
 	int GrammarFeature::FeatureCount(const vector<shared_ptr<Word>>& words)
 	{
 		int res = 0;
-		for (unsigned int i = 0; i < words.size(); ++i)
+		for (size_t i = 0; i < words.size(); ++i)
 		{
 			auto currentCount = CurrentFeatureCount(i, words);
 			res += currentCount;
