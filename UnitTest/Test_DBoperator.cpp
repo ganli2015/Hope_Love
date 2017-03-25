@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Test_DBoperator.h"
 
-
+#include "../Mind/FilePath.h"
 #include <sqlite3pp/sqlite3pp.h>
 
 const string dbPath = "testDB.db";
@@ -111,3 +111,15 @@ TEST(Test_DBoperator, InsertRow)
 	dbOpe.DeleteTable("t2");
 }
 
+TEST(Test_DBoperator, ttt)
+{
+	DBoperator dbOpe(Mind::GetHopeLoveMindPath()+"data.db");
+	DBQry qry("select * from BaseConceptsString" , dbOpe);
+
+	auto rows = qry.GetRows();
+
+// 	wstring ww = Utf8ToUnicode(rows[0].GetText("word"));
+// 	string wwtf = AsciiToUtf8(rows[0].GetText("word"));
+// 	string wwas = Utf8ToAscii(rows[0].GetText("word"));
+	//ASSERT_EQ(4, qry.RowCount());
+}

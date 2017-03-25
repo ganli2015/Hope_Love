@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include "windows.h"  
 #include <sstream>
 
 namespace CommonTool
@@ -19,5 +20,19 @@ namespace CommonTool
 	}
 
 	_COMMONTOOLSINOUT int StrToInt(const string str);
+
+	//**************string******************//  
+	// ASCII与Unicode互转  
+	_COMMONTOOLSINOUT wstring AsciiToUnicode(const string& str);
+	_COMMONTOOLSINOUT string  UnicodeToAscii(const wstring& wstr);
+	// UTF8与Unicode互转  
+	_COMMONTOOLSINOUT wstring Utf8ToUnicode(const string& str);
+	_COMMONTOOLSINOUT string  UnicodeToUtf8(const wstring& wstr);
+	// ASCII与UTF8互转  
+	_COMMONTOOLSINOUT string  AsciiToUtf8(const string& str);
+	_COMMONTOOLSINOUT string  Utf8ToAscii(const string& str);
+	//**************CString******************//  
+	// ASCII与Unicode互转  
+
 }
 

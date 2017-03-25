@@ -17,7 +17,7 @@ namespace Mind
 {
 	GrammarFeatureDatabase::GrammarFeatureDatabase() :TableName("GrammarFeature"), _db(NULL)
 	{
-		CheckHasTable();
+		//CheckHasTable();
 	}
 
 

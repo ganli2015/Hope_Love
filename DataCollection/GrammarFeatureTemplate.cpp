@@ -67,7 +67,7 @@ namespace DataCollection
 	{
 		if (i == words.size() - 1) return NULL;
 
-		shared_ptr<GrammarFeature> feature(new TagFollowedByWord(words[i]->Type(), words[i + 1]));
+		shared_ptr<GrammarFeature> feature(new TagFollowedByWord(words[i]->Type(), words[i + 1]->GetString()));
 		return feature;
 	}
 
@@ -75,7 +75,7 @@ namespace DataCollection
 	{
 		if (i == words.size() - 1) return NULL;
 
-		shared_ptr<GrammarFeature> feature(new WordFollowedByTag(words[i], words[i + 1]->Type()));
+		shared_ptr<GrammarFeature> feature(new WordFollowedByTag(words[i]->GetString(), words[i + 1]->Type()));
 		return feature;
 	}
 

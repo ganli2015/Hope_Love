@@ -2,7 +2,12 @@
 #include "InOut.h"
 #include "Word.h"
 
-#include "../CommonTools/DatabaseTrait.h"
+namespace CommonTool
+{
+	class DBoperator;
+	class DBCmd;
+	class DBRow;
+}
 
 namespace DataCollection
 {
@@ -25,11 +30,25 @@ namespace DataCollection
 		//////////////////////////////////////////////////////////////////////////
 		virtual int FeatureCount(const vector<shared_ptr<Word>>& words);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Get statement for insert row to database.
+		//////////////////////////////////////////////////////////////////////////
+		virtual CommonTool::DBCmd GetInsertCmd(CommonTool::DBoperator& dbOpe) const ;
+
+		void ReadFromDBRow(const CommonTool::DBRow& row);
+
 	private:
 		//////////////////////////////////////////////////////////////////////////
 		//Get count of feature from current word as well as its neighbour.
 		//////////////////////////////////////////////////////////////////////////
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words) = 0;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Bind parameter of feature to <cmd>.
+		//////////////////////////////////////////////////////////////////////////
+		virtual void BindParam(CommonTool::DBCmd& cmd) const = 0;
+
+		virtual void ReadParam(const CommonTool::DBRow& row) = 0;
 	};
 
 
@@ -51,6 +70,8 @@ namespace DataCollection
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words) ;
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -65,6 +86,8 @@ namespace DataCollection
 		~TagBigram() {};
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -80,6 +103,8 @@ namespace DataCollection
 		~TagTrigram() {};
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -88,12 +113,14 @@ namespace DataCollection
 	class _DATACOLLECTIONINOUT TagFollowedByWord : public GrammarFeature
 	{
 		PartOfSpeech _t1;
-		shared_ptr<Word> _word;
+		string _word;
 	public:
-		TagFollowedByWord(const PartOfSpeech t1, const shared_ptr<Word> val) :_t1(t1),_word(val) {};
+		TagFollowedByWord(const PartOfSpeech t1, const string val) :_t1(t1),_word(val) {};
 		~TagFollowedByWord() {};
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -102,12 +129,14 @@ namespace DataCollection
 	class _DATACOLLECTIONINOUT WordFollowedByTag : public GrammarFeature
 	{
 		PartOfSpeech _t1;
-		shared_ptr<Word> _word;
+		string _word;
 	public:
-		WordFollowedByTag(const shared_ptr<Word> val, const PartOfSpeech t1) :_t1(t1), _word(val) {};
+		WordFollowedByTag(const string val, const PartOfSpeech t1) :_t1(t1), _word(val) {};
 		~WordFollowedByTag() {};
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 }
 
