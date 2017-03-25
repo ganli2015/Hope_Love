@@ -101,6 +101,9 @@
     <ClInclude Include="Test_GrammarFeatureDatabase.h">
       <Filter>Mind</Filter>
     </ClInclude>
+    <ClInclude Include="Test_DBoperator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -165,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="Test_GrammarFeatureDatabase.cpp">
       <Filter>Mind</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_DBoperator.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

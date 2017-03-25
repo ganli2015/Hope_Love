@@ -12,7 +12,7 @@ namespace DataCollection
 	//It is a feature for some grammar.
 	//It is generated from some feature template with a rule.
 	//////////////////////////////////////////////////////////////////////////
-	class GrammarFeature : public Obj<GrammarFeature>
+	class _DATACOLLECTIONINOUT GrammarFeature : public Obj<GrammarFeature>
 	{
 	protected:
 		

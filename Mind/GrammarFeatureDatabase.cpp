@@ -71,10 +71,9 @@ namespace Mind
 	{
 		if (_db == NULL)
 		{
-			_db = new DBoperator();
+			_db = new DBoperator(GetDatabasePath());
 		}
 
-		_db->Connect(GetDatabasePath());
 	}
 
 	DBCmd Mind::GrammarFeatureDatabase::CreateCommand(const string statement) const

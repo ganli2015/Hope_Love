@@ -43,7 +43,7 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-	RunFilter("Test_GrammarFeatureDatabase*");
+	RunFilter("Test_DBoperator*");
 
 #ifdef _RUN_INTEGRATION_TEST
 

@@ -8,20 +8,15 @@ using namespace sqlite3pp;
 
 namespace CommonTool
 {
-	DBoperator::DBoperator()
+	DBoperator::DBoperator(const string dbPath)
 	{
+		_db = new database(dbPath.c_str());
 	}
 
 
 	DBoperator::~DBoperator()
 	{
 		Disconnect();
-	}
-
-	void DBoperator::Connect(const string dbPath)
-	{
-		Disconnect();
-		_db = new database(dbPath.c_str());
 	}
 
 	void DBoperator::Disconnect()
@@ -31,6 +26,12 @@ namespace CommonTool
 			_db->disconnect();
 			_db = NULL;
 		}
+	}
+
+	void DBoperator::DeleteTable(const string tableName)
+	{
+		DBCmd cmd("Drop table " + tableName, *this);
+		cmd.Execute();
 	}
 
 	DBCmd::DBCmd(const string cmd, DBoperator db)
@@ -51,12 +52,22 @@ namespace CommonTool
 
 	void DBCmd::Bind(const string key, const long val)
 	{
-		_cmd->bind(key.c_str(),ToString(val), sqlite3pp::nocopy);
+		_cmd->bind(key.c_str(), val);
 	}
 
 	void DBCmd::Bind(const string key, const string val)
 	{
-		_cmd->bind(key.c_str(), val, sqlite3pp::nocopy);
+		_cmd->bind(key.c_str(), val, sqlite3pp::copy);
+	}
+
+	void DBCmd::Bind(const int index, const long val)
+	{
+		_cmd->bind(index+1, val);
+	}
+
+	void DBCmd::Bind(const int index, const string val)
+	{
+		_cmd->bind(index+1, val, sqlite3pp::copy);
 	}
 
 	DBQry::DBQry(const string cmd, DBoperator db)
@@ -113,5 +124,24 @@ namespace CommonTool
 		_strType[colName] = val;
 	}
 
+	long DBRow::GetLong(const string colName) const
+	{
+		if (_longType.find(colName) != _longType.end())
+		{
+			return _longType.at(colName);
+		}
+
+		throw invalid_argument("Invalid column name: " + colName);
+	}
+
+	string DBRow::GetText(const string colName) const
+	{
+		if (_strType.find(colName) != _strType.end())
+		{
+			return _strType.at(colName);
+		}
+
+		throw invalid_argument("Invalid column name: " + colName);
+	}
 }
 

@@ -30,11 +30,12 @@ namespace CommonTool
 		friend class DBCmd;
 		friend class DBQry;
 	public:
-		DBoperator();
+		DBoperator(const string dbPath);
 		~DBoperator();
 
-		void Connect(const string dbPath);
 		void Disconnect();
+
+		void DeleteTable(const string tableName);
 	};
 
 	class _COMMONTOOLSINOUT DBCmd
@@ -51,21 +52,40 @@ namespace CommonTool
 		//////////////////////////////////////////////////////////////////////////
 		void Bind(const string key, const long val);
 		void Bind(const string key, const string val);
+		//////////////////////////////////////////////////////////////////////////
+		//Bind the value with the parameter index in the initial command string.(start from 0)
+		//////////////////////////////////////////////////////////////////////////
+		void Bind(const int index, const long val);
+		void Bind(const int index, const string val);
 	};
 
-	class DBRow
+	//////////////////////////////////////////////////////////////////////////
+	//A row in a table.
+	//////////////////////////////////////////////////////////////////////////
+	class _COMMONTOOLSINOUT DBRow
 	{
 		map<string, long> _longType;
 		map<string, string> _strType;
+
+		friend class DBQry;
+	public:
+		template<class T>
+		struct ReturnTrait
+		{
+			typedef typename T type;
+		};
 
 	public:
 		DBRow();
 		~DBRow();
 
-		void Insert(const string colName, const long val);
-		void Insert(const string colName, const string val);
+
+		long GetLong(const string colName) const;
+		string GetText(const string colName) const;
 	private:
 
+		void Insert(const string colName, const long val);
+		void Insert(const string colName, const string val);
 	};
 
 	class _COMMONTOOLSINOUT DBQry
@@ -79,6 +99,8 @@ namespace CommonTool
 		~DBQry();
 
 		long RowCount() const;
+
+		vector<DBRow> GetRows() const { return _rows; }
 
 	private:
 
