@@ -1,11 +1,20 @@
 #pragma once
 
-#include <sqlite3pp/sqlite3pp.h>
+//#include <sqlite3pp/sqlite3pp.h>
+
+namespace sqlite3pp
+{
+	class database;
+	class command;
+	class query;
+}
 
 template<class T>
 struct Trait
 {
-
+	typedef typename T::database DB;
+	typedef typename T::command DBCmd;
+	typedef typename T::query DBQry;
 };
 
 template<>

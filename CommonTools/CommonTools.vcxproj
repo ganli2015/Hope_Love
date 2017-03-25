@@ -73,23 +73,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppD.lib;sqlite3D.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3ppD.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,7 +114,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppD.lib;sqlite3D.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3ppD.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,7 +126,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppLIB.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3pp.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,7 +138,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppLIB.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3pp.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

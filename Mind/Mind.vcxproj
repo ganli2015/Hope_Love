@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib;sqlite3D.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\$(Configuration)\"</Command>
@@ -117,7 +117,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib;sqlite3D.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>
@@ -132,7 +132,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\$(Configuration)\"</Command>
@@ -147,7 +147,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>

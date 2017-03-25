@@ -2,6 +2,8 @@
 #include "InOut.h"
 #include "Word.h"
 
+#include "../CommonTools/DatabaseTrait.h"
+
 namespace DataCollection
 {
 	class Word;
@@ -10,8 +12,10 @@ namespace DataCollection
 	//It is a feature for some grammar.
 	//It is generated from some feature template with a rule.
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT GrammarFeature : public Obj<GrammarFeature>
+	class GrammarFeature : public Obj<GrammarFeature>
 	{
+	protected:
+		
 	public:
 		GrammarFeature();
 		virtual ~GrammarFeature();
