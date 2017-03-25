@@ -70,26 +70,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
     <ReferencePath />
-    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
     <ReferencePath />
-    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\gTest\include;..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\gTest\lib;..\thirdpart\TinyXml\lib;..\thirdpart\sqlite3pp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,7 +104,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtest_maind.lib;gtestd.lib;tinyxml.lib;gmock_main.lib;gmock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_maind.lib;gtestd.lib;tinyxml.lib;gmock_main.lib;gmock.lib;sqlite3ppD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Artificial Intelligence\Project\HopeLoveAPI\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -131,7 +131,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtest_maind.lib;gtestd.lib;tinyxml.lib;gmock_main.lib;gmock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_maind.lib;gtestd.lib;tinyxml.lib;gmock_main.lib;gmock.lib;sqlite3ppD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Artificial Intelligence\Project\HopeLoveAPI\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -161,7 +161,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest_main.lib;gtest.lib;tinyxml.lib;gmock_mainr.lib;gmockr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_main.lib;gtest.lib;tinyxml.lib;gmock_mainr.lib;gmockr.lib;sqlite3pp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Artificial Intelligence\Project\HopeLoveAPI\Release</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -191,7 +191,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest_main.lib;gtest.lib;tinyxml.lib;gmock_mainr.lib;gmockr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_main.lib;gtest.lib;tinyxml.lib;gmock_mainr.lib;gmockr.lib;sqlite3pp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\Artificial Intelligence\Project\HopeLoveAPI\Release</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -219,6 +219,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="Test_Concept.h" />
     <ClInclude Include="Test_ConceptInteractTable.h" />
     <ClInclude Include="Test_GrammarFeature.h" />
+    <ClInclude Include="Test_GrammarFeatureDatabase.h" />
     <ClInclude Include="Test_iRelation.h" />
     <ClInclude Include="Test_LogicSystem.h" />
     <ClInclude Include="Test_Mathmatic.h" />
@@ -245,6 +246,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClCompile Include="Test_Concept.cpp" />
     <ClCompile Include="Test_ConceptInteractTable.cpp" />
     <ClCompile Include="Test_GrammarFeature.cpp" />
+    <ClCompile Include="Test_GrammarFeatureDatabase.cpp" />
     <ClCompile Include="Test_iRelation.cpp" />
     <ClCompile Include="Test_LogicSystem.cpp" />
     <ClCompile Include="Test_Mathmatic.cpp" />

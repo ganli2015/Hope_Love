@@ -192,11 +192,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy  "$(SolutionDir)$(ConfigurationName)\*.dll" "$(TargetDir)"
+    <PostBuildEvent>copy  "$(SolutionDir)$(PlatformName)\$(ConfigurationName)\*.dll" "$(TargetDir)"
 copy  "$(SolutionDir)Mind\HopeLoveData\*.txt" "$(TargetDir)HopeLoveData"
 copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(TargetDir)HopeLoveData"
 if not exist "$(TargetDir)HopeLoveData\large" mkdir "$(TargetDir)HopeLoveData\large"
-copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(TargetDir)HopeLoveData\large"</PostBuildEvent>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(TargetDir)HopeLoveData\large"
+copy  "$(SolutionDir)Mind\HopeLoveData\*.db" "$(TargetDir)HopeLoveData"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 

@@ -98,6 +98,9 @@
     <ClInclude Include="Test_GrammarFeature.h">
       <Filter>DataCollection</Filter>
     </ClInclude>
+    <ClInclude Include="Test_GrammarFeatureDatabase.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -159,6 +162,9 @@
     </ClCompile>
     <ClCompile Include="Test_GrammarFeature.cpp">
       <Filter>DataCollection</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_GrammarFeatureDatabase.cpp">
+      <Filter>Mind</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

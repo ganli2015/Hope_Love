@@ -1,6 +1,8 @@
 #include "Stdafx.h"
 #include "FilePath.h"
 
+#include "GrammarFeatureDatabase.h"
+
 namespace Mind
 {
 	static std::string DataDir = "HopeLoveData\\";
@@ -16,6 +18,11 @@ namespace Mind
 	void SetHopeLoveMindPath(const std::string str)
 	{
 		DataDir = str;
+	}
+
+	std::string GetDatabasePath()
+	{
+		return GetHopeLoveMindPath()+"data.db";
 	}
 
 }

@@ -73,23 +73,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\thirdpart\TinyXml\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\TinyXml\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\TinyXml\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\TinyXml\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;sqlite3D.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\$(Configuration)\"</Command>
@@ -117,7 +117,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;sqlite3D.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>
@@ -132,7 +132,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;sqlite3.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\$(Configuration)\"</Command>
@@ -147,7 +147,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml.lib;sqlite3.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>Copy "$(TargetPath)" "$(SolutionDir)HopeLove\bin\x64\$(Configuration)\"</Command>
@@ -170,6 +170,7 @@
     <ClInclude Include="ConceptSetInitializer.h" />
     <ClInclude Include="FindConnectConcept.h" />
     <ClInclude Include="FilePath.h" />
+    <ClInclude Include="GrammarFeatureDatabase.h" />
     <ClInclude Include="GrammaSet.h" />
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="ConceptSetInitializer.cpp" />
     <ClCompile Include="FindConnectConcept.cpp" />
     <ClCompile Include="FilePath.cpp" />
+    <ClCompile Include="GrammarFeatureDatabase.cpp" />
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
     <ClCompile Include="ReactionValueEvaluation.cpp" />

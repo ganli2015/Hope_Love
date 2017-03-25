@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{71dd3d29-21a2-436d-92f4-e331101f0eb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -62,6 +65,9 @@
     <ClInclude Include="resource1.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GrammarFeatureDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -108,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="ReactionValueEvaluation.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarFeatureDatabase.cpp">
+      <Filter>Database</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

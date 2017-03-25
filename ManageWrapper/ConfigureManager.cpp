@@ -2,6 +2,7 @@
 #include "ConfigureManager.h"
 
 #include "../Mind/Cerebrum.h"
+#include "../Mind/GrammarFeatureDatabase.h"
 
 #include "../MindElement/MindElementCreator.h"
 
@@ -43,6 +44,7 @@ namespace ManageWrapper
 		knowledgeInit.Initialize("HopeLoveData\\LogicStatements.txt",knowledge);
 		LOG("Initialized LogicKnowledge.");
 		brain->SetLogicKnowledge(knowledge);
+
 	}
 }
 

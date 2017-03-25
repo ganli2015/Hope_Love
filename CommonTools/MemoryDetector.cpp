@@ -46,7 +46,7 @@ namespace CommonTool
 	std::string MemoryDetector::PrintDiff() const
 	{
 		char buffer[1000];
-		sprintf_s(buffer, "Last second statistics:{%d,%d,%d,%d,%d}.Last statistics:{%d,%d,%d,%d,%d}. ",
+		sprintf_s(buffer, "Last second statistics:{%rd,%rd,%rd,%rd,%rd}.Last statistics:{%rd,%rd,%rd,%rd,%rd}. ",
 			_s1.lCounts[0], _s1.lCounts[1], _s1.lCounts[2], _s1.lCounts[3], _s1.lCounts[4],
 			_s2.lCounts[0], _s2.lCounts[1], _s2.lCounts[2], _s2.lCounts[3], _s2.lCounts[4]);
 

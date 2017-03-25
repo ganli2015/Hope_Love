@@ -73,23 +73,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,11 +97,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <CallingConvention>Cdecl</CallingConvention>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppD.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3D.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -110,11 +110,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <CallingConvention>Cdecl</CallingConvention>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppD.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3D.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,11 +122,11 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <CallingConvention>Cdecl</CallingConvention>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppLIB.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,11 +134,11 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <CallingConvention>Cdecl</CallingConvention>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppLIB.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,6 +153,8 @@
     <ClInclude Include="CommonStringFunction.h" />
     <ClInclude Include="CommonTranslateFunction.h" />
     <ClInclude Include="ConfigureInfoManager.h" />
+    <ClInclude Include="DatabaseTrait.h" />
+    <ClInclude Include="DBoperator.h" />
     <ClInclude Include="GeneralFunctor.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="IOFunction.h" />
@@ -170,6 +172,7 @@
     <ClCompile Include="CommonStringFunction.cpp" />
     <ClCompile Include="CommonTranslateFunction.cpp" />
     <ClCompile Include="ConfigureInfoManager.cpp" />
+    <ClCompile Include="DBoperator.cpp" />
     <ClCompile Include="IOFunction.cpp" />
     <ClCompile Include="LogWriter.cpp" />
     <ClCompile Include="MemoryDetector.cpp" />

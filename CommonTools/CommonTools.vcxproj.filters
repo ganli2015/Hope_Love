@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{c4d1b22d-542f-437f-8f29-f4f3ed112a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -56,6 +59,12 @@
     <ClInclude Include="MemoryDetector.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DBoperator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseTrait.h">
+      <Filter>Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -95,6 +104,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MemoryDetector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DBoperator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
