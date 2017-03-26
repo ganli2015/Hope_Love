@@ -4,10 +4,10 @@
 #include "../Mind/FilePath.h"
 #include <sqlite3pp/sqlite3pp.h>
 
-const string dbPath = "testDB.db";
 const string tableName = "t1";
 
 using namespace CommonTool;
+using namespace FuncForTest;
 
 TEST(Test_DBoperator, QueryRowCount)
 {

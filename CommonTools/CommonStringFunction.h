@@ -1,6 +1,5 @@
 #pragma once
 #include "InOut.h"
-#include "windows.h"  
 #include <sstream>
 
 namespace CommonTool

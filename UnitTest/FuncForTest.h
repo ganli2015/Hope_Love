@@ -38,6 +38,7 @@ protected:
 namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
+	const string dbPath = "testDB.db";
 
 	shared_ptr<DataCollection::Word> ToWord(const string str, const DataCollection::PartOfSpeech pos);
 

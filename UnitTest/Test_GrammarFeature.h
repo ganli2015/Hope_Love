@@ -57,6 +57,29 @@ namespace DataCollection
 			_res.push_back(param);
 		}
 	};
+
+	struct Param_ReadWriteDB
+	{
+		shared_ptr<GrammarFeature> input;
+	};
+
+	class Test_ReadWriteDB : public::testing::TestWithParam<Param_ReadWriteDB>
+	{
+	protected:
+		static string featureTable;
+		static vector<Param_ReadWriteDB> _params;
+	public:
+		static vector<Param_ReadWriteDB> GenerateSamples();
+
+	protected:
+		static void ClearFeatureRows();
+		static void PushSample(const shared_ptr<GrammarFeature> feature)
+		{
+			Param_ReadWriteDB param;
+			param.input = feature;
+			_params.push_back(param);
+		}
+	};
 }
 
 

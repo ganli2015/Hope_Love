@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iterator>
 #include "../CommonTools/CommonTranslateFunction.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace std;
 using namespace CommonTool;
@@ -79,13 +80,19 @@ namespace DataCollection
 		else return false;
 	}
 
-	std::string Word::GetString() const
+	std::string Word::GetString(const Word::Encode encode) const
 	{
 		string str("");
 		for (size_t i=0;i<_word.size();++i)
 		{
 			str+=_word[i]->GetString();
 		}
+
+		if (encode == Word::Utf8)
+		{
+			str = CommonTool::AsciiToUtf8(str);
+		}
+
 		return str;
 	}
 

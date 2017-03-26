@@ -36,6 +36,14 @@ namespace DataCollection
 		std::vector<shared_ptr<Character>> _word;
 
 		bool _known;
+
+	public:
+		enum Encode
+		{
+			Utf8,
+			Ascii
+		};
+
 	public:
 		Word(void);
 		~Word(void);
@@ -49,7 +57,7 @@ namespace DataCollection
 		///Number of character in the word.
 		int NumOfChara() const {return _word.size();}
 		bool IsSame(const shared_ptr<Word> word) const;
-		std::string GetString() const ;
+		std::string GetString(const Word::Encode encode = Ascii) const;
 
 		///Append a character <right> to <me>.
 		Word& operator+=(const Character right);

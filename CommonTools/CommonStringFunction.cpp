@@ -3,6 +3,7 @@
 
 #include "GeneralFunctor.h"
 
+#include "windows.h"  
 
 namespace CommonTool
 {

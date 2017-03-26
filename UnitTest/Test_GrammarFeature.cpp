@@ -6,7 +6,10 @@
 #include "../DataCollection/GrammarFeatureTemplate.h"
 #include "../DataCollection/LanguageFunc.h"
 
+#include "../CommonTools/DBoperator.h"
+
 using namespace FuncForTest;
+using namespace CommonTool;
 
 namespace DataCollection
 {
@@ -54,6 +57,7 @@ namespace DataCollection
 
 	vector<Param_FindFeatures> Test_FindFeatures::GenerateSamples()
 	{
+		//The number is expected feature count.
 		PushSample<TagWithWordTemplate>(7);
 		PushSample<TagBigramTemplate>(6);
 		PushSample<TagTrigramTemplate>(5);
@@ -76,13 +80,80 @@ namespace DataCollection
 		auto tagTrigram = make_shared<TagTrigram>(Adverb, Adjective,Adverb);
 		PushSample(tagTrigram, 1);
 
-		auto tagFollowedByWord = make_shared<TagFollowedByWord>(Adverb,ToWord("大",Adjective));
+		auto tagFollowedByWord = make_shared<TagFollowedByWord>(Adverb,"大");
 		PushSample(tagFollowedByWord, 1);
 
-		auto wordFollowedByTag = make_shared<WordFollowedByTag>(ToWord("越", Adverb), Adjective);
+		auto wordFollowedByTag = make_shared<WordFollowedByTag>("越", Adjective);
 		PushSample(wordFollowedByTag, 2);
 
 		return _res;
+	}
+
+	INSTANTIATE_TEST_CASE_P(Test_GrammarFeature, Test_ReadWriteDB, testing::ValuesIn(Test_ReadWriteDB::GenerateSamples()));
+
+	TEST_P(Test_ReadWriteDB, WriteToDBAndRead)
+	{
+		//Clear all rows in table "GrammarFeature".
+		ClearFeatureRows();
+
+		auto param = GetParam();
+		//Insert feature to database.
+		DBoperator db(dbPath);
+		DBCmd insertCmd = param.input->GetInsertCmd(db);
+		insertCmd.Bind(":freq", 1);//freq must not be null.
+		insertCmd.Execute();
+
+		//Get row from database.
+		DBQry qry("Select * from " + featureTable, db);
+		auto rows = qry.GetRows();
+		ASSERT_EQ(1, rows.size());
+
+		//Check the feature is the same as input.
+		auto feature = GrammarFeature::GetFeature(rows[0]);
+		ASSERT_TRUE(feature->Same(param.input));
+	}
+
+	std::string Test_ReadWriteDB::featureTable = "GrammarFeature";
+
+	vector<Param_ReadWriteDB> Test_ReadWriteDB::_params;
+
+	vector<Param_ReadWriteDB> Test_ReadWriteDB::GenerateSamples()
+	{
+		//Generate samples of basic features.
+		{
+			auto word = ToWord("我", Pronoun);
+			shared_ptr<TagWithWord> feature(new TagWithWord(word));
+			PushSample(feature);
+		}
+
+		{
+			shared_ptr<TagBigram> feature(new TagBigram(Noun,Verb));
+			PushSample(feature);
+		}
+
+		{
+			shared_ptr<TagTrigram> feature(new TagTrigram(Noun, Verb,Adjective));
+			PushSample(feature);
+		}
+
+		{
+			shared_ptr<TagFollowedByWord> feature(new TagFollowedByWord(Noun, "莫莫"));
+			PushSample(feature);
+		}
+
+		{
+			shared_ptr<WordFollowedByTag> feature(new WordFollowedByTag( "莫莫", Noun));
+			PushSample(feature);
+		}
+
+		return _params;
+	}
+
+	void Test_ReadWriteDB::ClearFeatureRows()
+	{
+		DBoperator db(FuncForTest::dbPath);
+		DBCmd cmd("Delete from " + featureTable, db);
+		cmd.Execute();
 	}
 
 }

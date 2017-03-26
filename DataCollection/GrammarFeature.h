@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include <functional>
 #include "Word.h"
 
 namespace CommonTool
@@ -19,11 +20,37 @@ namespace DataCollection
 	//////////////////////////////////////////////////////////////////////////
 	class _DATACOLLECTIONINOUT GrammarFeature : public Obj<GrammarFeature>
 	{
+		//////////////////////////////////////////////////////////////////////////
+		//Used for create a derived feature.
+		//////////////////////////////////////////////////////////////////////////
+		class FeatureCreator
+		{
+		public:
+			virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row) = 0;
+		};
+
+		template<class T>
+		class ConcreteFeatureCreator : public FeatureCreator
+		{
+		public:
+			virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row)
+			{
+				shared_ptr<T> feature(new T());
+				feature->ReadFromDBRow(row);
+				return feature;
+			}
+		};
+
 	protected:
-		
+		static map<string, FeatureCreator*> _featureCreators;
 	public:
 		GrammarFeature();
 		virtual ~GrammarFeature();
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get feature from a row in database.
+		//////////////////////////////////////////////////////////////////////////
+		static shared_ptr<GrammarFeature> GetFeature(const CommonTool::DBRow& row);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get count of this feature in this sentence.
@@ -35,8 +62,15 @@ namespace DataCollection
 		//////////////////////////////////////////////////////////////////////////
 		virtual CommonTool::DBCmd GetInsertCmd(CommonTool::DBoperator& dbOpe) const ;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Read data from a row in database.
+		//////////////////////////////////////////////////////////////////////////
 		void ReadFromDBRow(const CommonTool::DBRow& row);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Check if <other> is same with <me>.
+		//////////////////////////////////////////////////////////////////////////
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const = 0;
 	private:
 		//////////////////////////////////////////////////////////////////////////
 		//Get count of feature from current word as well as its neighbour.
@@ -49,6 +83,8 @@ namespace DataCollection
 		virtual void BindParam(CommonTool::DBCmd& cmd) const = 0;
 
 		virtual void ReadParam(const CommonTool::DBRow& row) = 0;
+
+		static void PrepareFeatureCreators();
 	};
 
 
@@ -65,9 +101,11 @@ namespace DataCollection
 		shared_ptr<Word> _word;
 
 	public:
+		TagWithWord() {};
 		TagWithWord(const shared_ptr<Word> val);
 		~TagWithWord();
 
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words) ;
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -82,8 +120,11 @@ namespace DataCollection
 		PartOfSpeech _t1;
 		PartOfSpeech _t2;
 	public:
+		TagBigram() {};
 		TagBigram(const PartOfSpeech t1, const PartOfSpeech t2) :_t1(t1), _t2(t2) {};
 		~TagBigram() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -99,8 +140,11 @@ namespace DataCollection
 		PartOfSpeech _t2;
 		PartOfSpeech _t3;
 	public:
+		TagTrigram() {};
 		TagTrigram(const PartOfSpeech t1, const PartOfSpeech t2, const PartOfSpeech t3) :_t1(t1), _t2(t2), _t3(t3) {};
 		~TagTrigram() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -115,8 +159,12 @@ namespace DataCollection
 		PartOfSpeech _t1;
 		string _word;
 	public:
-		TagFollowedByWord(const PartOfSpeech t1, const string val) :_t1(t1),_word(val) {};
+		TagFollowedByWord() {};
+		TagFollowedByWord(const PartOfSpeech t1, const string val) :_t1(t1), _word(val) {};
 		~TagFollowedByWord() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -131,8 +179,12 @@ namespace DataCollection
 		PartOfSpeech _t1;
 		string _word;
 	public:
+		WordFollowedByTag() {};
 		WordFollowedByTag(const string val, const PartOfSpeech t1) :_t1(t1), _word(val) {};
 		~WordFollowedByTag() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;

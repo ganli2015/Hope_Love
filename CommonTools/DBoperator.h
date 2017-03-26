@@ -40,7 +40,7 @@ namespace CommonTool
 
 	class _COMMONTOOLSINOUT DBCmd
 	{
-		sqlite3pp::command *_cmd;
+		shared_ptr<sqlite3pp::command> _cmd;
 	public:
 		DBCmd(const string cmd,DBoperator db);
 		~DBCmd();
@@ -90,11 +90,14 @@ namespace CommonTool
 
 	class _COMMONTOOLSINOUT DBQry
 	{
-		sqlite3pp::query *_qry;
+		shared_ptr< sqlite3pp::query > _qry;
 
 		vector<DBRow> _rows;
 
 	public:
+		//////////////////////////////////////////////////////////////////////////
+		//Note!The string in the database will be convert from Utf-8 to Ascii.
+		//////////////////////////////////////////////////////////////////////////
 		DBQry(const string cmd, DBoperator db);
 		~DBQry();
 
@@ -103,7 +106,7 @@ namespace CommonTool
 		vector<DBRow> GetRows() const { return _rows; }
 
 	private:
-
+		void ParseQry(sqlite3pp::query *qry);
 	};
 
 

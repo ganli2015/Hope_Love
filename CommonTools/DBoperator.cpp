@@ -36,13 +36,12 @@ namespace CommonTool
 
 	DBCmd::DBCmd(const string cmd, DBoperator db)
 	{
-		_cmd = new command(*db._db, cmd.c_str());
+		_cmd =shared_ptr<command>( new command(*db._db, cmd.c_str()));
 	}
 
 	DBCmd::~DBCmd()
 	{
-		if(_cmd!=NULL)
-			delete _cmd;
+
 	}
 
 	void DBCmd::Execute()
@@ -72,38 +71,51 @@ namespace CommonTool
 
 	DBQry::DBQry(const string cmd, DBoperator db)
 	{
-		_qry = new query(*db._db, cmd.c_str());
-
-		//Add data to rows.
-		for (sqlite3pp::query::iterator i = _qry->begin(); i != _qry->end(); ++i) 
+		try
 		{
-			auto row = (*i);
-			DBRow dbRow;
-			for (int j = 0; j < _qry->column_count(); ++j) 
-			{
-				if (row.column_type(j) == SQLITE3_TEXT)
-				{
-					dbRow.Insert(_qry->column_name(j), row.get<const char*>(j));
-				}
-				else if (row.column_type(j) == SQLITE_INTEGER)
-				{
-					dbRow.Insert(_qry->column_name(j), row.get<const long>(j));
-				}
-			}
+			_qry = shared_ptr<query>(new query(*db._db, cmd.c_str()));
 
-			_rows.push_back(dbRow);
+			//Add data to rows.
+			ParseQry(_qry.get());
+		}
+		catch (const std::exception&)
+		{
 		}
 	}
 
 	DBQry::~DBQry()
 	{
-		if (_qry != NULL)
-			delete _qry;
+
 	}
 
 	long DBQry::RowCount() const
 	{
 		return _rows.size();
+	}
+
+	void DBQry::ParseQry(sqlite3pp::query *qry)
+	{
+		for (sqlite3pp::query::iterator i = qry->begin(); i != qry->end(); ++i)
+		{
+			auto row = (*i);
+			DBRow dbRow;
+			for (int j = 0; j < qry->column_count(); ++j)
+			{
+				if (row.column_type(j) == SQLITE3_TEXT)
+				{
+					//Parse string from utf8 to ascii.
+					auto value = row.get<const char*>(j);
+					auto ascii = Utf8ToAscii(value);
+					dbRow.Insert(qry->column_name(j), ascii);
+				}
+				else if (row.column_type(j) == SQLITE_INTEGER)
+				{
+					dbRow.Insert(qry->column_name(j), row.get<const long>(j));
+				}
+			}
+
+			_rows.push_back(dbRow);
+		}
 	}
 
 	DBRow::DBRow()
