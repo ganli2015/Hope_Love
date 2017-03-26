@@ -71,6 +71,19 @@ namespace DataCollection
 		//Check if <other> is same with <me>.
 		//////////////////////////////////////////////////////////////////////////
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const = 0;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get hash value.
+		//////////////////////////////////////////////////////////////////////////
+		virtual size_t GetHash() const = 0;
+
+	protected:
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get class type of <me>.
+		//////////////////////////////////////////////////////////////////////////
+		string GetMyType() const;
+
 	private:
 		//////////////////////////////////////////////////////////////////////////
 		//Get count of feature from current word as well as its neighbour.
@@ -85,6 +98,7 @@ namespace DataCollection
 		virtual void ReadParam(const CommonTool::DBRow& row) = 0;
 
 		static void PrepareFeatureCreators();
+
 	};
 
 
@@ -106,6 +120,7 @@ namespace DataCollection
 		~TagWithWord();
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words) ;
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -125,6 +140,7 @@ namespace DataCollection
 		~TagBigram() {};
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -145,6 +161,7 @@ namespace DataCollection
 		~TagTrigram() {};
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
@@ -164,6 +181,7 @@ namespace DataCollection
 		~TagFollowedByWord() {};
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
@@ -184,6 +202,7 @@ namespace DataCollection
 		~WordFollowedByTag() {};
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);

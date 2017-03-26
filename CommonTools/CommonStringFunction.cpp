@@ -5,6 +5,8 @@
 
 #include "windows.h"  
 
+#include <functional>
+
 namespace CommonTool
 {
 	vector<string> SplitString( const string& str, const char splitTag )
@@ -96,5 +98,41 @@ namespace CommonTool
 	string Utf8ToAscii(const string& str) {
 		return UnicodeToAscii(Utf8ToUnicode(str));
 	}
+
+	std::string Getline_UnicodeFile(ifstream& fin, size_t& index)
+	{
+		wstring wstrLine = L"";
+		string strLineAnsi = "";
+
+		while (true && !fin.eof())
+		{
+			fin.seekg(index, ios::beg);
+			wchar_t wch;
+			fin.read((char *)(&wch), 2);
+			if (wch == 0x000D) // 判断回车  
+			{
+				strLineAnsi = UnicodeToAscii(wstrLine);
+				wstrLine.erase(0, wstrLine.size() + 1);
+				index += 4; // 跳过回车符和行开头符  
+
+				break;
+			}
+			else
+			{
+				wstrLine.append(1, wch);
+				index += 2;
+			}
+		}
+
+		return strLineAnsi;
+	}
+
+
+	size_t GetStrHash(const string str)
+	{
+		hash<string> hs;
+		return hs(str);
+	}
+
 }
 

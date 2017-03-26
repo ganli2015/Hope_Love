@@ -9,9 +9,13 @@ namespace CommonTool
 	class DBCmd;
 }
 
-namespace Mind
+namespace DataCollection
 {
 	class GrammarFeature;
+}
+
+namespace Mind
+{
 
 	class GrammarFeatureDatabase
 	{
@@ -22,20 +26,16 @@ namespace Mind
 		~GrammarFeatureDatabase();
 
 
-		void Insert(const shared_ptr<GrammarFeature> feature);
+		void Insert(const shared_ptr<DataCollection::GrammarFeature> feature);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Number of rows.
 		//////////////////////////////////////////////////////////////////////////
 		long RowCount();
 
-	private:
+		void Disconnect();
 
-		//////////////////////////////////////////////////////////////////////////
-		//Check if there is feature table.
-		//If not, create one.
-		//////////////////////////////////////////////////////////////////////////
-		void CheckHasTable();
+	private:
 
 		//////////////////////////////////////////////////////////////////////////
 		//Check if database is connected.

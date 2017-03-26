@@ -1,6 +1,7 @@
 #pragma once
 #include "InOut.h"
 #include <sstream>
+#include <fstream>
 
 namespace CommonTool
 {
@@ -33,5 +34,15 @@ namespace CommonTool
 	//**************CString******************//  
 	// ASCIIÓëUnicode»¥×ª  
 
+	//////////////////////////////////////////////////////////////////////////
+	//Get one line of a Unicode file and parse the line to Ascii.
+	//Note!The index should start from 2 and it is an output from this function.
+	//////////////////////////////////////////////////////////////////////////
+	_COMMONTOOLSINOUT std::string Getline_UnicodeFile(ifstream& fin, size_t& index);
+
+	//////////////////////////////////////////////////////////////////////////
+	//Get hash value of a string.
+	//////////////////////////////////////////////////////////////////////////
+	_COMMONTOOLSINOUT size_t GetStrHash(const string str);
 }
 

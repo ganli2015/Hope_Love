@@ -171,11 +171,11 @@
     <ClInclude Include="FindConnectConcept.h" />
     <ClInclude Include="FilePath.h" />
     <ClInclude Include="GrammarFeatureDatabase.h" />
+    <ClInclude Include="GrammarFeatureTrainer.h" />
     <ClInclude Include="GrammaSet.h" />
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="ReactionValueEvaluation.h" />
-    <ClInclude Include="resource1.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +191,7 @@
     <ClCompile Include="FindConnectConcept.cpp" />
     <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="GrammarFeatureDatabase.cpp" />
+    <ClCompile Include="GrammarFeatureTrainer.cpp" />
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
     <ClCompile Include="ReactionValueEvaluation.cpp" />

@@ -9,8 +9,6 @@
 #include "FilePath.h"
 
 
-
-
 using namespace CommonTool;
 
 namespace Mind
@@ -23,14 +21,21 @@ namespace Mind
 
 	GrammarFeatureDatabase::~GrammarFeatureDatabase()
 	{
-		_db->Disconnect();
-		delete _db;
+		if (_db != NULL)
+		{
+			_db->Disconnect();
+			delete _db;
+			_db = NULL;
+		}
+
 	}
 
-	void GrammarFeatureDatabase::Insert(const shared_ptr<GrammarFeature> feature)
+	void GrammarFeatureDatabase::Insert(const shared_ptr<DataCollection::GrammarFeature> feature)
 	{
 		CheckConnect();
 
+		auto cmd = feature->GetInsertCmd(*_db);
+		cmd.Execute();
 	}
 
 	long GrammarFeatureDatabase::RowCount()
@@ -43,28 +48,10 @@ namespace Mind
 		return qry.RowCount();
 	}
 
-	void GrammarFeatureDatabase::CheckHasTable()
+	void GrammarFeatureDatabase::Disconnect()
 	{
-		CheckConnect();
-		//if (RowCount() != 0) return;
-
-		DEBUG_FORMAT("Not find table %s.", TableName.c_str());
-		string state = "CREATE TABLE " + TableName + "\
-				(ID int(8) PRIMARY KEY  NOT NULL,\
-				Freq int(8)  NOT NULL,\
-				Type char(15) NOT NULL,\
-				POS1 int(2),\
-				POS2 int(2),\
-				POS3 int(2),\
-				POS4 int(2),\
-				POS5 int(2),\
-				Word1 int(8),\
-				Word2 int(8),\
-				Word3 int(8),\
-				Word4 int(8),\
-				Word5 int(8));";
-		DBCmd cmd = CreateCommand(state);
-		cmd.Execute();
+		if(_db!=NULL)
+			_db->Disconnect();
 	}
 
 	void GrammarFeatureDatabase::CheckConnect()
@@ -73,7 +60,6 @@ namespace Mind
 		{
 			_db = new DBoperator(GetDatabasePath());
 		}
-
 	}
 
 	DBCmd Mind::GrammarFeatureDatabase::CreateCommand(const string statement) const

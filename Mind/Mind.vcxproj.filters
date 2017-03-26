@@ -62,11 +62,11 @@
     <ClInclude Include="ReactionValueEvaluation.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GrammarFeatureDatabase.h">
       <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarFeatureTrainer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +117,9 @@
     </ClCompile>
     <ClCompile Include="GrammarFeatureDatabase.cpp">
       <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarFeatureTrainer.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

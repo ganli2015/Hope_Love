@@ -50,6 +50,11 @@ namespace DataCollection
 		LOG("Grammar feature creators are prepared.");
 	}
 
+	std::string GrammarFeature::GetMyType() const
+	{
+		return typeid(*this).name();
+	}
+
 	int GrammarFeature::FeatureCount(const vector<shared_ptr<Word>>& words)
 	{
 		int res = 0;
@@ -64,12 +69,14 @@ namespace DataCollection
 
 	CommonTool::DBCmd GrammarFeature::GetInsertCmd(CommonTool::DBoperator& dbOpe) const
 	{
-		string state = "Insert into GrammarFeature(freq,type,pos1,pos2,pos3,word1,word2,word3)\
-				VALUES (:freq,:type,:pos1,:pos2,:pos3,:word1,:word2,:word3) ";
+		string state = "Insert into GrammarFeature(id,type,pos1,pos2,pos3,word1,word2,word3)\
+				VALUES (:id,:type,:pos1,:pos2,:pos3,:word1,:word2,:word3) ";
 		DBCmd cmd(state, dbOpe);
 		BindParam(cmd);
+		//Set id.
+		cmd.Bind(":id", GetHash());
 		//Set type of <me>.
-		auto type = typeid(*this).name();
+		auto type = GetMyType();
 		cmd.Bind(":type", type);
 
 		return cmd;
@@ -103,6 +110,12 @@ namespace DataCollection
 		{
 			return false;
 		}
+	}
+
+	size_t TagWithWord::GetHash() const
+	{
+		string hashStr = GetMyType() + _word->GetString() + ToString(_word->Type());
+		return GetStrHash(hashStr);
 	}
 
 	int TagWithWord::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -148,6 +161,12 @@ namespace DataCollection
 		}
 	}
 
+	size_t TagBigram::GetHash() const
+	{
+		string hashStr = GetMyType() + ToString(_t1) + ToString(_t2);
+		return GetStrHash(hashStr);
+	}
+
 	int TagBigram::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		//Check POS of current and previous word.
@@ -164,6 +183,8 @@ namespace DataCollection
 
 	void TagBigram::BindParam(CommonTool::DBCmd& cmd) const
 	{
+
+
 		cmd.Bind(":pos1", (int)_t1);
 		cmd.Bind(":pos2", (int)_t2);
 	}
@@ -188,6 +209,12 @@ namespace DataCollection
 		{
 			return false;
 		}
+	}
+
+	size_t TagTrigram::GetHash() const
+	{
+		string hashStr = GetMyType() + ToString(_t1) + ToString(_t2) + ToString(_t3);
+		return GetStrHash(hashStr);
 	}
 
 	int TagTrigram::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -235,6 +262,12 @@ namespace DataCollection
 		}
 	}
 
+	size_t TagFollowedByWord::GetHash() const
+	{
+		string hashStr = GetMyType() + _word + ToString(_t1);
+		return GetStrHash(hashStr);
+	}
+
 	int TagFollowedByWord::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		//Check current POS and next word string.
@@ -276,6 +309,12 @@ namespace DataCollection
 		{
 			return false;
 		}
+	}
+
+	size_t WordFollowedByTag::GetHash() const
+	{
+		string hashStr = GetMyType() + _word + ToString(_t1);
+		return GetStrHash(hashStr);
 	}
 
 	int WordFollowedByTag::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)

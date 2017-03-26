@@ -100,7 +100,6 @@ namespace DataCollection
 		//Insert feature to database.
 		DBoperator db(dbPath);
 		DBCmd insertCmd = param.input->GetInsertCmd(db);
-		insertCmd.Bind(":freq", 1);//freq must not be null.
 		insertCmd.Execute();
 
 		//Get row from database.
