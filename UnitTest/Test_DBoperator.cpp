@@ -89,7 +89,8 @@ TEST(Test_DBoperator, InsertRow)
 	//Bind with index.
 	string state2 = "INSERT INTO t2 (long1, name1) VALUES (?, ?)";
 	DBCmd insertCmd2(state2, dbOpe);
-	insertCmd2.Bind(0, 2);
+	long index2 = 2;
+	insertCmd2.Bind((int)0, index2);
 	insertCmd2.Bind(1, "bb");
 	insertCmd2.Execute();
 

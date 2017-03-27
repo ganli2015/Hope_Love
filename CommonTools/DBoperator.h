@@ -5,6 +5,7 @@ namespace sqlite3pp {
 	class database;
 	class command;
 	class query;
+	class transaction;
 }
 
 #define SQLITE_INTEGER  1
@@ -26,6 +27,7 @@ namespace CommonTool
 	class _COMMONTOOLSINOUT DBoperator
 	{
 		sqlite3pp::database *_db;
+		sqlite3pp::transaction *_tr;
 
 		friend class DBCmd;
 		friend class DBQry;
@@ -36,6 +38,9 @@ namespace CommonTool
 		void Disconnect();
 
 		void DeleteTable(const string tableName);
+
+		void BeginTransaction();
+		void CommitTransaction();
 	};
 
 	class _COMMONTOOLSINOUT DBCmd
@@ -50,7 +55,9 @@ namespace CommonTool
 		//////////////////////////////////////////////////////////////////////////
 		//Bind the value with key in the initial command string.
 		//////////////////////////////////////////////////////////////////////////
+		void Bind(const string key, const int val);
 		void Bind(const string key, const long val);
+		void Bind(const string key, const long long val);
 		void Bind(const string key, const string val);
 		//////////////////////////////////////////////////////////////////////////
 		//Bind the value with the parameter index in the initial command string.(start from 0)
@@ -101,7 +108,7 @@ namespace CommonTool
 		DBQry(const string cmd, DBoperator db);
 		~DBQry();
 
-		long RowCount() const;
+		size_t RowCount() const;
 
 		vector<DBRow> GetRows() const { return _rows; }
 

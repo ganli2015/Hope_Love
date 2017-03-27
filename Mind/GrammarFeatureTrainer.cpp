@@ -131,10 +131,12 @@ namespace Mind
 	void GrammarFeatureTrainer::WriteFeaturesToDB() const
 	{
 		shared_ptr<GrammarFeatureDatabase> featureDB(new GrammarFeatureDatabase());
+		vector<shared_ptr<GrammarFeature>> featureVec;
 		for (auto feature : _features)
 		{
-			featureDB->Insert(feature.second);
+			featureVec.push_back(feature.second);
 		}
+		featureDB->Insert(featureVec);
 	}
 
 }

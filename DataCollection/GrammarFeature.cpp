@@ -74,7 +74,8 @@ namespace DataCollection
 		DBCmd cmd(state, dbOpe);
 		BindParam(cmd);
 		//Set id.
-		cmd.Bind(":id", GetHash());
+		long long hash = GetHash()/2;
+		cmd.Bind(":id", hash);
 		//Set type of <me>.
 		auto type = GetMyType();
 		cmd.Bind(":type", type);

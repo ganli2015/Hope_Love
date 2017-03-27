@@ -8,7 +8,7 @@ using namespace sqlite3pp;
 
 namespace CommonTool
 {
-	DBoperator::DBoperator(const string dbPath)
+	DBoperator::DBoperator(const string dbPath):_tr(NULL)
 	{
 		_db = new database(dbPath.c_str());
 	}
@@ -34,6 +34,22 @@ namespace CommonTool
 		cmd.Execute();
 	}
 
+	void DBoperator::BeginTransaction()
+	{
+		if (_tr == NULL)
+		{
+			_tr = new transaction(*_db);
+		}
+	}
+
+	void DBoperator::CommitTransaction()
+	{
+		if (_tr != NULL)
+		{
+			_tr->commit();
+		}
+	}
+
 	DBCmd::DBCmd(const string cmd, DBoperator db)
 	{
 		_cmd =shared_ptr<command>( new command(*db._db, cmd.c_str()));
@@ -49,7 +65,17 @@ namespace CommonTool
 		_cmd->execute();
 	}
 
+	void DBCmd::Bind(const string key, const int val)
+	{
+		_cmd->bind(key.c_str(), val);
+	}
+
 	void DBCmd::Bind(const string key, const long val)
+	{
+		_cmd->bind(key.c_str(), val);
+	}
+
+	void DBCmd::Bind(const string key, const long long val)
 	{
 		_cmd->bind(key.c_str(), val);
 	}
@@ -88,7 +114,7 @@ namespace CommonTool
 
 	}
 
-	long DBQry::RowCount() const
+	size_t DBQry::RowCount() const
 	{
 		return _rows.size();
 	}

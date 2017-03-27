@@ -38,6 +38,17 @@ namespace Mind
 		cmd.Execute();
 	}
 
+	void GrammarFeatureDatabase::Insert(const vector<shared_ptr<DataCollection::GrammarFeature>> features)
+	{
+		CheckConnect();
+		_db->BeginTransaction();
+		for (auto feature : features)
+		{
+			Insert(feature);
+		}
+		_db->CommitTransaction();
+	}
+
 	long GrammarFeatureDatabase::RowCount()
 	{
 		CheckConnect();
