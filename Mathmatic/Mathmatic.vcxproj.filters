@@ -53,6 +53,9 @@
     <ClInclude Include="MatrixEigen.h">
       <Filter>imp</Filter>
     </ClInclude>
+    <ClInclude Include="NumericalOptimization.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="MatrixEigen.cpp">
       <Filter>imp</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalOptimization.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

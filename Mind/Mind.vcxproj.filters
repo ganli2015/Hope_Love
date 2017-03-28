@@ -65,7 +65,7 @@
     <ClInclude Include="GrammarFeatureDatabase.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="GrammarFeatureTrainer.h">
+    <ClInclude Include="GrammarFeatureModel.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,7 +118,7 @@
     <ClCompile Include="GrammarFeatureDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="GrammarFeatureTrainer.cpp">
+    <ClCompile Include="GrammarFeatureModel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

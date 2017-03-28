@@ -438,8 +438,6 @@ namespace Mind
 		return samples;
 	}
 
-	
-
 	void GrammarSet::ExtractGrammarLocalDistribution()
 	{
 		vector<Sen_Gra> samples=InputGraSamples(GetHopeLoveMindPath()+StringGrammar_InitialFilename);

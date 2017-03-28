@@ -33,6 +33,11 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		void CollectFeatures(const string samplePath);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Compute weights for different features.
+		//////////////////////////////////////////////////////////////////////////
+		void ComputeWeights(const string samplePath);
+
 	private:
 		void PrepareFeatureTemplates();
 
@@ -44,6 +49,22 @@ namespace Mind
 
 		void WriteFeaturesToDB() const;
 	};
+
+	class GrammarFeatureModel
+	{
+	public:
+		GrammarFeatureModel();
+		~GrammarFeatureModel();
+
+		//////////////////////////////////////////////////////////////////////////
+		//Compute Possibility of tagging for a given sentence. 
+		//////////////////////////////////////////////////////////////////////////
+		double ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+	private:
+
+	};
+
+
 }
 
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GrammarFeatureTrainer.h"
+#include "GrammarFeatureModel.h"
 #include "GrammarFeatureDatabase.h"
 
 #include "../CommonTools/CommonStringFunction.h"
@@ -35,6 +35,11 @@ namespace Mind
 		LOG_FORMAT("Finish find features of sample sentences and the count of features is %d.", _features.size());
 		WriteFeaturesToDB();
 		LOG("Finish write features to database.");
+	}
+
+	void GrammarFeatureTrainer::ComputeWeights(const string samplePath)
+	{
+		auto allPOSsentences = ParseSampleSentences(samplePath);
 	}
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
@@ -137,6 +142,19 @@ namespace Mind
 			featureVec.push_back(feature.second);
 		}
 		featureDB->Insert(featureVec);
+	}
+
+	GrammarFeatureModel::GrammarFeatureModel()
+	{
+	}
+
+	GrammarFeatureModel::~GrammarFeatureModel()
+	{
+	}
+
+	double GrammarFeatureModel::ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const
+	{
+		return -1;
 	}
 
 }

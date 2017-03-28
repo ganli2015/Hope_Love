@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "DataPrepareForHopeLove.h"
 
-#include "../Mind/GrammarFeatureTrainer.h"
+#include "../Mind/GrammarFeatureModel.h"
 
 #include "../CommonTools/DBoperator.h"
 
@@ -11,7 +11,7 @@ using namespace CommonTool;
 
 //These are preparations for Hope_Love, including training data and collecting data.
 
-TEST(DISABLED_Preparation, CollectGrammarFeatures)
+TEST(Preparation, CollectGrammarFeatures)
 {
 // 	DBoperator db(GetDatabasePath());
 // 	DBCmd cmd("Insert into BaseConceptsString(id,word,pos) values(10000,'가가가가',10)", db);
