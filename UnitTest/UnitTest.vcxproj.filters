@@ -107,6 +107,9 @@
     <ClInclude Include="DataPrepareForHopeLove.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Test_NumericalOptimization.h">
+      <Filter>Mathmatic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -177,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="DataPrepareForHopeLove.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_NumericalOptimization.cpp">
+      <Filter>Mathmatic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
