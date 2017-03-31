@@ -1,6 +1,6 @@
 #pragma once
 #include "InOut.h"
-
+#include <set>
 
 
 namespace DataCollection
@@ -12,6 +12,46 @@ namespace DataCollection
 
 namespace Mind
 {
+	class GrammarFeatureDatabase;
+
+	class _MINDINOUT GrammarFeatureModel
+	{
+		GrammarFeatureDatabase *_featureDB;
+		FeatureList _features;
+
+		friend class GrammarFeatureTrainer;
+	private:
+		struct FeatureStat
+		{
+			shared_ptr<DataCollection::GrammarFeature> feature;
+			int count;//Satisfied feature count in a sentence.
+		};
+
+		typedef vector<FeatureStat> StatList;
+
+	public:
+		GrammarFeatureModel();
+		~GrammarFeatureModel();
+
+		//////////////////////////////////////////////////////////////////////////
+		//Compute Possibility of tagging for a given sentence. 
+		//////////////////////////////////////////////////////////////////////////
+		double ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Load all features from database to memory.
+		//////////////////////////////////////////////////////////////////////////
+		void LoadAllFeatures();
+		void ClearFeatures() { _features.clear(); }
+
+	private:
+		//////////////////////////////////////////////////////////////////////////
+		//Get features of sentence.
+		//Return a map: key is feature type and value is corresponding features.
+		//////////////////////////////////////////////////////////////////////////
+		map<string, StatList> GetAllFeatures(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 	//Do some training or statistical techniques with grammar feature.
 	//////////////////////////////////////////////////////////////////////////
@@ -23,6 +63,27 @@ namespace Mind
 		map<size_t, shared_ptr<DataCollection::GrammarFeature>> _features;
 
 		vector<shared_ptr<DataCollection::GrammarFeatureTemplate>> _featureTemplates;
+
+		friend class GrammarFeatureModel;
+
+	private:
+		//////////////////////////////////////////////////////////////////////////
+		//Parameters for optimizing weights.
+		//////////////////////////////////////////////////////////////////////////
+		struct OptWeightParam
+		{
+			//////////////////////////////////////////////////////////////////////////
+			//Each element is feature distribution of each sentence.
+			//In map<string, int>, key is feature type and value is its count in this sentence.
+			//////////////////////////////////////////////////////////////////////////
+			vector<map<string, double>> featureCounts;
+
+			//////////////////////////////////////////////////////////////////////////
+			//Sequence of feature types.Its order is the same as variable.
+			//////////////////////////////////////////////////////////////////////////
+			vector<string> featureTypes;
+		};
+
 	public:
 		GrammarFeatureTrainer();
 		~GrammarFeatureTrainer();
@@ -48,23 +109,19 @@ namespace Mind
 		void FindFeaturesOneSentence(const vector<shared_ptr<DataCollection::Word>>& sentence) ;
 
 		void WriteFeaturesToDB() const;
-	};
 
-	class GrammarFeatureModel
-	{
-	public:
-		GrammarFeatureModel();
-		~GrammarFeatureModel();
+		map<string, double> ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const;
+		void AddFeatureTypesForOpt(const map<string, double>& featureDistri, set<string>& types) const;
 
-		//////////////////////////////////////////////////////////////////////////
-		//Compute Possibility of tagging for a given sentence. 
-		//////////////////////////////////////////////////////////////////////////
-		double ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
-	private:
+		static double OptFunc_ComputeWeights(const std::vector<double> &weights,
+			std::vector<double> &grad,
+			void* f_data);
 
+		static double ObjFunc(const vector<double>& weights,const OptWeightParam* param);
 	};
 
 
+	
 }
 
 

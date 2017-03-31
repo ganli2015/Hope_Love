@@ -59,10 +59,37 @@ namespace Mind
 		return qry.RowCount();
 	}
 
+	void GrammarFeatureDatabase::Connect()
+	{
+		CheckConnect();
+	}
+
 	void GrammarFeatureDatabase::Disconnect()
 	{
 		if(_db!=NULL)
 			_db->Disconnect();
+	}
+
+	Mind::FeatureList GrammarFeatureDatabase::GetAllFeatures()
+	{
+		CheckConnect();
+
+		_db->BeginTransaction();
+		//Get all rows.
+		string state = "select * from " + TableName;
+		DBQry qry(state, *_db);
+		auto allRows = qry.GetRows();
+		_db->CommitTransaction();
+
+		//Transform row to feature.
+		FeatureList res;
+		for (auto row : allRows)
+		{
+			auto feature = DataCollection::GrammarFeature::GetFeature(row);
+			res.push_back(feature);
+		}
+
+		return res;
 	}
 
 	void GrammarFeatureDatabase::CheckConnect()

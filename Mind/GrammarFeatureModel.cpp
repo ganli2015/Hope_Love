@@ -40,6 +40,27 @@ namespace Mind
 	void GrammarFeatureTrainer::ComputeWeights(const string samplePath)
 	{
 		auto allPOSsentences = ParseSampleSentences(samplePath);
+
+		GrammarFeatureModel featureModel;
+		//Load all features from database for efficiency.
+		featureModel.LoadAllFeatures();
+		LOG("Load all features.");
+
+		OptWeightParam optParam;
+		set<string> featureTypes;
+		for (auto posSentence : allPOSsentences)
+		{
+			auto featureStat = featureModel.GetAllFeatures(posSentence);
+			//Convert to map<string,int>.
+			auto featureDistribution = ConvertToFeatureCountDistribution(featureStat);
+			optParam.featureCounts.push_back(featureDistribution);
+			//Collect feature types with no duplication.
+			AddFeatureTypesForOpt(featureDistribution, featureTypes);
+		}
+		featureModel.ClearFeatures();
+		//Add types.
+		optParam.featureTypes.assign(featureTypes.begin(), featureTypes.end());
+		LOG_FORMAT("There are %d types of features.", optParam.featureTypes.size());
 	}
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
@@ -144,17 +165,116 @@ namespace Mind
 		featureDB->Insert(featureVec);
 	}
 
-	GrammarFeatureModel::GrammarFeatureModel()
+	map<string, double> GrammarFeatureTrainer::ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const
+	{
+		map<string, int> freqDistri;
+		double denominator = 0;//denominator of possibility.
+		for (auto statPair : featureStat)
+		{
+			//Compute total count of a specific feature template.
+			int countFeatureTemplate = 0;
+			for (auto stat : statPair.second)
+			{
+				countFeatureTemplate += stat.count;
+			}
+			freqDistri[statPair.first] = countFeatureTemplate;
+			denominator += exp(countFeatureTemplate);
+		}
+
+		map<string, double> res;
+		for (auto freqPair : freqDistri)
+		{
+			double possi = exp(freqPair.second) / denominator;
+			res[freqPair.first] = possi;
+		}
+
+		return res;
+	}
+
+	void GrammarFeatureTrainer::AddFeatureTypesForOpt(const map<string, double>& featureDistri, set<string>& types) const
+	{
+		for (auto pair : featureDistri)
+		{
+			types.insert(pair.first);
+		}
+	}
+
+	double GrammarFeatureTrainer::OptFunc_ComputeWeights(const std::vector<double> &weights, std::vector<double> &grad, void* f_data)
+	{
+		OptWeightParam* param = reinterpret_cast<OptWeightParam*>(f_data);
+		return -1;
+	}
+
+	double GrammarFeatureTrainer::ObjFunc(const vector<double>& weights, const OptWeightParam* param)
+	{
+		double obj = 0;
+		for (auto featureDistri : param->featureCounts)
+		{
+			double deviation = -1;
+			for (unsigned i=0;i<param->featureTypes.size();++i)
+			{
+				string featureType = param->featureTypes[i];
+				if (featureDistri.count(featureType))
+				{
+					deviation += featureDistri[featureType] * weights[i];
+				}
+			}
+			obj += deviation*deviation;
+		}
+		return obj;
+	}
+
+	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase())
 	{
 	}
 
 	GrammarFeatureModel::~GrammarFeatureModel()
 	{
+		if (_featureDB != NULL)
+		{
+			delete _featureDB;
+		}
 	}
 
 	double GrammarFeatureModel::ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
 		return -1;
+	}
+
+	void GrammarFeatureModel::LoadAllFeatures()
+	{
+		//Get features from database.
+		_featureDB->Connect();
+		_features = _featureDB->GetAllFeatures();
+		_featureDB->Disconnect();
+	}
+
+	map<string, GrammarFeatureModel::StatList> GrammarFeatureModel::GetAllFeatures(
+		const vector<shared_ptr<DataCollection::Word>>& sentence) const
+	{
+		//Find features in this sentence.
+		map<string, GrammarFeatureModel::StatList> res;
+		for (auto feature : _features)
+		{
+			int featureCount = feature->FeatureCount(sentence);
+			if (featureCount > 0)
+			{
+				//Has feature in the sentence.
+
+				FeatureStat stat;
+				stat.feature = feature;
+				stat.count = featureCount;
+				string featureType = feature->GetMyType();
+				if (res.count(featureType) == 0)
+				{
+					//A new type, then add StatList.
+					res[featureType] = StatList();
+				}
+				res[featureType].push_back(stat);
+			}
+		}
+
+		return res;
 	}
 
 }
