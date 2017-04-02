@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GrammarFeatureModel.h"
 #include "GrammarFeatureDatabase.h"
+#include "MindParameterDatabase.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/LogWriter.h"
@@ -9,6 +10,9 @@
 #include "../DataCollection/LanguageFunc.h"
 #include "../DataCollection/GrammarFeatureTemplate.h"
 #include "../DataCollection/GrammarFeature.h"
+
+#include "../Mathmatic/MathTool.h"
+#include "../Mathmatic/NumericalOptimization.h"
 
 #include <stdlib.h>
 
@@ -46,8 +50,11 @@ namespace Mind
 		featureModel.LoadAllFeatures();
 		LOG("Load all features.");
 
+		//test
+		int i = 0;
+
 		OptWeightParam optParam;
-		set<string> featureTypes;
+		set<string> featureTypes;//The count of types determines
 		for (auto posSentence : allPOSsentences)
 		{
 			auto featureStat = featureModel.GetAllFeatures(posSentence);
@@ -61,6 +68,19 @@ namespace Mind
 		//Add types.
 		optParam.featureTypes.assign(featureTypes.begin(), featureTypes.end());
 		LOG_FORMAT("There are %d types of features.", optParam.featureTypes.size());
+
+		//Get random weights.
+		vector<double> weights = Math::CreateRandomDoubleList(featureTypes.size());
+		//Optimize.
+		Math::NumericalOptimization opt(weights.size());
+		opt.SetObjectiveFunction(OptFunc_ComputeWeights, &optParam);
+		double objFunValue = 0;
+		LOG_FORMAT("Initial objective function value is %lf.", ObjFunc(weights,&optParam));
+		auto result = opt.Optimize(weights, objFunValue);
+		LOG_FORMAT("Final objective function value is %lf.", objFunValue);
+		//Write weights to database.
+		MindParameterDatabase mindPramDB;
+		mindPramDB.UpdateGrammarFeatureWeights(weights);
 	}
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
@@ -181,6 +201,7 @@ namespace Mind
 			denominator += exp(countFeatureTemplate);
 		}
 
+		//Convert frequency to possibility.
 		map<string, double> res;
 		for (auto freqPair : freqDistri)
 		{
@@ -202,26 +223,59 @@ namespace Mind
 	double GrammarFeatureTrainer::OptFunc_ComputeWeights(const std::vector<double> &weights, std::vector<double> &grad, void* f_data)
 	{
 		OptWeightParam* param = reinterpret_cast<OptWeightParam*>(f_data);
-		return -1;
+		double obj = ObjFunc(weights, param);
+		ComputeGrad(weights, param, grad);
+		return obj;
 	}
 
 	double GrammarFeatureTrainer::ObjFunc(const vector<double>& weights, const OptWeightParam* param)
 	{
+		//Compute Objective function.
 		double obj = 0;
 		for (auto featureDistri : param->featureCounts)
 		{
-			double deviation = -1;
-			for (unsigned i=0;i<param->featureTypes.size();++i)
-			{
-				string featureType = param->featureTypes[i];
-				if (featureDistri.count(featureType))
-				{
-					deviation += featureDistri[featureType] * weights[i];
-				}
-			}
+			double deviation = ComputeDeviation(weights, param->featureTypes, featureDistri);
+			
 			obj += deviation*deviation;
 		}
 		return obj;
+	}
+
+	void GrammarFeatureTrainer::ComputeGrad(const std::vector<double> &weights,const OptWeightParam* param, vector<double>& grad)
+	{
+		for (unsigned i = 0; i < param->featureTypes.size(); ++i)
+		{
+			//The ith feature type corresponds to the ith gradient.
+
+			double gradient = 0;
+			string featureType = param->featureTypes[i];
+			//Compute each contribution of each sentence.
+			for (auto featureDistri : param->featureCounts)
+			{
+				if (featureDistri.count(featureType))
+				{
+					double deviation = ComputeDeviation(weights, param->featureTypes, featureDistri);
+					gradient += 2 * featureDistri[featureType] * deviation;
+				}
+			}
+			grad[i] = gradient;
+		}
+	}
+
+	double GrammarFeatureTrainer::ComputeDeviation(const vector<double>& weights, 
+		const vector<string> &featureTypes, 
+		const map<string, double> &featureDistri)
+	{
+		double deviation = -1;
+		for (unsigned i = 0; i < featureTypes.size(); ++i)
+		{
+			string featureType = featureTypes[i];
+			if (featureDistri.count(featureType))
+			{
+				deviation += featureDistri.at(featureType) * weights[i];
+			}
+		}
+		return deviation;
 	}
 
 	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase())

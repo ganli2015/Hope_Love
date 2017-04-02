@@ -13,7 +13,7 @@ using namespace CommonTool;
 
 namespace Mind
 {
-	GrammarFeatureDatabase::GrammarFeatureDatabase() :TableName("GrammarFeature"), _db(NULL)
+	GrammarFeatureDatabase::GrammarFeatureDatabase() :TableName("GrammarFeature")
 	{
 		//CheckHasTable();
 	}
@@ -21,12 +21,7 @@ namespace Mind
 
 	GrammarFeatureDatabase::~GrammarFeatureDatabase()
 	{
-		if (_db != NULL)
-		{
-			_db->Disconnect();
-			delete _db;
-			_db = NULL;
-		}
+	
 
 	}
 
@@ -59,16 +54,6 @@ namespace Mind
 		return qry.RowCount();
 	}
 
-	void GrammarFeatureDatabase::Connect()
-	{
-		CheckConnect();
-	}
-
-	void GrammarFeatureDatabase::Disconnect()
-	{
-		if(_db!=NULL)
-			_db->Disconnect();
-	}
 
 	Mind::FeatureList GrammarFeatureDatabase::GetAllFeatures()
 	{
@@ -92,13 +77,6 @@ namespace Mind
 		return res;
 	}
 
-	void GrammarFeatureDatabase::CheckConnect()
-	{
-		if (_db == NULL)
-		{
-			_db = new DBoperator(GetDatabasePath());
-		}
-	}
 
 	DBCmd Mind::GrammarFeatureDatabase::CreateCommand(const string statement) const
 	{

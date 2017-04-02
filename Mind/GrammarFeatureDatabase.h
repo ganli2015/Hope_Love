@@ -1,13 +1,6 @@
 #pragma once
-#include "InOut.h"
+#include "MindDatabase.h"
 
-
-
-namespace CommonTool
-{
-	class DBoperator;
-	class DBCmd;
-}
 
 namespace DataCollection
 {
@@ -17,10 +10,9 @@ namespace DataCollection
 namespace Mind
 {
 
-	class GrammarFeatureDatabase
+	class GrammarFeatureDatabase : public MindDatabase
 	{
 		const string TableName;
-		CommonTool::DBoperator *_db;
 	public:
 		GrammarFeatureDatabase();
 		~GrammarFeatureDatabase();
@@ -37,8 +29,6 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		long RowCount();
 
-		void Connect();
-		void Disconnect();
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get all features in database.
@@ -47,11 +37,7 @@ namespace Mind
 
 	private:
 
-		//////////////////////////////////////////////////////////////////////////
-		//Check if database is connected.
-		//If not, then connect.
-		//////////////////////////////////////////////////////////////////////////
-		void CheckConnect();
+		
 
 		CommonTool::DBCmd CreateCommand(const string statement) const;
 	};

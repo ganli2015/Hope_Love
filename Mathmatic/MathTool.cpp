@@ -102,7 +102,18 @@ namespace Math
 		return Matrix(mat);
 	}
 
-	double _MATHMATICINOUT ComputeDeviation( const vector<double>& vec1,const vector<double>& vec2 )
+	vector<double> _MATHMATICINOUT CreateRandomDoubleList(size_t length)
+	{
+		vector<double> res;
+		for (size_t m = 0; m < length; ++m)
+		{
+			double val = Rand::GetRandDecimal();
+			res.push_back(val);
+		}
+		return res;
+	}
+
+	double _MATHMATICINOUT ComputeDeviation(const vector<double>& vec1, const vector<double>& vec2)
 	{
 		Check(vec1.size()==vec2.size());
 

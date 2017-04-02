@@ -5,7 +5,7 @@
 
 namespace Math
 {
-	NumericalOptimization::NumericalOptimization(const algorithm alg, const unsigned n):_opt(new nlopt::opt((nlopt::algorithm)alg,n))
+	NumericalOptimization::NumericalOptimization(const unsigned n, const algorithm alg):_opt(new nlopt::opt((nlopt::algorithm)alg,n))
 	{
 		
 	}

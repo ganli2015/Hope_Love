@@ -42,7 +42,7 @@ TEST(Test_NumericalOptimization, NonlinearlyConstrainedProblem)
 {
 	vector<double> lb{ -HUGE_VAL, 0 };
 
-	NumericalOptimization opt(Math::LD_MMA, 2);
+	NumericalOptimization opt( 2, Math::LD_MMA);
 	opt.SetLowerBound(lb);
 	opt.SetObjectiveFunction(NonlinearlyConstrainedProblem::myfunc);
 	opt.SetInequalityConstraint(NonlinearlyConstrainedProblem::myconstraint, &NonlinearlyConstrainedProblem::data[0], 1e-8);

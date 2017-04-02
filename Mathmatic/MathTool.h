@@ -26,6 +26,8 @@ namespace Math
 
 	Matrix _MATHMATICINOUT CreateRandomMatrix(size_t i,size_t j);
 
+	vector<double> _MATHMATICINOUT CreateRandomDoubleList(size_t length);
+
 	double _MATHMATICINOUT ComputeDeviation(const vector<double>& vec1,const vector<double>& vec2);
 
 	bool _MATHMATICINOUT SameVec(const vector<double>& vec1,const vector<double>& vec2);

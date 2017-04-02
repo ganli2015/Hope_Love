@@ -68,6 +68,12 @@
     <ClInclude Include="GrammarFeatureModel.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MindParameterDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="MindDatabase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -119,6 +125,12 @@
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="GrammarFeatureModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MindParameterDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="MindDatabase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

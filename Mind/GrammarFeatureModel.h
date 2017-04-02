@@ -118,6 +118,11 @@ namespace Mind
 			void* f_data);
 
 		static double ObjFunc(const vector<double>& weights,const OptWeightParam* param);
+		static void ComputeGrad(const std::vector<double> &weights, const OptWeightParam* param, vector<double>& grad);
+		//////////////////////////////////////////////////////////////////////////
+		//Compute difference between a sentence grammar possibility and one.
+		//////////////////////////////////////////////////////////////////////////
+		static double ComputeDeviation(const vector<double>& weights, const vector<string> &featureTypes, const map<string, double> &featureDistri);
 	};
 
 

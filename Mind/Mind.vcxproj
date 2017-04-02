@@ -175,6 +175,8 @@
     <ClInclude Include="GrammaSet.h" />
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
+    <ClInclude Include="MindDatabase.h" />
+    <ClInclude Include="MindParameterDatabase.h" />
     <ClInclude Include="ReactionValueEvaluation.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
@@ -194,6 +196,8 @@
     <ClCompile Include="GrammarFeatureModel.cpp" />
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
+    <ClCompile Include="MindDatabase.cpp" />
+    <ClCompile Include="MindParameterDatabase.cpp" />
     <ClCompile Include="ReactionValueEvaluation.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

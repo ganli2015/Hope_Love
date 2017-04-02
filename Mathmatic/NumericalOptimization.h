@@ -91,7 +91,7 @@ namespace Math
 		vector<double> _lowerBound;
 
 	public:
-		NumericalOptimization(const algorithm alg,const unsigned n);
+		NumericalOptimization(const unsigned n, const algorithm alg = LD_TNEWTON_PRECOND_RESTART);
 		~NumericalOptimization();
 
 		void SetObjectiveFunction(ObjectFunction objFunc,void* otherParam=NULL);
