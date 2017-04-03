@@ -15,8 +15,18 @@ namespace CommonTool
 	string ToString(const T t)
 	{
 		stringstream ss;
+		ss.precision(13);
 		ss<<t;
 		return ss.str();
+	}
+
+	template <class Type>
+	Type StringToNum(const string& str)
+	{
+		istringstream iss(str);
+		Type num;
+		iss >> num;
+		return num;
 	}
 
 	_COMMONTOOLSINOUT int StrToInt(const string str);

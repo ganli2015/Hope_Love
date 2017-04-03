@@ -45,8 +45,8 @@ TEST(Test_NumericalOptimization, NonlinearlyConstrainedProblem)
 	NumericalOptimization opt( 2, Math::LD_MMA);
 	opt.SetLowerBound(lb);
 	opt.SetObjectiveFunction(NonlinearlyConstrainedProblem::myfunc);
-	opt.SetInequalityConstraint(NonlinearlyConstrainedProblem::myconstraint, &NonlinearlyConstrainedProblem::data[0], 1e-8);
-	opt.SetInequalityConstraint(NonlinearlyConstrainedProblem::myconstraint, &NonlinearlyConstrainedProblem::data[1], 1e-8);
+	opt.AddInequalityConstraint(NonlinearlyConstrainedProblem::myconstraint, &NonlinearlyConstrainedProblem::data[0], 1e-8);
+	opt.AddInequalityConstraint(NonlinearlyConstrainedProblem::myconstraint, &NonlinearlyConstrainedProblem::data[1], 1e-8);
 	opt.SetXTol(1e-8);
 
 	vector<double> x{ 1.234, 5.678 };

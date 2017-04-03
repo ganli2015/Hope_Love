@@ -33,6 +33,9 @@
     <Filter Include="DataCollection">
       <UniqueIdentifier>{7bb132c4-b054-444e-a31f-ffe63c548f3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TestAndPreparation">
+      <UniqueIdentifier>{1c72c7c1-59b3-469f-9fc2-ef2deee0fe7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -104,11 +107,11 @@
     <ClInclude Include="Test_DBoperator.h">
       <Filter>CommonTool</Filter>
     </ClInclude>
-    <ClInclude Include="DataPrepareForHopeLove.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Test_NumericalOptimization.h">
       <Filter>Mathmatic</Filter>
+    </ClInclude>
+    <ClInclude Include="DataPrepareForHopeLove.h">
+      <Filter>TestAndPreparation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -178,11 +181,11 @@
     <ClCompile Include="Test_DBoperator.cpp">
       <Filter>CommonTool</Filter>
     </ClCompile>
-    <ClCompile Include="DataPrepareForHopeLove.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Test_NumericalOptimization.cpp">
       <Filter>Mathmatic</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPrepareForHopeLove.cpp">
+      <Filter>TestAndPreparation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

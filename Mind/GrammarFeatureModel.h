@@ -18,6 +18,13 @@ namespace Mind
 	{
 		GrammarFeatureDatabase *_featureDB;
 		FeatureList _features;
+		//////////////////////////////////////////////////////////////////////////
+		//The order of <_featureTypes> determines the order of weights in the database! 
+		set<string> _featureTypes;
+		//////////////////////////////////////////////////////////////////////////
+		//Key is feature type.
+		//////////////////////////////////////////////////////////////////////////
+		map<string, double> _weights;
 
 		friend class GrammarFeatureTrainer;
 	private:
@@ -35,6 +42,7 @@ namespace Mind
 
 		//////////////////////////////////////////////////////////////////////////
 		//Compute Possibility of tagging for a given sentence. 
+		//Call LoadAllFeatures before computing!!
 		//////////////////////////////////////////////////////////////////////////
 		double ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 
@@ -45,11 +53,14 @@ namespace Mind
 		void ClearFeatures() { _features.clear(); }
 
 	private:
+		void ReadWeightsInDB();
+
 		//////////////////////////////////////////////////////////////////////////
 		//Get features of sentence.
 		//Return a map: key is feature type and value is corresponding features.
 		//////////////////////////////////////////////////////////////////////////
 		map<string, StatList> GetAllFeatures(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+		map<string, double> ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -63,6 +74,7 @@ namespace Mind
 		map<size_t, shared_ptr<DataCollection::GrammarFeature>> _features;
 
 		vector<shared_ptr<DataCollection::GrammarFeatureTemplate>> _featureTemplates;
+
 
 		friend class GrammarFeatureModel;
 
@@ -110,11 +122,13 @@ namespace Mind
 
 		void WriteFeaturesToDB() const;
 
-		map<string, double> ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const;
-		void AddFeatureTypesForOpt(const map<string, double>& featureDistri, set<string>& types) const;
-
 		static double OptFunc_ComputeWeights(const std::vector<double> &weights,
 			std::vector<double> &grad,
+			void* f_data);
+		//////////////////////////////////////////////////////////////////////////
+		//The constraint on last weight that must be 0 to 1.
+		//////////////////////////////////////////////////////////////////////////
+		static double LastWeightConstraint(const vector<double>& weights, std::vector<double> &grad,
 			void* f_data);
 
 		static double ObjFunc(const vector<double>& weights,const OptWeightParam* param);
@@ -122,7 +136,9 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		//Compute difference between a sentence grammar possibility and one.
 		//////////////////////////////////////////////////////////////////////////
-		static double ComputeDeviation(const vector<double>& weights, const vector<string> &featureTypes, const map<string, double> &featureDistri);
+		static double ComputeObjComponent(const vector<double>& weights, const vector<string> &featureTypes, const map<string, double> &featureDistri);
+	
+		static double ComputeLastWeight(const vector<double>& weights);
 	};
 
 

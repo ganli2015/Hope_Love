@@ -87,19 +87,26 @@ namespace Math
 	class _MATHMATICINOUT NumericalOptimization
 	{
 		nlopt::opt *_opt;
-		vector<double> _upperBound;
-		vector<double> _lowerBound;
 
 	public:
 		NumericalOptimization(const unsigned n, const algorithm alg = LD_TNEWTON_PRECOND_RESTART);
 		~NumericalOptimization();
 
+		//////////////////////////////////////////////////////////////////////////
+		//Minimize the objective function.
+		//////////////////////////////////////////////////////////////////////////
 		void SetObjectiveFunction(ObjectFunction objFunc,void* otherParam=NULL);
-		void SetInequalityConstraint(ConstraintFunc func, void* otherParam = NULL, double tol = 0);
-		void SetEqualityConstraint(ConstraintFunc func, void* otherParam = NULL, double tol = 0);
+		//////////////////////////////////////////////////////////////////////////
+		//Maximize the objective function.
+		//////////////////////////////////////////////////////////////////////////
+		void SetMaximizeObjectiveFunction(ObjectFunction objFunc, void* otherParam = NULL);
+		void AddInequalityConstraint(ConstraintFunc func, void* otherParam = NULL, double tol = 0);
+		void AddEqualityConstraint(ConstraintFunc func, void* otherParam = NULL, double tol = 0);
 
-		void SetUpperBound(const vector<double>& upper) { _upperBound = upper; };
-		void SetLowerBound(const vector<double>& lower) { _lowerBound = lower; };
+		void SetUpperBound(const vector<double>& upper);;
+		void SetLowerBound(const vector<double>& lower);;
+		void SetUpperBound(const double& upper);;
+		void SetLowerBound(const double& lower);;
 
 		void SetXTol(const double xtol);
 		void SetFTol(const double ftol);

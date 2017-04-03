@@ -50,19 +50,23 @@ namespace Mind
 		featureModel.LoadAllFeatures();
 		LOG("Load all features.");
 
-		//test
+		//test 
 		int i = 0;
 
 		OptWeightParam optParam;
-		set<string> featureTypes;//The count of types determines
+		set<string> featureTypes = featureModel._featureTypes;
 		for (auto posSentence : allPOSsentences)
 		{
 			auto featureStat = featureModel.GetAllFeatures(posSentence);
 			//Convert to map<string,int>.
-			auto featureDistribution = ConvertToFeatureCountDistribution(featureStat);
+			auto featureDistribution = featureModel.ConvertToFeatureCountDistribution(featureStat);
 			optParam.featureCounts.push_back(featureDistribution);
-			//Collect feature types with no duplication.
-			AddFeatureTypesForOpt(featureDistribution, featureTypes);
+
+			//test
+			if (i++ > 20)
+			{
+				break;
+			}
 		}
 		featureModel.ClearFeatures();
 		//Add types.
@@ -70,13 +74,25 @@ namespace Mind
 		LOG_FORMAT("There are %d types of features.", optParam.featureTypes.size());
 
 		//Get random weights.
-		vector<double> weights = Math::CreateRandomDoubleList(featureTypes.size());
+		vector<double> weights = Math::CreateRandomDoubleList(featureTypes.size()-1);
 		//Optimize.
-		Math::NumericalOptimization opt(weights.size());
-		opt.SetObjectiveFunction(OptFunc_ComputeWeights, &optParam);
+		Math::NumericalOptimization opt(weights.size(), Math::LD_MMA);
+		opt.SetMaximizeObjectiveFunction(OptFunc_ComputeWeights, &optParam);
+		opt.AddInequalityConstraint(LastWeightConstraint);
+		//Set weights range to 0 to 1.
+		opt.SetLowerBound(0);
+		opt.SetUpperBound(1);
 		double objFunValue = 0;
 		LOG_FORMAT("Initial objective function value is %lf.", ObjFunc(weights,&optParam));
-		auto result = opt.Optimize(weights, objFunValue);
+		try
+		{
+			auto result = opt.Optimize(weights, objFunValue);
+			LOG_FORMAT("Optimization result: %s.", CommonTool::ToString(result).c_str());
+		}
+		catch (const std::exception& ex)
+		{
+			LOG_EXCEPTION(ex);
+		}
 		LOG_FORMAT("Final objective function value is %lf.", objFunValue);
 		//Write weights to database.
 		MindParameterDatabase mindPramDB;
@@ -185,41 +201,6 @@ namespace Mind
 		featureDB->Insert(featureVec);
 	}
 
-	map<string, double> GrammarFeatureTrainer::ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const
-	{
-		map<string, int> freqDistri;
-		double denominator = 0;//denominator of possibility.
-		for (auto statPair : featureStat)
-		{
-			//Compute total count of a specific feature template.
-			int countFeatureTemplate = 0;
-			for (auto stat : statPair.second)
-			{
-				countFeatureTemplate += stat.count;
-			}
-			freqDistri[statPair.first] = countFeatureTemplate;
-			denominator += exp(countFeatureTemplate);
-		}
-
-		//Convert frequency to possibility.
-		map<string, double> res;
-		for (auto freqPair : freqDistri)
-		{
-			double possi = exp(freqPair.second) / denominator;
-			res[freqPair.first] = possi;
-		}
-
-		return res;
-	}
-
-	void GrammarFeatureTrainer::AddFeatureTypesForOpt(const map<string, double>& featureDistri, set<string>& types) const
-	{
-		for (auto pair : featureDistri)
-		{
-			types.insert(pair.first);
-		}
-	}
-
 	double GrammarFeatureTrainer::OptFunc_ComputeWeights(const std::vector<double> &weights, std::vector<double> &grad, void* f_data)
 	{
 		OptWeightParam* param = reinterpret_cast<OptWeightParam*>(f_data);
@@ -234,16 +215,48 @@ namespace Mind
 		double obj = 0;
 		for (auto featureDistri : param->featureCounts)
 		{
-			double deviation = ComputeDeviation(weights, param->featureTypes, featureDistri);
+			double deviation = ComputeObjComponent(weights, param->featureTypes, featureDistri);
 			
-			obj += deviation*deviation;
+			obj += deviation;
 		}
 		return obj;
 	}
 
-	void GrammarFeatureTrainer::ComputeGrad(const std::vector<double> &weights,const OptWeightParam* param, vector<double>& grad)
+	double GrammarFeatureTrainer::LastWeightConstraint(const vector<double>& weights, std::vector<double> &grad,
+		void* f_data)
 	{
-		for (unsigned i = 0; i < param->featureTypes.size(); ++i)
+		double lastWeight = ComputeLastWeight(weights);
+		if (!grad.empty())
+		{
+			for (unsigned i=0;i<weights.size();++i)
+			{
+				grad[i] = -(2 * lastWeight - 1);
+			}
+		}
+
+		return lastWeight*(lastWeight - 1);
+	}
+
+	void GrammarFeatureTrainer::ComputeGrad(const std::vector<double> &weights, const OptWeightParam* param, vector<double>& grad)
+	{
+// 		for (unsigned i = 0; i < param->featureTypes.size(); ++i)
+// 		{
+// 			//The ith feature type corresponds to the ith gradient.
+// 
+// 			double gradient = 0;
+// 			string featureType = param->featureTypes[i];
+// 			//Compute each contribution of each sentence.
+// 			for (auto featureDistri : param->featureCounts)
+// 			{
+// 				if (featureDistri.count(featureType))
+// 				{
+// 					gradient +=  featureDistri[featureType] * deviation;
+// 				}
+// 			}
+// 			grad[i] = gradient;
+// 		}
+
+		for (unsigned i=0;i<weights.size();++i)
 		{
 			//The ith feature type corresponds to the ith gradient.
 
@@ -254,32 +267,68 @@ namespace Mind
 			{
 				if (featureDistri.count(featureType))
 				{
-					double deviation = ComputeDeviation(weights, param->featureTypes, featureDistri);
-					gradient += 2 * featureDistri[featureType] * deviation;
+					gradient += featureDistri[featureType];
 				}
 			}
+			//Compute last feature contribution.
+			string lastType = param->featureTypes[weights.size()];
+			for (auto featureDistri : param->featureCounts)
+			{
+				if (featureDistri.count(lastType))
+				{
+					gradient -= featureDistri[lastType];
+				}
+			}
+
 			grad[i] = gradient;
 		}
 	}
 
-	double GrammarFeatureTrainer::ComputeDeviation(const vector<double>& weights, 
+	double GrammarFeatureTrainer::ComputeObjComponent(const vector<double>& weights, 
 		const vector<string> &featureTypes, 
 		const map<string, double> &featureDistri)
 	{
-		double deviation = -1;
+		double deviation = 0;
 		for (unsigned i = 0; i < featureTypes.size(); ++i)
 		{
 			string featureType = featureTypes[i];
 			if (featureDistri.count(featureType))
 			{
-				deviation += featureDistri.at(featureType) * weights[i];
+				if (i == featureTypes.size() - 1)
+				{
+					//Last weight equals one minus other weights.
+					double lastWeight = ComputeLastWeight(weights);
+					deviation += featureDistri.at(featureType)*lastWeight;
+				}
+				else
+				{
+					deviation += featureDistri.at(featureType) * weights[i];
+				}
 			}
 		}
 		return deviation;
 	}
 
+	double GrammarFeatureTrainer::ComputeLastWeight(const vector<double>& weights)
+	{
+		double res = 1;
+		for (auto w : weights)
+		{
+			res -= w;
+		}
+		return res;
+	}
+
 	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase())
 	{
+		_featureTypes.insert(make_shared<TagWithWord>()->GetMyType());
+		_featureTypes.insert(make_shared<TagBigram>()->GetMyType());
+		_featureTypes.insert(make_shared<TagTrigram>()->GetMyType());
+		_featureTypes.insert(make_shared<TagFollowedByWord>()->GetMyType());
+		_featureTypes.insert(make_shared<WordFollowedByTag>()->GetMyType());
+
+		ReadWeightsInDB();
+		LOG("Finish read weights from database.");
 	}
 
 	GrammarFeatureModel::~GrammarFeatureModel()
@@ -292,7 +341,18 @@ namespace Mind
 
 	double GrammarFeatureModel::ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		return -1;
+		//Get feature distribution.
+		auto featureMap = GetAllFeatures(sentence);
+		auto featureDistri = ConvertToFeatureCountDistribution(featureMap);
+
+		double res = 0;
+		for (auto featurePair : featureDistri)
+		{
+			double weight = _weights.at(featurePair.first);
+			res += weight*featurePair.second;
+		}
+
+		return res;
 	}
 
 	void GrammarFeatureModel::LoadAllFeatures()
@@ -301,6 +361,25 @@ namespace Mind
 		_featureDB->Connect();
 		_features = _featureDB->GetAllFeatures();
 		_featureDB->Disconnect();
+	}
+
+	void GrammarFeatureModel::ReadWeightsInDB()
+	{
+		MindParameterDatabase db;
+		db.Connect();
+		vector<double> weights = db.GetGrammarFeatureWeights();
+		if (weights.size() != _featureTypes.size())
+		{
+			throw runtime_error("The size of weights in database is different from size of feature types.");
+		}
+		LOG_FORMAT("The size of feature types is %d", _featureTypes.size());
+
+		int i = 0;
+		for (auto type : _featureTypes)
+		{
+			_weights[type] = weights[i];
+			++i;
+		}
 	}
 
 	map<string, GrammarFeatureModel::StatList> GrammarFeatureModel::GetAllFeatures(
@@ -331,5 +410,21 @@ namespace Mind
 		return res;
 	}
 
+	map<string, double> GrammarFeatureModel::ConvertToFeatureCountDistribution(const map<string, GrammarFeatureModel::StatList> &featureStat) const
+	{
+		map<string, double> freqDistri;
+		for (auto statPair : featureStat)
+		{
+			//Compute total count of a specific feature template.
+			int countFeatureTemplate = 0;
+			for (auto stat : statPair.second)
+			{
+				countFeatureTemplate += stat.count;
+			}
+			freqDistri[statPair.first] = (double)countFeatureTemplate;
+		}
+
+		return freqDistri;
+	}
 }
 
