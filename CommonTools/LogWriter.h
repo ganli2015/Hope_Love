@@ -260,8 +260,34 @@ namespace CommonTool
 #define DEBUG_FORMAT2(format,var1,var2) CommonTool::LogWriter::OutFormat(format,CommonTool::Debug,var1,var2) 
 
 /************************************************************************/
+//Log Warn
+
+#define WARN(object) CommonTool::LogWriter::Output(object,CommonTool::Warn) 
+
+#define WARN_DESC(desc,object) WARN(desc);WARN(object)
+
+#define WARN_IF(condition,desc,object) if(condition) {WARN_DESC(desc,object);}
+
+#define WARN_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Warn,var) 
+
+#define WARN_FORMAT2(format,var1,var2) CommonTool::LogWriter::OutFormat(format,CommonTool::Warn,var1,var2) 
+
+/************************************************************************/
+//Log Error
+
+#define ERRORLOG(object) CommonTool::LogWriter::Output(object,CommonTool::Error) 
+
+#define ERROR_DESC(desc,object) ERRORLOG(desc);ERRORLOG(object)
+
+#define ERROR_IF(condition,desc,object) if(condition) {ERROR_DESC(desc,object);}
+
+#define ERROR_FORMAT(format,var) CommonTool::LogWriter::OutFormat(format,CommonTool::Error,var) 
+
+#define ERROR_FORMAT2(format,var1,var2) CommonTool::LogWriter::OutFormat(format,CommonTool::Error,var1,var2) 
 
 #define LOG_EXCEPTION(ex) CommonTool::LogWriter::OutputException(ex);
+
+/************************************************************************/
 
 //#define CREATELOG(filename) CommonTool::LogWriter NEWLOG(filename)
 

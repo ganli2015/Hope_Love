@@ -72,7 +72,8 @@ namespace Mind
 		ifstream in(GetHopeLoveMindPath() + ConceptReactorNetworkFilename);
 		if (!in || !SameInputDimension(dimension, in))
 		{
-			BasicTrainNetwork();
+			//BasicTrainNetwork();
+			WARN("Network in ConceptReactSystem is not initialized.");
 			return;
 		}
 		else

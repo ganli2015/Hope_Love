@@ -50,9 +50,6 @@ namespace Mind
 		featureModel.LoadAllFeatures();
 		LOG("Load all features.");
 
-		//test 
-		int i = 0;
-
 		OptWeightParam optParam;
 		set<string> featureTypes = featureModel._featureTypes;
 		for (auto posSentence : allPOSsentences)
@@ -61,12 +58,6 @@ namespace Mind
 			//Convert to map<string,int>.
 			auto featureDistribution = featureModel.ConvertToFeatureCountDistribution(featureStat);
 			optParam.featureCounts.push_back(featureDistribution);
-
-			//test
-			if (i++ > 20)
-			{
-				break;
-			}
 		}
 		featureModel.ClearFeatures();
 		//Add types.
@@ -74,14 +65,18 @@ namespace Mind
 		LOG_FORMAT("There are %d types of features.", optParam.featureTypes.size());
 
 		//Get random weights.
+		//Note! <weights> excludes the last weight as all weights sum to 1.
 		vector<double> weights = Math::CreateRandomDoubleList(featureTypes.size()-1);
 		//Optimize.
-		Math::NumericalOptimization opt(weights.size(), Math::LD_MMA);
+		Math::NumericalOptimization opt(weights.size(), Math::GN_ISRES);
 		opt.SetMaximizeObjectiveFunction(OptFunc_ComputeWeights, &optParam);
 		opt.AddInequalityConstraint(LastWeightConstraint);
 		//Set weights range to 0 to 1.
 		opt.SetLowerBound(0);
 		opt.SetUpperBound(1);
+		opt.SetXTol(1e-10);
+		opt.SetFTol(1e-10);
+		opt.SetMaxIteration(1000);
 		double objFunValue = 0;
 		LOG_FORMAT("Initial objective function value is %lf.", ObjFunc(weights,&optParam));
 		try
@@ -94,9 +89,11 @@ namespace Mind
 			LOG_EXCEPTION(ex);
 		}
 		LOG_FORMAT("Final objective function value is %lf.", objFunValue);
-		//Write weights to database.
+		//Write all weights to database.
+		vector<double> allWeights = weights;
+		allWeights.push_back(ComputeLastWeight(weights));
 		MindParameterDatabase mindPramDB;
-		mindPramDB.UpdateGrammarFeatureWeights(weights);
+		mindPramDB.UpdateGrammarFeatureWeights(allWeights);
 	}
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
@@ -205,7 +202,8 @@ namespace Mind
 	{
 		OptWeightParam* param = reinterpret_cast<OptWeightParam*>(f_data);
 		double obj = ObjFunc(weights, param);
-		ComputeGrad(weights, param, grad);
+		if(!grad.empty())
+			ComputeGrad(weights, param, grad);
 		return obj;
 	}
 
@@ -348,8 +346,11 @@ namespace Mind
 		double res = 0;
 		for (auto featurePair : featureDistri)
 		{
-			double weight = _weights.at(featurePair.first);
-			res += weight*featurePair.second;
+			if (_weights.count(featurePair.first))
+			{
+				double weight = _weights.at(featurePair.first);
+				res += weight*featurePair.second;
+			}
 		}
 
 		return res;

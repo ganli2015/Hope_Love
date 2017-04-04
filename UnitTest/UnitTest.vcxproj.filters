@@ -113,6 +113,12 @@
     <ClInclude Include="DataPrepareForHopeLove.h">
       <Filter>TestAndPreparation</Filter>
     </ClInclude>
+    <ClInclude Include="TestAlgorithm.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPOSTagging.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -185,6 +191,12 @@
       <Filter>Mathmatic</Filter>
     </ClCompile>
     <ClCompile Include="DataPrepareForHopeLove.cpp">
+      <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAlgorithm.cpp">
+      <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPOSTagging.cpp">
       <Filter>TestAndPreparation</Filter>
     </ClCompile>
   </ItemGroup>

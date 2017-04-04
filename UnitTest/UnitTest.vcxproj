@@ -226,8 +226,10 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="PublicHeader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TestAlgorithm.h" />
     <ClInclude Include="TestClass.h" />
     <ClInclude Include="TestPerformance.h" />
+    <ClInclude Include="TestPOSTagging.h" />
     <ClInclude Include="Test_CommonTool.h" />
     <ClInclude Include="Test_Concept.h" />
     <ClInclude Include="Test_ConceptInteractTable.h" />
@@ -256,8 +258,10 @@ If NOT exist "Log" mkdir "Log" </Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TestAlgorithm.cpp" />
     <ClCompile Include="TestClass.cpp" />
     <ClCompile Include="TestPerformance.cpp" />
+    <ClCompile Include="TestPOSTagging.cpp" />
     <ClCompile Include="Test_CommonTool.cpp" />
     <ClCompile Include="Test_Concept.cpp" />
     <ClCompile Include="Test_ConceptInteractTable.cpp" />

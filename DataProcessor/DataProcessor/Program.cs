@@ -33,7 +33,7 @@ namespace DataProcessor
 
 
             POSAssignment posAssign = new POSAssignment();
-            posAssign.SetMaxIDFOfCommonWords(10);
+            posAssign.SetMaxIDFOfCommonWords(13);
             posAssign.AssignPOSofCommonWords();
             //            posAssign.GenerateLargeVocabulary();
 
