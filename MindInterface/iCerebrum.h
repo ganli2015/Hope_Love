@@ -159,6 +159,11 @@ namespace Mind
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
 		virtual map<double, DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const =0;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Compute grammar confidence of such POS tagging.
+		//////////////////////////////////////////////////////////////////////////
+		virtual double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const = 0;
+
 		//Concept React System Functions
 		
 		//////////////////////////////////////////////////////////////////////////

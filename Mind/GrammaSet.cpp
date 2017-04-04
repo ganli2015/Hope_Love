@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "GrammaSet.h"
 #include "FilePath.h"
+#include "GrammarFeatureModel.h"
 
 #include "../CommonTools/LogWriter.h"
 
@@ -28,7 +29,7 @@ using namespace Math;
 
 namespace Mind
 {
-	GrammarSet::GrammarSet(void)
+	GrammarSet::GrammarSet(void):_featureModel(shared_ptr<GrammarFeatureModel>(new GrammarFeatureModel()))
 	{
 		Initialize();
 		LOG("Initialized GrammarSet");
@@ -513,6 +514,16 @@ namespace Mind
 		}
 
 		return res;
+	}
+
+	double GrammarSet::ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
+	{
+		if (!_featureModel->FeaturesLoaded())
+		{
+			_featureModel->LoadAllFeatures();
+		}
+
+		return _featureModel->ComputePossiblity(sentence);
 	}
 
 	double GrammarSet::ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const

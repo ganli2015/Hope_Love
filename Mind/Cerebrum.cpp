@@ -233,6 +233,11 @@ namespace Mind
 		return _grammaset->ComputeP_GrammarLocalAnalysis(pattern);
 	}
 
+	double Cerebrum::ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
+	{
+		return _grammaset->ComputeGrammarPossibility(sentence);
+	}
+
 	map<double, DataCollection::PartOfSpeech> Cerebrum::ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const
 	{
 		return _grammaset->ComputePossibilityTable(forwardPos, backwardPos);

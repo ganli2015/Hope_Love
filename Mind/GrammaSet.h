@@ -18,6 +18,7 @@
 namespace Mind
 {
 	class GrammarLocal;
+	class GrammarFeatureModel;
 
 	struct GrammarAttribute
 	{
@@ -52,6 +53,8 @@ namespace Mind
 		///The weight of local grammar used for computation of <ComputePossibility>.
 		//////////////////////////////////////////////////////////////////////////
 		double _wLocal;
+
+		shared_ptr<GrammarFeatureModel> _featureModel;
 
 	public:
 		GrammarSet(void);
@@ -95,6 +98,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		double ComputePossibility(const DataCollection::GrammarPattern& pattern) const;
 		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
+		double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 
 		//////////////////////////////////////////////////////////////////////////
 		///Compute confidence of <curPOS> when its previous POS is <forwardPos> and its next POS is <backwardPos>.

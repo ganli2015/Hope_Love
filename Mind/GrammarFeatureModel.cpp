@@ -317,7 +317,7 @@ namespace Mind
 		return res;
 	}
 
-	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase())
+	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase()),_loadedFeatures(false)
 	{
 		_featureTypes.insert(make_shared<TagWithWord>()->GetMyType());
 		_featureTypes.insert(make_shared<TagBigram>()->GetMyType());
@@ -362,6 +362,7 @@ namespace Mind
 		_featureDB->Connect();
 		_features = _featureDB->GetAllFeatures();
 		_featureDB->Disconnect();
+		_loadedFeatures = true;
 	}
 
 	void GrammarFeatureModel::ReadWeightsInDB()

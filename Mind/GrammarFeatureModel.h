@@ -18,6 +18,7 @@ namespace Mind
 	{
 		GrammarFeatureDatabase *_featureDB;
 		FeatureList _features;
+		bool _loadedFeatures;
 		//////////////////////////////////////////////////////////////////////////
 		//The order of <_featureTypes> determines the order of weights in the database! 
 		set<string> _featureTypes;
@@ -50,7 +51,8 @@ namespace Mind
 		//Load all features from database to memory.
 		//////////////////////////////////////////////////////////////////////////
 		void LoadAllFeatures();
-		void ClearFeatures() { _features.clear(); }
+		void ClearFeatures() { _features.clear(); _loadedFeatures = false; }
+		bool FeaturesLoaded() { return _loadedFeatures; }
 
 	private:
 		void ReadWeightsInDB();

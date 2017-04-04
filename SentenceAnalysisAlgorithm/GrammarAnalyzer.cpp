@@ -322,9 +322,9 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 	map<double, vector<shared_ptr<Word>>, greater<double>> combinationForLog;//Used for log.
 	for (size_t i=0;i<combination.size();++i)
 	{
-		GrammarPattern pattern=LanguageFunc::ConvertToPattern(combination[i]);
+		//GrammarPattern pattern=LanguageFunc::ConvertToPattern(combination[i]);
 
-		double value = brain->ComputePossibility(pattern);
+		double value = brain->ComputeGrammarPossibility(combination[i]);
 
 		if(value>maxValueFun)
 		{
@@ -365,7 +365,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 	{
 		LOG_FORMAT("Combination size is %u which is larger than uplimit.", combination.size());
 		//Compute local possibility of each combination and order from large to small.
-		map<double, int, greater<double>> prob_index;
+		map<double, int, greater<double>> prob_index;//Key is possibility and value is index of combination.
 		for (size_t i = 0; i < combination.size(); ++i)
 		{
 			GrammarPattern pattern = LanguageFunc::ConvertToPattern(combination[i]);
