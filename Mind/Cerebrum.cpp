@@ -24,6 +24,7 @@ namespace Mind
 		_conceptInteractTableContainer(new ConceptInteractTableContainer)
 	{
 		_conceptReactSystem=(new ConceptReactSystem(_conceptset));
+		_grammaset->InitializeGrammarModel();
 	}
 
 	Cerebrum::~Cerebrum()
@@ -223,14 +224,14 @@ namespace Mind
 		return _grammaset->GetP_Backward(me,backward);
 	}
 
-	double Cerebrum::ComputePossibility(const DataCollection::GrammarPattern& pattern) const
+	double Cerebrum::ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		return _grammaset->ComputePossibility(pattern);
+		return _grammaset->ComputePossibility(sentence);
 	}
 
-	double Cerebrum::ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const
+	double Cerebrum::ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		return _grammaset->ComputeP_GrammarLocalAnalysis(pattern);
+		return _grammaset->ComputeP_GrammarLocalAnalysis(sentence);
 	}
 
 	double Cerebrum::ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const

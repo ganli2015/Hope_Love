@@ -31,7 +31,13 @@ namespace Mind
 		vector<Edge_Info> edge_infos;
 	};
 
-
+	struct Sen_Gra
+	{
+		//////////////////////////////////////////////////////////////////////////
+		///Vector of Part of Speech.
+		//////////////////////////////////////////////////////////////////////////
+		vector<int> gra;
+	};
 	
 
 	namespace CommonFunction
@@ -40,6 +46,7 @@ namespace Mind
 
 		shared_ptr<NeuralNetwork::iDataArray> ToDataArray(const shared_ptr<iConceptChain> chain, const ConceptSet* conceptSet);
 		
+		vector<Sen_Gra> InputGraSamples(string file) ;
 	}
 }
 

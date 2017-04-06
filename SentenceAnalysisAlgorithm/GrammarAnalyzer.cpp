@@ -324,7 +324,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPattern(const vector<vector<shared_ptr
 	{
 		//GrammarPattern pattern=LanguageFunc::ConvertToPattern(combination[i]);
 
-		double value = brain->ComputeGrammarPossibility(combination[i]);
+		double value = brain->ComputePossibility(combination[i]);
 
 		if(value>maxValueFun)
 		{
@@ -369,7 +369,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 		for (size_t i = 0; i < combination.size(); ++i)
 		{
 			GrammarPattern pattern = LanguageFunc::ConvertToPattern(combination[i]);
-			double value = brain->ComputeLocalPossibility(pattern);
+			double value = brain->ComputeLocalPossibility(combination[i]);
 			prob_index[value] = i;
 		}
 

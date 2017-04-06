@@ -1,5 +1,5 @@
 #pragma once
-#include "InOut.h"
+#include "GrammarModel.h"
 #include <set>
 
 
@@ -14,7 +14,7 @@ namespace Mind
 {
 	class GrammarFeatureDatabase;
 
-	class _MINDINOUT GrammarFeatureModel
+	class _MINDINOUT GrammarFeatureModel : public GrammarModel
 	{
 		GrammarFeatureDatabase *_featureDB;
 		FeatureList _features;
@@ -39,7 +39,7 @@ namespace Mind
 
 	public:
 		GrammarFeatureModel();
-		~GrammarFeatureModel();
+		virtual ~GrammarFeatureModel();
 
 		//////////////////////////////////////////////////////////////////////////
 		//Compute Possibility of tagging for a given sentence. 

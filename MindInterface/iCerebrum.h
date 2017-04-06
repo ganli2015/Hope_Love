@@ -151,11 +151,11 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		///Compute the possibility of <pattern> in grammar sense.
 		//////////////////////////////////////////////////////////////////////////
-		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const =0;
+		virtual double ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const =0;
 		//////////////////////////////////////////////////////////////////////////
 		///Compute the possibility of <pattern> in grammar sense using local analysis.
 		//////////////////////////////////////////////////////////////////////////
-		virtual double ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const = 0;
+		virtual double ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const = 0;
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
 		virtual map<double, DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const =0;
 

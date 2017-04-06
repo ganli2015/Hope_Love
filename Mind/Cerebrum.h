@@ -97,8 +97,8 @@ namespace Mind
 		//获得me的前一个词性是backward的概率.
 		virtual double GetP_Backward(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward) const;
 
-		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const ;
-		virtual double ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const;
+		virtual double ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+		virtual double ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 		virtual double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const ;
 
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.

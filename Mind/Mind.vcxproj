@@ -172,6 +172,9 @@
     <ClInclude Include="FilePath.h" />
     <ClInclude Include="GrammarFeatureDatabase.h" />
     <ClInclude Include="GrammarFeatureModel.h" />
+    <ClInclude Include="GrammarLocalModel.h" />
+    <ClInclude Include="GrammarModel.h" />
+    <ClInclude Include="GrammarPatternModel.h" />
     <ClInclude Include="GrammaSet.h" />
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
@@ -194,6 +197,9 @@
     <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="GrammarFeatureDatabase.cpp" />
     <ClCompile Include="GrammarFeatureModel.cpp" />
+    <ClCompile Include="GrammarLocalModel.cpp" />
+    <ClCompile Include="GrammarModel.cpp" />
+    <ClCompile Include="GrammarPatternModel.cpp" />
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
     <ClCompile Include="MindDatabase.cpp" />

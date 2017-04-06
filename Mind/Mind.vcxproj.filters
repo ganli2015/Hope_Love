@@ -74,6 +74,15 @@
     <ClInclude Include="MindDatabase.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GrammarModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarPatternModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarLocalModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -131,6 +140,15 @@
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="MindDatabase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarPatternModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarLocalModel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

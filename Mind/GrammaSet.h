@@ -1,12 +1,12 @@
 #pragma once
 #include "InOut.h"
 #include "GrammaTree.h"
+#include "GrammarPatternModel.h"
 
 #include "../DataCollection/GrammaPattern.h"
 #include "../DataCollection/Word.h"
 
 #include "../Mathmatic/Vector.h"
-#include "../Mathmatic/MyInt.h"
 
 #include "../MindInterface/PublicTypedef.h"
 
@@ -15,10 +15,17 @@
 // 	class GrammaPattern;
 // }
 
+namespace Math
+{
+	class MyInt;
+}
+
 namespace Mind
 {
 	class GrammarLocal;
 	class GrammarFeatureModel;
+	class GrammarLocalModel;
+	//class GrammarPatternModel;
 
 	struct GrammarAttribute
 	{
@@ -29,21 +36,11 @@ namespace Mind
 	class _MINDINOUT GrammarSet : public Obj<GrammarSet>
 	{
 	private:
-		struct Sen_Gra
-		{
-			//////////////////////////////////////////////////////////////////////////
-			///Vector of Part of Speech.
-			//////////////////////////////////////////////////////////////////////////
-			vector<int> gra;
-		};
-
-
 
 		std::map<int,GrammaTree> _forwardtree;
 		std::map<int,GrammaTree> _backwardtree;
 
 		std::vector<GrammarAttribute> _patterns;
-		map<DataCollection::PartOfSpeech,shared_ptr<GrammarLocal>> _grammarLocalTable;
 
 		//////////////////////////////////////////////////////////////////////////
 		///The weight of grammar pattern used for computation of <ComputePossibility>.
@@ -55,10 +52,16 @@ namespace Mind
 		double _wLocal;
 
 		shared_ptr<GrammarFeatureModel> _featureModel;
+		shared_ptr<GrammarPatternModel> _patternModel;
+		shared_ptr<GrammarLocalModel> _localModel;
+
+		friend class GrammarPatternModel;
 
 	public:
 		GrammarSet(void);
 		~GrammarSet(void);
+
+		void InitializeGrammarModel();
 
 		//////////////////////////////////////////////////////////////////////////
 		///Search all grammar patterns which are sub patterns of <pattern>.
@@ -96,7 +99,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		///Compute the possibility of <pattern> in grammar sense.
 		//////////////////////////////////////////////////////////////////////////
-		double ComputePossibility(const DataCollection::GrammarPattern& pattern) const;
+		double ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
 		double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 
@@ -104,7 +107,7 @@ namespace Mind
 		///Compute confidence of <curPOS> when its previous POS is <forwardPos> and its next POS is <backwardPos>.
 		///The returned value is 0 to 1.
 		//////////////////////////////////////////////////////////////////////////
-		double ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const;
+		double ComputeP_GrammarLocalAnalysis(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
 
 	
 	private:
@@ -123,11 +126,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		void ReadWeights();
 
-		void ReadGrammarLocal();
 
-		vector<GrammarSet::Sen_Gra> InputGraSamples(string file) const;
-
-		void ExtractGrammarLocalDistribution();
 
 		int GetMaxID() const;
 		int FindPatternIndex(const DataCollection::GrammarPattern& pattern);
@@ -137,11 +136,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		Math::MyInt GetTotalFrequency() const;
 
-		//////////////////////////////////////////////////////////////////////////
-		///Compute confidence of <pattern> considering confidence of each POS with local grammar analysis.
-		//////////////////////////////////////////////////////////////////////////
-		double ComputeP_GrammarLocal(const DataCollection::PartOfSpeech& curPos, const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;
-
+		
 		//////////////////////////////////////////////////////////////////////////
 		///Compute the weights of possibilities of grammar patterns and possibilities of local grammar.
 		///Such weights make each possibility of grammar structure close to one as possible.
@@ -157,11 +152,6 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		double ComputeDeviation(const vector<double>& patternP, const vector<double>& localP,
 			const double wPattern, const double wLocal) const;
-
-		//////////////////////////////////////////////////////////////////////////
-		///Compute possibility of component of grammar pattern.
-		//////////////////////////////////////////////////////////////////////////
-		double ComputePossibilityGrammarPattern(const DataCollection::GrammarPattern& pattern,const Math::MyInt totalFreq) const;
 	};
 }
 

@@ -65,6 +65,36 @@ namespace Mind
 			return res;
 		}
 
+		vector<Sen_Gra> InputGraSamples(string file) 
+		{
+			vector<Sen_Gra> samples;
 
+			ifstream in(file);
+			if (!in) return samples;
+
+			while (!in.eof())
+			{
+				Sen_Gra sample;
+
+				int count;
+				in >> count;
+				//			Vector array(NUM_PARTOFSPEECH);
+				vector<int> gra;
+				gra.reserve(count);
+				for (int i = 1; i <= count; ++i)
+				{
+					int elem;
+					in >> elem;
+					//				++array[elem];
+					gra.push_back(elem);
+				}
+
+				sample.gra = gra;
+				//			array.Normalize();
+				samples.push_back(sample);
+			}
+
+			return samples;
+		}
 	}
 }
