@@ -116,9 +116,6 @@ namespace Mind
 	private:
 		void PrepareFeatureTemplates();
 
-		vector<vector<shared_ptr<DataCollection::Word>>> ParseSampleSentences(const string samplePath) const;
-		vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line) const;
-
 		void FindFeatures(const vector<vector<shared_ptr<DataCollection::Word>>>& sentences) ;
 		void FindFeaturesOneSentence(const vector<shared_ptr<DataCollection::Word>>& sentence) ;
 

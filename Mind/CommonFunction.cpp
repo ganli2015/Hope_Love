@@ -96,5 +96,62 @@ namespace Mind
 
 			return samples;
 		}
+
+
+		vector<vector<shared_ptr<DataCollection::Word>>> ParseSampleSentences(const string samplePath)
+		{
+			vector<vector<shared_ptr<DataCollection::Word>>> res;
+			ifstream in(samplePath, ios::binary);
+			if (!in)
+			{
+				throw runtime_error("File not found: " + samplePath);
+			}
+
+			size_t index = 2;
+			while (!in.eof())
+			{
+				//One line is raw sentence and the next line is POS sentence.
+
+				//Raw sentence is not used.
+				string raw = CommonTool::Getline_UnicodeFile(in, index);
+				string POSUnsplit = CommonTool::Getline_UnicodeFile(in, index);
+
+				//Parse the second line into pos sentence.
+				try
+				{
+					auto onePosSentence = ParsePOSTagging(POSUnsplit);
+					res.push_back(onePosSentence);
+				}
+				catch (const std::exception& ex)
+				{
+					LOG_EXCEPTION(ex);
+				}
+			}
+
+			return res;
+		}
+
+		vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line) 
+		{
+			//Split blank and get each word.
+			auto split = CommonTool::SplitString(line, ' ');
+
+			vector<shared_ptr<DataCollection::Word>> res;
+
+			for (unsigned int i = 0; i < split.size(); ++i)
+			{
+				//Split '/' and get word string and pos.
+				auto word_POS = CommonTool::SplitString(split[i], '/');
+				if (word_POS.size() != 2)
+				{
+					throw runtime_error("Error in ParsePOSTagging");
+				}
+
+				res.push_back(LanguageFunc::GetParticularWord(word_POS[0], (PartOfSpeech)atoi(word_POS[1].c_str())));
+			}
+
+			return res;
+		}
+
 	}
 }

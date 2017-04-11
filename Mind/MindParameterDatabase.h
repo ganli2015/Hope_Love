@@ -12,9 +12,12 @@ namespace Mind
 	class MindParameterDatabase : public MindDatabase
 	{
 		const string TableName;
-		const string paramIDTag;
-		const string paramValueTag;
+		const string ParamIDTag;
+		const string ParamValueTag;
 		vector<string> _featureWeightID;
+		const string FeaturegwID;
+		const string LocalgwID;
+		const string PatterngwID;
 
 	public:
 		MindParameterDatabase();
@@ -27,11 +30,24 @@ namespace Mind
 
 		vector<double> GetGrammarFeatureWeights();
 
+		//////////////////////////////////////////////////////////////////////////
+		//Functions below are used for writing and reading weights for different grammar models.
+		void WriteGrammarFeatureModelWeight(const double val);
+		double GetGrammarFeatureModelWeight();
+
+		void WriteGrammarLocalModelWeight(const double val);
+		double GetGrammarLocalModelWeight();
+
+		void WriteGrammarPatternModelWeight(const double val);
+		double GetGrammarPatternModelWeight();
+
+		//////////////////////////////////////////////////////////////////////////
+
 	private:
 
 		void PrepareFeatureWeightID();
 
-		void UpdateWeight(const string id, const double weight);
+		void UpdateValue(const string id, const double value);
 		//////////////////////////////////////////////////////////////////////////
 		//Get a double value from database.
 		//////////////////////////////////////////////////////////////////////////

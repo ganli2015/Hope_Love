@@ -3,7 +3,7 @@
 #include "FilePath.h"
 #include "GrammarFeatureModel.h"
 #include "GrammarLocalModel.h"
-#include "CommonFunction.h"
+#include "MindParameterDatabase.h"
 
 #include "../CommonTools/LogWriter.h"
 
@@ -51,6 +51,8 @@ namespace Mind
 		_localModel->ReadGrammarLocal();
 
 		_patternModel = make_shared<GrammarPatternModel>(this);
+
+		ReadWeights();
 	}
 
 	void GrammarSet::Initialize()
@@ -79,13 +81,6 @@ namespace Mind
 			_patterns.push_back(patterns[i]);
 
 			//AddPatternToTree(pattern);
-		}
-
-		ReadWeights();
-
-		CFG_SECTION(COMPUTE_GRAMMAR_WEIGHTS)
-		{
-			InitializeWeights();
 		}
 	}
 
@@ -462,31 +457,8 @@ namespace Mind
 		return _localModel->ComputePossiblity(sentence);
 	}
 
-	void GrammarSet::InitializeWeights()
+	void GrammarSet::InitializeWeights(const string filePath)
 	{
-// 		vector<Sen_Gra> samples = CommonFunction::InputGraSamples(GetHopeLoveMindPath() + StringGrammar_InitialFilename);
-// 
-// 		//Compute possibilities of grammar patterns and local grammar of each pattern.
-// 		MyInt totalFreq = GetTotalFrequency();
-// 		vector<double> localPVec;
-// 		vector<double> patternPVec;
-// 		for (size_t i = 0; i < samples.size(); ++i)
-// 		{
-// 			//Compute the possibility of local grammar.
-// 			GrammarPattern pattern=LanguageFunc::ConvertToPattern(samples[i].gra);
-// 			double localP = ComputeP_GrammarLocalAnalysis(pattern);
-// 			localPVec.push_back(localP);
-// 
-// 			//Compute the possibility of matched patterns.
-// 			double patternP = _patternModel->ComputePossiblity(pattern, totalFreq);
-// 			patternPVec.push_back(patternP);
-// 		}
-// 
-// 		//Optimize <_wPattern> and <_wLocal> until possibility of each sample is close to 1.
-// 		_wPattern = 0.5, _wLocal = 0.5;
-// 		ComputeWeights(patternPVec, localPVec, _wPattern, _wLocal);
-// 
-// 		WriteWeights(_wPattern, _wLocal);
 	}
 
 	void GrammarSet::WriteWeights(const double wPattern, const double wLocal)
@@ -513,79 +485,22 @@ namespace Mind
 
 	void GrammarSet::ReadWeights()
 	{
-		string paramFile = GetHopeLoveMindPath()+"MindParam.txt";
-		TiXmlDocument *myDocument = new TiXmlDocument(paramFile.c_str());
-		if (!myDocument->LoadFile())
-		{
-			cout << "Cannot read weights in GrammarSet" << endl;
-			return;
-		}
-		TiXmlNode *root = myDocument->FirstChild("Root");
+		MindParameterDatabase paramDB;
+		paramDB.Connect();
+		
+		double patternModelWeight = paramDB.GetGrammarPatternModelWeight();
+		LOG_FORMAT("Weight for gramamr pattern model is %lf.", patternModelWeight);
+		_weights[_patternModel] = patternModelWeight;
 
-		TiXmlNode *doubleParamNode=root->FirstChild("DoubleParam");
-		TiXmlElement *wPatternNode=doubleParamNode->FirstChildElement("wPattern");
-		TiXmlElement *wLocalNode = doubleParamNode->FirstChildElement("wLocal");
+		double localModelWeight = paramDB.GetGrammarLocalModelWeight();
+		LOG_FORMAT("Weight for gramamr local model is %lf.", localModelWeight);
+		_weights[_localModel] = localModelWeight;
 
-		if (wPatternNode == nullptr || wLocalNode == nullptr)
-		{
-			throw runtime_error("Error in ReadWeights: cannot read weights from file.");
-		}
+		double featureModelWeight = paramDB.GetGrammarFeatureModelWeight();
+		LOG_FORMAT("Weight for gramamr feature model is %lf.", featureModelWeight);
+		_weights[_featureModel] = featureModelWeight;
 
-		const char* wpatternStr=wPatternNode->Attribute("value");
-		const char* wlocalStr = wLocalNode->Attribute("value");
-
-		_wPattern= strtod(wpatternStr, NULL);
-		_wLocal = strtod(wlocalStr, NULL);
-
-		delete myDocument;
-	}
-
-	void GrammarSet::ComputeWeights(const vector<double>& patternP, const vector<double>& localP,
-		double& wPattern, double& wLocal) const
-	{
-		double gradPattern, gradLocal;
-		double deltaStep = 1e-4;
-		double divergeTol = 1e-5;
-		int iterCount = 0;
-		int maxIterCount = 10000;
-		do 
-		{
-			double dev = ComputeDeviation(patternP, localP, wPattern, wLocal);
-			//Numerically compute the gradient of each weight.
-			double deltaPattern= ComputeDeviation(patternP, localP, wPattern+ deltaStep, wLocal)-dev;
-			double deltaLocal = ComputeDeviation(patternP, localP, wPattern , wLocal + deltaStep) - dev;
-			gradPattern = deltaPattern / deltaStep;
-			gradLocal = deltaLocal / deltaStep;
-
-			//Adjust each weight simply by gradient.
-			wPattern -= gradPattern;
-			wLocal -= gradLocal;
-
-			if (++iterCount > maxIterCount)
-			{
-				break;
-			};
-
-			//Iterate until both weights are not changed within tolerance.
-		} while (Math::DoubleCompare(gradPattern,0,divergeTol)!=0 && Math::DoubleCompare(gradLocal, 0, divergeTol) != 0);
-
-	}
-
-	double GrammarSet::ComputeDeviation(const vector<double>& patternP, const vector<double>& localP,
-		const double wPattern, const double wLocal) const
-	{
-		assert(patternP.size() == localP.size());
-
-		double res = 0;
-		for (size_t i=0;i<patternP.size();++i)
-		{
-			//Each element of <patternP> and the element in <localP> of the same index correspond to one grammar pattern.
-			//Sum possibilities of each grammar patterns and compute the deviation from one.
-			res += pow(patternP[i] * wPattern + localP[i] * wLocal-1,2);
-		}
-
-		//Normalize deviation.
-		return res/patternP.size();
+		LOG("Finish read grammar model weights");
 	}
 
 
@@ -601,13 +516,16 @@ namespace Mind
 
 	double GrammarSet::ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		//The final possibility takes local grammar and grammar patterns of <pattern> into consideration.
-		//And the above two components has weights respectively.
+		//The final possibility takes all grammar models into consideration.
+		//And the above components has weights respectively.
 
-		double localP = _localModel->ComputePossiblity(sentence);
-		double patternP = _patternModel->ComputePossiblity(sentence);
-		//DEBUG_FORMAT2("Local grammar possibility is %.10lf.Grammar pattern possibility is %.10lf.", localP, patternP);
-		double res = _wPattern*patternP + _wLocal*localP;
+		double res = 0;
+		for (auto modelWeight : _weights)
+		{
+			double p = modelWeight.first->ComputePossiblity(sentence);
+			double weight = modelWeight.second;
+			res += weight*p;
+		}
 
 		//Adjust the possibility such that it is in the interval of 0 to 1.
 		res = min(1., res);

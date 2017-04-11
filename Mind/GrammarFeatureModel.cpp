@@ -2,6 +2,7 @@
 #include "GrammarFeatureModel.h"
 #include "GrammarFeatureDatabase.h"
 #include "MindParameterDatabase.h"
+#include "CommonFunction.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/LogWriter.h"
@@ -32,7 +33,7 @@ namespace Mind
 
 	void GrammarFeatureTrainer::CollectFeatures(const string samplePath)
 	{
-		auto allPOSsentences = ParseSampleSentences(samplePath);
+		auto allPOSsentences = CommonFunction::ParseSampleSentences(samplePath);
 		LOG_FORMAT("Finish parse sample sentences.The count of sentences is %d.", allPOSsentences.size());
 		//Find features of sample sentences and features will be added to <_features>.
 		FindFeatures(allPOSsentences);
@@ -43,7 +44,7 @@ namespace Mind
 
 	void GrammarFeatureTrainer::ComputeWeights(const string samplePath)
 	{
-		auto allPOSsentences = ParseSampleSentences(samplePath);
+		auto allPOSsentences = CommonFunction::ParseSampleSentences(samplePath);
 
 		GrammarFeatureModel featureModel;
 		//Load all features from database for efficiency.
@@ -103,61 +104,6 @@ namespace Mind
 		_featureTemplates.push_back(make_shared<TagTrigramTemplate>());
 		_featureTemplates.push_back(make_shared<TagFollowedByWordTemplate>());
 		_featureTemplates.push_back(make_shared<WordFollowedByTagTemplate>());
-	}
-
-	vector<vector<shared_ptr<DataCollection::Word>>> GrammarFeatureTrainer::ParseSampleSentences(const string samplePath) const
-	{
-		vector<vector<shared_ptr<DataCollection::Word>>> res;
-		ifstream in(samplePath, ios::binary);
-		if (!in)
-		{
-			throw runtime_error("File not found: "+samplePath);
-		}
-
-		size_t index = 2;
-		while (!in.eof())
-		{
-			//One line is raw sentence and the next line is POS sentence.
-
-			//Raw sentence is not used.
-			string raw = CommonTool::Getline_UnicodeFile(in, index);
-			string POSUnsplit = CommonTool::Getline_UnicodeFile(in, index);
-
-			//Parse the second line into pos sentence.
-			try
-			{
-				auto onePosSentence = ParsePOSTagging(POSUnsplit);
-				res.push_back(onePosSentence);
-			}
-			catch (const std::exception& ex)
-			{
-				LOG_EXCEPTION(ex);
-			}
-		}
-
-		return res;
-	}
-
-	vector<shared_ptr<DataCollection::Word>> GrammarFeatureTrainer::ParsePOSTagging(const string line) const
-	{
-		//Split blank and get each word.
-		auto split = CommonTool::SplitString(line, ' ');
-
-		vector<shared_ptr<DataCollection::Word>> res;
-
-		for (unsigned int i = 0; i < split.size(); ++i)
-		{
-			//Split '/' and get word string and pos.
-			auto word_POS = CommonTool::SplitString(split[i], '/');
-			if (word_POS.size() != 2)
-			{
-				throw runtime_error("Error in ParsePOSTagging");
-			}
-
-			res.push_back(LanguageFunc::GetParticularWord(word_POS[0], (PartOfSpeech)atoi(word_POS[1].c_str())));
-		}
-
-		return res;
 	}
 
 	void GrammarFeatureTrainer::FindFeatures(const vector<vector<shared_ptr<DataCollection::Word>>>& sentences) 

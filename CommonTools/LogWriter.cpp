@@ -58,7 +58,7 @@ namespace CommonTool
 
 		log4cpp::Appender *appender2 = new log4cpp::FileAppender("default", "Log\\loginfo.log");
 		auto fileLayout = new log4cpp::PatternLayout();
-		fileLayout->setConversionPattern("%d [%p] %m%n");
+		fileLayout->setConversionPattern("%d [%p] [%x] %m%n");
 		appender2->setLayout(fileLayout);
 
 		_root = &log4cpp::Category::getRoot();

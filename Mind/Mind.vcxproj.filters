@@ -12,6 +12,9 @@
     <Filter Include="Database">
       <UniqueIdentifier>{71dd3d29-21a2-436d-92f4-e331101f0eb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Grammar">
+      <UniqueIdentifier>{83575a96-f645-4871-be47-ad6e9eaeca27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -24,12 +27,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Cerebrum.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GrammaTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GrammaSet.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="FilePath.h">
@@ -65,23 +62,29 @@
     <ClInclude Include="GrammarFeatureDatabase.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="GrammarFeatureModel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MindParameterDatabase.h">
       <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="MindDatabase.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GrammarModel.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="GrammaTree.h">
+      <Filter>Grammar</Filter>
     </ClInclude>
-    <ClInclude Include="GrammarPatternModel.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="GrammarFeatureModel.h">
+      <Filter>Grammar</Filter>
     </ClInclude>
     <ClInclude Include="GrammarLocalModel.h">
-      <Filter>头文件</Filter>
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarPatternModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammaSet.h">
+      <Filter>Grammar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,12 +92,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Cerebrum.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GrammaTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GrammaSet.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="FilePath.cpp">
@@ -133,23 +130,29 @@
     <ClCompile Include="GrammarFeatureDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="GrammarFeatureModel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="MindParameterDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="MindDatabase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="GrammarModel.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="GrammaTree.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammaSet.cpp">
+      <Filter>Grammar</Filter>
     </ClCompile>
     <ClCompile Include="GrammarPatternModel.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarModel.cpp">
+      <Filter>Grammar</Filter>
     </ClCompile>
     <ClCompile Include="GrammarLocalModel.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarFeatureModel.cpp">
+      <Filter>Grammar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,7 +9,12 @@ using namespace CommonTool;
 
 namespace Mind
 {
-	MindParameterDatabase::MindParameterDatabase() :TableName("MindParam"), paramIDTag("name"), paramValueTag("value")
+	MindParameterDatabase::MindParameterDatabase() :TableName("MindParam"),
+		ParamIDTag("name"),
+		ParamValueTag("value"),
+		FeaturegwID("featuregw"),
+		LocalgwID("localgw"),
+		PatterngwID("patterngw")
 	{
 		PrepareFeatureWeightID();
 	}
@@ -30,7 +35,7 @@ namespace Mind
 			sprintf_s(buffer, "fw%d", i);
 			string id(buffer);
 
-			UpdateWeight(id, weights[i]);
+			UpdateValue(id, weights[i]);
 		}
 	}
 
@@ -47,9 +52,51 @@ namespace Mind
 		return res;
 	}
 
+	void MindParameterDatabase::WriteGrammarFeatureModelWeight(const double val)
+	{
+		CheckConnect();
+
+		UpdateValue(FeaturegwID, val);
+	}
+
+	double MindParameterDatabase::GetGrammarFeatureModelWeight()
+	{
+		CheckConnect();
+
+		return GetDoubleParam(FeaturegwID);
+	}
+
+	void MindParameterDatabase::WriteGrammarLocalModelWeight(const double val)
+	{
+		CheckConnect();
+
+		UpdateValue(LocalgwID, val);
+	}
+
+	double MindParameterDatabase::GetGrammarLocalModelWeight()
+	{
+		CheckConnect();
+
+		return GetDoubleParam(LocalgwID);
+	}
+
+	void MindParameterDatabase::WriteGrammarPatternModelWeight(const double val)
+	{
+		CheckConnect();
+
+		UpdateValue(PatterngwID, val);
+	}
+
+	double MindParameterDatabase::GetGrammarPatternModelWeight()
+	{
+		CheckConnect();
+
+		return GetDoubleParam(PatterngwID);
+	}
+
 	void MindParameterDatabase::PrepareFeatureWeightID()
 	{
-		int weightCount = 5;
+		unsigned weightCount = 5;
 		for (unsigned i = 0; i < weightCount; ++i)
 		{
 			//Get id of the weight.
@@ -61,11 +108,11 @@ namespace Mind
 		}
 	}
 
-	void MindParameterDatabase::UpdateWeight(const string id, const double weight)
+	void MindParameterDatabase::UpdateValue(const string id, const double value)
 	{
 		char state[100];
 		sprintf_s(state, "UPDATE %s SET %s = '%s' WHERE %s = '%s'", TableName.c_str(),
-			paramValueTag.c_str(), ToString(weight).c_str(), paramIDTag.c_str(), id.c_str());
+			ParamValueTag.c_str(), ToString(value).c_str(), ParamIDTag.c_str(), id.c_str());
 
 		DBCmd cmd(state, *_db);
 		cmd.Execute();
@@ -81,7 +128,7 @@ namespace Mind
 		if (rows.size() == 1)
 		{
 			//get unique value.
-			auto valueStr = rows[0].GetText("value");
+			auto valueStr = rows[0].GetText(ParamValueTag);
 			return StringToNum<double>(valueStr);
 		}
 		else

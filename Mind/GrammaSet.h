@@ -22,6 +22,7 @@ namespace Math
 
 namespace Mind
 {
+	class GrammarModel;
 	class GrammarLocal;
 	class GrammarFeatureModel;
 	class GrammarLocalModel;
@@ -43,13 +44,9 @@ namespace Mind
 		std::vector<GrammarAttribute> _patterns;
 
 		//////////////////////////////////////////////////////////////////////////
-		///The weight of grammar pattern used for computation of <ComputePossibility>.
+		//Weights for different grammar models.
 		//////////////////////////////////////////////////////////////////////////
-		double _wPattern;
-		//////////////////////////////////////////////////////////////////////////
-		///The weight of local grammar used for computation of <ComputePossibility>.
-		//////////////////////////////////////////////////////////////////////////
-		double _wLocal;
+		map<shared_ptr<GrammarModel>, double> _weights;
 
 		shared_ptr<GrammarFeatureModel> _featureModel;
 		shared_ptr<GrammarPatternModel> _patternModel;
@@ -116,17 +113,15 @@ namespace Mind
 		void AddPatternToTree(const DataCollection::GrammarPattern& pattern);
 
 		//////////////////////////////////////////////////////////////////////////
-		///Initialize <_wPattern> and <_wLocal>.
+		///Initialize weights for grammar models.
 		//////////////////////////////////////////////////////////////////////////
-		void InitializeWeights();
+		void InitializeWeights(const string filePath);
 
 		void WriteWeights(const double wPattern, const double wLocal);
 		//////////////////////////////////////////////////////////////////////////
 		///Read weights from file.
 		//////////////////////////////////////////////////////////////////////////
 		void ReadWeights();
-
-
 
 		int GetMaxID() const;
 		int FindPatternIndex(const DataCollection::GrammarPattern& pattern);
@@ -135,23 +130,6 @@ namespace Mind
 		///Get the sum of frequencies of all grammar patterns.
 		//////////////////////////////////////////////////////////////////////////
 		Math::MyInt GetTotalFrequency() const;
-
-		
-		//////////////////////////////////////////////////////////////////////////
-		///Compute the weights of possibilities of grammar patterns and possibilities of local grammar.
-		///Such weights make each possibility of grammar structure close to one as possible.
-		//////////////////////////////////////////////////////////////////////////
-		void ComputeWeights(const vector<double>& patternP, const vector<double>& localP,
-			double& wPattern, double& wLocal) const;
-
-		//////////////////////////////////////////////////////////////////////////
-		///Compute the deviation of grammar possibility.
-		///<patternP> are possibilities of grammar patterns.
-		///<localP> are possibilities of local grammar structure.
-		///<wPattern> is the weight of <patternP>, <wLocal> is the weight of <localP>.
-		//////////////////////////////////////////////////////////////////////////
-		double ComputeDeviation(const vector<double>& patternP, const vector<double>& localP,
-			const double wPattern, const double wLocal) const;
 	};
 }
 
