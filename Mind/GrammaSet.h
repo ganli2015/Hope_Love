@@ -53,7 +53,7 @@ namespace Mind
 		shared_ptr<GrammarLocalModel> _localModel;
 
 		friend class GrammarPatternModel;
-
+		friend class DataPrepareForHopeLove;
 	public:
 		GrammarSet(void);
 		~GrammarSet(void);

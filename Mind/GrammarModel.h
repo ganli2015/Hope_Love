@@ -25,7 +25,7 @@ namespace Mind
 		virtual double ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const =0;
 	};
 
-	class GrammarModelTrainer
+	class _MINDINOUT GrammarModelTrainer
 	{
 		struct OptWeightsParam
 		{
@@ -70,6 +70,15 @@ namespace Mind
 		//  (p11*w1+p12*w2+p13*w3-1)^2+(p21*w1+p22*w2+p23*w3-1)^2+...
 		//////////////////////////////////////////////////////////////////////////
 		static double OptFunc_ComputeWeights(const std::vector<double> &weights, std::vector<double> &grad, void* f_data);
+
+		static double ObjFuncValue(const std::vector<double> &weights, OptWeightsParam *param);
+
+		static double ComputeComponent(const vector<double>& weights,const vector<double>& pSeq);
+		//////////////////////////////////////////////////////////////////////////
+		//Compute gradients.
+		//	grad1=2*p11*(p11*w1+p12*w2+p13*w3-1)+2*p21*(p21*w1+p22*w2+p23*w3-1)+...
+		//////////////////////////////////////////////////////////////////////////
+		static void ComputeGrad(const vector<double>& weights, const OptWeightsParam *param, vector<double>& grad);
 	};
 }
 

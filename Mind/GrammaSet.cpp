@@ -459,6 +459,22 @@ namespace Mind
 
 	void GrammarSet::InitializeWeights(const string filePath)
 	{
+		GrammarModelTrainer model;
+		model.SetSampleFilePath(filePath);
+		model.AddGrammarModel(_featureModel);
+		model.AddGrammarModel(_localModel);
+		model.AddGrammarModel(_patternModel);
+
+		//Load features.
+		_featureModel->LoadAllFeatures();
+		model.OptimizeWeights();
+		_featureModel->ClearFeatures();
+
+		//Write weights to database.
+		MindParameterDatabase paramDB;
+		paramDB.WriteGrammarFeatureModelWeight(model.GetModelWeight(_featureModel));
+		paramDB.WriteGrammarLocalModelWeight(model.GetModelWeight(_localModel));
+		paramDB.WriteGrammarPatternModelWeight(model.GetModelWeight(_patternModel));
 	}
 
 	void GrammarSet::WriteWeights(const double wPattern, const double wLocal)

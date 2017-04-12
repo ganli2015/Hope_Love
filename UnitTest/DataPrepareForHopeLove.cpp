@@ -2,6 +2,10 @@
 #include "DataPrepareForHopeLove.h"
 
 #include "../Mind/GrammarFeatureModel.h"
+#include "../Mind/GrammarLocalModel.h"
+#include "../Mind/GrammarPatternModel.h"
+#include "../Mind/GrammarModel.h"
+#include "../Mind/GrammaSet.h"
 
 #include "../CommonTools/DBoperator.h"
 
@@ -27,6 +31,14 @@ TEST(DISABLED_Preparation, ComputeWeights)
 	trainer.ComputeWeights("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt");
 }
 
+TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
+{
+	GrammarSet *grammarSet = new GrammarSet();
+	grammarSet->InitializeGrammarModel();
+	DataPrepareForHopeLove::InitializeWeightsForGrammarSet(
+		"E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt", grammarSet);
+}
+
 TEST(DISABLED_Preparation, TestPOS)
 {
 	vector<shared_ptr<DataCollection::Word>> sentence;
@@ -43,4 +55,9 @@ TEST(DISABLED_Preparation, TestPOS)
 	model.LoadAllFeatures();
 	double res = model.ComputePossiblity(sentence);
 	double res2 = model.ComputePossiblity(sentence2);
+}
+
+void DataPrepareForHopeLove::InitializeWeightsForGrammarSet(const string sampleFile, GrammarSet* grammarSet)
+{
+	grammarSet->InitializeWeights(sampleFile);
 }
