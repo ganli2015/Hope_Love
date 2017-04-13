@@ -119,6 +119,9 @@
     <ClInclude Include="TestPOSTagging.h">
       <Filter>TestAndPreparation</Filter>
     </ClInclude>
+    <ClInclude Include="Test_GrammarModel.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -198,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="TestPOSTagging.cpp">
       <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_GrammarModel.cpp">
+      <Filter>Mind</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

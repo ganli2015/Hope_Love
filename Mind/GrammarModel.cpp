@@ -7,6 +7,8 @@
 
 #include "../CommonTools/LogWriter.h"
 
+#include "../DataCollection/Word.h"
+
 using namespace CommonTool;
 
 namespace Mind
@@ -23,12 +25,25 @@ namespace Mind
 	void GrammarModelTrainer::OptimizeWeights()
 	{
 		auto samples = CommonFunction::ParseSampleSentences(_sampleFile);
+
+		//test
+		ComputePossibility(samples[599]);
+
 		//Prepare parameters.
 		//Compute possibility for each sentence for each model.
 		OptWeightsParam optParam;
 		for (auto sample : samples)
 		{
-			optParam.possi.push_back(ComputePossibility(sample));
+			auto curPossi = ComputePossibility(sample);
+			optParam.possi.push_back(curPossi);
+			for (auto p : curPossi)
+			{
+				if (_isnan(p))
+				{
+					ERRORLOG("NAN!!!!");
+					ERRORLOG(sample);
+				}
+			}
 		}
 
 		//Compute random initial weights.

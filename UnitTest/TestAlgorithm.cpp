@@ -9,7 +9,7 @@ using namespace Mind;
 TEST_F(TestAlgorithm, TestPOSTagging)
 {
 	TestPOSTagging test;
-	test.Run("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt", 10);
+	test.Run("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_pos.txt", 30);
 }
 
 void TestAlgorithm::SetUp()

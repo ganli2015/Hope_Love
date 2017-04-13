@@ -9,7 +9,7 @@ namespace DataCollection
 namespace Mind
 {
 	class GrammarLocal;
-	class GrammarLocalModel : public GrammarModel
+	class _MINDINOUT GrammarLocalModel : public GrammarModel
 	{
 		map<DataCollection::PartOfSpeech, shared_ptr<GrammarLocal>> _grammarLocalTable;
 
