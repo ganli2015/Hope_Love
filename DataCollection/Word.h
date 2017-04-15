@@ -72,6 +72,9 @@ namespace DataCollection
 	    void KnowIt(){_known=true;};
 		long long ToInt() const;
 
+		Character GetLastCharacter() const { return *_word.back(); }
+		Character GetFirstCharacter() const { return *_word.front(); }
+
 	private:
 
 	};

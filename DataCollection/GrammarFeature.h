@@ -108,6 +108,10 @@ namespace DataCollection
 	/*<<Joint Word Segmentation and POS Tagging using a Single Perceptron>>.
 	/************************************************************************/
 
+	//Check if the type of <object> is <type>,if so ,return a derived object <derived>, otherwise return false.
+#define CheckType(object,type,derived) auto derived = dynamic_pointer_cast<type>(object);\
+	if (derived == NULL) return false;
+
 	//////////////////////////////////////////////////////////////////////////
 	//tag t with word w
 	//////////////////////////////////////////////////////////////////////////
@@ -201,6 +205,50 @@ namespace DataCollection
 		WordFollowedByTag() {};
 		WordFollowedByTag(const string val, const PartOfSpeech t1) :_t1(t1), _word(val) {};
 		~WordFollowedByTag() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//word w with tag t and previous character c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordTagPreChar : public GrammarFeature
+	{
+		string _word;
+		PartOfSpeech _t;
+		string _preC;
+	public:
+		WordTagPreChar() {};
+		WordTagPreChar(const string val, const PartOfSpeech t1,const string preC) :_t(t1), _word(val),_preC(preC) {};
+		~WordTagPreChar() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//word w with tag t and next character c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordTagNextChar : public GrammarFeature
+	{
+		string _word;
+		PartOfSpeech _t;
+		string _nextC;
+	public:
+		WordTagNextChar() {};
+		WordTagNextChar(const string val, const PartOfSpeech t1, const string C) :_t(t1), _word(val), _nextC(C) {};
+		~WordTagNextChar() {};
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
 		virtual size_t GetHash() const;

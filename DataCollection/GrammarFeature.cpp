@@ -5,6 +5,8 @@
 #include "../CommonTools/DBoperator.h"
 #include "../CommonTools/LogWriter.h"
 
+#include "../DataCollection/Character.h"
+
 using namespace CommonTool;
 
 namespace DataCollection
@@ -100,8 +102,7 @@ namespace DataCollection
 	bool TagWithWord::Same(const shared_ptr<GrammarFeature> other) const
 	{
 		//Check type.
-		auto otherDrived = dynamic_pointer_cast<TagWithWord>(other);
-		if (otherDrived == NULL) return false;
+		CheckType(other, TagWithWord, otherDrived);
 
 		if (_word->IsSame(otherDrived->_word))
 		{
@@ -149,8 +150,7 @@ namespace DataCollection
 	bool TagBigram::Same(const shared_ptr<GrammarFeature> other) const
 	{
 		//Check type.
-		auto otherDrived = dynamic_pointer_cast<TagBigram>(other);
-		if (otherDrived == NULL) return false;
+		CheckType(other, TagBigram, otherDrived);
 
 		if (_t1 == otherDrived->_t1 && _t2 == otherDrived->_t2)
 		{
@@ -199,8 +199,7 @@ namespace DataCollection
 	bool TagTrigram::Same(const shared_ptr<GrammarFeature> other) const
 	{
 		//Check type.
-		auto otherDrived = dynamic_pointer_cast<TagTrigram>(other);
-		if (otherDrived == NULL) return false;
+		CheckType(other, TagTrigram, otherDrived);
 
 		if (_t1 == otherDrived->_t1 && _t2 == otherDrived->_t2&&_t3 == otherDrived->_t3)
 		{
@@ -250,8 +249,7 @@ namespace DataCollection
 	bool TagFollowedByWord::Same(const shared_ptr<GrammarFeature> other) const
 	{
 		//Check type.
-		auto otherDrived = dynamic_pointer_cast<TagFollowedByWord>(other);
-		if (otherDrived == NULL) return false;
+		CheckType(other, TagFollowedByWord, otherDrived);
 
 		if (_word == otherDrived->_word && _t1 == otherDrived->_t1)
 		{
@@ -299,8 +297,7 @@ namespace DataCollection
 	bool WordFollowedByTag::Same(const shared_ptr<GrammarFeature> other) const
 	{
 		//Check type.
-		auto otherDrived = dynamic_pointer_cast<WordFollowedByTag>(other);
-		if (otherDrived == NULL) return false;
+		CheckType(other, WordFollowedByTag, otherDrived);
 
 		if (_word == otherDrived->_word && _t1 == otherDrived->_t1)
 		{
@@ -343,6 +340,110 @@ namespace DataCollection
 	{
 		_t1 = (PartOfSpeech)row.GetLong("pos1");
 		_word = row.GetText("word1");
+	}
+
+	bool WordTagPreChar::Same(const shared_ptr<GrammarFeature> other) const
+	{
+		CheckType(other, WordTagPreChar, otherDerived);
+
+		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_preC == otherDerived->_preC)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	size_t WordTagPreChar::GetHash() const
+	{
+		string hashStr = GetMyType() + _word + ToString(_t) + _preC;
+		return GetStrHash(hashStr);
+	}
+
+	int WordTagPreChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == 0) return 0;
+
+		//Get last character of previous word.
+		auto preWord = words[i - 1];
+		auto lastChar = preWord->GetLastCharacter();
+
+		if (_word == words[i]->GetString() && _t == words[i]->Type() && _preC== lastChar.GetString())
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	void WordTagPreChar::BindParam(CommonTool::DBCmd& cmd) const
+	{
+		cmd.Bind(":pos1", (int)_t);
+		cmd.Bind(":word1", AsciiToUtf8(_word));
+		cmd.Bind(":word2", AsciiToUtf8(_preC));
+	}
+
+	void WordTagPreChar::ReadParam(const CommonTool::DBRow& row)
+	{
+		_t = (PartOfSpeech)row.GetLong("pos1");
+		_word = row.GetText("word1");
+		_preC = row.GetText("word2");
+	}
+
+	bool WordTagNextChar::Same(const shared_ptr<GrammarFeature> other) const
+	{
+		CheckType(other, WordTagNextChar, otherDerived);
+
+		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_nextC == otherDerived->_nextC)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	size_t WordTagNextChar::GetHash() const
+	{
+		string hashStr = GetMyType() + _word + ToString(_t) + _nextC;
+		return GetStrHash(hashStr);
+	}
+
+	int WordTagNextChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == 0) return 0;
+
+		//Get last character of previous word.
+		auto nextWord = words[i + 1];
+		auto nextChar = nextWord->GetLastCharacter();
+
+		if (_word == words[i]->GetString() && _t == words[i]->Type() && _nextC == nextChar.GetString())
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	void WordTagNextChar::BindParam(CommonTool::DBCmd& cmd) const
+	{
+		cmd.Bind(":pos1", (int)_t);
+		cmd.Bind(":word1", AsciiToUtf8(_word));
+		cmd.Bind(":word2", AsciiToUtf8(_nextC));
+	}
+
+	void WordTagNextChar::ReadParam(const CommonTool::DBRow& row)
+	{
+		_t = (PartOfSpeech)row.GetLong("pos1");
+		_word = row.GetText("word1");
+		_nextC = row.GetText("word2");
 	}
 
 }

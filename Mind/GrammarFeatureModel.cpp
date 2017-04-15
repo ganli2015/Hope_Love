@@ -99,6 +99,7 @@ namespace Mind
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
 	{
+		//Feature templates are used for extracting features from samples.
 		_featureTemplates.push_back(make_shared<TagWithWordTemplate>());
 		_featureTemplates.push_back(make_shared<TagBigramTemplate>());
 		_featureTemplates.push_back(make_shared<TagTrigramTemplate>());
