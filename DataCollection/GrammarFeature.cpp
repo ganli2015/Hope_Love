@@ -90,40 +90,11 @@ namespace DataCollection
 		ReadParam(row);
 	}
 
-	TagWithWord::TagWithWord(const shared_ptr<Word> val) :_word(val)
-	{
-	}
-
-	TagWithWord::~TagWithWord()
-	{
-	}
-
-	bool TagWithWord::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		//Check type.
-		CheckType(other, TagWithWord, otherDrived);
-
-		if (_word->IsSame(otherDrived->_word))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t TagWithWord::GetHash() const
-	{
-		string hashStr = GetMyType() + _word->GetString() + ToString(_word->Type());
-		return GetStrHash(hashStr);
-	}
-
 	int TagWithWord::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		//Check if the string and POS are the same.
 		auto curWord = words[i];
-		if (curWord->IsSame(_word))
+		if (GetString(0) == curWord->GetString() && GetPOS(0) == curWord->Type())
 		{
 			return 1;
 		}
@@ -131,47 +102,13 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void TagWithWord::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_word->Type());
-		cmd.Bind(":word1", _word->GetString(Word::Utf8));
-	}
-
-	void TagWithWord::ReadParam(const CommonTool::DBRow& row)
-	{
-		auto pos = (PartOfSpeech)row.GetLong("pos1");
-		string wordStr = row.GetText("word1");
-		_word = LanguageFunc::GetParticularWord(wordStr, pos);
-	}
-
-	bool TagBigram::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		//Check type.
-		CheckType(other, TagBigram, otherDrived);
-
-		if (_t1 == otherDrived->_t1 && _t2 == otherDrived->_t2)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t TagBigram::GetHash() const
-	{
-		string hashStr = GetMyType() + ToString(_t1) + ToString(_t2);
-		return GetStrHash(hashStr);
 	}
 
 	int TagBigram::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		//Check POS of current and previous word.
 		if (i == 0) return 0;
-		if (_t1 == words[i - 1]->Type() && _t2 == words[i]->Type())
+		if (GetPOS(0) == words[i - 1]->Type() && GetPOS(1) == words[i]->Type())
 		{
 			return 1;
 		}
@@ -179,41 +116,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void TagBigram::BindParam(CommonTool::DBCmd& cmd) const
-	{
-
-
-		cmd.Bind(":pos1", (int)_t1);
-		cmd.Bind(":pos2", (int)_t2);
-	}
-
-	void TagBigram::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t1 = (PartOfSpeech)row.GetLong("pos1");
-		_t2 = (PartOfSpeech)row.GetLong("pos2");
-	}
-
-	bool TagTrigram::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		//Check type.
-		CheckType(other, TagTrigram, otherDrived);
-
-		if (_t1 == otherDrived->_t1 && _t2 == otherDrived->_t2&&_t3 == otherDrived->_t3)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t TagTrigram::GetHash() const
-	{
-		string hashStr = GetMyType() + ToString(_t1) + ToString(_t2) + ToString(_t3);
-		return GetStrHash(hashStr);
 	}
 
 	int TagTrigram::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -221,7 +123,7 @@ namespace DataCollection
 		//Check POS of current,previous and next word.
 		if (i == 0 || i == words.size() - 1) return 0;
 
-		if (_t1 == words[i - 1]->Type() && _t2 == words[i]->Type() && _t3 == words[i + 1]->Type())
+		if (GetPOS(0) == words[i - 1]->Type() && GetPOS(1) == words[i]->Type() && GetPOS(2) == words[i + 1]->Type())
 		{
 			return 1;
 		}
@@ -229,41 +131,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void TagTrigram::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t1);
-		cmd.Bind(":pos2", (int)_t2);
-		cmd.Bind(":pos3", (int)_t3);
-	}
-
-	void TagTrigram::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t1 = (PartOfSpeech)row.GetLong("pos1");
-		_t2 = (PartOfSpeech)row.GetLong("pos2");
-		_t3 = (PartOfSpeech)row.GetLong("pos3");
-	}
-
-	bool TagFollowedByWord::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		//Check type.
-		CheckType(other, TagFollowedByWord, otherDrived);
-
-		if (_word == otherDrived->_word && _t1 == otherDrived->_t1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t TagFollowedByWord::GetHash() const
-	{
-		string hashStr = GetMyType() + _word + ToString(_t1);
-		return GetStrHash(hashStr);
 	}
 
 	int TagFollowedByWord::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -271,7 +138,7 @@ namespace DataCollection
 		//Check current POS and next word string.
 		if (i == words.size() - 1) return 0;
 
-		if (_t1 == words[i]->Type() && _word == words[i + 1]->GetString())
+		if (GetPOS(0) == words[i]->Type() && GetString(0) == words[i + 1]->GetString())
 		{
 			return 1;
 		}
@@ -279,39 +146,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void TagFollowedByWord::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t1);
-		cmd.Bind(":word1", AsciiToUtf8(_word));
-	}
-
-	void TagFollowedByWord::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t1 = (PartOfSpeech)row.GetLong("pos1");
-		_word = row.GetText("word1");
-	}
-
-	bool WordFollowedByTag::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		//Check type.
-		CheckType(other, WordFollowedByTag, otherDrived);
-
-		if (_word == otherDrived->_word && _t1 == otherDrived->_t1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t WordFollowedByTag::GetHash() const
-	{
-		string hashStr = GetMyType() + _word + ToString(_t1);
-		return GetStrHash(hashStr);
 	}
 
 	int WordFollowedByTag::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -319,7 +153,7 @@ namespace DataCollection
 		//Check current word and next POS.
 		if (i == words.size() - 1) return 0;
 
-		if (_word == words[i]->GetString() && _t1 == words[i + 1]->Type())
+		if (GetString(0) == words[i]->GetString() && GetPOS(0) == words[i + 1]->Type())
 		{
 			return 1;
 		}
@@ -327,38 +161,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void WordFollowedByTag::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t1);
-		cmd.Bind(":word1", AsciiToUtf8(_word));
-	}
-
-	void WordFollowedByTag::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t1 = (PartOfSpeech)row.GetLong("pos1");
-		_word = row.GetText("word1");
-	}
-
-	bool WordTagPreChar::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		CheckType(other, WordTagPreChar, otherDerived);
-
-		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_preC == otherDerived->_preC)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t WordTagPreChar::GetHash() const
-	{
-		string hashStr = GetMyType() + _word + ToString(_t) + _preC;
-		return GetStrHash(hashStr);
 	}
 
 	int WordTagPreChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -369,7 +171,7 @@ namespace DataCollection
 		auto preWord = words[i - 1];
 		auto lastChar = preWord->GetLastCharacter();
 
-		if (_word == words[i]->GetString() && _t == words[i]->Type() && _preC== lastChar.GetString())
+		if (GetString(0) == words[i]->GetString() && GetPOS(0) == words[i]->Type() && GetString(1) == lastChar.GetString())
 		{
 			return 1;
 		}
@@ -377,40 +179,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void WordTagPreChar::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t);
-		cmd.Bind(":word1", AsciiToUtf8(_word));
-		cmd.Bind(":word2", AsciiToUtf8(_preC));
-	}
-
-	void WordTagPreChar::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t = (PartOfSpeech)row.GetLong("pos1");
-		_word = row.GetText("word1");
-		_preC = row.GetText("word2");
-	}
-
-	bool WordTagNextChar::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		CheckType(other, WordTagNextChar, otherDerived);
-
-		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_nextC == otherDerived->_nextC)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t WordTagNextChar::GetHash() const
-	{
-		string hashStr = GetMyType() + _word + ToString(_t) + _nextC;
-		return GetStrHash(hashStr);
 	}
 
 	int WordTagNextChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -421,7 +189,7 @@ namespace DataCollection
 		auto nextWord = words[i + 1];
 		auto nextChar = nextWord->GetLastCharacter();
 
-		if (_word == words[i]->GetString() && _t == words[i]->Type() && _nextC == nextChar.GetString())
+		if (GetString(0) == words[i]->GetString() && GetPOS(0) == words[i]->Type() && GetString(1) == nextChar.GetString())
 		{
 			return 1;
 		}
@@ -429,40 +197,6 @@ namespace DataCollection
 		{
 			return 0;
 		}
-	}
-
-	void WordTagNextChar::BindParam(CommonTool::DBCmd& cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t);
-		cmd.Bind(":word1", AsciiToUtf8(_word));
-		cmd.Bind(":word2", AsciiToUtf8(_nextC));
-	}
-
-	void WordTagNextChar::ReadParam(const CommonTool::DBRow& row)
-	{
-		_t = (PartOfSpeech)row.GetLong("pos1");
-		_word = row.GetText("word1");
-		_nextC = row.GetText("word2");
-	}
-
-	bool SingleCharWithTrigramChar::Same(const shared_ptr<GrammarFeature> other) const
-	{
-		CheckType(other, SingleCharWithTrigramChar, otherDerived);
-
-		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_c1 == otherDerived->_c1&&_c2 == otherDerived->_c2)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	size_t SingleCharWithTrigramChar::GetHash() const
-	{
-		string hashStr = GetMyType() + _word + ToString(_t) + _c1 + _c2;
-		return GetStrHash(hashStr);
 	}
 
 	int SingleCharWithTrigramChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -474,7 +208,7 @@ namespace DataCollection
 		auto curW = words[i];
 		if (preW->NumOfChara() == 1 && nextW->NumOfChara() == 1 && curW->NumOfChara() == 1)
 		{
-			if (curW->GetString() == _word&&curW->Type() == _t&&preW->GetString() == _c1&&nextW->GetString() == _c2)
+			if (curW->GetString() == GetString(0) &&curW->Type() == GetPOS(0) &&preW->GetString() == GetString(1) &&nextW->GetString() == GetString(2))
 			{
 				return true;
 			}
@@ -483,26 +217,10 @@ namespace DataCollection
 		return false;
 	}
 
-	void SingleCharWithTrigramChar::BindParam(CommonTool::DBCmd & cmd) const
-	{
-		cmd.Bind(":pos1", (int)_t);
-		cmd.Bind(":word1", AsciiToUtf8(_word));
-		cmd.Bind(":word2", AsciiToUtf8(_c1));
-		cmd.Bind(":word3", AsciiToUtf8(_c2));
-	}
-
-	void SingleCharWithTrigramChar::ReadParam(const CommonTool::DBRow & row)
-	{
-		_t = (PartOfSpeech)row.GetLong("pos1");
-		_word = row.GetText("word1");
-		_c1 = row.GetText("word2");
-		_c2 = row.GetText("word3");
-	}
-
 	int WordStartWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		auto curWord = words[i];
-		if (_word[0] == curWord->GetFirstCharacter().GetString() && _pos[0] == curWord->Type())
+		if (GetString(0) == curWord->GetFirstCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
 			return true;
 		}

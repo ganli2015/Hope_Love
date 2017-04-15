@@ -123,7 +123,7 @@ namespace DataCollection
 	template<size_t wordSize, size_t posSize>
 	class FeatureStyle : public GrammarFeature
 	{
-	protected:
+	private:
 		string *_word;
 		PartOfSpeech *_pos;
 
@@ -132,6 +132,12 @@ namespace DataCollection
 		{
 			_word = new string[wordSize]();
 			_pos = new PartOfSpeech[posSize]();
+		}
+
+		virtual ~FeatureStyle()
+		{
+			delete[] _word;
+			delete[] _pos;
 		}
 
 		virtual bool Same(const shared_ptr<GrammarFeature> other) const
@@ -197,186 +203,174 @@ namespace DataCollection
 		{
 			for (size_t i = 0; i < wordSize; i++)
 			{
-				string bindParam = ":word" + CommonTool::ToString(i + 1);
+				string bindParam = "word" + CommonTool::ToString(i + 1);
 				_word[i] = row.GetText(bindParam);
 			}
 			for (size_t i = 0; i < posSize; i++)
 			{
-				string bindParam = ":pos" + CommonTool::ToString(i + 1);
+				string bindParam = "pos" + CommonTool::ToString(i + 1);
 				_pos[i] = (PartOfSpeech)row.GetLong(bindParam);
 			}
 		}
 
+	protected:
+
+		string GetString(int i) const { return _word[i]; }
+		void SetString(int i, const string val) { _word[i] = val; }
+		PartOfSpeech GetPOS(int i) const { return _pos[i]; }
+		void SetPOS(int i, const PartOfSpeech pos) { _pos[i] = pos; }
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag t with word w
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT TagWithWord : public GrammarFeature
+	class _DATACOLLECTIONINOUT TagWithWord : public FeatureStyle<1,1>
 	{
-		shared_ptr<Word> _word;
-
 	public:
 		TagWithWord() {};
-		TagWithWord(const shared_ptr<Word> val);
-		~TagWithWord();
+		TagWithWord(const shared_ptr<Word> val)
+		{
+			SetString(0, val->GetString());
+			SetPOS(0, val->Type());
+		};
+		~TagWithWord() {};
 
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words) ;
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag t with word w
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT TagBigram : public GrammarFeature
+	class _DATACOLLECTIONINOUT TagBigram : public FeatureStyle<0, 2>
 	{
-		PartOfSpeech _t1;
-		PartOfSpeech _t2;
 	public:
 		TagBigram() {};
-		TagBigram(const PartOfSpeech t1, const PartOfSpeech t2) :_t1(t1), _t2(t2) {};
+		TagBigram(const PartOfSpeech t1, const PartOfSpeech t2) 
+		{
+			SetPOS(0, t1);
+			SetPOS(1, t2);
+		};
 		~TagBigram() {};
 
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag trigram t1t2t3
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT TagTrigram : public GrammarFeature
+	class _DATACOLLECTIONINOUT TagTrigram : public FeatureStyle<0, 3>
 	{
-		PartOfSpeech _t1;
-		PartOfSpeech _t2;
-		PartOfSpeech _t3;
 	public:
 		TagTrigram() {};
-		TagTrigram(const PartOfSpeech t1, const PartOfSpeech t2, const PartOfSpeech t3) :_t1(t1), _t2(t2), _t3(t3) {};
+		TagTrigram(const PartOfSpeech t1, const PartOfSpeech t2, const PartOfSpeech t3) 
+		{
+			SetPOS(0, t1);
+			SetPOS(1, t2);
+			SetPOS(2, t3);
+		};
 		~TagTrigram() {};
 
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag t followed by word w
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT TagFollowedByWord : public GrammarFeature
+	class _DATACOLLECTIONINOUT TagFollowedByWord : public FeatureStyle<1,1>
 	{
-		PartOfSpeech _t1;
-		string _word;
 	public:
 		TagFollowedByWord() {};
-		TagFollowedByWord(const PartOfSpeech t1, const string val) :_t1(t1), _word(val) {};
+		TagFollowedByWord(const PartOfSpeech t1, const string val) 
+		{
+			SetPOS(0, t1);
+			SetString(0, val);
+		};
 		~TagFollowedByWord() {};
-
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//word w followed by tag t
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT WordFollowedByTag : public GrammarFeature
+	class _DATACOLLECTIONINOUT WordFollowedByTag : public FeatureStyle<1, 1>
 	{
-		PartOfSpeech _t1;
-		string _word;
 	public:
 		WordFollowedByTag() {};
-		WordFollowedByTag(const string val, const PartOfSpeech t1) :_t1(t1), _word(val) {};
+		WordFollowedByTag(const string val, const PartOfSpeech t1)
+		{
+			SetPOS(0, t1);
+			SetString(0, val);
+		};
 		~WordFollowedByTag() {};
-
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//word w with tag t and previous character c
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT WordTagPreChar : public GrammarFeature
+	class _DATACOLLECTIONINOUT WordTagPreChar : public FeatureStyle<2, 1>
 	{
-		string _word;
-		PartOfSpeech _t;
-		string _preC;
 	public:
 		WordTagPreChar() {};
-		WordTagPreChar(const string val, const PartOfSpeech t1,const string preC) :_t(t1), _word(val),_preC(preC) {};
+		WordTagPreChar(const string val, const PartOfSpeech t1, const string preC)
+		{
+			SetString(0, val);
+			SetPOS(0, t1);
+			SetString(1, preC);
+		};
 		~WordTagPreChar() {};
-
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//word w with tag t and next character c
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT WordTagNextChar : public GrammarFeature
+	class _DATACOLLECTIONINOUT WordTagNextChar : public FeatureStyle<2, 1>
 	{
 		string _word;
 		PartOfSpeech _t;
 		string _nextC;
 	public:
 		WordTagNextChar() {};
-		WordTagNextChar(const string val, const PartOfSpeech t1, const string C) :_t(t1), _word(val), _nextC(C) {};
+		WordTagNextChar(const string val, const PartOfSpeech t1, const string C)
+		{
+			SetString(0, val);
+			SetPOS(0, t1);
+			SetString(1, C);
+		};
 		~WordTagNextChar() {};
-
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag t on single-character word w in character trigram c1wc2
 	//////////////////////////////////////////////////////////////////////////
-	class _DATACOLLECTIONINOUT SingleCharWithTrigramChar : public GrammarFeature
+	class _DATACOLLECTIONINOUT SingleCharWithTrigramChar : public FeatureStyle<3, 1>
 	{
-		string _word;
-		string _c1;
-		string _c2;
-		PartOfSpeech _t;
 	public:
 		SingleCharWithTrigramChar() {};
-		SingleCharWithTrigramChar(const string word, const string c1,const string c2, const PartOfSpeech t1) :_t(t1), _word(word), _c1(c1),_c2(c2) {};
+		SingleCharWithTrigramChar(const string word, const string c1, const string c2, const PartOfSpeech t1)
+		{
+			SetString(0, word);
+			SetString(1, c1);
+			SetString(2, c2);
+			SetPOS(0, t1);
+		};
 		~SingleCharWithTrigramChar() {};
-
-		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
-		virtual size_t GetHash() const;
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
-		virtual void BindParam(CommonTool::DBCmd& cmd) const;
-		virtual void ReadParam(const CommonTool::DBRow& row);
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -387,8 +381,8 @@ namespace DataCollection
 	public:
 		WordStartWithChar() {};
 		WordStartWithChar(const string c,  const PartOfSpeech t1) {
-			_word[0] = c;
-			_pos[0] = t1;
+			SetString(0, c);
+			SetPOS(0, t1);
 		};
 		~WordStartWithChar() {};
 
