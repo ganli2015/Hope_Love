@@ -3,6 +3,9 @@
 #include <functional>
 #include "Word.h"
 
+#include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/DBoperator.h"
+
 namespace CommonTool
 {
 	class DBoperator;
@@ -111,6 +114,100 @@ namespace DataCollection
 	//Check if the type of <object> is <type>,if so ,return a derived object <derived>, otherwise return false.
 #define CheckType(object,type,derived) auto derived = dynamic_pointer_cast<type>(object);\
 	if (derived == NULL) return false;
+
+	//////////////////////////////////////////////////////////////////////////
+	//Base for concrete feature classes with feature elements based on string or PartOfSpeech.
+	//<wordSize> is the size of string array.
+	//<posSize> is the size of PartOfSpeech array.
+	//////////////////////////////////////////////////////////////////////////
+	template<size_t wordSize, size_t posSize>
+	class FeatureStyle : public GrammarFeature
+	{
+	protected:
+		string *_word;
+		PartOfSpeech *_pos;
+
+	public:
+		FeatureStyle()
+		{
+			_word = new string[wordSize]();
+			_pos = new PartOfSpeech[posSize]();
+		}
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const
+		{
+			//Check type.
+			if (other->GetMyType() != GetMyType()) return false;
+
+			auto derived = dynamic_pointer_cast<FeatureStyle<wordSize, posSize>>(other);
+			assert(derived != NULL);
+
+			//Check word.
+			for (size_t i = 0; i < wordSize; i++)
+			{
+				if (_word[i] != derived->_word[i])
+					return false;
+			}
+
+			//Check pos.
+			for (size_t i = 0; i < posSize; i++)
+			{
+				if (_pos[i] != derived->_pos[i])
+					return false;
+			}
+
+			return true;
+		}
+
+		virtual size_t GetHash() const
+		{
+			string hashStr = GetMyType();
+			//Sum up words and pos.
+			for (size_t i = 0; i < wordSize; i++)
+			{
+				hashStr += _word[i];
+			}
+			for (size_t i = 0; i < posSize; i++)
+			{
+				hashStr += _pos[i];
+			}
+
+			return CommonTool::GetStrHash(hashStr);
+		}
+
+	private:
+
+		virtual void BindParam(CommonTool::DBCmd& cmd) const
+		{
+			//Bind word.
+			for (size_t i = 0; i < wordSize; i++)
+			{
+				string bindParam = ":word" + CommonTool::ToString(i + 1);
+				cmd.Bind(bindParam, CommonTool::AsciiToUtf8(_word[i]));
+			}
+			//Bind pos.
+			for (size_t i = 0; i < posSize; i++)
+			{
+				string bindParam = ":pos" + CommonTool::ToString(i + 1);
+				cmd.Bind(bindParam, (int)_pos[i]);
+			}
+		}
+
+		virtual void ReadParam(const CommonTool::DBRow& row)
+		{
+			for (size_t i = 0; i < wordSize; i++)
+			{
+				string bindParam = ":word" + CommonTool::ToString(i + 1);
+				_word[i] = row.GetText(bindParam);
+			}
+			for (size_t i = 0; i < posSize; i++)
+			{
+				string bindParam = ":pos" + CommonTool::ToString(i + 1);
+				_pos[i] = (PartOfSpeech)row.GetLong(bindParam);
+			}
+		}
+
+	};
 
 	//////////////////////////////////////////////////////////////////////////
 	//tag t with word w
@@ -257,6 +354,46 @@ namespace DataCollection
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 		virtual void BindParam(CommonTool::DBCmd& cmd) const;
 		virtual void ReadParam(const CommonTool::DBRow& row);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on single-character word w in character trigram c1wc2
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT SingleCharWithTrigramChar : public GrammarFeature
+	{
+		string _word;
+		string _c1;
+		string _c2;
+		PartOfSpeech _t;
+	public:
+		SingleCharWithTrigramChar() {};
+		SingleCharWithTrigramChar(const string word, const string c1,const string c2, const PartOfSpeech t1) :_t(t1), _word(word), _c1(c1),_c2(c2) {};
+		~SingleCharWithTrigramChar() {};
+
+		virtual bool Same(const shared_ptr<GrammarFeature> other) const;
+		virtual size_t GetHash() const;
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+		virtual void BindParam(CommonTool::DBCmd& cmd) const;
+		virtual void ReadParam(const CommonTool::DBRow& row);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word starting with char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordStartWithChar : public FeatureStyle<1,1>
+	{
+	public:
+		WordStartWithChar() {};
+		WordStartWithChar(const string c,  const PartOfSpeech t1) {
+			_word[0] = c;
+			_pos[0] = t1;
+		};
+		~WordStartWithChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
 	};
 }
 

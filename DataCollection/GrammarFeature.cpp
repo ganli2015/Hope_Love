@@ -2,7 +2,6 @@
 #include "GrammarFeature.h"
 #include "LanguageFunc.h"
 
-#include "../CommonTools/DBoperator.h"
 #include "../CommonTools/LogWriter.h"
 
 #include "../DataCollection/Character.h"
@@ -444,6 +443,73 @@ namespace DataCollection
 		_t = (PartOfSpeech)row.GetLong("pos1");
 		_word = row.GetText("word1");
 		_nextC = row.GetText("word2");
+	}
+
+	bool SingleCharWithTrigramChar::Same(const shared_ptr<GrammarFeature> other) const
+	{
+		CheckType(other, SingleCharWithTrigramChar, otherDerived);
+
+		if (_word == otherDerived->_word&&_t == otherDerived->_t&&_c1 == otherDerived->_c1&&_c2 == otherDerived->_c2)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	size_t SingleCharWithTrigramChar::GetHash() const
+	{
+		string hashStr = GetMyType() + _word + ToString(_t) + _c1 + _c2;
+		return GetStrHash(hashStr);
+	}
+
+	int SingleCharWithTrigramChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == 0 || i == words.size() - 1) return 0;
+
+		auto preW = words[i - 1];
+		auto nextW = words[i + 1];
+		auto curW = words[i];
+		if (preW->NumOfChara() == 1 && nextW->NumOfChara() == 1 && curW->NumOfChara() == 1)
+		{
+			if (curW->GetString() == _word&&curW->Type() == _t&&preW->GetString() == _c1&&nextW->GetString() == _c2)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	void SingleCharWithTrigramChar::BindParam(CommonTool::DBCmd & cmd) const
+	{
+		cmd.Bind(":pos1", (int)_t);
+		cmd.Bind(":word1", AsciiToUtf8(_word));
+		cmd.Bind(":word2", AsciiToUtf8(_c1));
+		cmd.Bind(":word3", AsciiToUtf8(_c2));
+	}
+
+	void SingleCharWithTrigramChar::ReadParam(const CommonTool::DBRow & row)
+	{
+		_t = (PartOfSpeech)row.GetLong("pos1");
+		_word = row.GetText("word1");
+		_c1 = row.GetText("word2");
+		_c2 = row.GetText("word3");
+	}
+
+	int WordStartWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		if (_word[0] == curWord->GetFirstCharacter().GetString() && _pos[0] == curWord->Type())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }
