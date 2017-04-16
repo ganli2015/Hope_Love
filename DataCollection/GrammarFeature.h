@@ -16,6 +16,67 @@ namespace CommonTool
 namespace DataCollection
 {
 	class Word;
+	class GrammarFeature;
+
+	//Handle all feature templates.
+	//<prefix> is the prefix of code expression, and <suffix> is the suffix.
+#define HANDLE_ALL_FEATURETEMPLATES(prefix,suffix) prefix##TagWithWordTemplate##suffix;\
+	prefix##TagBigramTemplate##suffix;\
+	prefix##TagTrigramTemplate##suffix;\
+	prefix##TagFollowedByWordTemplate##suffix;\
+	prefix##WordFollowedByTagTemplate##suffix;\
+	prefix##WordTagPreCharTemplate##suffix;\
+	prefix##WordTagNextCharTemplate##suffix;\
+	prefix##SingleCharWithTrigramCharTemplate##suffix;\
+	prefix##WordStartWithCharTemplate##suffix;\
+	prefix##WordEndWithCharTemplate##suffix;
+
+#define HANDLE_ALL_FEATURES(prefix,suffix) prefix##TagWithWord##suffix;\
+	prefix##TagBigram##suffix;\
+	prefix##TagTrigram##suffix;\
+	prefix##TagFollowedByWord##suffix;\
+	prefix##WordFollowedByTag##suffix;\
+	prefix##WordTagPreChar##suffix;\
+	prefix##WordTagNextChar##suffix;\
+	prefix##SingleCharWithTrigramChar##suffix;\
+	prefix##WordStartWithChar##suffix;\
+	prefix##WordEndWithChar##suffix;
+
+
+	//Used for create a derived feature.
+	//////////////////////////////////////////////////////////////////////////
+	class FeatureCreator
+	{
+		static map<string, FeatureCreator*> _featureCreators;
+		static bool _prepareTag;
+	public:
+		static shared_ptr<GrammarFeature> CreateFeature(const CommonTool::DBRow& row);
+
+	protected:
+		virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row) = 0;
+		static bool PrepareFeatureCreators();
+
+	private:
+		template<typename T>
+		static void AddFeatureCreator()
+		{
+			auto feature = make_shared<T>();
+			_featureCreators[feature->GetMyType()] = new ConcreteFeatureCreator<T>();
+		}
+	};
+
+	template<class T>
+	class ConcreteFeatureCreator : public FeatureCreator
+	{
+	protected:
+		virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row)
+		{
+			shared_ptr<T> feature(new T());
+			feature->ReadFromDBRow(row);
+			return feature;
+		}
+	};
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//It is a feature for some grammar.
@@ -24,28 +85,9 @@ namespace DataCollection
 	class _DATACOLLECTIONINOUT GrammarFeature : public Obj<GrammarFeature>
 	{
 		//////////////////////////////////////////////////////////////////////////
-		//Used for create a derived feature.
-		//////////////////////////////////////////////////////////////////////////
-		class FeatureCreator
-		{
-		public:
-			virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row) = 0;
-		};
 
-		template<class T>
-		class ConcreteFeatureCreator : public FeatureCreator
-		{
-		public:
-			virtual shared_ptr<GrammarFeature> Create(const CommonTool::DBRow& row)
-			{
-				shared_ptr<T> feature(new T());
-				feature->ReadFromDBRow(row);
-				return feature;
-			}
-		};
 
 	protected:
-		static map<string, FeatureCreator*> _featureCreators;
 	public:
 		GrammarFeature();
 		virtual ~GrammarFeature();
@@ -89,6 +131,8 @@ namespace DataCollection
 		
 
 	private:
+
+
 		//////////////////////////////////////////////////////////////////////////
 		//Get count of feature from current word as well as its neighbour.
 		//////////////////////////////////////////////////////////////////////////
@@ -101,7 +145,6 @@ namespace DataCollection
 
 		virtual void ReadParam(const CommonTool::DBRow& row) = 0;
 
-		static void PrepareFeatureCreators();
 
 	};
 

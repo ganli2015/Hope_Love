@@ -11,23 +11,14 @@ using namespace CommonTool;
 namespace DataCollection
 {
 
-	map<string, GrammarFeature::FeatureCreator*> GrammarFeature::_featureCreators;
+	map<string, FeatureCreator*> FeatureCreator::_featureCreators;
 
-	GrammarFeature::GrammarFeature()
+	bool FeatureCreator::_prepareTag= PrepareFeatureCreators();
+
+	shared_ptr<GrammarFeature> FeatureCreator::CreateFeature(const CommonTool::DBRow& row)
 	{
-		if (_featureCreators.empty())
-		{
-			PrepareFeatureCreators();
-		}
-	}
+		if (_featureCreators.empty()) PrepareFeatureCreators();
 
-
-	GrammarFeature::~GrammarFeature()
-	{
-	}
-
-	shared_ptr<GrammarFeature> GrammarFeature::GetFeature(const CommonTool::DBRow& row)
-	{
 		auto type = row.GetText("type");
 		if (_featureCreators.count(type) == 0)
 		{
@@ -39,16 +30,26 @@ namespace DataCollection
 		}
 	}
 
-	void GrammarFeature::PrepareFeatureCreators()
+	bool FeatureCreator::PrepareFeatureCreators()
 	{
-		string typePrefix = "class DataCollection::";
-
-		_featureCreators[typePrefix+"TagWithWord"] = new ConcreteFeatureCreator<TagWithWord>();
-		_featureCreators[typePrefix+"TagBigram"] = new ConcreteFeatureCreator<TagBigram>();
-		_featureCreators[typePrefix+"TagTrigram"] = new ConcreteFeatureCreator<TagTrigram>();
-		_featureCreators[typePrefix+"TagFollowedByWord"] = new ConcreteFeatureCreator<TagFollowedByWord>();
-		_featureCreators[typePrefix+"WordFollowedByTag"] = new ConcreteFeatureCreator<WordFollowedByTag>();
+		HANDLE_ALL_FEATURES(AddFeatureCreator<, >());
 		LOG("Grammar feature creators are prepared.");
+		return true;
+	}
+
+	GrammarFeature::GrammarFeature()
+	{
+
+	}
+
+
+	GrammarFeature::~GrammarFeature()
+	{
+	}
+
+	shared_ptr<GrammarFeature> GrammarFeature::GetFeature(const CommonTool::DBRow& row)
+	{
+		return FeatureCreator::CreateFeature(row);
 	}
 
 	std::string GrammarFeature::GetMyType() const

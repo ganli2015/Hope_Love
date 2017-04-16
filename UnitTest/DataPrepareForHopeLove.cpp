@@ -26,7 +26,7 @@ TEST(DISABLED_Preparation, CollectGrammarFeatures)
 	trainer.CollectFeatures("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_wo_pos.txt");
 }
 
-TEST(DISABLED_Preparation, ComputeWeights)
+TEST(Preparation, ComputeWeights)
 {
 	//Compute weights for different grammar feature templates.
 	//Before running this test, run <CollectGrammarFeatures> first to collect all featuer from a sample file.

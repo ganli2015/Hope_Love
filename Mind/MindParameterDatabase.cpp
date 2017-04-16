@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MindParameterDatabase.h"
+#include "GrammarFeatureModel.h"
 
 #include "../CommonTools/DBoperator.h"
 #include "../CommonTools/CommonStringFunction.h"
@@ -96,7 +97,7 @@ namespace Mind
 
 	void MindParameterDatabase::PrepareFeatureWeightID()
 	{
-		unsigned weightCount = 5;
+		unsigned weightCount = GrammarFeatureModel::GetFeatureTypesCount();
 		for (unsigned i = 0; i < weightCount; ++i)
 		{
 			//Get id of the weight.

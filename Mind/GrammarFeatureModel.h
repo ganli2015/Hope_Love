@@ -16,12 +16,15 @@ namespace Mind
 
 	class _MINDINOUT GrammarFeatureModel : public GrammarModel
 	{
+		//////////////////////////////////////////////////////////////////////////
+		//The order of <_featureTypes> determines the order of weights in the database! 
+		//////////////////////////////////////////////////////////////////////////
+		static set<string> _featureTypes;
+
 		GrammarFeatureDatabase *_featureDB;
 		FeatureList _features;
 		bool _loadedFeatures;
-		//////////////////////////////////////////////////////////////////////////
-		//The order of <_featureTypes> determines the order of weights in the database! 
-		set<string> _featureTypes;
+
 		//////////////////////////////////////////////////////////////////////////
 		//Key is feature type.
 		//////////////////////////////////////////////////////////////////////////
@@ -41,6 +44,8 @@ namespace Mind
 		GrammarFeatureModel();
 		virtual ~GrammarFeatureModel();
 
+		static size_t GetFeatureTypesCount() { return _featureTypes.size(); }
+
 		//////////////////////////////////////////////////////////////////////////
 		//Compute Possibility of tagging for a given sentence. 
 		//Call LoadAllFeatures before computing!!
@@ -55,7 +60,16 @@ namespace Mind
 		bool FeaturesLoaded() { return _loadedFeatures; }
 
 	private:
+		template<typename T>
+		static void AddFeature(set<string>& features)
+		{
+			features.insert(make_shared<T>()->GetMyType());
+		}
+
+		static set<string> PrepareGrammarFeatures();
+
 		void ReadWeightsInDB();
+		
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get features of sentence.
@@ -115,6 +129,11 @@ namespace Mind
 
 	private:
 		void PrepareFeatureTemplates();
+		template<typename T>
+		void AddFeatureTemplate()
+		{
+			_featureTemplates.push_back(make_shared<T>());
+		}
 
 		void FindFeatures(const vector<vector<shared_ptr<DataCollection::Word>>>& sentences) ;
 		void FindFeaturesOneSentence(const vector<shared_ptr<DataCollection::Word>>& sentence) ;

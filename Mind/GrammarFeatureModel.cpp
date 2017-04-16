@@ -100,11 +100,7 @@ namespace Mind
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
 	{
 		//Feature templates are used for extracting features from samples.
-		_featureTemplates.push_back(make_shared<TagWithWordTemplate>());
-		_featureTemplates.push_back(make_shared<TagBigramTemplate>());
-		_featureTemplates.push_back(make_shared<TagTrigramTemplate>());
-		_featureTemplates.push_back(make_shared<TagFollowedByWordTemplate>());
-		_featureTemplates.push_back(make_shared<WordFollowedByTagTemplate>());
+		HANDLE_ALL_FEATURETEMPLATES(AddFeatureTemplate<, >());
 	}
 
 	void GrammarFeatureTrainer::FindFeatures(const vector<vector<shared_ptr<DataCollection::Word>>>& sentences) 
@@ -264,14 +260,19 @@ namespace Mind
 		return res;
 	}
 
-	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase()),_loadedFeatures(false)
+	set<string> GrammarFeatureModel::PrepareGrammarFeatures()
 	{
-		_featureTypes.insert(make_shared<TagWithWord>()->GetMyType());
-		_featureTypes.insert(make_shared<TagBigram>()->GetMyType());
-		_featureTypes.insert(make_shared<TagTrigram>()->GetMyType());
-		_featureTypes.insert(make_shared<TagFollowedByWord>()->GetMyType());
-		_featureTypes.insert(make_shared<WordFollowedByTag>()->GetMyType());
+		set<string> features;
+		HANDLE_ALL_FEATURES(AddFeature<, >(features));
 
+		return features;
+	}
+
+	set<string> GrammarFeatureModel::_featureTypes = GrammarFeatureModel::PrepareGrammarFeatures();
+
+	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase()), _loadedFeatures(false)
+	{
+		
 		ReadWeightsInDB();
 		LOG("Finish read weights from database.");
 	}
