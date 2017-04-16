@@ -43,7 +43,15 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-	RunFilter("Preparation*");
+	//Read filter information from file.
+	ifstream in("config.txt");
+	string line;
+	getline(in, line);
+
+	if (line != "")
+	{
+		RunFilter(line);
+	}
 
 #ifdef _RUN_INTEGRATION_TEST
 

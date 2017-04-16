@@ -19,14 +19,14 @@ using namespace DataCollection;
 
 //These are preparations for Hope_Love, including training data and collecting data.
 
-TEST(DISABLED_Preparation, CollectGrammarFeatures)
+TEST(DISABLED_Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
 {
 	//Before running this test, clean data in table 
 	GrammarFeatureTrainer trainer;
 	trainer.CollectFeatures("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_wo_pos.txt");
 }
 
-TEST(Preparation, ComputeWeights)
+TEST(DISABLED_Preparation, GrammarFeatureTrainer_ComputeWeights)
 {
 	//Compute weights for different grammar feature templates.
 	//Before running this test, run <CollectGrammarFeatures> first to collect all featuer from a sample file.
@@ -34,7 +34,7 @@ TEST(Preparation, ComputeWeights)
 	trainer.ComputeWeights("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt");
 }
 
-TEST(DISABLED_Preparation, GrammarModelTrainer_OptimizeWeights)
+TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
 {
 	GrammarSet *grammarSet = new GrammarSet();
 	grammarSet->InitializeGrammarModel();

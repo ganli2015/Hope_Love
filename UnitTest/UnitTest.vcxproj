@@ -114,7 +114,7 @@ copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
 
 if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
 copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"
-</Command>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.db" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 
@@ -144,7 +144,7 @@ copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
 
 if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
 copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"
-</Command>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.db" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 
@@ -177,7 +177,7 @@ copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
 
 if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
 copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"
-</Command>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.db" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 
@@ -210,7 +210,7 @@ copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(ProjectDir)HopeLoveData"
 
 if not exist "$(ProjectDir)HopeLoveData\large" (md "$(ProjectDir)HopeLoveData\large")
 copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(ProjectDir)HopeLoveData\large"
-</Command>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.db" "$(ProjectDir)HopeLoveData\large"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 

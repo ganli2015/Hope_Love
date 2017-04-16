@@ -24,9 +24,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void Run(const string corpusFilename,const int sentenceCount);
 
-private:
 	vector<shared_ptr<DataCollection::Word>> POSTagging(const string sentence) const;
 
+private:
 	vector<TestPOSTagging::POSSample> ReadSentences(const string filename, const int sentenceCount);
 
 	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line);

@@ -21,6 +21,7 @@
 #include "../DataCollection/LanguageFunc.h"
 
 #include "../CommonTools/MyObject.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace Mind;
 using namespace DataCollection;
@@ -204,6 +205,27 @@ namespace FuncForTest
 		return res;
 	}
 
+	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line)
+	{
+		//Split blank and get each word.
+		auto split = CommonTool::SplitString(line, ' ');
+
+		vector<shared_ptr<DataCollection::Word>> res;
+
+		for (unsigned int i = 0; i < split.size(); ++i)
+		{
+			//Split '/' and get word string and pos.
+			auto word_POS = CommonTool::SplitString(split[i], '/');
+			if (word_POS.size() != 2)
+			{
+				throw runtime_error("Error in ParsePOSTagging");
+			}
+
+			res.push_back(LanguageFunc::GetParticularWord(word_POS[0], (PartOfSpeech)atoi(word_POS[1].c_str())));
+		}
+
+		return res;
+	}
 }
 
 void InitCerebrum::SetUp()

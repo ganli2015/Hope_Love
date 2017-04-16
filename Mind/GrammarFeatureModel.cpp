@@ -75,9 +75,9 @@ namespace Mind
 		//Set weights range to 0 to 1.
 		opt.SetLowerBound(0);
 		opt.SetUpperBound(1);
-		opt.SetXTol(1e-10);
-		opt.SetFTol(1e-10);
-		opt.SetMaxIteration(1000);
+		opt.SetXTol(1e-5);
+		opt.SetFTol(1e-5);
+		opt.SetMaxIteration(2000);
 		double objFunValue = 0;
 		LOG_FORMAT("Initial objective function value is %lf.", ObjFunc(weights,&optParam));
 		try
@@ -311,6 +311,8 @@ namespace Mind
 		_features = _featureDB->GetAllFeatures();
 		_featureDB->Disconnect();
 		_loadedFeatures = true;
+
+		LOG_FORMAT("The size of features is %d.", _features.size());
 	}
 
 	void GrammarFeatureModel::ReadWeightsInDB()

@@ -25,6 +25,8 @@ TestPOSTagging::~TestPOSTagging()
 
 void TestPOSTagging::Run(const string corpusFilename, const int sentenceCount)
 {
+	ofstream out("Log//incorrect POS tagging.txt");
+
 	auto samples = ReadSentences(corpusFilename, sentenceCount);
 	int correctNum = 0;
 	int totalNum = 0;
@@ -38,6 +40,10 @@ void TestPOSTagging::Run(const string corpusFilename, const int sentenceCount)
 			if (IsCorrect(samples[i].POSTag, result))
 			{
 				correctNum++;
+			}
+			else
+			{
+				OutputResult(samples[i].POSUnsplit, result, out);
 			}
 
 			++totalNum;
@@ -103,7 +109,7 @@ vector<TestPOSTagging::POSSample> TestPOSTagging::ReadSentences(const string fil
 		}
 
 		aSample.POSUnsplit = POSUnsplit;
-		aSample.POSTag = ParsePOSTagging(POSUnsplit);
+		aSample.POSTag = FuncForTest::ParsePOSTagging(POSUnsplit);
 		res.push_back(aSample);
 
 		if (res.size() >= sampleNum)
@@ -115,27 +121,7 @@ vector<TestPOSTagging::POSSample> TestPOSTagging::ReadSentences(const string fil
 	return res;
 }
 
-vector<shared_ptr<DataCollection::Word>> TestPOSTagging::ParsePOSTagging(const string line)
-{
-	//Split blank and get each word.
-	auto split = CommonTool::SplitString(line, ' ');
 
-	vector<shared_ptr<DataCollection::Word>> res;
-
-	for (unsigned int i = 0; i < split.size(); ++i)
-	{
-		//Split '/' and get word string and pos.
-		auto word_POS = CommonTool::SplitString(split[i], '/');
-		if (word_POS.size() != 2)
-		{
-			throw runtime_error("Error in ParsePOSTagging");
-		}
-
-		res.push_back(LanguageFunc::GetParticularWord(word_POS[0], (PartOfSpeech)atoi(word_POS[1].c_str())));
-	}
-
-	return res;
-}
 
 bool TestPOSTagging::IsCorrect(const vector<shared_ptr<DataCollection::Word>>& expect, const vector<shared_ptr<DataCollection::Word>>& result)
 {

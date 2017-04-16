@@ -64,6 +64,12 @@ namespace FuncForTest
 
 	shared_ptr<Mind::iConcept> GetConcept(const string str,const int id);
 
+	//////////////////////////////////////////////////////////////////////////
+	//Parse a string to word list.
+	//String should be like this: "然后/8 将/7 照片/0 贴上/1 ，/14"
+	//////////////////////////////////////////////////////////////////////////
+	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line);
+
 	///Check whether there are the same elements in v1 and v2, regardless with order.
 	template<class T>
 	bool ContainSameElements(const vector<vector<T>>& v1,const vector<vector<T>>& v2)
