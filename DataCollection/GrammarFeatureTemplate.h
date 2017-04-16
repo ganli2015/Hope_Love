@@ -96,6 +96,73 @@ namespace DataCollection
 	private:
 		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
 	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//word w with tag t and previous character c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordTagPreCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordTagPreCharTemplate() {};
+		virtual ~WordTagPreCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//word w with tag t and next character c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordTagNextCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordTagNextCharTemplate() {};
+		virtual ~WordTagNextCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on single-character word w in character trigram c1wc2
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT SingleCharWithTrigramCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		SingleCharWithTrigramCharTemplate() {};
+		virtual ~SingleCharWithTrigramCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word starting with char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordStartWithCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordStartWithCharTemplate() {};
+		virtual ~WordStartWithCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word ending with char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordEndWithCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordEndWithCharTemplate() {};
+		virtual ~WordEndWithCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
 }
 
 

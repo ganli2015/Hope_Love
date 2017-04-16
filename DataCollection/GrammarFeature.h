@@ -111,9 +111,6 @@ namespace DataCollection
 	/*<<Joint Word Segmentation and POS Tagging using a Single Perceptron>>.
 	/************************************************************************/
 
-	//Check if the type of <object> is <type>,if so ,return a derived object <derived>, otherwise return false.
-#define CheckType(object,type,derived) auto derived = dynamic_pointer_cast<type>(object);\
-	if (derived == NULL) return false;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Base for concrete feature classes with feature elements based on string or PartOfSpeech.
@@ -385,6 +382,23 @@ namespace DataCollection
 			SetPOS(0, t1);
 		};
 		~WordStartWithChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word ending with char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordEndWithChar : public FeatureStyle<1, 1>
+	{
+	public:
+		WordEndWithChar() {};
+		WordEndWithChar(const string c, const PartOfSpeech t1) {
+			SetString(0, c);
+			SetPOS(0, t1);
+		};
+		~WordEndWithChar() {};
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);

@@ -183,7 +183,7 @@ namespace DataCollection
 
 	int WordTagNextChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
-		if (i == 0) return 0;
+		if (i == words.size() - 1) return 0;
 
 		//Get last character of previous word.
 		auto nextWord = words[i + 1];
@@ -221,6 +221,19 @@ namespace DataCollection
 	{
 		auto curWord = words[i];
 		if (GetString(0) == curWord->GetFirstCharacter().GetString() && GetPOS(0) == curWord->Type())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	int WordEndWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		if (GetString(0) == curWord->GetLastCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
 			return true;
 		}

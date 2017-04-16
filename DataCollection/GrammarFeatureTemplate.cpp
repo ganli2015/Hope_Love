@@ -79,5 +79,54 @@ namespace DataCollection
 		return feature;
 	}
 
+	shared_ptr<GrammarFeature> WordTagPreCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == 0) return NULL;
+
+		//Get last character of previous word.
+		auto preWord = words[i - 1];
+		auto lastChar = preWord->GetLastCharacter();
+
+		return make_shared<WordTagPreChar>(words[i]->GetString(), words[i]->Type(), lastChar.GetString());
+	}
+
+	shared_ptr<GrammarFeature> WordTagNextCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == words.size() - 1) return NULL;
+
+		//Get last character of previous word.
+		auto nextWord = words[i + 1];
+		auto nextChar = nextWord->GetLastCharacter();
+
+		return make_shared<WordTagNextChar>(words[i]->GetString(), words[i]->Type(), nextChar.GetString());
+	}
+
+
+	shared_ptr<GrammarFeature> SingleCharWithTrigramCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		if (i == 0 || i == words.size() - 1) return NULL;
+
+		auto preW = words[i - 1];
+		auto nextW = words[i + 1];
+		auto curW = words[i];
+		if (preW->NumOfChara() == 1 && nextW->NumOfChara() == 1 && curW->NumOfChara() == 1)
+		{
+			return make_shared<SingleCharWithTrigramChar>(curW->GetString(), preW->GetString(), nextW->GetString(), curW->Type());
+		}
+
+		return NULL;
+	}
+
+	shared_ptr<GrammarFeature> WordStartWithCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		return make_shared<WordStartWithChar>(words[i]->GetFirstCharacter().GetString(), words[i]->Type());
+	}
+
+	shared_ptr<GrammarFeature> WordEndWithCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		return make_shared<WordEndWithChar>(words[i]->GetLastCharacter().GetString(), words[i]->Type());
+
+	}
+
 }
 

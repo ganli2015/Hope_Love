@@ -86,6 +86,21 @@ namespace DataCollection
 		auto wordFollowedByTag = make_shared<WordFollowedByTag>("越", Adjective);
 		PushSample(wordFollowedByTag, 2);
 
+		auto wordTagPreChar = make_shared<WordTagPreChar>("越", Adverb, "纪");
+		PushSample(wordTagPreChar, 1);
+
+		auto wordTagNextChar = make_shared<WordTagNextChar>("年纪", Noun, "越");
+		PushSample(wordTagNextChar, 1);
+
+		auto singleCharWithTrigramChar = make_shared<SingleCharWithTrigramChar>("大", "越",  "越",Adjective);
+		PushSample(singleCharWithTrigramChar, 1);
+
+		auto wordStartWithChar = make_shared<WordStartWithChar>("容",Adjective);
+		PushSample(wordStartWithChar, 1);
+
+		auto wordEndWithChar = make_shared<WordEndWithChar>("易", Adjective);
+		PushSample(wordEndWithChar, 1);
+
 		return _res;
 	}
 
