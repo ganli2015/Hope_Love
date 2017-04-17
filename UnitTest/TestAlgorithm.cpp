@@ -13,7 +13,7 @@ using namespace CommonTool;
 TEST_F(TestAlgorithm, TestPOSTagging)
 {
 	TestPOSTagging test;
-	test.Run("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_pos.txt", 100);
+	test.Run("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_mine.txt");
 }
 
 TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)

@@ -74,6 +74,8 @@ namespace DataCollection
 	{
 		if(word->NumOfChara()!=NumOfChara())
 			return false;
+		if (Type() != word->Type())
+			return false;
 
 		if(ToInt()==word->ToInt())
 			return true;

@@ -16,6 +16,7 @@ using namespace std;
 #include "../Mind/FilePath.h"
 
 #include "../CommonTools/MemoryDetector.h"
+#include "../CommonTools/LogWriter.h"
 
 class MyGlobal: public testing::Environment
 {
@@ -30,12 +31,17 @@ public:
 
 void MyGlobal::SetUp()
 {
-	_startObjCount=MyObject::GetObjectCount();
+	LOG("----------------------------------------Unit Test----------------------------------------");
+	_startObjCount = MyObject::GetObjectCount();
 }
 
 void MyGlobal::TearDown()
 {
 	ASSERT_EQ(MyObject::GetObjectCount(),_startObjCount);
+
+	LOG("/n");
+	LOG("/n");
+	LOG("/n");
 }
 
 void RunFilter(const string filterStr);

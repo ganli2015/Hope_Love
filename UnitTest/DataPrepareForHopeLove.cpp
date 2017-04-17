@@ -34,7 +34,7 @@ TEST(DISABLED_Preparation, GrammarFeatureTrainer_ComputeWeights)
 	trainer.ComputeWeights("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt");
 }
 
-TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
+TEST(DISABLED_Preparation, GrammarModelTrainer_OptimizeWeights)
 {
 	GrammarSet *grammarSet = new GrammarSet();
 	grammarSet->InitializeGrammarModel();

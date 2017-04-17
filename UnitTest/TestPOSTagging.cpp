@@ -33,7 +33,7 @@ void TestPOSTagging::Run(const string corpusFilename, const int sentenceCount)
 
 	for (unsigned int i = 0; i < samples.size(); ++i)
 	{
-		if(totalNum>=sentenceCount) break;
+		if(sentenceCount!=0 && totalNum>=sentenceCount) break;
 		try
 		{
 			auto result = POSTagging(samples[i].raw);
@@ -109,10 +109,17 @@ vector<TestPOSTagging::POSSample> TestPOSTagging::ReadSentences(const string fil
 		}
 
 		aSample.POSUnsplit = POSUnsplit;
-		aSample.POSTag = FuncForTest::ParsePOSTagging(POSUnsplit);
+		try
+		{
+			aSample.POSTag = FuncForTest::ParsePOSTagging(POSUnsplit);
+		}
+		catch (const std::exception&)
+		{
+			break;
+		}
 		res.push_back(aSample);
 
-		if (res.size() >= sampleNum)
+		if (sampleNum != 0 && res.size() >= sampleNum)
 		{
 			break;
 		}
