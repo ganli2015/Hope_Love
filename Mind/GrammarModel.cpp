@@ -26,9 +26,6 @@ namespace Mind
 	{
 		auto samples = CommonFunction::ParseSampleSentences(_sampleFile);
 
-		//test
-		ComputePossibility(samples[599]);
-
 		//Prepare parameters.
 		//Compute possibility for each sentence for each model.
 		OptWeightsParam optParam;

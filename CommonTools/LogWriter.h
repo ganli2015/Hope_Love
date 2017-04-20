@@ -32,6 +32,8 @@ namespace CommonTool
 
 		log4cpp::Category* _root;
 
+		friend class NDCObject;
+
 	private:
 		///The current log file.
 		static ofstream _currentLog;
@@ -219,7 +221,13 @@ namespace CommonTool
 		void Release();
 	};
 
-	
+	class _COMMONTOOLSINOUT NDCObject
+	{
+	public:
+		NDCObject(const string);
+		~NDCObject();
+
+	};
 }
 
 
@@ -294,6 +302,9 @@ namespace CommonTool
 ///Create a section and record the time consuming of it.
 #define SECTION_TIME(tag) CommonTool::CodeSection tag##CodeSection(#tag)
 #define END_SECTION(tag) tag##CodeSection.Release()
+
+//Create NDC for current field.
+#define NDC_SECTION(context) CommonTool::NDCObject myndcobject(context)
 
 #else 
 #define LOG_DESC(object)

@@ -9,6 +9,7 @@
 #include "log4cpp/BasicLayout.hh"
 #include "log4cpp/Priority.hh"
 #include <log4cpp/PatternLayout.hh>
+#include <log4cpp/NDC.hh>
 
 #include "StackWalker.h"
 
@@ -187,6 +188,16 @@ namespace CommonTool
 		}
 
 		_released = true;
+	}
+
+	NDCObject::NDCObject(const string context)
+	{
+		log4cpp::NDC::push(context);
+	}
+
+	NDCObject::~NDCObject()
+	{
+		log4cpp::NDC::pop();
 	}
 
 }

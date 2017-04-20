@@ -391,6 +391,7 @@ void GrammarAnalyzer::SelectOptimalGrammarPatternWithUplimit(const vector<vector
 
 bool GrammarAnalyzer::Analyze()
 {
+	NDC_SECTION("Grammar Analysis");
 	OptimizePOSofWords();
 	BuildGrammarAssociationOfWords();
 
@@ -441,13 +442,13 @@ void GrammarAnalyzer::LogOptimalCombinations(const vector<vector<shared_ptr<Word
 	{
 		auto combi = combinations[i];
 		//Collect word string.
-		string wordStr = "";
-		for (size_t j=0;j<combi.size();++j)
-		{
-			wordStr += combi[j]->GetString() + " "+ToString(combi[j]->Type())+" ";
-		}
+		auto wordStr = LanguageFunc::WordListString(combi);
 
 		DEBUG_FORMAT2("Combination: %s ; Value: %lf.", wordStr.c_str(), values[i]);
+
+		//test
+// 		Mind::iCerebrum *brain = Mind::iCerebrum::Instance();
+// 		brain->ComputePossibility(combi);
 	}
 	DEBUGLOG("***Combinations***");
 }

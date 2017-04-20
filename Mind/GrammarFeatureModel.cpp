@@ -287,6 +287,8 @@ namespace Mind
 
 	double GrammarFeatureModel::ComputePossiblity(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
+		NDC_SECTION("GrammarFeatureModel");
+
 		//Get feature distribution.
 		auto featureMap = GetAllFeatures(sentence);
 		auto featureDistri = ConvertToFeatureCountDistribution(featureMap);
@@ -337,6 +339,8 @@ namespace Mind
 	map<string, GrammarFeatureModel::StatList> GrammarFeatureModel::GetAllFeatures(
 		const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
+		//DEBUGLOG("Begin to get features of the sentence.");
+
 		//Find features in this sentence.
 		map<string, GrammarFeatureModel::StatList> res;
 		for (auto feature : _features)
@@ -345,6 +349,8 @@ namespace Mind
 			if (featureCount > 0)
 			{
 				//Has feature in the sentence.
+
+				//DEBUGLOG(feature);
 
 				FeatureStat stat;
 				stat.feature = feature;
@@ -358,6 +364,8 @@ namespace Mind
 				res[featureType].push_back(stat);
 			}
 		}
+
+		//DEBUGLOG("End of gettign features of the sentence.");
 
 		return res;
 	}

@@ -126,6 +126,11 @@ namespace DataCollection
 		//Get class type of <me>.
 		//////////////////////////////////////////////////////////////////////////
 		string GetMyType() const;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Serialize the data.
+		//////////////////////////////////////////////////////////////////////////
+		virtual string GetString() const = 0;
 	protected:
 
 		
@@ -219,6 +224,24 @@ namespace DataCollection
 			}
 
 			return CommonTool::GetStrHash(hashStr);
+		}
+
+		virtual string GetString() const
+		{
+			string res = "";
+			res += GetMyType();
+			res += "  word: ";
+			for (size_t i = 0; i < wordSize; i++)
+			{
+				res += _word[i]+" ";
+			}
+			res += "  pos: ";
+			for (size_t i = 0; i < posSize; i++)
+			{
+				res +=CommonTool::ToString(_pos[i]) + " ";
+			}
+
+			return res;
 		}
 
 	private:

@@ -7,6 +7,7 @@
 
 #include "../CommonTools/GeneralFunctor.h"
 #include "../CommonTools/assertions.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace std;
 
@@ -306,6 +307,17 @@ namespace DataCollection
 		}
 
 		return res;
+	}
+
+	std::string LanguageFunc::WordListString(const vector<shared_ptr<Word>> & wordList)
+	{
+		string wordStr = "";
+		for (size_t j = 0; j < wordList.size(); ++j)
+		{
+			wordStr += wordList[j]->GetString() + " " +CommonTool::ToString(wordList[j]->Type()) + " ";
+		}
+
+		return wordStr;
 	}
 
 }

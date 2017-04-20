@@ -5,6 +5,8 @@
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
 
+#include "../CommonTools/LogWriter.h"
+
 #include "../MindInterface/iCerebrum.h"
 
 #include "../Mathmatic/FindSequence.h"
@@ -258,6 +260,7 @@ vector<vector<int>> WordSegmentator::ComputeUandAIndexes(const vector<shared_ptr
 
 bool WordSegmentator::Segment(  )
 {
+	NDC_SECTION("Word Segmentation");
 	for (size_t i=0;i<_unsegmented->Count_SubSentence();++i)
 	{
 		SegmentSubsentence(_unsegmented->GetSubSentence(i));

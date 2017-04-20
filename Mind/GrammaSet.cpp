@@ -535,12 +535,19 @@ namespace Mind
 		//The final possibility takes all grammar models into consideration.
 		//And the above components has weights respectively.
 
+		if (!_featureModel->FeaturesLoaded())
+		{
+			_featureModel->LoadAllFeatures();
+		}
+
+
 		double res = 0;
 		for (auto modelWeight : _weights)
 		{
 			double p = modelWeight.first->ComputePossiblity(sentence);
 			double weight = modelWeight.second;
 			res += weight*p;
+			DEBUG_FORMAT2("The P computed by model '%s' is %lf.", typeid(*modelWeight.first).name(), weight*p);
 		}
 
 		//Adjust the possibility such that it is in the interval of 0 to 1.

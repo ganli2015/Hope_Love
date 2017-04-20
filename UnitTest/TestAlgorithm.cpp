@@ -18,19 +18,22 @@ TEST_F(TestAlgorithm, TestPOSTagging)
 
 TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)
 {
-	string unSplitSentence = "然后/8 将/7 照片/0 贴上/1 ，/14";
-	auto expect = FuncForTest::ParsePOSTagging(unSplitSentence);
+// 	string unSplitSentence = "然后/8 将/7 照片/0 贴上/1 ，/14";
+// 	auto expect = FuncForTest::ParsePOSTagging(unSplitSentence);
+// 
+// 	string unSplitSentence2 = "然后/8 将/1 照片/0 贴/1 上/1 ，/14";
+// 	auto result = FuncForTest::ParsePOSTagging(unSplitSentence2);
+// 
+// 	GrammarFeatureModel model;
+// 	model.LoadAllFeatures();
+// 	auto expectP = model.ComputePossiblity(expect);
+// 	auto resultP= model.ComputePossiblity(result);
+// 
+// 	cout << "Expect P is " + ToString(expectP) << endl;
+// 	cout << "Result P is " + ToString(resultP) << endl;
 
-	string unSplitSentence2 = "然后/8 将/1 照片/0 贴/1 上/1 ，/14";
-	auto result = FuncForTest::ParsePOSTagging(unSplitSentence2);
-
-	GrammarFeatureModel model;
-	model.LoadAllFeatures();
-	auto expectP = model.ComputePossiblity(expect);
-	auto resultP= model.ComputePossiblity(result);
-
-	cout << "Expect P is " + ToString(expectP) << endl;
-	cout << "Result P is " + ToString(resultP) << endl;
+	TestPOSTagging test;
+	test.POSTagging("不会真信了吧！");
 }
 
 void TestAlgorithm::SetUp()

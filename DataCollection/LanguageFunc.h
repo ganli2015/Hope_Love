@@ -44,6 +44,7 @@ namespace DataCollection
 		static vector<shared_ptr<Word>> RemovePuncs(const vector<shared_ptr<Word>>& words);
 		static bool IsPuncture(const shared_ptr<Word> word);
 		static string ConvertWordsToString(const vector<shared_ptr<Word>> words);
+		static string WordListString(const vector<shared_ptr<Word>>  & wordList);
 
 	//grammar pattern
 		//////////////////////////////////////////////////////////////////////////
