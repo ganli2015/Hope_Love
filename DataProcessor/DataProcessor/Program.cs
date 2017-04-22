@@ -31,12 +31,12 @@ namespace DataProcessor
     {
         static void Main(string[] args)
         {
-            ProcessPOSTagged processor = new ProcessPOSTagged();
-            processor.Do(Path.Combine(Dir.rawdir, "my_conversation.txt"));
+            //             ProcessPOSTagged processor = new ProcessPOSTagged();
+            //             processor.Do(Path.Combine(Dir.rawdir, "my_conversation.txt"));
 
-//             POSAssignment posAssign = new POSAssignment();
-//             posAssign.SetMaxIDFOfCommonWords(13);
-//             posAssign.AssignPOSofCommonWords();
+            //             POSAssignment posAssign = new POSAssignment();
+            //             posAssign.SetMaxIDFOfCommonWords(13);
+            //             posAssign.AssignPOSofCommonWords();
             //            posAssign.GenerateLargeVocabulary();
 
             //                         SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();
@@ -44,6 +44,9 @@ namespace DataProcessor
 
             //             ReduceGrammarPatternDistribution rgpd = new ReduceGrammarPatternDistribution();
             //             rgpd.Run(Dir.outdir + "GrammaPatterns_Initial_corpus_de.txt", Dir.outdir + "GrammaPatterns_Initial_corpus_de_reduced.txt");
+
+            ExtractChatting extractChatting = new ExtractChatting();
+            extractChatting.Extract(@"C:\Users\Administrator\Desktop\莫莫.txt");
         }
     }
 }

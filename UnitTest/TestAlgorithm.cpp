@@ -10,6 +10,9 @@
 using namespace Mind;
 using namespace CommonTool;
 
+#ifndef UNIT_TEST
+
+
 TEST_F(TestAlgorithm, TestPOSTagging)
 {
 	TestPOSTagging test;
@@ -47,3 +50,5 @@ void TestAlgorithm::TearDown()
 	Mind::SetHopeLoveMindPath("HopeLoveData\\");
 	iCerebrum::KillInstance();
 }
+
+#endif // UNIT_TEST

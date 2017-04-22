@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dir.cs" />
+    <Compile Include="ExtractChatting.cs" />
     <Compile Include="POSAssignment.cs" />
     <Compile Include="ProcessPOSTagged.cs" />
     <Compile Include="Program.cs" />

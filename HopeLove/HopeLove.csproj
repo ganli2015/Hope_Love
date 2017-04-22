@@ -110,10 +110,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ExtractChatting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -131,9 +127,6 @@
     <Compile Include="CommonForAppendForm.cs" />
     <Compile Include="CommonWordTable.xaml.cs">
       <DependentUpon>CommonWordTable.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExtractChatting.xaml.cs">
-      <DependentUpon>ExtractChatting.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
