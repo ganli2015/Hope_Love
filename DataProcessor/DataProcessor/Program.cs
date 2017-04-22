@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DataProcessor
 {
@@ -30,11 +31,12 @@ namespace DataProcessor
     {
         static void Main(string[] args)
         {
+            ProcessPOSTagged processor = new ProcessPOSTagged();
+            processor.Do(Path.Combine(Dir.rawdir, "my_conversation.txt"));
 
-
-            POSAssignment posAssign = new POSAssignment();
-            posAssign.SetMaxIDFOfCommonWords(13);
-            posAssign.AssignPOSofCommonWords();
+//             POSAssignment posAssign = new POSAssignment();
+//             posAssign.SetMaxIDFOfCommonWords(13);
+//             posAssign.AssignPOSofCommonWords();
             //            posAssign.GenerateLargeVocabulary();
 
             //                         SegmentationCorpusExtractor sce = new SegmentationCorpusExtractor();

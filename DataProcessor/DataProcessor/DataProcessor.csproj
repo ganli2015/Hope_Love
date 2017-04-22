@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Dir.cs" />
     <Compile Include="POSAssignment.cs" />
+    <Compile Include="ProcessPOSTagged.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReduceGrammarPatternDistribution.cs" />
