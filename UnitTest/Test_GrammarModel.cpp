@@ -3,6 +3,7 @@
 #include "FuncForTest.h"
 
 #include "../Mind/GrammarLocalModel.h"
+#include "../Mind/GrammarFeatureModel.h"
 
 #include "../DataCollection/Word.h"
 
@@ -39,4 +40,93 @@ namespace Mind
 
 		ASSERT_FALSE(_isnan(result));
 	}
+
+#ifndef _DEBUG
+
+
+	TEST_F(Test_GrammarFeatureModel, ComputePossibility0)
+	{
+		auto optimal = ComputeOptimal(_samples[0]);
+
+		ASSERT_EQ(_samples[0].expectOptimal, optimal)
+			<< "The optimal sentence is " + optimal;
+	}
+
+	TEST_F(Test_GrammarFeatureModel, ComputePossibility1)
+	{
+		auto optimal = ComputeOptimal(_samples[1]);
+
+		ASSERT_EQ(_samples[1].expectOptimal, optimal)
+			<< "The optimal sentence is " + optimal;
+	}
+
+
+	void Test_GrammarFeatureModel::SetUpTestCase()
+	{
+		Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
+		_featureModel = new GrammarFeatureModel();
+		_featureModel->LoadAllFeatures();
+		PrepareSamples();
+	}
+
+	void Test_GrammarFeatureModel::TearDownTestCase()
+	{
+		Mind::SetHopeLoveMindPath(FuncForTest::SimpleDataPath);
+		delete _featureModel;
+		_samples.clear();
+	}
+
+	void Test_GrammarFeatureModel::PrepareSamples()
+	{
+		{
+			Sample sample;
+			sample.sentences.push_back("不/6 会/1 真/0 信/0 了/9 吧/11");
+			sample.sentences.push_back("不/6 会/1 真/0 信/0 了/1 吧/11");
+			sample.sentences.push_back("不/6 会/1 真/0 信/1 了/9 吧/11");
+			sample.sentences.push_back("不/6 会/1 真/2 信/0 了/9 吧/11");
+			sample.sentences.push_back("不/6 会/1 真/6 信/1 了/9 吧/11");
+			sample.expectOptimal = "不/6 会/1 真/6 信/1 了/9 吧/11";
+
+			_samples.push_back(sample);
+		}
+
+		{
+			Sample sample;
+			sample.sentences.push_back("那/5 你/5 了解/1 一下/3 吧/11");
+			sample.sentences.push_back("那/8 你/5 了解/1 一下/3 吧/11");
+			sample.sentences.push_back("那/5 你/5 了解/0 一下/3 吧/11");
+			sample.sentences.push_back("那/0 你/5 了解/0 一下/3 吧/11");
+
+			sample.expectOptimal = "那/8 你/5 了解/1 一下/3 吧/11";
+
+			_samples.push_back(sample);
+		}
+
+	}
+
+	std::string Test_GrammarFeatureModel::ComputeOptimal(const Sample& sample)
+	{
+		string optimalSentence = "";
+		double maxP = -1;
+		for (auto sen : sample.sentences)
+		{
+			auto wordList = FuncForTest::ParsePOSTagging(sen);
+			auto P = _featureModel->ComputePossiblity(wordList);
+
+			if (P > maxP)
+			{
+				optimalSentence = sen;
+				maxP = P;
+			}
+		}
+
+		return optimalSentence;
+	}
+
+	vector<Test_GrammarFeatureModel::Sample> Test_GrammarFeatureModel::_samples;
+
+	GrammarFeatureModel* Test_GrammarFeatureModel::_featureModel;
+
+#endif // !DEBUG
+
 }

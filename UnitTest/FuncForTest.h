@@ -39,6 +39,8 @@ namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
 	const string dbPath = "testDB.db";
+	const string LargeDataPath = "HopeLoveData\\large\\";
+	const string SimpleDataPath = "HopeLoveData\\";
 
 	shared_ptr<DataCollection::Word> ToWord(const string str, const DataCollection::PartOfSpeech pos);
 

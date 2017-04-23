@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TestAlgorithm.h"
 #include "TestPOSTagging.h"
+#include "FuncForTest.h"
 
 #include "../Mind/Cerebrum.h"
 #include "../Mind/GrammarFeatureModel.h"
@@ -16,7 +17,7 @@ using namespace CommonTool;
 TEST_F(TestAlgorithm, TestPOSTagging)
 {
 	TestPOSTagging test;
-	test.Run("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_mine.txt");
+	test.Run("D:\\Projects\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_mine.txt");
 }
 
 TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)
@@ -41,13 +42,13 @@ TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)
 
 void TestAlgorithm::SetUp()
 {
-	Mind::SetHopeLoveMindPath("HopeLoveData\\large\\");
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	iCerebrum::SetInstance(Cerebrum::Instance());
 }
 
 void TestAlgorithm::TearDown()
 {
-	Mind::SetHopeLoveMindPath("HopeLoveData\\");
+	Mind::SetHopeLoveMindPath(FuncForTest::SimpleDataPath);
 	iCerebrum::KillInstance();
 }
 

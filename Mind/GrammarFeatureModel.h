@@ -119,6 +119,13 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		//Read and collect grammar features from the file <samplePath>.
 		//The features will write to the database (..\Mind\HopeLoveData\data.db).
+		//
+		//The following are steps to collect features from corpus:
+		//1) Get the conversation from QQ.
+		//2) Run ExtractChatting from DataProcessor project and get a text of sentences.
+		//3) Copy all sentences to CorpusWordParser.exe and do POS tagging.
+		//4) Copy the tagged text to a new text file and change encoding to UCS-2 Little Endian.
+		//5) Pass the above file path to <samplePath> and run in the unit test of "Preparation.GrammarFeatureTrainer_CollectGrammarFeatures".
 		//////////////////////////////////////////////////////////////////////////
 		void CollectFeatures(const string samplePath);
 

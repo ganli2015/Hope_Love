@@ -23,13 +23,13 @@ TEST(DISABLED_Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
 {
 	//Before running this test, clean data in table 
 	GrammarFeatureTrainer trainer;
-	trainer.CollectFeatures("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_wo_pos.txt");
+	trainer.CollectFeatures("D:\\Projects\\Hope_Love\\DataProcessor\\Corpus\\New\\myconv.txt");
 }
 
 TEST(DISABLED_Preparation, GrammarFeatureTrainer_ComputeWeights)
 {
 	//Compute weights for different grammar feature templates.
-	//Before running this test, run <CollectGrammarFeatures> first to collect all featuer from a sample file.
+	//Before running this test, run <CollectGrammarFeatures> first to collect all feature from a sample file.
 	GrammarFeatureTrainer trainer;
 	trainer.ComputeWeights("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt");
 }
