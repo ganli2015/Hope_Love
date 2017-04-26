@@ -38,7 +38,7 @@ protected:
 namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
-	const string dbPath = "testDB.db";
+	const string dbPath = TestSampleDir + "testDB.db";
 	const string LargeDataPath = "HopeLoveData\\large\\";
 	const string SimpleDataPath = "HopeLoveData\\";
 

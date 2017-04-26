@@ -191,7 +191,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;UNIT_TEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CallingConvention>StdCall</CallingConvention>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -235,7 +235,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="Test_ConceptInteractTable.h" />
     <ClInclude Include="Test_DBoperator.h" />
     <ClInclude Include="Test_GrammarFeature.h" />
-    <ClInclude Include="Test_GrammarFeatureDatabase.h" />
+    <ClInclude Include="Test_Database.h" />
     <ClInclude Include="Test_GrammarModel.h" />
     <ClInclude Include="Test_iRelation.h" />
     <ClInclude Include="Test_LogicSystem.h" />
@@ -268,7 +268,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClCompile Include="Test_ConceptInteractTable.cpp" />
     <ClCompile Include="Test_DBoperator.cpp" />
     <ClCompile Include="Test_GrammarFeature.cpp" />
-    <ClCompile Include="Test_GrammarFeatureDatabase.cpp" />
+    <ClCompile Include="Test_Database.cpp" />
     <ClCompile Include="Test_GrammarModel.cpp" />
     <ClCompile Include="Test_iRelation.cpp" />
     <ClCompile Include="Test_LogicSystem.cpp" />

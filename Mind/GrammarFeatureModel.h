@@ -21,7 +21,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		static set<string> _featureTypes;
 
-		GrammarFeatureDatabase *_featureDB;
+		unique_ptr<GrammarFeatureDatabase> _featureDB;
 		FeatureList _features;
 		bool _loadedFeatures;
 
@@ -82,7 +82,7 @@ namespace Mind
 	//////////////////////////////////////////////////////////////////////////
 	//Do some training or statistical techniques with grammar feature.
 	//////////////////////////////////////////////////////////////////////////
-	class _MINDINOUT GrammarFeatureTrainer
+	class _MINDINOUT GrammarFeatureTrainer : public MindObject
 	{
 		//////////////////////////////////////////////////////////////////////////
 		//Key is hash of a feature.

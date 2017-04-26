@@ -168,6 +168,7 @@
     <ClInclude Include="ConceptReactSystem.h" />
     <ClInclude Include="ConceptSet.h" />
     <ClInclude Include="ConceptSetInitializer.h" />
+    <ClInclude Include="DBContainer.h" />
     <ClInclude Include="FindConnectConcept.h" />
     <ClInclude Include="FilePath.h" />
     <ClInclude Include="GrammarFeatureDatabase.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="MindDatabase.h" />
+    <ClInclude Include="MindObject.h" />
     <ClInclude Include="MindParameterDatabase.h" />
     <ClInclude Include="ReactionValueEvaluation.h" />
     <ClInclude Include="Stdafx.h" />
@@ -193,6 +195,7 @@
     <ClCompile Include="ConceptReactSystem.cpp" />
     <ClCompile Include="ConceptSet.cpp" />
     <ClCompile Include="ConceptSetInitializer.cpp" />
+    <ClCompile Include="DBContainer.cpp" />
     <ClCompile Include="FindConnectConcept.cpp" />
     <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="GrammarFeatureDatabase.cpp" />
@@ -203,6 +206,7 @@
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
     <ClCompile Include="MindDatabase.cpp" />
+    <ClCompile Include="MindObject.cpp" />
     <ClCompile Include="MindParameterDatabase.cpp" />
     <ClCompile Include="ReactionValueEvaluation.cpp" />
     <ClCompile Include="Stdafx.cpp">

@@ -3,6 +3,7 @@
 #include "GrammarFeatureDatabase.h"
 #include "MindParameterDatabase.h"
 #include "CommonFunction.h"
+#include "DBContainer.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/LogWriter.h"
@@ -93,8 +94,8 @@ namespace Mind
 		//Write all weights to database.
 		vector<double> allWeights = weights;
 		allWeights.push_back(ComputeLastWeight(weights));
-		MindParameterDatabase mindPramDB;
-		mindPramDB.UpdateGrammarFeatureWeights(allWeights);
+		auto mindPramDB = _dbContainer->GetMindParameterDatabase();
+		mindPramDB->UpdateGrammarFeatureWeights(allWeights);
 	}
 
 	void GrammarFeatureTrainer::PrepareFeatureTemplates()
@@ -132,7 +133,7 @@ namespace Mind
 
 	void GrammarFeatureTrainer::WriteFeaturesToDB() const
 	{
-		shared_ptr<GrammarFeatureDatabase> featureDB(new GrammarFeatureDatabase());
+		auto featureDB = _dbContainer->GetGrammarFeatureDatabase();
 		vector<shared_ptr<GrammarFeature>> featureVec;
 		for (auto feature : _features)
 		{
@@ -270,9 +271,9 @@ namespace Mind
 
 	set<string> GrammarFeatureModel::_featureTypes = GrammarFeatureModel::PrepareGrammarFeatures();
 
-	GrammarFeatureModel::GrammarFeatureModel() :_featureDB(new GrammarFeatureDatabase()), _loadedFeatures(false)
+	GrammarFeatureModel::GrammarFeatureModel() : _loadedFeatures(false)
 	{
-		
+		_featureDB = _dbContainer->GetGrammarFeatureDatabase();
 		ReadWeightsInDB();
 		LOG("Finish read weights from database.");
 	}
@@ -281,7 +282,7 @@ namespace Mind
 	{
 		if (_featureDB != NULL)
 		{
-			delete _featureDB;
+			_featureDB = NULL;
 		}
 	}
 
@@ -319,9 +320,8 @@ namespace Mind
 
 	void GrammarFeatureModel::ReadWeightsInDB()
 	{
-		MindParameterDatabase db;
-		db.Connect();
-		vector<double> weights = db.GetGrammarFeatureWeights();
+		auto db=_dbContainer->GetMindParameterDatabase();
+		vector<double> weights = db->GetGrammarFeatureWeights();
 		if (weights.size() != _featureTypes.size())
 		{
 			throw runtime_error("The size of weights in database is different from size of feature types.");

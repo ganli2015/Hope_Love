@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include "MindObject.h"
 
 namespace DataCollection
 {
@@ -13,7 +14,7 @@ namespace Mind
 	//////////////////////////////////////////////////////////////////////////
 	//Interface of Grammar model.
 	//////////////////////////////////////////////////////////////////////////
-	class GrammarModel
+	class GrammarModel : public MindObject
 	{
 	public:
 		GrammarModel();

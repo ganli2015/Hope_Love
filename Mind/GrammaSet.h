@@ -2,6 +2,7 @@
 #include "InOut.h"
 #include "GrammaTree.h"
 #include "GrammarPatternModel.h"
+#include "MindObject.h"
 
 #include "../DataCollection/GrammaPattern.h"
 #include "../DataCollection/Word.h"
@@ -34,7 +35,7 @@ namespace Mind
 		int frequency;
 	};
 
-	class _MINDINOUT GrammarSet : public Obj<GrammarSet>
+	class _MINDINOUT GrammarSet : public Obj<GrammarSet> , public MindObject
 	{
 	private:
 

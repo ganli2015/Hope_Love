@@ -4,6 +4,7 @@
 #include "GrammarFeatureModel.h"
 #include "GrammarLocalModel.h"
 #include "MindParameterDatabase.h"
+#include "DBContainer.h"
 
 #include "../CommonTools/LogWriter.h"
 
@@ -471,10 +472,10 @@ namespace Mind
 		_featureModel->ClearFeatures();
 
 		//Write weights to database.
-		MindParameterDatabase paramDB;
-		paramDB.WriteGrammarFeatureModelWeight(model.GetModelWeight(_featureModel));
-		paramDB.WriteGrammarLocalModelWeight(model.GetModelWeight(_localModel));
-		paramDB.WriteGrammarPatternModelWeight(model.GetModelWeight(_patternModel));
+		auto paramDB = _dbContainer->GetMindParameterDatabase();
+		paramDB->WriteGrammarFeatureModelWeight(model.GetModelWeight(_featureModel));
+		paramDB->WriteGrammarLocalModelWeight(model.GetModelWeight(_localModel));
+		paramDB->WriteGrammarPatternModelWeight(model.GetModelWeight(_patternModel));
 	}
 
 	void GrammarSet::WriteWeights(const double wPattern, const double wLocal)
@@ -501,18 +502,17 @@ namespace Mind
 
 	void GrammarSet::ReadWeights()
 	{
-		MindParameterDatabase paramDB;
-		paramDB.Connect();
+		auto paramDB = _dbContainer->GetMindParameterDatabase();
 		
-		double patternModelWeight = paramDB.GetGrammarPatternModelWeight();
+		double patternModelWeight = paramDB->GetGrammarPatternModelWeight();
 		LOG_FORMAT("Weight for gramamr pattern model is %lf.", patternModelWeight);
 		_weights[_patternModel] = patternModelWeight;
 
-		double localModelWeight = paramDB.GetGrammarLocalModelWeight();
+		double localModelWeight = paramDB->GetGrammarLocalModelWeight();
 		LOG_FORMAT("Weight for gramamr local model is %lf.", localModelWeight);
 		_weights[_localModel] = localModelWeight;
 
-		double featureModelWeight = paramDB.GetGrammarFeatureModelWeight();
+		double featureModelWeight = paramDB->GetGrammarFeatureModelWeight();
 		LOG_FORMAT("Weight for gramamr feature model is %lf.", featureModelWeight);
 		_weights[_featureModel] = featureModelWeight;
 
