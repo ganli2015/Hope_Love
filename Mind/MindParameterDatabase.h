@@ -9,7 +9,7 @@ namespace CommonTool
 
 namespace Mind
 {
-	class MindParameterDatabase : public MindDatabase
+	class _MINDINOUT MindParameterDatabase : public MindDatabase
 	{
 		const string TableName;
 		const string ParamIDTag;
@@ -19,6 +19,7 @@ namespace Mind
 		const string LocalgwID;
 		const string PatterngwID;
 
+		friend class Test_Database;
 	public:
 		MindParameterDatabase();
 		~MindParameterDatabase();

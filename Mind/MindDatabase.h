@@ -13,8 +13,9 @@ namespace Mind
 	//////////////////////////////////////////////////////////////////////////
 	//The base class of Database classes for Mind.
 	//////////////////////////////////////////////////////////////////////////
-	class MindDatabase
+	class _MINDINOUT MindDatabase
 	{
+		friend class Test_Database;
 	protected:
 		CommonTool::DBoperator *_db;
 	public:

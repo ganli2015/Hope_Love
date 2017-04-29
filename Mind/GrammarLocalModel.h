@@ -13,6 +13,7 @@ namespace Mind
 	{
 		map<DataCollection::PartOfSpeech, shared_ptr<GrammarLocal>> _grammarLocalTable;
 
+		const static int NUM_POS_FOR_LOCAL;
 	public:
 		GrammarLocalModel();
 		~GrammarLocalModel();

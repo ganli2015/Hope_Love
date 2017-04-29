@@ -14,6 +14,9 @@ using namespace DataCollection;
 
 namespace Mind
 {
+	//The total POS for local grammar analysis is 15, including punctuations.
+	const int GrammarLocalModel::NUM_POS_FOR_LOCAL = NUM_PARTOFSPEECH + 3;
+
 	GrammarLocalModel::GrammarLocalModel()
 	{
 	}
@@ -113,9 +116,6 @@ namespace Mind
 			LOG("Cannot find file: " + GrammarLocal_InitialFilename);
 			return;
 		}
-
-		//The total POS for local grammar analysis is 15, including punctuations.
-		int NUM_POS_FOR_LOCAL = NUM_PARTOFSPEECH + 3;
 
 		//Initialize each POS with GrammarLocal.
 		map<PartOfSpeech, GrammarLocal> grammarLocalTable;
