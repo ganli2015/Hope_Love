@@ -5,6 +5,7 @@ namespace DataCollection
 {
 	class GrammarFeature;
 	class Word;
+	class Character;
 
 	//////////////////////////////////////////////////////////////////////////
 	//It represents an abstract feature for grammar.
@@ -24,6 +25,10 @@ namespace DataCollection
 		//Find a feature from current word as well as its neighbour.
 		//////////////////////////////////////////////////////////////////////////
 		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words) = 0;
+	
+	protected:
+		string PickRandomMiddleChar(const vector<Character>& characters) const;
+	
 	};
 
 
@@ -159,6 +164,58 @@ namespace DataCollection
 	public:
 		WordEndWithCharTemplate() {};
 		virtual ~WordEndWithCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word containing char c (not the starting or ending character)
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordContainCharTemplate() {};
+		virtual ~WordContainCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word starting with char c0 and containing char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainCharStartWithCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordContainCharStartWithCharTemplate() {};
+		virtual ~WordContainCharStartWithCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word ending with char c0 and containing char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainCharEndWithCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordContainCharEndWithCharTemplate() {};
+		virtual ~WordContainCharEndWithCharTemplate() {};
+
+	private:
+		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word containing repeated char cc
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordWithRepeatedCharTemplate : public GrammarFeatureTemplate
+	{
+	public:
+		WordWithRepeatedCharTemplate() {};
+		virtual ~WordWithRepeatedCharTemplate() {};
 
 	private:
 		virtual shared_ptr<GrammarFeature> FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words);

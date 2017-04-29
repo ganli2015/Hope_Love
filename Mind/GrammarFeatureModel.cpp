@@ -78,7 +78,7 @@ namespace Mind
 		opt.SetUpperBound(1);
 		opt.SetXTol(1e-5);
 		opt.SetFTol(1e-5);
-		opt.SetMaxIteration(2000);
+		opt.SetMaxIteration(5000);
 		double objFunValue = 0;
 		LOG_FORMAT("Initial objective function value is %lf.", ObjFunc(weights,&optParam));
 		try

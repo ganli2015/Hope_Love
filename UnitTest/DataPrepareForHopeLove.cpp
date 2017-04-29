@@ -19,27 +19,30 @@ using namespace DataCollection;
 
 //These are preparations for Hope_Love, including training data and collecting data.
 
-TEST(DISABLED_Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
+TEST(Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
 {
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	//Before running this test, clean data in table 
 	GrammarFeatureTrainer trainer;
-	trainer.CollectFeatures("D:\\Projects\\Hope_Love\\DataProcessor\\Corpus\\New\\myconv.txt");
+	trainer.CollectFeatures("E:\\Artificial Intelligence\\Document\\DataBase\\myconv_feature.txt");
 }
 
-TEST(DISABLED_Preparation, GrammarFeatureTrainer_ComputeWeights)
+TEST(Preparation, GrammarFeatureTrainer_ComputeWeights)
 {
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	//Compute weights for different grammar feature templates.
 	//Before running this test, run <CollectGrammarFeatures> first to collect all feature from a sample file.
 	GrammarFeatureTrainer trainer;
-	trainer.ComputeWeights("E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt");
+	trainer.ComputeWeights("E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt");
 }
 
-TEST(DISABLED_Preparation, GrammarModelTrainer_OptimizeWeights)
+TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
 {
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	GrammarSet *grammarSet = new GrammarSet();
 	grammarSet->InitializeGrammarModel();
 	DataPrepareForHopeLove::InitializeWeightsForGrammarSet(
-		"E:\\Artificial Intelligence\\Project\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_de_sub.txt", grammarSet);
+		"E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt", grammarSet);
 }
 
 TEST(DISABLED_Preparation, TestPOS)

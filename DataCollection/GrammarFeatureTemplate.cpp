@@ -2,6 +2,7 @@
 #include "GrammarFeatureTemplate.h"
 #include "GrammarFeature.h"
 
+#include "../Mathmatic/Rand.h"
 
 namespace DataCollection
 {
@@ -27,6 +28,15 @@ namespace DataCollection
 		}
 
 		return res;
+	}
+
+	std::string GrammarFeatureTemplate::PickRandomMiddleChar(const vector<Character>& characters) const
+	{
+		Math::Rand ran;
+		int randIndex = ran.GetRandInt(1, characters.size() - 2);
+		string midChar = characters[randIndex].GetString();
+
+		return midChar;
 	}
 
 	TagWithWordTemplate::TagWithWordTemplate()
@@ -125,7 +135,54 @@ namespace DataCollection
 	shared_ptr<GrammarFeature> WordEndWithCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		return make_shared<WordEndWithChar>(words[i]->GetLastCharacter().GetString(), words[i]->Type());
+	}
 
+	shared_ptr<GrammarFeature> WordContainCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto characters = words[i]->GetCharatcters();
+		if (characters.size() <= 2) return NULL;
+
+		//Pick a random middle character.
+		auto midChar = PickRandomMiddleChar(characters);
+		return make_shared<WordContainChar>(midChar, words[i]->Type());
+	}
+
+	shared_ptr<GrammarFeature> WordContainCharStartWithCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto characters = words[i]->GetCharatcters();
+		if (characters.size() <= 2) return NULL;
+
+		auto midChar = PickRandomMiddleChar(characters);
+		auto startChar = words[i]->GetFirstCharacter();
+
+		return make_shared<WordContainCharStartWithChar>(midChar, startChar.GetString(), words[i]->Type());
+	}
+
+	shared_ptr<GrammarFeature> WordContainCharEndWithCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto characters = words[i]->GetCharatcters();
+		if (characters.size() <= 2) return NULL;
+
+		auto midChar = PickRandomMiddleChar(characters);
+		auto lastChar = words[i]->GetLastCharacter();
+
+		return make_shared<WordContainCharEndWithChar>(midChar, lastChar.GetString(), words[i]->Type());
+	}
+
+	shared_ptr<GrammarFeature> WordWithRepeatedCharTemplate::FindOneFeature(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		auto characters = curWord->GetCharatcters();
+
+		for (int j = 0; j < characters.size() - 1; ++j)
+		{
+			if (characters[j].GetString() ==  characters[j + 1].GetString())
+			{
+				return make_shared<WordWithRepeatedChar>(characters[j].GetString(), curWord->Type());;
+			}
+		}
+
+		return NULL;
 	}
 
 }

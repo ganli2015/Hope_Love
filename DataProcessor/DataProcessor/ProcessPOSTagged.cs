@@ -87,7 +87,8 @@ namespace DataProcessor
                             wordlist.Add(s);
                     }
 
-                    string newLine = "";
+                    string posLine = "";
+                    string rawSentence = "";
                     for (int i = 0; i < wordlist.Count; ++i)
                     {
                         var word = wordlist[i];
@@ -97,14 +98,16 @@ namespace DataProcessor
                         PartOfSpeech myPOS = POSMapping.GetMyPOS(word_pos[1]);
                         var newWord = String.Format("{0}/{1}", word_pos[0], Convert.ToInt32(myPOS));
 
-                        newLine += newWord;
+                        posLine += newWord;
+                        rawSentence += word_pos[0];
                         if (i != wordlist.Count - 1)
                         {
-                            newLine += " ";
+                            posLine += " ";
                         }
                     }
 
-                    sw.WriteLine(newLine);
+                    sw.WriteLine(rawSentence);
+                    sw.WriteLine(posLine);
                 }
                 catch (System.Exception ex)
                 {

@@ -70,7 +70,17 @@ namespace DataCollection
 		return sumIndex;
 	}
 
-	bool Word::IsSame(const shared_ptr<Word> word ) const
+	vector<Character> Word::GetCharatcters() const
+	{
+		vector<Character> res;
+		for (auto ch : _word)
+		{
+			res.push_back(*ch);
+		}
+		return res;
+	}
+
+	bool Word::IsSame(const shared_ptr<Word> word) const
 	{
 		if(word->NumOfChara()!=NumOfChara())
 			return false;

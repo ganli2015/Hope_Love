@@ -74,6 +74,7 @@ namespace DataCollection
 
 		Character GetLastCharacter() const { return *_word.back(); }
 		Character GetFirstCharacter() const { return *_word.front(); }
+		vector<Character> GetCharatcters() const;
 
 	private:
 

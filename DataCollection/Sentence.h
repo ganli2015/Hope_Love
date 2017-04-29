@@ -21,8 +21,6 @@ namespace DataCollection
 
 		std::vector<shared_ptr<Character>> GetRawSentence() const;
 		std::string GetString() const;
-
-		bool InSentence(const shared_ptr<Word> word) const;
 	};
 
 	//////////////////////////////////////////////////////////////////////////

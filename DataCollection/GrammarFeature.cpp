@@ -211,11 +211,11 @@ namespace DataCollection
 		{
 			if (curW->GetString() == GetString(0) &&curW->Type() == GetPOS(0) &&preW->GetString() == GetString(1) &&nextW->GetString() == GetString(2))
 			{
-				return true;
+				return 1;
 			}
 		}
 
-		return false;
+		return 0;
 	}
 
 	int WordStartWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
@@ -223,11 +223,11 @@ namespace DataCollection
 		auto curWord = words[i];
 		if (GetString(0) == curWord->GetFirstCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
-			return true;
+			return 1;
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
 	}
 
@@ -236,12 +236,109 @@ namespace DataCollection
 		auto curWord = words[i];
 		if (GetString(0) == curWord->GetLastCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
-			return true;
+			return 1;
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
+	}
+
+	int WordContainChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		auto pos = GetPOS(0);
+		if (curWord->Type() != pos)//Check POS.
+		{
+			return 0;
+		}
+		//Check size.
+		auto characters = curWord->GetCharatcters();
+		if (characters.size() <= 2) return 0;
+
+		//Check middle characters.
+		auto containedChar = GetString(0);
+		int totalCount = 0;
+		for (unsigned j = 1; j < characters.size() - 1; ++j)
+		{
+			if (characters[j].GetString() == containedChar)
+			{
+				++totalCount;
+			}
+		}
+
+		return totalCount;
+	}
+
+	int WordContainCharStartWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		//Check the first char and POS.
+		if (GetString(1) == curWord->GetFirstCharacter().GetString() && GetPOS(0) == curWord->Type())
+		{
+			//Check middle characters.
+			auto characters = curWord->GetCharatcters();
+			auto containedChar = GetString(0);
+			for (unsigned j = 1; j < characters.size() - 1; ++j)
+			{
+				if (characters[j].GetString() == containedChar)
+				{
+					return 1;
+				}
+			}
+
+			return 0;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	int WordContainCharEndWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		//Check the first char and POS.
+		if (GetString(1) == curWord->GetLastCharacter().GetString() && GetPOS(0) == curWord->Type())
+		{
+			//Check middle characters.
+			auto characters = curWord->GetCharatcters();
+			auto containedChar = GetString(0);
+			for (unsigned j = 1; j < characters.size() - 1; ++j)
+			{
+				if (characters[j].GetString() == containedChar)
+				{
+					return 1;
+				}
+			}
+
+			return 0;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	int WordWithRepeatedChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
+	{
+		auto curWord = words[i];
+		auto characters = curWord->GetCharatcters();
+		if (curWord->Type() != GetPOS(0))//Check POS.
+		{
+			return 0;
+		}
+
+		auto repeatedChar = GetString(0);
+		for (int j = 0; j < characters.size() - 1; ++j)
+		{
+			if (characters[j].GetString() == repeatedChar && characters[j + 1].GetString() == repeatedChar)
+			{
+				return 1;
+			}
+		}
+
+		return 0;
 	}
 
 }

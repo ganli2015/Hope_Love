@@ -29,7 +29,11 @@ namespace DataCollection
 	prefix##WordTagNextCharTemplate##suffix;\
 	prefix##SingleCharWithTrigramCharTemplate##suffix;\
 	prefix##WordStartWithCharTemplate##suffix;\
-	prefix##WordEndWithCharTemplate##suffix;
+	prefix##WordEndWithCharTemplate##suffix;\
+	prefix##WordContainCharTemplate##suffix;\
+	prefix##WordContainCharStartWithCharTemplate##suffix; \
+	prefix##WordContainCharEndWithCharTemplate##suffix;\
+	prefix##WordWithRepeatedCharTemplate##suffix;
 
 #define HANDLE_ALL_FEATURES(prefix,suffix) prefix##TagWithWord##suffix;\
 	prefix##TagBigram##suffix;\
@@ -40,7 +44,11 @@ namespace DataCollection
 	prefix##WordTagNextChar##suffix;\
 	prefix##SingleCharWithTrigramChar##suffix;\
 	prefix##WordStartWithChar##suffix;\
-	prefix##WordEndWithChar##suffix;
+	prefix##WordEndWithChar##suffix;\
+	prefix##WordContainChar##suffix;\
+	prefix##WordContainCharStartWithChar##suffix;\
+	prefix##WordContainCharEndWithChar##suffix;\
+	prefix##WordWithRepeatedChar##suffix;
 
 
 	//Used for create a derived feature.
@@ -465,6 +473,76 @@ namespace DataCollection
 			SetPOS(0, t1);
 		};
 		~WordEndWithChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word containing char c (not the starting or ending character)
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainChar : public FeatureStyle<1, 1>
+	{
+	public:
+		WordContainChar() {};
+		WordContainChar(const string c, const PartOfSpeech t1) {
+			SetString(0, c);
+			SetPOS(0, t1);
+		};
+		~WordContainChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word starting with char c0 and containing char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainCharStartWithChar : public FeatureStyle<2, 1>
+	{
+	public:
+		WordContainCharStartWithChar() {};
+		WordContainCharStartWithChar(const string containChar, const string startChar, const PartOfSpeech t1) {
+			SetString(0, containChar);
+			SetString(1, startChar);
+			SetPOS(0, t1);
+		};
+		~WordContainCharStartWithChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word ending with char c0 and containing char c
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordContainCharEndWithChar : public FeatureStyle<2, 1>
+	{
+	public:
+		WordContainCharEndWithChar() {};
+		WordContainCharEndWithChar(const string containChar, const string endChar, const PartOfSpeech t1) {
+			SetString(0, containChar);
+			SetString(1, endChar);
+			SetPOS(0, t1);
+		};
+		~WordContainCharEndWithChar() {};
+
+	private:
+		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//tag t on a word containing repeated char cc
+	//////////////////////////////////////////////////////////////////////////
+	class _DATACOLLECTIONINOUT WordWithRepeatedChar : public FeatureStyle<1, 1>
+	{
+	public:
+		WordWithRepeatedChar() {};
+		WordWithRepeatedChar(const string c, const PartOfSpeech t1) {
+			SetString(0, c);
+			SetPOS(0, t1);
+		};
+		~WordWithRepeatedChar() {};
 
 	private:
 		virtual int CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words);
