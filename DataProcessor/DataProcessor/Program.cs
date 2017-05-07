@@ -27,6 +27,11 @@ namespace DataProcessor
         Other
     };
 
+    class A
+    {
+        ~A() { Console.Write("ddd"); }
+    }
+
     class Program
     {
         static void Main(string[] args)

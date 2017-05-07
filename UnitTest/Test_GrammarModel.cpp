@@ -60,6 +60,14 @@ namespace Mind
 			<< "The optimal sentence is " + optimal;
 	}
 
+	TEST_F(Test_GrammarFeatureModel, ComputePossibility2)
+	{
+		auto optimal = ComputeOptimal(_samples[2]);
+
+		ASSERT_EQ(_samples[2].expectOptimal, optimal)
+			<< "The optimal sentence is " + optimal;
+	}
+
 
 	void Test_GrammarFeatureModel::SetUpTestCase()
 	{
@@ -83,8 +91,8 @@ namespace Mind
 			sample.sentences.push_back("不/6 会/1 真/0 信/0 了/9 吧/11");
 			sample.sentences.push_back("不/6 会/1 真/0 信/0 了/1 吧/11");
 			sample.sentences.push_back("不/6 会/1 真/0 信/1 了/9 吧/11");
-			sample.sentences.push_back("不/6 会/1 真/2 信/0 了/9 吧/11");
-			sample.sentences.push_back("不/6 会/1 真/6 信/1 了/9 吧/11");
+ 			sample.sentences.push_back("不/6 会/1 真/2 信/0 了/9 吧/11");
+ 			sample.sentences.push_back("不/6 会/1 真/6 信/1 了/9 吧/11");
 			sample.expectOptimal = "不/6 会/1 真/6 信/1 了/9 吧/11";
 
 			_samples.push_back(sample);
@@ -98,6 +106,16 @@ namespace Mind
 			sample.sentences.push_back("那/0 你/5 了解/0 一下/3 吧/11");
 
 			sample.expectOptimal = "那/8 你/5 了解/1 一下/3 吧/11";
+
+			_samples.push_back(sample);
+		}
+
+		{
+			Sample sample;
+			sample.sentences.push_back("又/6 没/6 吃/1 晚饭/0 吧/11");
+			sample.sentences.push_back("又/6 没/1 吃/1 晚饭/0 吧/11");
+
+			sample.expectOptimal = "又/6 没/6 吃/1 晚饭/0 吧/11";
 
 			_samples.push_back(sample);
 		}

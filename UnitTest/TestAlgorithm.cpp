@@ -18,7 +18,7 @@ TEST_F(TestAlgorithm, TestPOSTagging)
 {
 	TestPOSTagging test;
 	//test.Run("D:\\Projects\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_mine.txt");
-	test.Run("E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt",100);
+	test.Run("E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt",20);
 }
 
 TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)

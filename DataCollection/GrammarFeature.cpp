@@ -221,6 +221,7 @@ namespace DataCollection
 	int WordStartWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		auto curWord = words[i];
+		if (curWord->NumOfChara() <= 1) return 0;
 		if (GetString(0) == curWord->GetFirstCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
 			return 1;
@@ -234,6 +235,7 @@ namespace DataCollection
 	int WordEndWithChar::CurrentFeatureCount(const unsigned i, const vector<shared_ptr<Word>>& words)
 	{
 		auto curWord = words[i];
+		if (curWord->NumOfChara() <= 1) return 0;
 		if (GetString(0) == curWord->GetLastCharacter().GetString() && GetPOS(0) == curWord->Type())
 		{
 			return 1;

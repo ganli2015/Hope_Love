@@ -332,6 +332,7 @@ namespace Mind
 		for (auto type : _featureTypes)
 		{
 			_weights[type] = weights[i];
+			DEBUG_FORMAT2("Type: %s ; Weight: %lf.", type.c_str(), weights[i]);
 			++i;
 		}
 	}
@@ -351,6 +352,7 @@ namespace Mind
 				//Has feature in the sentence.
 
 				//DEBUGLOG(feature);
+				//DEBUG_FORMAT("Feature count is %d.", featureCount);
 
 				FeatureStat stat;
 				stat.feature = feature;
@@ -365,7 +367,7 @@ namespace Mind
 			}
 		}
 
-		//DEBUGLOG("End of gettign features of the sentence.");
+		//DEBUGLOG("End of getting features of the sentence.");
 
 		return res;
 	}
