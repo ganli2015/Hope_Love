@@ -3,8 +3,18 @@
 
 #include "../Mind/MindParameterDatabase.h"
 #include "../Mind/GrammarFeatureDatabase.h"
+#include "../Mind/ConceptDatabase.h"
+
+#include "../MindElement/BaseConcept.h"
 
 #include "../CommonTools/DBoperator.h"
+
+#include "../DataCollection/Word.h"
+#include "../DataCollection/LanguageFunc.h"
+
+#include "../Mathmatic/MathTool.h"
+
+using namespace DataCollection;
 
 namespace Mind
 {
@@ -13,12 +23,12 @@ namespace Mind
 		MindParameterDatabase *db = new MindParameterDatabase();
 		SetDBOperator(db, _testDBOperator);
 
-		double weight = 0.1;
+		double weight = GetRandomDecimal();
 		db->WriteGrammarFeatureModelWeight(weight);
 
 		auto getVal = db->GetGrammarFeatureModelWeight();
 
-		ASSERT_EQ(weight, getVal);
+		ASSERT_DOUBLE_EQ(weight, getVal);
 	}
 
 	TEST_F(Test_Database, ReadWriteGrammarLocalModelWeight)
@@ -26,12 +36,12 @@ namespace Mind
 		MindParameterDatabase *db = new MindParameterDatabase();
 		SetDBOperator(db, _testDBOperator);
 
-		double weight = 0.2;
+		double weight = GetRandomDecimal();
 		db->WriteGrammarLocalModelWeight(weight);
 
 		auto getVal = db->GetGrammarLocalModelWeight();
 
-		ASSERT_EQ(weight, getVal);
+		ASSERT_DOUBLE_EQ(weight, getVal);
 	}
 
 	TEST_F(Test_Database, ReadWriteGrammarPatternModelWeight)
@@ -39,12 +49,12 @@ namespace Mind
 		MindParameterDatabase *db = new MindParameterDatabase();
 		SetDBOperator(db, _testDBOperator);
 
-		double weight = 0.3;
+		double weight = GetRandomDecimal();
 		db->WriteGrammarPatternModelWeight(weight);
 
 		auto getVal = db->GetGrammarPatternModelWeight();
 
-		ASSERT_EQ(weight, getVal);
+		ASSERT_DOUBLE_EQ(weight, getVal);
 	}
 
 	TEST_F(Test_Database, ReadWriteGrammarFeatureWeights)
@@ -66,7 +76,11 @@ namespace Mind
 		}
 		SetFeatureWeightsID(db, weightID);
 
-		vector<double> weights{ 0.1,0.2,0.3,0.4,0.5 };
+		vector<double> weights ;
+		for (int i = 0; i < 5; ++i)
+		{
+			weights.push_back(GetRandomDecimal());
+		}
 		db->UpdateGrammarFeatureWeights(weights);
 
 		auto getVal = db->GetGrammarFeatureWeights();
@@ -74,14 +88,42 @@ namespace Mind
 		ASSERT_EQ(weights.size(), getVal.size());
 		for (unsigned i=0;i<weights.size();++i)
 		{
-			ASSERT_EQ(weights[i], getVal[i]);
+			ASSERT_DOUBLE_EQ(weights[i], getVal[i]);
 		}
+	}
+
+	TEST_F(Test_Database, ReadWriteBaseConcept)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+
+		long index = 0;
+		int id = 2;
+		string wordStr = "ÎÒ";
+		PartOfSpeech pos = Pronoun;
+
+		//Create concept.
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord(wordStr, pos);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(index);
+		concept->SetId(id);
+
+		db->AddBaseConcept(concept);
+
+		auto getConcept = db->ReadBaseConcept(index);
+
+		ASSERT_EQ(index, getConcept->GetBaseId());
+		ASSERT_EQ(id, getConcept->GetId());
+		ASSERT_EQ(wordStr, getConcept->GetString());
+		ASSERT_EQ(pos, getConcept->GetPartOfSpeech());
 	}
 
 	void Test_Database::SetUpTestCase()
 	{
 		//Create a DBOperator to point to test.db.
 		_testDBOperator = new CommonTool::DBoperator(FuncForTest::dbPath);
+
+		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
 	}
 
 	void Test_Database::TearDownTestCase()
@@ -98,6 +140,14 @@ namespace Mind
 	{
 		db->_featureWeightID = weightID;
 	}
+
+	double Test_Database::GetRandomDecimal()
+	{
+		auto rand = _rand.GetRandDouble(0, 1);
+		return (int)(rand * 100) / 100.0;
+	}
+
+	Math::Rand Test_Database::_rand;
 
 	CommonTool::DBoperator * Test_Database::_testDBOperator;
 

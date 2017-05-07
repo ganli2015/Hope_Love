@@ -92,6 +92,9 @@
     <ClInclude Include="MindObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ConceptDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -165,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="MindObject.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConceptDatabase.cpp">
+      <Filter>Database</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

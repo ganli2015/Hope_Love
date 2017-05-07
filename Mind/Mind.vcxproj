@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Cerebrum.h" />
     <ClInclude Include="CommonFunction.h" />
+    <ClInclude Include="ConceptDatabase.h" />
     <ClInclude Include="ConceptInteractTableContainer.h" />
     <ClInclude Include="ConceptReactImp.h" />
     <ClInclude Include="ConceptReactImp_1212.h" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClCompile Include="Cerebrum.cpp" />
     <ClCompile Include="CommonFunction.cpp" />
+    <ClCompile Include="ConceptDatabase.cpp" />
     <ClCompile Include="ConceptInteractTableContainer.cpp" />
     <ClCompile Include="ConceptReactImp.cpp" />
     <ClCompile Include="ConceptReactImp_1212.cpp" />

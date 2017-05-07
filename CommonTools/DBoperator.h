@@ -38,6 +38,7 @@ namespace CommonTool
 		void Disconnect();
 
 		void DeleteTable(const string tableName);
+		void DeleteRowsInTable(const string tableName);
 
 		void BeginTransaction();
 		void CommitTransaction();

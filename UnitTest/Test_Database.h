@@ -2,6 +2,8 @@
 #include "PublicHeader.h"
 #include "FuncForTest.h"
 
+#include "../Mathmatic/Rand.h"
+
 namespace CommonTool
 {
 	class DBoperator;
@@ -16,12 +18,18 @@ namespace Mind
 	{
 	protected:
 		static CommonTool::DBoperator *_testDBOperator;
+		static Math::Rand _rand;
 
 		static void SetUpTestCase();
 		static void TearDownTestCase();
 
 		static void SetDBOperator(MindDatabase* db, CommonTool::DBoperator* dbope);
 		static void SetFeatureWeightsID(MindParameterDatabase* db, vector<string> weightID);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get random Decimal of two digits behind decimal point.
+		//////////////////////////////////////////////////////////////////////////
+		static double GetRandomDecimal();
 	};
 }
 

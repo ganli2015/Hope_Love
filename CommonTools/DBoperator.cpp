@@ -34,6 +34,12 @@ namespace CommonTool
 		cmd.Execute();
 	}
 
+	void DBoperator::DeleteRowsInTable(const string tableName)
+	{
+		DBCmd cmd("Delete from " + tableName, *this);
+		cmd.Execute();
+	}
+
 	void DBoperator::BeginTransaction()
 	{
 		if (_tr == NULL)
