@@ -118,12 +118,28 @@ namespace Mind
 		ASSERT_EQ(pos, getConcept->GetPartOfSpeech());
 	}
 
+	TEST_F(Test_Database, GetBaseConceptCount)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+
+		//Add base concept to database.
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("Œ“", Pronoun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(0);
+		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
+
+		auto count = db->GetBaseConceptCount();
+
+		ASSERT_EQ(1, count);
+	}
+
 	void Test_Database::SetUpTestCase()
 	{
 		//Create a DBOperator to point to test.db.
 		_testDBOperator = new CommonTool::DBoperator(FuncForTest::dbPath);
-
-		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
 	}
 
 	void Test_Database::TearDownTestCase()
@@ -145,6 +161,11 @@ namespace Mind
 	{
 		auto rand = _rand.GetRandDouble(0, 1);
 		return (int)(rand * 100) / 100.0;
+	}
+
+	void Test_Database::SetUp()
+	{
+		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
 	}
 
 	Math::Rand Test_Database::_rand;

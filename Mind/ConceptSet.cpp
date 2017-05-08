@@ -3,6 +3,8 @@
 #include "CommonFunction.h"
 #include "ConceptSetInitializer.h"
 #include "FindConnectConcept.h"
+#include "DBContainer.h"
+#include "ConceptDatabase.h"
 #include <fstream>
 #include <deque>
 #include <sstream>
@@ -32,7 +34,7 @@ int ToInt(char str)
 namespace Mind
 {
 
-	ConceptSet::ConceptSet(void)
+	ConceptSet::ConceptSet(void):_conceptDB(_dbContainer->GetConceptDatabase())
 	{
 		Initialize();
 		LOG("Initialized ConceptSet.");
@@ -368,12 +370,12 @@ namespace Mind
 	void ConceptSet::AddBaseConcept(const shared_ptr<DataCollection::Word> word,int id )
 	{
 		//Add to _baseConceptset
-		CheckBaseWordIDExist(word,id,_baseConceptset);
+		//CheckBaseWordIDExist(word,id,_baseConceptset);
 		shared_ptr<BaseConcept> newConcept(new BaseConcept(word));
 		newConcept->SetId(id);
-		newConcept->SetBaseId(_baseConceptset.size());
+		newConcept->SetBaseId(_conceptDB->GetBaseConceptCount());
 		string str=word->GetString();
-		_baseConceptset.insert(make_pair(str,newConcept));
+		_conceptDB->AddBaseConcept(newConcept);
 
 		//Add to _conceptset
 		CheckWordIDExist(word,id,_conceptset);
@@ -525,7 +527,12 @@ namespace Mind
 		return res;
 	}
 
-	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS( const PartOfSpeech pos ) const
+	int ConceptSet::BaseConceptCount() const
+	{
+		return _conceptDB->GetBaseConceptCount();
+	}
+
+	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS(const PartOfSpeech pos) const
 	{
 		vector<shared_ptr<Word>> res;
 
@@ -584,15 +591,7 @@ namespace Mind
 
 	shared_ptr<BaseConcept> ConceptSet::GetBaseConcept( const int id ) const
 	{
-		for (const_baseConceptIter it=_baseConceptset.begin();it!=_baseConceptset.end();++it)
-		{
-			if(it->second->GetBaseId()==id)
-			{
-				return it->second;
-			}
-		}
-
-		return NULL;
+		return _conceptDB->ReadBaseConcept(id);
 	}
 
 	shared_ptr<iConcept> ConceptSet::GetConceptPtr( const shared_ptr<DataCollection::Word> word ) const

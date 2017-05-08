@@ -51,6 +51,18 @@ namespace Mind
 		return concept;
 	}
 
+	size_t ConceptDatabase::GetBaseConceptCount()
+	{
+		CheckConnect();
+		char state[100];
+		sprintf_s(state, "Select Count(*) from %s", BaseConceptTable.c_str());
+
+		DBQry qry(state, *_db);
+		auto row = qry.GetRows().front();
+
+		return row.GetLong("Count(*)");
+	}
+
 	void ConceptDatabase::AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos)
 	{
 		CheckConnect();
@@ -64,7 +76,7 @@ namespace Mind
 		cmd.Bind(":id", id);
 		cmd.Bind(":word", CommonTool::AsciiToUtf8(word));
 		cmd.Bind(":pos", (int)pos);
-
+		
 		cmd.Execute();
 	}
 

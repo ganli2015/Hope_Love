@@ -6,6 +6,7 @@ namespace Mind
 {
 	class GrammarFeatureDatabase;
 	class MindParameterDatabase;
+	class ConceptDatabase;
 
 	//////////////////////////////////////////////////////////////////////////
 	//A factory containing all database object for Mind data.
@@ -24,6 +25,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		unique_ptr<GrammarFeatureDatabase> GetGrammarFeatureDatabase() const;
 		unique_ptr<MindParameterDatabase> GetMindParameterDatabase() const;
+		unique_ptr<ConceptDatabase> GetConceptDatabase() const;
 	private:
 		DBContainer();
 		~DBContainer();

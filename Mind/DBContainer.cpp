@@ -3,6 +3,7 @@
 
 #include "GrammarFeatureDatabase.h"
 #include "MindParameterDatabase.h"
+#include "ConceptDatabase.h"
 
 namespace Mind
 {
@@ -30,6 +31,14 @@ namespace Mind
 	unique_ptr<MindParameterDatabase> DBContainer::GetMindParameterDatabase() const
 	{
 		unique_ptr<MindParameterDatabase> db(new MindParameterDatabase());
+		db->Connect();
+
+		return db;
+	}
+
+	unique_ptr<ConceptDatabase> DBContainer::GetConceptDatabase() const
+	{
+		unique_ptr<ConceptDatabase> db(new ConceptDatabase());
 		db->Connect();
 
 		return db;

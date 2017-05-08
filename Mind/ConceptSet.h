@@ -1,6 +1,7 @@
 #pragma once
 #include "InOut.h"
 #include "CommonFunction.h"
+#include "MindObject.h"
 #include "../MindElement/Concept.h"
 #include "../MindElement/BaseConcept.h"
 
@@ -13,15 +14,17 @@ namespace DataCollection
 
 namespace Mind
 {
+	class ConceptDatabase;
 	class iConceptInteractTable;
 	struct DescMatchedConceptInfo;
 
-	class _MINDINOUT ConceptSet : public Obj<ConceptSet>
+	class _MINDINOUT ConceptSet : public Obj<ConceptSet> , public MindObject
 	{
 		typedef std::multimap<std::string,shared_ptr<Concept>> ConceptMap;
 		typedef std::multimap<std::string,shared_ptr<BaseConcept>> BaseConceptMap;
 		ConceptMap _conceptset;
-		BaseConceptMap _baseConceptset;
+		//BaseConceptMap _baseConceptset;
+		unique_ptr<ConceptDatabase> _conceptDB;
 
 		typedef ConceptMap::iterator conceptIter;
 		typedef ConceptMap::const_iterator const_conceptIter;
@@ -74,7 +77,7 @@ namespace Mind
 		shared_ptr<iConceptInteractTable> GetInteractTable(const shared_ptr<iConcept> from,const shared_ptr<iConcept> to,double level=0);
 		shared_ptr<iConceptInteractTable> GetDeepInteractTable(const shared_ptr<iConcept> from,const shared_ptr<iConcept> to);
 
-		int BaseConceptCount() const {return _baseConceptset.size();}
+		int BaseConceptCount() const;
 
 		vector<shared_ptr<iConcept>> FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description) const ;		
 		void FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description, vector<DescMatchedConceptInfo>& matchedInfos) const ;	

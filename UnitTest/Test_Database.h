@@ -30,6 +30,8 @@ namespace Mind
 		//Get random Decimal of two digits behind decimal point.
 		//////////////////////////////////////////////////////////////////////////
 		static double GetRandomDecimal();
+
+		virtual void SetUp();
 	};
 }
 
