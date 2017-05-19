@@ -4,6 +4,8 @@
 
 namespace Mind
 {
+	class BaseConcept;
+
 	class _MINDELEMENTINOUT MindElementCreator : public iMindElementCreatorImp
 	{
 	public:
@@ -12,6 +14,11 @@ namespace Mind
 
 		virtual shared_ptr<iConcept> CreateConcept(const ElementType type) const ;
 		virtual shared_ptr<iConcept> CreateConcept(const shared_ptr<DataCollection::Word> word,const ElementType type) const ;
+		//////////////////////////////////////////////////////////////////////////
+		//conceptID: ID for concept with the same word.
+		//baseID: ID fro base concept.
+		//////////////////////////////////////////////////////////////////////////
+		virtual shared_ptr<BaseConcept> CreateBaseConcept(const shared_ptr<DataCollection::Word> word,const int conceptID,const int baseID) const ;
 
 		virtual shared_ptr<iConceptChain> CreateConceptChain(const ElementType type) const ;
 		virtual shared_ptr<iConceptChain> CreateConceptChain(const vector<shared_ptr<iConcept>>& val,const ElementType type) const ;

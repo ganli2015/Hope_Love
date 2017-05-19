@@ -10,6 +10,8 @@ namespace CommonTool
 
 namespace Mind
 {
+	class MindElementCreator;
+
 	//////////////////////////////////////////////////////////////////////////
 	//The base class of Database classes for Mind.
 	//////////////////////////////////////////////////////////////////////////
@@ -18,6 +20,7 @@ namespace Mind
 		friend class Test_Database;
 	protected:
 		CommonTool::DBoperator *_db;
+		MindElementCreator *_elemCreator;
 	public:
 		MindDatabase();
 		~MindDatabase();

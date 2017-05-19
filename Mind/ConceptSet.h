@@ -92,6 +92,12 @@ namespace Mind
 		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara) const;
 		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word) const;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Collect new base concepts from the sample file <filePath>.
+		//The file should be POS tagged.
+		//////////////////////////////////////////////////////////////////////////
+		void CollectNewBaseConcepts(const string filePath);
+
 	private:
 		void Initialize();
 
@@ -106,7 +112,21 @@ namespace Mind
 
 	};
 
-	
+	class ConceptCollector
+	{
+		ConceptDatabase *_conceptDB;
+	public:
+		ConceptCollector(ConceptDatabase *db) :_conceptDB(db) {};
+		~ConceptCollector() {};
+
+		//////////////////////////////////////////////////////////////////////////
+		//Collect new base concepts from the sample file <filePath>.
+		//The file should be POS tagged.
+		//////////////////////////////////////////////////////////////////////////
+		void Collect(const string filePath);
+
+	private:
+	};
 }
 
 

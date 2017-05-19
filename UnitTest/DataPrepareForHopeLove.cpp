@@ -6,6 +6,7 @@
 #include "../Mind/GrammarPatternModel.h"
 #include "../Mind/GrammarModel.h"
 #include "../Mind/GrammaSet.h"
+#include "../Mind/ConceptSet.h"
 
 #include "../CommonTools/DBoperator.h"
 
@@ -43,6 +44,13 @@ TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
 	grammarSet->InitializeGrammarModel();
 	DataPrepareForHopeLove::InitializeWeightsForGrammarSet(
 		"E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt", grammarSet);
+}
+
+TEST(Preparation, CollectNewBaseConcept)
+{
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
+	ConceptSet conceptSet;
+	conceptSet.CollectNewBaseConcepts("E:\\Artificial Intelligence\\Document\\DataBase\\myconv.txt");
 }
 
 TEST(DISABLED_Preparation, TestPOS)

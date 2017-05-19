@@ -20,6 +20,7 @@
 
 #include "../MindElement/ConceptInteractTable.h"
 #include "../MindElement/BaseConcept.h"
+#include "../MindElement/MindElementCreator.h"
 
 #include "../MindInterface/iCerebrum.h"
 
@@ -219,7 +220,16 @@ namespace Mind
 		return maxLength;
 	}
 
-	int ConceptSet::MaxLength_WordWithHead( const shared_ptr<DataCollection::Character> headChara ) const
+	void ConceptSet::CollectNewBaseConcepts(const string filePath)
+	{
+		auto conceptDB = this->_conceptDB.release();
+		ConceptCollector collector(conceptDB);
+		collector.Collect(filePath);
+
+		this->_conceptDB.reset(conceptDB);
+	}
+
+	int ConceptSet::MaxLength_WordWithHead(const shared_ptr<DataCollection::Character> headChara) const
 	{
 		int maxLength=0;
 		string str=headChara->GetString();
@@ -371,9 +381,8 @@ namespace Mind
 	{
 		//Add to _baseConceptset
 		//CheckBaseWordIDExist(word,id,_baseConceptset);
-		shared_ptr<BaseConcept> newConcept(new BaseConcept(word));
-		newConcept->SetId(id);
-		newConcept->SetBaseId(_conceptDB->GetBaseConceptCount());
+		shared_ptr<BaseConcept> newConcept = this->_elemCreator->
+			CreateBaseConcept(word, id, _conceptDB->GetBaseConceptCount());
 		string str=word->GetString();
 		_conceptDB->AddBaseConcept(newConcept);
 
@@ -691,6 +700,27 @@ namespace Mind
 		genarate=for_each(_conceptset.begin(),_conceptset.end(),genarate);
 
 		matchedInfos=genarate.GetResult();
+	}
+
+	void ConceptCollector::Collect(const string filePath)
+	{
+		auto allPOSsentences = CommonFunction::ParseSampleSentences(filePath);
+		LOG_FORMAT("Finish parse sample sentences.The count of sentences is %d.", allPOSsentences.size());
+
+		int newConceptCount = 0;
+		for (auto sentence : allPOSsentences)
+		{
+			for (auto word : sentence)
+			{
+				//Check the word existence in database.
+				if(_conceptDB->HasWord(word)) continue;
+
+				this->_conceptDB->AddBaseConcept(word);
+				++newConceptCount;
+			}
+		}
+
+		LOG_FORMAT("%d new base concepts are added.", newConceptCount);
 	}
 
 }

@@ -4,6 +4,7 @@
 namespace Mind
 {
 	class DBContainer;
+	class MindElementCreator;
 
 	//////////////////////////////////////////////////////////////////////////
 	//The base for Mind classes used for accessing the same object.
@@ -12,6 +13,7 @@ namespace Mind
 	{
 	protected:
 		DBContainer* _dbContainer;
+		MindElementCreator* _elemCreator;
 	public:
 		MindObject();
 		~MindObject();

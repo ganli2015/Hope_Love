@@ -1,1 +1,1 @@
-Test_Database.*
+TestAlgorithm.TestPOSTagging

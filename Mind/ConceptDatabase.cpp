@@ -2,6 +2,9 @@
 #include "ConceptDatabase.h"
 
 #include "../MindElement/BaseConcept.h"
+#include "../MindElement/MindElementCreator.h"
+
+#include "../MindInterface/iMindElementCreator.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
@@ -33,6 +36,24 @@ namespace Mind
 		AddBaseConcept(index, id, word, pos);
 	}
 
+	void ConceptDatabase::AddBaseConcept(const shared_ptr<DataCollection::Word> word)
+	{
+		auto baseID = GetBaseConceptCount();
+		//Get max ID for existed base concept with Word <word>.
+		long maxID = -1;
+		auto rows = GetRowsWithWord(word->GetString());
+		for (auto row : rows)
+		{
+			auto id = row.GetLong("id");
+			if (id > maxID)
+			{
+				maxID = id;
+			}
+		}
+
+		AddBaseConcept(baseID, maxID + 1, word->GetString(), word->Type());
+	}
+
 	shared_ptr<BaseConcept> ConceptDatabase::ReadBaseConcept(const long index)
 	{
 		CheckConnect();
@@ -45,9 +66,7 @@ namespace Mind
 
 		//Create the concept.
 		shared_ptr<Word> word = LanguageFunc::GetParticularWord(wordStr, pos);
-		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
-		concept->SetId(id);
-		concept->SetBaseId(baseID);
+		shared_ptr<BaseConcept> concept = this->_elemCreator->CreateBaseConcept(word, id, baseID);
 		return concept;
 	}
 
@@ -57,10 +76,22 @@ namespace Mind
 		char state[100];
 		sprintf_s(state, "Select Count(*) from %s", BaseConceptTable.c_str());
 
-		DBQry qry(state, *_db);
-		auto row = qry.GetRows().front();
+		auto row = QueryRows(state).front();
 
 		return row.GetLong("Count(*)");
+	}
+
+	bool ConceptDatabase::HasWord(const shared_ptr<DataCollection::Word> word)
+	{
+		CheckConnect();
+
+		char state[100];
+		sprintf_s(state, "Select * from %s where word='%s' and pos='%d'", 
+			BaseConceptTable.c_str(), CommonTool::AsciiToUtf8(word->GetString()).c_str(),word->Type());
+
+		auto rows = QueryRows(state);
+
+		return !rows.empty();
 	}
 
 	void ConceptDatabase::AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos)
@@ -82,13 +113,10 @@ namespace Mind
 
 	CommonTool::DBRow ConceptDatabase::GetBaseConceptRow(const long index)
 	{
-		CheckConnect();
-
 		char state[100];
 		sprintf_s(state, "Select * from %s where baseID='%ld'", BaseConceptTable.c_str(), index);
 
-		DBQry qry(state, *_db);
-		auto rows = qry.GetRows();
+		auto rows = QueryRows(state);
 		if (rows.size() == 1)
 		{
 			//get unique value.
@@ -100,5 +128,23 @@ namespace Mind
 		}
 	}
 
+
+	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
+	{
+		char state[100];
+		sprintf_s(state, "Select * from %s where word='%s'",
+			BaseConceptTable.c_str(), CommonTool::AsciiToUtf8(word).c_str());
+
+		return QueryRows(state);
+	}
+
+	vector<DBRow> ConceptDatabase::QueryRows(const string state)
+	{
+		CheckConnect();
+
+		DBQry qry(state, *_db);
+		auto rows = qry.GetRows();
+		return rows;
+	}
 
 }

@@ -3,12 +3,15 @@
 
 #include "../CommonTools/DBoperator.h"
 
+#include "../MindElement/MindElementCreator.h"
+
 using namespace CommonTool;
 
 namespace Mind
 {
 	MindDatabase::MindDatabase():_db(NULL)
 	{
+		_elemCreator = new MindElementCreator();
 	}
 
 

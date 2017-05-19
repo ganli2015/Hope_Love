@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MindElementCreator.h"
 #include "Concept.h"
+#include "BaseConcept.h"
 #include "ConceptEdge.h"
 #include "ConceptChain.h"
 #include "ConceptInteractTable_iConcept.h"
@@ -52,7 +53,16 @@ namespace Mind
 		}
 	}
 
-	shared_ptr<iConceptChain> MindElementCreator::CreateConceptChain( const ElementType type ) const
+	shared_ptr<BaseConcept> MindElementCreator::CreateBaseConcept(const shared_ptr<DataCollection::Word> word, const int conceptID, const int baseID) const
+	{
+		shared_ptr<BaseConcept> newConcept = make_shared<BaseConcept>(word);
+		newConcept->SetId(conceptID);
+		newConcept->SetBaseId(baseID);
+
+		return newConcept;
+	}
+
+	shared_ptr<iConceptChain> MindElementCreator::CreateConceptChain(const ElementType type) const
 	{
 		switch(type)
 		{
