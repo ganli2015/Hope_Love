@@ -13,6 +13,7 @@ namespace Mind
 {
 	class MindDatabase;
 	class MindParameterDatabase;
+	class ConceptDatabase;
 
 	class Test_Database :public testing::Test
 	{
@@ -32,6 +33,11 @@ namespace Mind
 		static double GetRandomDecimal();
 
 		virtual void SetUp();
+
+		//////////////////////////////////////////////////////////////////////////
+		//Add base concept "Œ“" to database.
+		//////////////////////////////////////////////////////////////////////////
+		void AddBaseConceptToDB_WO(ConceptDatabase *db);
 	};
 }
 

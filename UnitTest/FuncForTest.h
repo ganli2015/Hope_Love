@@ -35,12 +35,28 @@ protected:
 	virtual void TearDown();
 };
 
+class Flags
+{
+public:
+	//A flag for Unit Test running.
+	static bool UNIT_TEST;
+};
+
+#define CHECK_SKIP 	if (Flags::UNIT_TEST)\
+{\
+	cout<< "[  SKIPPED ] Running Unit Test.This test is skipped."<<endl;\
+	SUCCEED() ;\
+	return;\
+}
+
+
 namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
 	const string dbPath = TestSampleDir + "testDB.db";
 	const string LargeDataPath = "HopeLoveData\\large\\";
 	const string SimpleDataPath = "HopeLoveData\\";
+
 
 	shared_ptr<DataCollection::Word> ToWord(const string str, const DataCollection::PartOfSpeech pos);
 

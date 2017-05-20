@@ -11,11 +11,11 @@
 using namespace Mind;
 using namespace CommonTool;
 
-#ifndef UNIT_TEST
-
 
 TEST_F(TestAlgorithm, TestPOSTagging)
 {
+	CHECK_SKIP;
+
 	TestPOSTagging test;
 	//test.Run("D:\\Projects\\Hope_Love\\DataProcessor\\Corpus\\New\\corpus_mine.txt");
 	test.Run("E:\\Artificial Intelligence\\Document\\DataBase\\myconv_train.txt",20);
@@ -36,6 +36,7 @@ TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)
 // 
 // 	cout << "Expect P is " + ToString(expectP) << endl;
 // 	cout << "Result P is " + ToString(resultP) << endl;
+	CHECK_SKIP;
 
 	TestPOSTagging test;
 	test.POSTagging("不会真信了吧！");
@@ -53,4 +54,3 @@ void TestAlgorithm::TearDown()
 	iCerebrum::KillInstance();
 }
 
-#endif // UNIT_TEST

@@ -22,6 +22,8 @@ using namespace DataCollection;
 
 TEST(Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
 {
+	CHECK_SKIP;
+
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	//Before running this test, clean data in table 
 	GrammarFeatureTrainer trainer;
@@ -30,6 +32,7 @@ TEST(Preparation, GrammarFeatureTrainer_CollectGrammarFeatures)
 
 TEST(Preparation, GrammarFeatureTrainer_ComputeWeights)
 {
+	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	//Compute weights for different grammar feature templates.
 	//Before running this test, run <CollectGrammarFeatures> first to collect all feature from a sample file.
@@ -39,6 +42,7 @@ TEST(Preparation, GrammarFeatureTrainer_ComputeWeights)
 
 TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
 {
+	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	GrammarSet *grammarSet = new GrammarSet();
 	grammarSet->InitializeGrammarModel();
@@ -48,13 +52,15 @@ TEST(Preparation, GrammarModelTrainer_OptimizeWeights)
 
 TEST(Preparation, CollectNewBaseConcept)
 {
+	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	ConceptSet conceptSet;
 	conceptSet.CollectNewBaseConcepts("E:\\Artificial Intelligence\\Document\\DataBase\\myconv.txt");
 }
 
-TEST(DISABLED_Preparation, TestPOS)
+TEST(Preparation, TestPOS)
 {
+	CHECK_SKIP;
 	vector<shared_ptr<DataCollection::Word>> sentence;
 	sentence.push_back(ToWord("Äã", Pronoun));
 	sentence.push_back(ToWord("È¥", Pronoun));

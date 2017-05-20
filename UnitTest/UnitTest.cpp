@@ -49,6 +49,12 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
+	//Check if unit testing.
+	if (argc == 2 )
+	{
+		Flags::UNIT_TEST = true;
+	}
+
 	//Read filter information from file.
 	ifstream in("config.txt");
 	string line;

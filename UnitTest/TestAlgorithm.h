@@ -1,8 +1,6 @@
 #pragma once
 #include "PublicHeader.h"
 
-#ifndef UNIT_TEST
-
 class TestAlgorithm :public testing::Test
 {
 protected:
@@ -10,4 +8,3 @@ protected:
 	virtual void TearDown();
 };
 
-#endif // UNIT_TEST

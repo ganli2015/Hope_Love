@@ -124,16 +124,31 @@ namespace Mind
 		SetDBOperator(db, _testDBOperator);
 
 		//Add base concept to database.
-		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
-		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
-		concept->SetBaseId(0);
-		concept->SetId(0);
-
-		db->AddBaseConcept(concept);
+		AddBaseConceptToDB_WO(db);
 
 		auto count = db->GetBaseConceptCount();
 
 		ASSERT_EQ(1, count);
+	}
+
+	TEST_F(Test_Database, HasWord_ConceptDatabase)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddBaseConceptToDB_WO(db);
+
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
+		ASSERT_TRUE(db->HasWord(word));
+	}
+
+	TEST_F(Test_Database, NotHasWord_ConceptDatabase)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddBaseConceptToDB_WO(db);
+
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Noun);
+		ASSERT_FALSE(db->HasWord(word));
 	}
 
 	void Test_Database::SetUpTestCase()
@@ -166,6 +181,16 @@ namespace Mind
 	void Test_Database::SetUp()
 	{
 		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
+	}
+
+	void Test_Database::AddBaseConceptToDB_WO(ConceptDatabase *db)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(0);
+		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
 	}
 
 	Math::Rand Test_Database::_rand;
