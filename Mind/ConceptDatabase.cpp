@@ -11,14 +11,18 @@
 
 #include "../CommonTools/DBoperator.h"
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/QueryStatement.h"
 
 using namespace CommonTool;
 using namespace DataCollection;
 
 namespace Mind
 {
-	ConceptDatabase::ConceptDatabase():BaseConceptTable("BaseConceptsString")
+	ConceptDatabase::ConceptDatabase():BaseConceptTable("BaseConceptsString"),
+		NonBaseConceptTable("NonBaseConcept")
 	{
+		_tables.push_back(BaseConceptTable);
+		_tables.push_back(NonBaseConceptTable);
 	}
 
 
@@ -85,11 +89,16 @@ namespace Mind
 	{
 		CheckConnect();
 
-		char state[100];
-		sprintf_s(state, "Select * from %s where word='%s' and pos='%d'", 
-			BaseConceptTable.c_str(), CommonTool::AsciiToUtf8(word->GetString()).c_str(),word->Type());
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
 
-		auto rows = QueryRows(state);
+			state.EQ("word", word->GetString());
+			state.EQ("pos", word->Type());
+		}
+
+		auto rows = QueryForTables(statements);
 
 		return !rows.empty();
 	}
@@ -113,8 +122,8 @@ namespace Mind
 
 	CommonTool::DBRow ConceptDatabase::GetBaseConceptRow(const long index)
 	{
-		char state[100];
-		sprintf_s(state, "Select * from %s where baseID='%ld'", BaseConceptTable.c_str(), index);
+		QueryStatement state (BaseConceptTable);
+		state.EQ("baseID", index);
 
 		auto rows = QueryRows(state);
 		if (rows.size() == 1)
@@ -138,13 +147,42 @@ namespace Mind
 		return QueryRows(state);
 	}
 
-	vector<DBRow> ConceptDatabase::QueryRows(const string state)
+	vector<CommonTool::DBRow> ConceptDatabase::QueryForTables(const vector<CommonTool::QueryStatement>& statements)
+	{
+		vector<CommonTool::DBRow> res;
+		for (auto state : statements)
+		{
+			auto rows = QueryRows(state);
+			res.insert(res.end(), rows.begin(), rows.end());
+		}
+
+		return res;
+	}
+
+	vector<CommonTool::QueryStatement> ConceptDatabase::CreateQryForTables() const
+	{
+		vector<CommonTool::QueryStatement> res;
+		for (auto table : _tables)
+		{
+			res.push_back(QueryStatement(table));
+		}
+		return res;
+	}
+
+	vector<DBRow> ConceptDatabase::QueryRows(const CommonTool::QueryStatement& state)
+	{
+		return QueryRows(state.GetString());
+	}
+
+	vector<CommonTool::DBRow> ConceptDatabase::QueryRows(const string& cmd)
 	{
 		CheckConnect();
 
-		DBQry qry(state, *_db);
+		DBQry qry(cmd, *_db);
 		auto rows = qry.GetRows();
 		return rows;
+
+		//return vector<CommonTool::DBRow>();
 	}
 
 }

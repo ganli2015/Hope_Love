@@ -5,6 +5,7 @@ namespace CommonTool
 {
 	class DBoperator;
 	class DBRow;
+	class QueryStatement;
 }
 
 namespace DataCollection
@@ -23,6 +24,9 @@ namespace Mind
 	class _MINDINOUT ConceptDatabase : public MindDatabase
 	{
 		const string BaseConceptTable;
+		const string NonBaseConceptTable;
+
+		vector<string> _tables;
 	public:
 		ConceptDatabase();
 		~ConceptDatabase();
@@ -50,12 +54,17 @@ namespace Mind
 		bool HasWord(const shared_ptr<DataCollection::Word> word);
 
 	private:
-		vector<CommonTool::DBRow> QueryRows(const string cmd);
+		vector<CommonTool::DBRow> QueryRows(const CommonTool::QueryStatement& cmd);
+		vector<CommonTool::DBRow> QueryRows(const string& cmd);
 
 		void AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos);
 		CommonTool::DBRow GetBaseConceptRow(const long index);
 
 		vector<CommonTool::DBRow> GetRowsWithWord(const string word);
+
+		vector<CommonTool::DBRow> QueryForTables(const vector<CommonTool::QueryStatement>& statements);
+
+		vector<CommonTool::QueryStatement> CreateQryForTables() const;
 	};
 }
 

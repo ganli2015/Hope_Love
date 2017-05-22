@@ -163,6 +163,7 @@
     <ClInclude Include="MemoryDetector.h" />
     <ClInclude Include="MyException.h" />
     <ClInclude Include="MyObject.h" />
+    <ClInclude Include="QueryStatement.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     <ClCompile Include="MemoryDetector.cpp" />
     <ClCompile Include="MyException.cpp" />
     <ClCompile Include="MyObject.cpp" />
+    <ClCompile Include="QueryStatement.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

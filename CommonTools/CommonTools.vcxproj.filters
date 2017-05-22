@@ -65,6 +65,9 @@
     <ClInclude Include="DatabaseTrait.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="QueryStatement.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -107,6 +110,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DBoperator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryStatement.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
