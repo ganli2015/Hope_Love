@@ -151,6 +151,36 @@ namespace Mind
 		ASSERT_FALSE(db->HasWord(word));
 	}
 
+	TEST_F(Test_Database, HasString_ConceptDatabase)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddBaseConceptToDB_WO(db);
+
+		ASSERT_TRUE(db->HasString("我"));
+	}
+
+	TEST_F(Test_Database, GetConceptsWithHead)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddBaseConceptToDB_WO(db);
+		AddBaseConceptToDB_WOYAO(db);
+		AddBaseConceptToDB_WOHAO(db);
+		AddBaseConceptToDB_NIHAO(db);
+
+		auto chara = make_shared<Character>("我");
+
+		auto concepts = db->GetConceptsWithHead(chara);
+
+		//Check all start with "我".
+		for (auto concept : concepts)
+		{
+			auto startChara = concept->GetWord()->GetFirstCharacter();
+			ASSERT_TRUE(startChara.IsSame(*chara));
+		}
+	}
+
 	void Test_Database::SetUpTestCase()
 	{
 		//Create a DBOperator to point to test.db.
@@ -188,6 +218,36 @@ namespace Mind
 		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
 		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
 		concept->SetBaseId(0);
+		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
+	}
+
+	void Test_Database::AddBaseConceptToDB_WOYAO(ConceptDatabase *db)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我要", Pronoun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(1);
+		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
+	}
+
+	void Test_Database::AddBaseConceptToDB_WOHAO(ConceptDatabase *db)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我好", Pronoun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(2);
+		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
+	}
+
+	void Test_Database::AddBaseConceptToDB_NIHAO(ConceptDatabase *db)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("你好", Pronoun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(3);
 		concept->SetId(0);
 
 		db->AddBaseConcept(concept);

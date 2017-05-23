@@ -18,38 +18,50 @@ namespace CommonTool
 	{
 		//Create head.
 		string res = StringFormat("Select * from %s ", _tableName.c_str());
+
+		vector<string> conditions;//All constraint terms.
+
+		//Like constraint.
+		for (auto like : _likeConditions)
+		{
+			string append = StringFormat("%s LIKE '%s'", like.first,
+				CommonTool::AsciiToUtf8(like.second).c_str());
+			conditions.push_back(append);
+		}
+
 		//Collect equality conditions.
-		vector<string> eqConditions;
 		for (auto strEq : _eqConditionsString)
 		{
 			string append = StringFormat("%s='%s'", strEq.first.c_str(),
 				CommonTool::AsciiToUtf8(strEq.second).c_str());
-			eqConditions.push_back(append);
+			conditions.push_back(append);
 		}
 		for (auto intEq : _eqConditionsInt)
 		{
 			string append = StringFormat("%s='%d'", intEq.first.c_str(),
 				intEq.second);
-			eqConditions.push_back(append);
+			conditions.push_back(append);
 		}
 		for (auto longEq : _eqConditionsLong)
 		{
 			string append = StringFormat("%s='%ld'", longEq.first.c_str(),
 				longEq.second);
-			eqConditions.push_back(append);
+			conditions.push_back(append);
 		}
 
-		if (eqConditions.empty())
+		if (conditions.empty())
 		{
 			return res;
 		}
 		else
 		{
 			res += "where ";
-			for (int i = 0; i < eqConditions.size(); ++i)
+
+			//Join like constraints.
+			for (int i = 0; i < conditions.size(); ++i)
 			{
-				res += " " + eqConditions[i] + " ";
-				if (i != eqConditions.size() - 1)
+				res += " " + conditions[i] + " ";
+				if (i != conditions.size() - 1)
 				{
 					res += "and";
 				}
@@ -72,6 +84,11 @@ namespace CommonTool
 	void QueryStatement::EQ(const string fieldName, const long val)
 	{
 		_eqConditionsLong.push_back(make_pair(fieldName, val));
+	}
+
+	void QueryStatement::Like(const string fieldName, const string format)
+	{
+		_likeConditions.push_back(make_pair(fieldName, format));
 	}
 
 }

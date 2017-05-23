@@ -107,11 +107,6 @@ namespace Mind
 	{
 		MockiCerebrum* brain= new MockiCerebrum;
 
-		EXPECT_CALL(*brain,FindConceptWithMatchedDisc(_,_)).WillRepeatedly(Return());
-
-		EXPECT_CALL(*brain,Deduce(Matcher<shared_ptr<iConceptInteractTable>>(_)))
-			.WillRepeatedly(Return(vector<shared_ptr<iDeduceResult>>()));
-
 		return brain;
 	}
 

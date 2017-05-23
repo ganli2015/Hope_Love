@@ -22,6 +22,9 @@ public:
 	SimpleConceptCreator(void){};
 	~SimpleConceptCreator(void){};
 
+	//////////////////////////////////////////////////////////////////////////
+	//Create simple concept with word string.
+	//////////////////////////////////////////////////////////////////////////
 	virtual shared_ptr<Mind::iConcept> Create(const string str, const int i=0) const;
 
 private:
@@ -34,5 +37,8 @@ public:
 	CerebrumConceptCreator(void){};
 	~CerebrumConceptCreator(void){};
 
+	//////////////////////////////////////////////////////////////////////////
+	//Get concept from Cerebrum.
+	//////////////////////////////////////////////////////////////////////////
 	virtual shared_ptr<Mind::iConcept> Create(const string str, const int i=0) const;
 };

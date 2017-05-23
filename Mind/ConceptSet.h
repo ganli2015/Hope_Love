@@ -82,16 +82,6 @@ namespace Mind
 		vector<shared_ptr<iConcept>> FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description) const ;		
 		void FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description, vector<DescMatchedConceptInfo>& matchedInfos) const ;	
 
-
-		int Count_ForwardAdjWord(const shared_ptr<DataCollection::Character> chara) const;
-		int Count_ForwardAdjWord(const shared_ptr<DataCollection::Word> word) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword) const;
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara) const;
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word) const;
-
 		//////////////////////////////////////////////////////////////////////////
 		//Collect new base concepts from the sample file <filePath>.
 		//The file should be POS tagged.

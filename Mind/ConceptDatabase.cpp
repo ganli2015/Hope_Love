@@ -87,8 +87,6 @@ namespace Mind
 
 	bool ConceptDatabase::HasWord(const shared_ptr<DataCollection::Word> word)
 	{
-		CheckConnect();
-
 		auto statements = CreateQryForTables();
 		for (int i = 0; i < statements.size(); ++i)
 		{
@@ -101,6 +99,45 @@ namespace Mind
 		auto rows = QueryForTables(statements);
 
 		return !rows.empty();
+	}
+
+	bool ConceptDatabase::HasString(const string wordStr)
+	{
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("word", wordStr);
+		}
+
+		auto rows = QueryForTables(statements);
+
+		return !rows.empty();
+	}
+
+	vector<shared_ptr<Concept>> ConceptDatabase::GetConceptsWithHead(const shared_ptr<DataCollection::Character> headChara)
+	{
+		string startChara = headChara->GetString();
+		//Query rows.
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.Like("word", StringFormat("%s%%",startChara.c_str()));
+		}
+		auto rows = QueryForTables(statements);
+
+		//Transform rows to concepts.
+		vector<shared_ptr<Concept>> res;
+		for (auto row : rows)
+		{
+			auto concept = this->_elemCreator->CreateConcept(row);
+			res.push_back(concept);
+		}
+
+		return res;
 	}
 
 	void ConceptDatabase::AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos)
@@ -140,11 +177,13 @@ namespace Mind
 
 	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
 	{
-		char state[100];
-		sprintf_s(state, "Select * from %s where word='%s'",
-			BaseConceptTable.c_str(), CommonTool::AsciiToUtf8(word).c_str());
+		auto statements = CreateQryForTables();
+		for (auto state : statements)
+		{
+			state.EQ("word", word);
+		}
 
-		return QueryRows(state);
+		return QueryForTables(statements);
 	}
 
 	vector<CommonTool::DBRow> ConceptDatabase::QueryForTables(const vector<CommonTool::QueryStatement>& statements)

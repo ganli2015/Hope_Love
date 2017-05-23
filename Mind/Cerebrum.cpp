@@ -66,46 +66,6 @@ namespace Mind
 		return IsInMind(word->GetString());
 	}
 
-	int Cerebrum::Count_ForwardAdjWord(const  shared_ptr<DataCollection::Character> chara ) const
-	{
-		return _conceptset->Count_ForwardAdjWord(chara);
-	}
-
-	int Cerebrum::Count_ForwardAdjWord(const  shared_ptr<DataCollection::Word> word ) const
-	{
-		return _conceptset->Count_ForwardAdjWord(word);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(chara,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(word,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord(const  shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(chara,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(word,adjword);
-	}
-
-	int Cerebrum::MaxLength_AdjacentWord( const shared_ptr<DataCollection::Character> chara ) const
-	{
-		return _conceptset->MaxLength_AdjacentWord(chara);
-	}
-
-	int Cerebrum::MaxLength_AdjacentWord( const shared_ptr<DataCollection::Word> word ) const
-	{
-		return _conceptset->MaxLength_AdjacentWord(word);
-	}
-
 	std::vector<shared_ptr<DataCollection::Word>> Cerebrum::GetAllKindsofWord( const shared_ptr<DataCollection::Word> word ) const
 	{
 		return _conceptset->GetAllKindsofWord(word);

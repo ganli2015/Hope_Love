@@ -9,6 +9,11 @@
 #include "ConceptInteractTable_MultiSet.h"
 #include "ConceptLevelTable.h"
 
+#include "../CommonTools/DBoperator.h"
+
+#include "../DataCollection/Word.h"
+#include "../DataCollection/LanguageFunc.h"
+
 namespace Mind
 {
 	MindElementCreator::MindElementCreator(void)
@@ -51,6 +56,19 @@ namespace Mind
 				return NULL;
 			}
 		}
+	}
+
+	shared_ptr<Concept> MindElementCreator::CreateConcept(const CommonTool::DBRow& dbRow) const
+	{
+		int id = dbRow.GetLong("id");
+		string wordStr = dbRow.GetText("word");
+		DataCollection::PartOfSpeech pos = (DataCollection::PartOfSpeech)dbRow.GetLong("pos");
+
+		shared_ptr<DataCollection::Word> word = DataCollection::LanguageFunc::GetParticularWord(wordStr, pos);
+		shared_ptr<Concept> concept = make_shared<Concept>(word);
+		concept->SetId(id);
+
+		return concept;
 	}
 
 	shared_ptr<BaseConcept> MindElementCreator::CreateBaseConcept(const shared_ptr<DataCollection::Word> word, const int conceptID, const int baseID) const

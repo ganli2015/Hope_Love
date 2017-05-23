@@ -12,11 +12,13 @@ namespace DataCollection
 {
 	enum PartOfSpeech;
 	class Word;
+	class Character;
 }
 
 namespace Mind
 {
 	class BaseConcept;
+	class Concept;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Database for Base Concept, NonBase Concept and Concept Connection.
@@ -52,6 +54,15 @@ namespace Mind
 		//Check if there is any concept with word <word>.
 		//////////////////////////////////////////////////////////////////////////
 		bool HasWord(const shared_ptr<DataCollection::Word> word);
+		//////////////////////////////////////////////////////////////////////////
+		//Check if there is any concept with string <wordStr>.
+		//////////////////////////////////////////////////////////////////////////
+		bool HasString(const string wordStr);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get all concepts whose word starts with <headChara>.
+		//////////////////////////////////////////////////////////////////////////
+		vector<shared_ptr<Concept>> GetConceptsWithHead(const shared_ptr<DataCollection::Character> headChara);
 
 	private:
 		vector<CommonTool::DBRow> QueryRows(const CommonTool::QueryStatement& cmd);

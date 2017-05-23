@@ -48,176 +48,13 @@ namespace Mind
 
 	bool ConceptSet::IsConceptExist( const std::string str ) const
 	{
-		if(_conceptset.find(str)!=_conceptset.end())
+		if (_conceptDB->HasString(str))
 			return true;
 		else if(LanguageFunc::IsPuncture(shared_ptr<Word>(new Word(str))))
 		{
 			return true;
 		}
 		else return false;
-	}
-
-	int ConceptSet::Count_ForwardAdjWord(const shared_ptr<DataCollection::Character> chara ) const
-	{
-		int count(0);
-
-		string str=chara->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-			return count;//count =0
-		else 
-		{
-			size_t step=_conceptset.count(str);
-			advance(it,step);
-			++count;
-			if(it==_conceptset.end())
-				return count;//count =1
-
-			do 
-			{
-				string str_next=it->first;
-				
-				if(ToInt(str[0])==ToInt(str_next[0]) && ToInt(str[1])==ToInt(str_next[1]))
-				{
-					++count;
-				}
-				else
-					break;
-
-				step=_conceptset.count(str_next);
-				advance(it,step);
-
-			} while (it!=_conceptset.end());
-		}
-
-		return count;
-	}
-
-	int ConceptSet::Count_ForwardAdjWord(const shared_ptr<DataCollection::Word> word ) const
-	{
-		int count(0);
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-			return count;//count =0
-		else 
-		{
-			size_t step=_conceptset.count(str);
-			advance(it,step);//跳过相同的str
-			++count;
-			if(it==_conceptset.end())
-				return count;//count =1
-
-			do 
-			{
-				string str_next=it->first;//取下一个同根字符串
-
-				if(str_next.size()<str.size())//默认长度是从小到大排列的
-				{
-					return count;
-				}
-
-				bool isAdj(true);//判断是否同根
-				for (size_t i=0;i<str.size();++i)
-				{
-					if(str[i]!=str_next[i])
-					{
-						isAdj=false;
-						break;
-					}
-				}
-
-				if(!isAdj)//不是同根的话立即跳出
-					break;
-				else
-				{
-					++count;
-				}
-				
-				step=_conceptset.count(str_next);
-				advance(it,step);//跳过相同的str_next
-			} while (it!=_conceptset.end());
-		}
-
-		return count;
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		GetForwardAdjWord(aword,adjword);
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword ) const
-	{
-		adjword.clear();
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-		{
-			return;
-		}
-
-		int num=Count_ForwardAdjWord(word);
-		for (int i=0;i<num;++i)
-		{
-			adjword.push_back(it->first);
-			size_t step=_conceptset.count(it->first);
-			advance(it,step);
-		}
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword ) const
-	{
-		adjword.clear();
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-		{
-			return;
-		}
-
-		int num=Count_ForwardAdjWord(word);
-		for (int i=0;i<num;++i)
-		{
-			Word aword(it->first);
-			adjword.push_back(aword);
-			size_t step=_conceptset.count(it->first);
-			advance(it,step);
-		}
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		GetForwardAdjWord(aword,adjword);
-	}
-
-	int ConceptSet::MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		int length=MaxLength_AdjacentWord(aword);
-		return length;
-	}
-
-	int ConceptSet::MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word ) const
-	{
-		vector<Word> adjword;
-		GetForwardAdjWord(word,adjword);
-		int maxLength(0);
-		for (size_t i=0;i<adjword.size();++i)
-		{
-			int curlength=adjword[i].NumOfChara();
-			if(curlength>maxLength)
-			{
-				maxLength=curlength;
-			}
-		}
-
-		return maxLength;
 	}
 
 	void ConceptSet::CollectNewBaseConcepts(const string filePath)
@@ -231,19 +68,18 @@ namespace Mind
 
 	int ConceptSet::MaxLength_WordWithHead(const shared_ptr<DataCollection::Character> headChara) const
 	{
-		int maxLength=0;
-		string str=headChara->GetString();
-		for (const_conceptIter it=_conceptset.begin();it!=_conceptset.end();++it)
+		//Get all concepts with head <headChara>.
+		auto conceptsWithHead = _conceptDB->GetConceptsWithHead(headChara);
+
+		int maxLength = 0;
+		for (auto concept : conceptsWithHead)
 		{
-			string conceptStr=it->first;
-			if(str[0]==conceptStr[0] && str[1]==conceptStr[1])//第一个字是否相同
+			auto word = concept->GetWord();
+			auto length = word->NumOfChara();
+			if (length > maxLength)
 			{
-				int length=it->second->GetWord()->NumOfChara();
-				if(length>maxLength)
-				{
-					maxLength=length;
-				}
-			}			
+				maxLength = length;
+			}
 		}
 
 		return maxLength;

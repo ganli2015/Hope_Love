@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DBoperator.h"
 #include "CommonStringFunction.h"
+#include "LogWriter.h"
 
 #include <sqlite3pp/sqlite3pp.h>
 
@@ -110,8 +111,9 @@ namespace CommonTool
 			//Add data to rows.
 			ParseQry(_qry.get());
 		}
-		catch (const std::exception&)
+		catch (const std::exception& ex)
 		{
+			LOG_EXCEPTION(ex);
 		}
 	}
 

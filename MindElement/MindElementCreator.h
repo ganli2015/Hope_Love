@@ -2,9 +2,15 @@
 #include "InOut.h"
 #include "../MindInterface/iMindElementCreator.h"
 
+namespace CommonTool
+{
+	class DBRow;
+}
+
 namespace Mind
 {
 	class BaseConcept;
+	class Concept;
 
 	class _MINDELEMENTINOUT MindElementCreator : public iMindElementCreatorImp
 	{
@@ -14,6 +20,7 @@ namespace Mind
 
 		virtual shared_ptr<iConcept> CreateConcept(const ElementType type) const ;
 		virtual shared_ptr<iConcept> CreateConcept(const shared_ptr<DataCollection::Word> word,const ElementType type) const ;
+		virtual shared_ptr<Concept> CreateConcept(const CommonTool::DBRow& dbRow) const;
 		//////////////////////////////////////////////////////////////////////////
 		//conceptID: ID for concept with the same word.
 		//baseID: ID fro base concept.

@@ -35,6 +35,7 @@
 
 #include "../UTFacility/MockExpression.h"
 #include "../UTFacility/ConceptTableCreator.h"
+#include "../UTFacility/MockiCerebrum.h"
 
 using namespace std;
 using namespace Math;
@@ -61,6 +62,28 @@ namespace Mind
 		auto words=iCerebrum::Instance()->GetAllKindsofWord(word);
 		ASSERT_TRUE(!words.empty());
 		ASSERT_TRUE(words.front()->GetString()== "”");
+	}
+
+	TEST_F(Test_Cerebrum, FindConceptWithMatchedDisc)
+	{
+		shared_ptr<ConceptTableCreator> tableCreator(new ConceptTableCreator());
+
+		shared_ptr<iConceptInteractTable> inputTable = tableCreator->SimpleCreate("二-加,加-一");
+
+		vector<DescMatchedConceptInfo> matchedInfo;
+		iCerebrum::Instance()->FindConceptWithMatchedDisc(inputTable, matchedInfo);
+
+		ASSERT_EQ(matchedInfo.size(), 1);
+		ASSERT_EQ(matchedInfo.front().matchedConcept->GetString(), "三");
+	}
+
+	TEST_F(Test_Cerebrum, MaxLength_WordWithHead)
+	{
+		auto headChara = make_shared<Character>("当");
+		auto length = iCerebrum::Instance()->MaxLength_WordWithHead(headChara);
+
+		//Two words in database : 当，当然
+		ASSERT_EQ(2, length);
 	}
 
 	TEST(Test_ConceptSetInitializer,ParseStrToConnectionInfo)
@@ -158,19 +181,6 @@ namespace Mind
 		iCerebrum::KillInstance();
 	}
 
-	TEST_F(Test_Cerebrum,FindConceptWithMatchedDisc)
-	{
-		shared_ptr<ConceptTableCreator> tableCreator(new ConceptTableCreator());
-
-		shared_ptr<iConceptInteractTable> inputTable=tableCreator->SimpleCreate("二-加,加-一");
-
-		vector<DescMatchedConceptInfo> matchedInfo;
-		iCerebrum::Instance()->FindConceptWithMatchedDisc(inputTable,matchedInfo);
-
-		ASSERT_EQ(matchedInfo.size(),1);
-		ASSERT_EQ(matchedInfo.front().matchedConcept->GetString(),"三");
-	}
-
 	Mind::Connection_Info Test_Mind::ParseStrToConnectionInfo( const string line,const Mind::ConceptSet* conceptSet )
 	{
 		return ConceptSetInitializer::ParseStrToConnectionInfo(line,conceptSet);
@@ -198,7 +208,6 @@ namespace Mind
 
 		return res;
 	}
-
 }
 
 
