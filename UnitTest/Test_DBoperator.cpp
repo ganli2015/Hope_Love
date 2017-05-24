@@ -124,3 +124,13 @@ TEST(Test_DBoperator, ttt)
 // 	string wwas = Utf8ToAscii(rows[0].GetText("word"));
 	//ASSERT_EQ(4, qry.RowCount());
 }
+
+CommonTool::Test_DBoperator::Test_DBoperator()
+{
+
+}
+
+CommonTool::Test_DBoperator::~Test_DBoperator()
+{
+
+}

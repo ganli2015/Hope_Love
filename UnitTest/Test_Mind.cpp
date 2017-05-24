@@ -86,6 +86,22 @@ namespace Mind
 		ASSERT_EQ(2, length);
 	}
 
+	TEST_F(Test_Cerebrum, GetAllKindsofWord)
+	{
+		shared_ptr<Word> word = make_shared<Word>("û");
+		auto allWords = iCerebrum::Instance()->GetAllKindsofWord(word);
+
+		ASSERT_EQ(2, allWords.size());
+
+		auto word1 = allWords[0];
+		ASSERT_EQ("û", word1->GetString());
+		ASSERT_EQ(Auxiliary, word1->Type());
+
+		auto word2 = allWords[1];
+		ASSERT_EQ("û", word2->GetString());
+		ASSERT_EQ(Adverb, word2->Type());
+	}
+
 	TEST(Test_ConceptSetInitializer,ParseStrToConnectionInfo)
 	{
 		MEMOCHECK;

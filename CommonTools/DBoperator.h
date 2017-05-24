@@ -76,6 +76,8 @@ namespace CommonTool
 		map<string, string> _strType;
 
 		friend class DBQry;
+
+		friend class Test_DBoperator;
 	public:
 		template<class T>
 		struct ReturnTrait
@@ -87,6 +89,7 @@ namespace CommonTool
 		DBRow();
 		~DBRow();
 
+		bool HasColumn(const string colName) const;
 
 		long GetLong(const string colName) const;
 		string GetText(const string colName) const;

@@ -39,11 +39,20 @@ namespace Mind
 		//ID and base ID will be automatically computed.
 		//////////////////////////////////////////////////////////////////////////
 		void AddBaseConcept(const shared_ptr<DataCollection::Word> word);
+		//////////////////////////////////////////////////////////////////////////
+		//Add non base concept.
+		//ID will be automatically computed.
+		//////////////////////////////////////////////////////////////////////////
+		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word);
 
 		//////////////////////////////////////////////////////////////////////////
 		//<index> is the index in database.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<BaseConcept> ReadBaseConcept(const long index);
+		shared_ptr<BaseConcept> GetBaseConcept(const long index);
+		//////////////////////////////////////////////////////////////////////////
+		//<id> is the ID of concepts with same words.
+		//////////////////////////////////////////////////////////////////////////
+		shared_ptr<Concept> GetNonBaseConcept(const int id,const string word);
 		
 		//////////////////////////////////////////////////////////////////////////
 		//Get total count of base concept.
@@ -64,12 +73,19 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		vector<shared_ptr<Concept>> GetConceptsWithHead(const shared_ptr<DataCollection::Character> headChara);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Get all concepts whose word string is <word>.
+		//////////////////////////////////////////////////////////////////////////
+		vector<shared_ptr<Concept>> GetConceptsWithWord(const string word);
+
 	private:
 		vector<CommonTool::DBRow> QueryRows(const CommonTool::QueryStatement& cmd);
 		vector<CommonTool::DBRow> QueryRows(const string& cmd);
 
 		void AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos);
+		void AddNonBaseConcept(const int id, const string word, const DataCollection::PartOfSpeech pos);
 		CommonTool::DBRow GetBaseConceptRow(const long index);
+		CommonTool::DBRow GetNonBaseConceptRow(const int id, const string word);
 
 		vector<CommonTool::DBRow> GetRowsWithWord(const string word);
 

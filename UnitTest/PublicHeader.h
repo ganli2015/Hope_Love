@@ -15,3 +15,7 @@
 #include "../CommonTools/assertions.h"
 
 using namespace std;
+
+//Output message of expect and result when assert is failed.
+#define EXPECT_RESULT(expect,result)  "Expect : " << expect<<"	"\
+<< "Result type: %s." << result

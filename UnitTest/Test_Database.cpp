@@ -110,12 +110,51 @@ namespace Mind
 
 		db->AddBaseConcept(concept);
 
-		auto getConcept = db->ReadBaseConcept(index);
+		auto getConcept = db->GetBaseConcept(index);
 
 		ASSERT_EQ(index, getConcept->GetBaseId());
 		ASSERT_EQ(id, getConcept->GetId());
 		ASSERT_EQ(wordStr, getConcept->GetString());
 		ASSERT_EQ(pos, getConcept->GetPartOfSpeech());
+	}
+
+	TEST_F(Test_Database, ReadWriteNonBaseConcept)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+
+		auto word= LanguageFunc::GetParticularWord("Äã", Pronoun);
+
+		db->AddNonBaseConcept(word);
+		auto concept = db->GetNonBaseConcept(0, "Äã");
+
+		ASSERT_EQ("Äã", concept->GetString());
+		ASSERT_EQ(Pronoun, concept->GetPartOfSpeech());
+
+		try
+		{
+			auto concept = db->GetNonBaseConcept(1, "Äã");
+		}
+		catch (const std::exception&)
+		{
+			//Get exception when the id is invalid.
+			SUCCEED();
+		}
+	}
+
+	TEST_F(Test_Database, ReadWriteNonBaseConcept_IDAutomaticallyIncrease)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+
+		auto word = LanguageFunc::GetParticularWord("Äã", Pronoun);
+
+		db->AddNonBaseConcept(word);
+		db->AddNonBaseConcept(word);//Same word.Id will be increased by one.
+		auto concept = db->GetNonBaseConcept(1, "Äã");
+
+		//Concept with id 1 can be read from database.
+		ASSERT_TRUE(concept != NULL);
 	}
 
 	TEST_F(Test_Database, GetBaseConceptCount)
@@ -179,6 +218,27 @@ namespace Mind
 			auto startChara = concept->GetWord()->GetFirstCharacter();
 			ASSERT_TRUE(startChara.IsSame(*chara));
 		}
+	}
+
+	TEST_F(Test_Database, GetConceptsWithWord)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddBaseConceptToDB_WO(db);//Pronoun 
+		AddBaseConceptToDB_WO_Noun(db);//Noun
+		AddBaseConceptToDB_NIHAO(db);
+
+		auto concepts = db->GetConceptsWithWord("ÎÒ");
+
+		ASSERT_EQ(2, concepts.size());
+
+		auto word1 = concepts[0]->GetWord();
+		ASSERT_EQ("ÎÒ", word1->GetString());
+		ASSERT_EQ(Pronoun, word1->Type());
+
+		auto word2 = concepts[1]->GetWord();
+		ASSERT_EQ("ÎÒ", word2->GetString());
+		ASSERT_EQ(Noun, word2->Type());
 	}
 
 	void Test_Database::SetUpTestCase()
@@ -249,6 +309,16 @@ namespace Mind
 		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
 		concept->SetBaseId(3);
 		concept->SetId(0);
+
+		db->AddBaseConcept(concept);
+	}
+
+	void Test_Database::AddBaseConceptToDB_WO_Noun(ConceptDatabase *db)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("ÎÒ", Noun);
+		shared_ptr<BaseConcept> concept = make_shared<BaseConcept>(word);
+		concept->SetBaseId(4);
+		concept->SetId(1);
 
 		db->AddBaseConcept(concept);
 	}

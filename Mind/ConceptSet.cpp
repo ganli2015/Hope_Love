@@ -120,27 +120,16 @@ namespace Mind
 		}
 
 		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		
-		vector<shared_ptr<Word>> rep;
-		if(it==_conceptset.end())
+		//Get all concepts with word <str>.
+		auto concepts = _conceptDB->GetConceptsWithWord(str);
+		//Collect words in concepts.
+		vector<shared_ptr<Word>> res;
+		for (auto concept : concepts)
 		{
-			return rep;
+			res.push_back(concept->GetWord());
 		}
 
-		const_conceptIter beg=_conceptset.lower_bound(str);
-		const_conceptIter end=_conceptset.upper_bound(str);
-		while(beg!=end)
-		{
-			shared_ptr<Word> aword=LanguageFunc::GetParticularWord(str,beg->second->GetPartOfSpeech());
-			if(aword!=NULL)
-			{
-				rep.push_back(aword);
-			}
-			beg++;
-		}
-
-		return rep;
+		return res;
 	}
 
 	vector<shared_ptr<iConcept>> ConceptSet::SearchForwardConcepts( const shared_ptr<iConcept> concept ) const
@@ -436,7 +425,7 @@ namespace Mind
 
 	shared_ptr<BaseConcept> ConceptSet::GetBaseConcept( const int id ) const
 	{
-		return _conceptDB->ReadBaseConcept(id);
+		return _conceptDB->GetBaseConcept(id);
 	}
 
 	shared_ptr<iConcept> ConceptSet::GetConceptPtr( const shared_ptr<DataCollection::Word> word ) const

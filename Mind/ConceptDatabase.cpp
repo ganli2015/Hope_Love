@@ -58,7 +58,26 @@ namespace Mind
 		AddBaseConcept(baseID, maxID + 1, word->GetString(), word->Type());
 	}
 
-	shared_ptr<BaseConcept> ConceptDatabase::ReadBaseConcept(const long index)
+	void ConceptDatabase::AddNonBaseConcept(const shared_ptr<DataCollection::Word> word)
+	{
+		//Compute the max ID of concepts with word <word>.
+		//And the newly added concept'ID is the max ID increased by one.
+
+		auto conceptWithWords = GetConceptsWithWord(word->GetString());
+		int maxID = -1;//If there is no concepts, the new ID is automatically zero.
+		for (auto concept : conceptWithWords)
+		{
+			auto id = concept->GetId();
+			if (id > maxID)
+			{
+				maxID = id;
+			}
+		}
+
+		AddNonBaseConcept(maxID + 1, word->GetString(), word->Type());
+	}
+
+	shared_ptr<BaseConcept> ConceptDatabase::GetBaseConcept(const long index)
 	{
 		CheckConnect();
 		//Get data from row.
@@ -72,6 +91,15 @@ namespace Mind
 		shared_ptr<Word> word = LanguageFunc::GetParticularWord(wordStr, pos);
 		shared_ptr<BaseConcept> concept = this->_elemCreator->CreateBaseConcept(word, id, baseID);
 		return concept;
+	}
+
+	shared_ptr<Concept> ConceptDatabase::GetNonBaseConcept(const int id, const string word)
+	{
+		CheckConnect();
+
+		auto row = GetNonBaseConceptRow(id, word);
+
+		return _elemCreator->CreateConcept(row);
 	}
 
 	size_t ConceptDatabase::GetBaseConceptCount()
@@ -140,6 +168,29 @@ namespace Mind
 		return res;
 	}
 
+	vector<shared_ptr<Concept>> ConceptDatabase::GetConceptsWithWord(const string word)
+	{
+		//Query rows.
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("word", word);
+		}
+		auto rows = QueryForTables(statements);
+
+		//Transform rows to concepts.
+		vector<shared_ptr<Concept>> res;
+		for (auto row : rows)
+		{
+			auto concept = this->_elemCreator->CreateConcept(row);
+			res.push_back(concept);
+		}
+
+		return res;
+	}
+
 	void ConceptDatabase::AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos)
 	{
 		CheckConnect();
@@ -154,6 +205,21 @@ namespace Mind
 		cmd.Bind(":word", CommonTool::AsciiToUtf8(word));
 		cmd.Bind(":pos", (int)pos);
 		
+		cmd.Execute();
+	}
+
+	void ConceptDatabase::AddNonBaseConcept(const int id, const string word, const DataCollection::PartOfSpeech pos)
+	{
+		CheckConnect();
+
+		string state = StringFormat("Insert into %s(id, word, pos)\
+			VALUES(:id, :word, :pos) ", NonBaseConceptTable.c_str());
+
+		DBCmd cmd(state, *_db);
+		cmd.Bind(":id", id);
+		cmd.Bind(":word", CommonTool::AsciiToUtf8(word));
+		cmd.Bind(":pos", (int)pos);
+
 		cmd.Execute();
 	}
 
@@ -174,6 +240,24 @@ namespace Mind
 		}
 	}
 
+
+	CommonTool::DBRow ConceptDatabase::GetNonBaseConceptRow(const int id, const string word)
+	{
+		QueryStatement state(NonBaseConceptTable);
+		state.EQ("id", id);
+		state.EQ("word", word);
+
+		auto rows = QueryRows(state);
+		if (rows.size() == 1)
+		{
+			//get unique value.
+			return rows.front();
+		}
+		else
+		{
+			throw runtime_error("Invalid word: " + word);
+		}
+	}
 
 	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
 	{

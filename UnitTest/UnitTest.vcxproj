@@ -241,6 +241,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="Test_LogicSystem.h" />
     <ClInclude Include="Test_Mathmatic.h" />
     <ClInclude Include="Test_Mind.h" />
+    <ClInclude Include="Test_MindElementCreator.h" />
     <ClInclude Include="Test_NeuralNetworkDesign.h" />
     <ClInclude Include="Test_NumericalOptimization.h" />
     <ClInclude Include="Test_ReactionAnalysisAlgorithm.h" />
@@ -274,6 +275,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClCompile Include="Test_LogicSystem.cpp" />
     <ClCompile Include="Test_Mathmatic.cpp" />
     <ClCompile Include="Test_Mind.cpp" />
+    <ClCompile Include="Test_MindElementCreator.cpp" />
     <ClCompile Include="Test_NeuralNetworkDesign.cpp" />
     <ClCompile Include="Test_NumericalOptimization.cpp" />
     <ClCompile Include="Test_ReactionAnalysisAlgorithm.cpp" />

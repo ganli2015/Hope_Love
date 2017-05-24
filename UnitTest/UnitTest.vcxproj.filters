@@ -122,6 +122,9 @@
     <ClInclude Include="Test_Database.h">
       <Filter>Mind</Filter>
     </ClInclude>
+    <ClInclude Include="Test_MindElementCreator.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -203,6 +206,9 @@
       <Filter>Mind</Filter>
     </ClCompile>
     <ClCompile Include="Test_Database.cpp">
+      <Filter>Mind</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_MindElementCreator.cpp">
       <Filter>Mind</Filter>
     </ClCompile>
   </ItemGroup>

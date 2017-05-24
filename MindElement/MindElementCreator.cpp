@@ -60,13 +60,28 @@ namespace Mind
 
 	shared_ptr<Concept> MindElementCreator::CreateConcept(const CommonTool::DBRow& dbRow) const
 	{
+		//Get common parameters.
 		int id = dbRow.GetLong("id");
 		string wordStr = dbRow.GetText("word");
 		DataCollection::PartOfSpeech pos = (DataCollection::PartOfSpeech)dbRow.GetLong("pos");
-
 		shared_ptr<DataCollection::Word> word = DataCollection::LanguageFunc::GetParticularWord(wordStr, pos);
-		shared_ptr<Concept> concept = make_shared<Concept>(word);
-		concept->SetId(id);
+
+		shared_ptr<Concept> concept;
+		//Check type of row.
+		if (dbRow.HasColumn("baseID"))
+		{
+			//It is base concept.
+
+			auto baseID = dbRow.GetLong("baseID");
+			concept = CreateBaseConcept(word, id, baseID);
+		}
+		else
+		{
+			//It is non base concept.
+
+			concept = make_shared<Concept>(word);
+			concept->SetId(id);
+		}
 
 		return concept;
 	}

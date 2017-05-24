@@ -160,6 +160,18 @@ namespace CommonTool
 	{
 	}
 
+	bool DBRow::HasColumn(const string colName) const
+	{
+		if (_strType.count(colName) == 0 && _longType.count(colName) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	void DBRow::Insert(const string colName, const long val)
 	{
 		_longType[colName]=val;
