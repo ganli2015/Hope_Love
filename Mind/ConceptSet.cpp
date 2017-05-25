@@ -158,48 +158,14 @@ namespace Mind
 
 	void ConceptSet::AddConcept(const shared_ptr<DataCollection::Word> word)
 	{
-		string str=word->GetString();
-		if(_conceptset.find(str)==_conceptset.end())
-		{
-			_conceptset.insert(make_pair(str,shared_ptr<Concept>(new Concept(word))));
-		}
-		else//如果存在这个字符串的单词，判断是否已经存在该词性单词的Concept。
-			//如果是，则抛出异常；否则新添加这个单词的Concept，其id为当前的最大id+1.
-		{
-			conceptIter beg=_conceptset.lower_bound(str);
-			conceptIter end=_conceptset.upper_bound(str);
-			int maxId(-1);
-			while(beg!=end)
-			{
-				if(word->Type()==beg->second->GetPartOfSpeech())
-				{
-					throw runtime_error("Error in AddConcept:One POS of the word can only have one concept!");
-				}
-
-				int id=beg->second->GetId();
-				if(id>maxId)
-				{
-					maxId=id;
-				}
-				beg++;
-			}
-			assert(maxId>=0);
-
-			shared_ptr<Concept> newConcept(new Concept(word));
-			newConcept->SetId(maxId+1);
-			_conceptset.insert(make_pair(str,newConcept));
-		}
+		_conceptDB->AddNonBaseConcept(word);
 	}
 
 	void ConceptSet::AddConcept(const shared_ptr<DataCollection::Word> word,int id)
 	{
-		CheckWordIDExist(word,id,_conceptset);			
+		CheckWordIDExist(word,id);			
 
-		shared_ptr<Concept> newConcept(new Concept(word));
-		newConcept->SetId(id);
-		string str=word->GetString();
-		_conceptset.insert(make_pair(str,newConcept));
-
+		_conceptDB->AddNonBaseConcept(word, id);
 	}
 
 	void ConceptSet::AddBaseConcept(const shared_ptr<DataCollection::Word> word,int id )
@@ -212,26 +178,11 @@ namespace Mind
 		_conceptDB->AddBaseConcept(newConcept);
 
 		//Add to _conceptset
-		CheckWordIDExist(word,id,_conceptset);
-		_conceptset.insert(make_pair(str,newConcept));
+		AddConcept(word, id);
 	}
 
 	void ConceptSet::MakeConnection( const shared_ptr<Word> from,const shared_ptr<Word> to )
 	{
-// 		Concept fromConcept,toConcept;
-// 		if(!GetConcept(from,fromConcept) || !GetConcept(to,toConcept))
-// 		{
-// 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
-// 		}
-// 
-// 		if(from->Type()!=to->Type() && to->Type()!=Noun)
-// 		{
-// 			throw runtime_error("Error in MakeConnection: POS not matched!");
-// 		}
-// 
-// 		Identity fromIdentity=GetIdentity(fromConcept);
-// 		Identity toIdentity=GetIdentity(toConcept);
-		
 		shared_ptr<Concept> pfromConcept=GetConceptRef(from);
 		shared_ptr<Concept> ptoConcept=GetConceptRef(to);
 		if(pfromConcept==NULL || ptoConcept==NULL)
@@ -272,44 +223,12 @@ namespace Mind
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef(const shared_ptr<DataCollection::Word> word) const 
 	{
-		const_conceptIter beg=_conceptset.lower_bound(word->GetString());
-		const_conceptIter end=_conceptset.upper_bound(word->GetString());
-		if(beg==_conceptset.end() && end==_conceptset.end())
-		{
-			return false;
-		}
-
-		while(beg!=end)
-		{
-			if(beg->second->GetPartOfSpeech()==word->Type())
-			{
-				return beg->second;
-			}
-			beg++;
-		}
-
-		return NULL;
+		return _conceptDB->GetConcept(word);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef( const Identity identity ) const
 	{
-		const_conceptIter beg=_conceptset.lower_bound(identity.str);
-		const_conceptIter end=_conceptset.upper_bound(identity.str);
-		if(beg==_conceptset.end() && end==_conceptset.end())
-		{
-			return NULL;
-		}
-
-		while(beg!=end)
-		{
-			if(beg->second->GetId()==identity.id)
-			{
-				return beg->second;
-			}
-			beg++;
-		}
-
-		return NULL;
+		return _conceptDB->GetConcept(identity.str, identity.id);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef(const shared_ptr<iConcept> concept) const 
@@ -370,35 +289,27 @@ namespace Mind
 	{
 		vector<shared_ptr<Word>> res;
 
-		for (const_conceptIter iter=_conceptset.begin();iter!=_conceptset.end();++iter)
+		auto conceptsWithPOS = _conceptDB->GetConceptsWithPOS(pos);
+		for (auto concept : conceptsWithPOS)
 		{
-			if(iter->second->GetPartOfSpeech()==pos)
-			{
-				res.push_back(iter->second->GetWord());
-			}
+			res.push_back(concept->GetWord());
 		}
 
 		return res;
 	}
 
-	void ConceptSet::CheckWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const ConceptMap& conceptset )
+	void ConceptSet::CheckWordIDExist(const shared_ptr<DataCollection::Word> word, const int id )
 	{
 		string str=word->GetString();
-		const_conceptIter beg=conceptset.lower_bound(str);
-		const_conceptIter end=conceptset.upper_bound(str);
-		while(beg!=end)
-		{
-			if(word->Type()==beg->second->GetPartOfSpeech())
-			{
-				throw runtime_error("Error in AddConcept:One POS of the word can only have one concept! Error word: "+word->GetString());
-			}
+		//get concepts with same string.
+		auto concepts = _conceptDB->GetConceptsWithWord(str);
 
-			int id_exist=beg->second->GetId();
-			if(id==id_exist)
+		for (auto concept : concepts)
+		{
+			if (concept->GetWord()->IsSame(word) && concept->GetId() == id)
 			{
-				throw logic_error("Error in AddConcept: id exists!");
+				throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", str.c_str(), id));
 			}
-			beg++;
 		}
 	}
 

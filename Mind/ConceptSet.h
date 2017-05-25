@@ -97,7 +97,7 @@ namespace Mind
 		shared_ptr<Concept> GetConceptRef(const shared_ptr<iConcept> concept) const ;
 
 		Identity GetIdentity(const Concept& concept) const;
-		void CheckWordIDExist(const shared_ptr<DataCollection::Word> word,const int id,const ConceptMap& conceptset);
+		void CheckWordIDExist(const shared_ptr<DataCollection::Word> word,const int id);
 		void CheckBaseWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const BaseConceptMap& conceptset );
 
 	};

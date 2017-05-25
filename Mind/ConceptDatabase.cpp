@@ -77,6 +77,11 @@ namespace Mind
 		AddNonBaseConcept(maxID + 1, word->GetString(), word->Type());
 	}
 
+	void ConceptDatabase::AddNonBaseConcept(const shared_ptr<DataCollection::Word> word, const int id)
+	{
+		AddNonBaseConcept(id, word->GetString(), word->Type());
+	}
+
 	shared_ptr<BaseConcept> ConceptDatabase::GetBaseConcept(const long index)
 	{
 		CheckConnect();
@@ -102,6 +107,46 @@ namespace Mind
 		return _elemCreator->CreateConcept(row);
 	}
 
+	shared_ptr<Concept> ConceptDatabase::GetConcept(const shared_ptr<DataCollection::Word> word)
+	{
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("word", word->GetString());
+			state.EQ("pos", word->Type());
+		}
+
+		auto rows = QueryForTables(statements);
+		if (rows.empty())
+			return NULL;
+		else
+		{
+			return _elemCreator->CreateConcept(rows.front());
+		}
+	}
+
+	shared_ptr<Concept> ConceptDatabase::GetConcept(const string word, const int id)
+	{
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("word", word);
+			state.EQ("id", id);
+		}
+
+		auto rows = QueryForTables(statements);
+		if (rows.empty())
+			return NULL;
+		else
+		{
+			return _elemCreator->CreateConcept(rows.front());
+		}
+	}
+
 	size_t ConceptDatabase::GetBaseConceptCount()
 	{
 		CheckConnect();
@@ -115,18 +160,9 @@ namespace Mind
 
 	bool ConceptDatabase::HasWord(const shared_ptr<DataCollection::Word> word)
 	{
-		auto statements = CreateQryForTables();
-		for (int i = 0; i < statements.size(); ++i)
-		{
-			auto &state = statements[i];
+		auto concept = GetConcept(word);
 
-			state.EQ("word", word->GetString());
-			state.EQ("pos", word->Type());
-		}
-
-		auto rows = QueryForTables(statements);
-
-		return !rows.empty();
+		return concept != NULL;
 	}
 
 	bool ConceptDatabase::HasString(const string wordStr)
@@ -177,6 +213,28 @@ namespace Mind
 			auto &state = statements[i];
 
 			state.EQ("word", word);
+		}
+		auto rows = QueryForTables(statements);
+
+		//Transform rows to concepts.
+		vector<shared_ptr<Concept>> res;
+		for (auto row : rows)
+		{
+			auto concept = this->_elemCreator->CreateConcept(row);
+			res.push_back(concept);
+		}
+
+		return res;
+	}
+
+	vector<shared_ptr<Concept>> ConceptDatabase::GetConceptsWithPOS(const DataCollection::PartOfSpeech pos)
+	{
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("pos", pos);
 		}
 		auto rows = QueryForTables(statements);
 
