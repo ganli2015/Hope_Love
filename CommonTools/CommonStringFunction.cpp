@@ -7,6 +7,8 @@
 
 #include <functional>
 
+#include <hashlibpp.h>
+
 namespace CommonTool
 {
 	vector<string> SplitString( const string& str, const char splitTag )
@@ -146,6 +148,17 @@ namespace CommonTool
 		va_end(args);
 
 		return buff;
+	}
+
+	string GenerateID(const string str)
+	{
+		hashwrapper *myWrapper = new md5wrapper();
+		string res = myWrapper->getHashFromString(str);
+
+		delete myWrapper;
+		myWrapper = NULL;
+
+		return res;
 	}
 
 }

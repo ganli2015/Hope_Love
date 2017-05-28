@@ -59,14 +59,14 @@
     <ClInclude Include="MemoryDetector.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="DBoperator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DatabaseTrait.h">
+    <ClInclude Include="QueryStatement.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="QueryStatement.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="DBoperator.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateStatement.h">
+      <Filter>Database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,11 +109,14 @@
     <ClCompile Include="MemoryDetector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="DBoperator.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="QueryStatement.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBoperator.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateStatement.cpp">
+      <Filter>Database</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

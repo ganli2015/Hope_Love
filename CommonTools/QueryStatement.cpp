@@ -5,19 +5,82 @@
 
 namespace CommonTool
 {
-	QueryStatement::QueryStatement(const string tableName) :_tableName(tableName)
+	QueryStatement::QueryStatement(const string tableName) :_tableName(tableName),_constraint(new ConstraintStatement())
 	{
 	}
 
 
 	QueryStatement::~QueryStatement()
 	{
+		delete _constraint;
 	}
 
 	string QueryStatement::GetString() const
 	{
 		//Create head.
 		string res = StringFormat("Select * from %s ", _tableName.c_str());
+
+		res += _constraint->GetString();
+
+		return res;
+	}
+
+	void QueryStatement::EQ(const string fieldName, const string val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void QueryStatement::EQ(const string fieldName, const int val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void QueryStatement::EQ(const string fieldName, const long val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void QueryStatement::Like(const string fieldName, const string format)
+	{
+		_constraint->Like(fieldName, format);
+	}
+
+
+
+
+	void ConstraintStatement::EQ(const string fieldName, const string val)
+	{
+		_eqConditionsString.push_back(make_pair(fieldName, val));
+	}
+
+	void ConstraintStatement::EQ(const string fieldName, const int val)
+	{
+		_eqConditionsInt.push_back(make_pair(fieldName, val));
+	}
+
+	void ConstraintStatement::EQ(const string fieldName, const long val)
+	{
+		_eqConditionsLong.push_back(make_pair(fieldName, val));
+	}
+
+	void ConstraintStatement::Like(const string fieldName, const string format)
+	{
+		_likeConditions.push_back(make_pair(fieldName, format));
+	}
+
+	ConstraintStatement::ConstraintStatement()
+	{
+
+	}
+
+	ConstraintStatement::~ConstraintStatement()
+	{
+
+	}
+
+	std::string ConstraintStatement::GetString() const
+	{
+		string res = "";
 
 		vector<string> conditions;//All constraint terms.
 
@@ -49,6 +112,7 @@ namespace CommonTool
 			conditions.push_back(append);
 		}
 
+
 		if (conditions.empty())
 		{
 			return res;
@@ -57,7 +121,7 @@ namespace CommonTool
 		{
 			res += "where ";
 
-			//Join like constraints.
+			//Join all constraints.
 			for (int i = 0; i < conditions.size(); ++i)
 			{
 				res += " " + conditions[i] + " ";
@@ -69,26 +133,6 @@ namespace CommonTool
 
 			return res;
 		}
-	}
-
-	void QueryStatement::EQ(const string fieldName, const string val)
-	{
-		_eqConditionsString.push_back(make_pair(fieldName, val));
-	}
-
-	void QueryStatement::EQ(const string fieldName, const int val)
-	{
-		_eqConditionsInt.push_back(make_pair(fieldName, val));
-	}
-
-	void QueryStatement::EQ(const string fieldName, const long val)
-	{
-		_eqConditionsLong.push_back(make_pair(fieldName, val));
-	}
-
-	void QueryStatement::Like(const string fieldName, const string format)
-	{
-		_likeConditions.push_back(make_pair(fieldName, format));
 	}
 
 }

@@ -3,6 +3,8 @@
 
 namespace CommonTool
 {
+	class ConstraintStatement;
+
 	//////////////////////////////////////////////////////////////////////////
 	//Statement of query for database.
 	//////////////////////////////////////////////////////////////////////////
@@ -10,12 +12,7 @@ namespace CommonTool
 	{
 		string _tableName;
 
-		//Equality constraints.Key is field name.
-		vector<pair<string, string>> _eqConditionsString;
-		vector<pair<string, int>> _eqConditionsInt;
-		vector<pair<string, long>> _eqConditionsLong;
-		//Like constraints.
-		vector<pair<string, string>> _likeConditions;//key is field name and value is like format.
+		ConstraintStatement* _constraint;
 
 	public:
 		QueryStatement(const string tableName);
@@ -36,9 +33,34 @@ namespace CommonTool
 		void EQ(const string fieldName, const long val);
 
 		//////////////////////////////////////////////////////////////////////////
-		//Only one Like contraint will be set.
+		//Only one Like constraint will be set.
 		//////////////////////////////////////////////////////////////////////////
 		void Like(const string fieldName,const string format);
+	};
+
+	class ConstraintStatement
+	{
+		//Equality constraints.Key is field name.
+		vector<pair<string, string>> _eqConditionsString;
+		vector<pair<string, int>> _eqConditionsInt;
+		vector<pair<string, long>> _eqConditionsLong;
+		//Like constraints.
+		vector<pair<string, string>> _likeConditions;//key is field name and value is like format.
+
+	public:
+		ConstraintStatement();
+		~ConstraintStatement();
+
+		//////////////////////////////////////////////////////////////////////////
+		//The statement start with 'where'.
+		//////////////////////////////////////////////////////////////////////////
+		string GetString() const;
+
+		void EQ(const string fieldName, const string val);
+		void EQ(const string fieldName, const int val);
+		void EQ(const string fieldName, const long val);
+
+		void Like(const string fieldName, const string format);
 	};
 }
 
