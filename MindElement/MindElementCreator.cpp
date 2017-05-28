@@ -95,6 +95,22 @@ namespace Mind
 		return newConcept;
 	}
 
+	shared_ptr<BaseConcept> MindElementCreator::CreateBaseConcept(const CommonTool::DBRow& dbRow) const
+	{
+		long baseID = dbRow.GetLong("baseID");
+		int id = dbRow.GetLong("id");
+		string wordStr = dbRow.GetText("word");
+		auto pos = (DataCollection::PartOfSpeech)dbRow.GetLong("pos");
+
+		shared_ptr<DataCollection::Word> word = DataCollection::LanguageFunc::GetParticularWord(wordStr, pos);
+
+		shared_ptr<BaseConcept> newConcept = make_shared<BaseConcept>(word);
+		newConcept->SetId(id);
+		newConcept->SetBaseId(baseID);
+
+		return newConcept;
+	}
+
 	shared_ptr<iConceptChain> MindElementCreator::CreateConceptChain(const ElementType type) const
 	{
 		switch(type)

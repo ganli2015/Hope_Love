@@ -32,12 +32,12 @@ namespace Mind
 
 	void ConceptDatabase::AddBaseConcept(const shared_ptr<BaseConcept> concept)
 	{
-		long index = concept->GetBaseId();
+		long baseId = concept->GetBaseId();
 		int id = concept->GetId();
 		string word = concept->GetString();
 		PartOfSpeech pos = concept->GetPartOfSpeech();
 
-		AddBaseConcept(index, id, word, pos);
+		AddBaseConcept(baseId, id, word, pos);
 	}
 
 	void ConceptDatabase::AddBaseConcept(const shared_ptr<DataCollection::Word> word)
@@ -87,15 +87,8 @@ namespace Mind
 		CheckConnect();
 		//Get data from row.
 		auto row = GetBaseConceptRow(index);
-		long baseID= row.GetLong("baseID");
-		int id = row.GetLong("id");
-		string wordStr = row.GetText("word");
-		PartOfSpeech pos = (PartOfSpeech)row.GetLong("pos");
 
-		//Create the concept.
-		shared_ptr<Word> word = LanguageFunc::GetParticularWord(wordStr, pos);
-		shared_ptr<BaseConcept> concept = this->_elemCreator->CreateBaseConcept(word, id, baseID);
-		return concept;
+		return _elemCreator->CreateBaseConcept(row);
 	}
 
 	shared_ptr<Concept> ConceptDatabase::GetNonBaseConcept(const int id, const string word)
@@ -249,16 +242,19 @@ namespace Mind
 		return res;
 	}
 
-	void ConceptDatabase::AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos)
+	void ConceptDatabase::AddBaseConcept(const long baseID, const int id, const string word, const DataCollection::PartOfSpeech pos)
 	{
 		CheckConnect();
 
-		char state[100];
-		sprintf_s(state, "Insert into %s (baseID,id,word,pos)\
-				VALUES (:baseID,:id,:word,:pos) ", BaseConceptTable.c_str());
+		char state[1024];
+		sprintf_s(state, "Insert into %s (conceptID,baseID,id,word,pos)\
+				VALUES (:conceptID,:baseID,:id,:word,:pos) ", BaseConceptTable.c_str());
+
+		string pk = GenerateConceptPrimaryKey(word, id);
 
 		DBCmd cmd(state, *_db);
-		cmd.Bind(":baseID", index);
+		cmd.Bind(":conceptID", pk);
+		cmd.Bind(":baseID", baseID);
 		cmd.Bind(":id", id);
 		cmd.Bind(":word", CommonTool::AsciiToUtf8(word));
 		cmd.Bind(":pos", (int)pos);
@@ -270,10 +266,13 @@ namespace Mind
 	{
 		CheckConnect();
 
-		string state = StringFormat("Insert into %s(id, word, pos)\
-			VALUES(:id, :word, :pos) ", NonBaseConceptTable.c_str());
+		string state = StringFormat("Insert into %s(conceptID,id, word, pos)\
+			VALUES(:conceptID,:id, :word, :pos) ", NonBaseConceptTable.c_str());
+
+		string pk = GenerateConceptPrimaryKey(word, id);
 
 		DBCmd cmd(state, *_db);
+		cmd.Bind(":conceptID", pk);
 		cmd.Bind(":id", id);
 		cmd.Bind(":word", CommonTool::AsciiToUtf8(word));
 		cmd.Bind(":pos", (int)pos);
@@ -348,6 +347,76 @@ namespace Mind
 			res.push_back(QueryStatement(table));
 		}
 		return res;
+	}
+
+	vector<shared_ptr<BaseConcept>> ConceptDatabase::GetAllBaseConcepts()
+	{
+		QueryStatement qry(BaseConceptTable);
+		auto allrows = QueryRows(qry);
+
+		vector<shared_ptr<BaseConcept>> res;
+		for (auto row : allrows)
+		{
+			res.push_back(_elemCreator->CreateBaseConcept(row));
+		}
+
+		return res;
+	}
+
+	vector<shared_ptr<Concept>> ConceptDatabase::GetAllNonBaseConcepts()
+	{
+		QueryStatement qry(NonBaseConceptTable);
+		auto allrows = QueryRows(qry);
+
+		vector<shared_ptr<Concept>> res;
+		for (auto row : allrows)
+		{
+			res.push_back(_elemCreator->CreateConcept(row));
+		}
+
+		return res;
+	}
+
+	std::string ConceptDatabase::GenerateConceptPrimaryKey(const string word, const int id)
+	{
+		string joinStr = StringFormat("%d-%s", id, word.c_str());
+		//Compute hash.
+		string newID = GenerateHash(joinStr);
+
+		return newID;
+	}
+
+	void ConceptDatabase::ChangePrimaryKeyToHash()
+	{
+		//Get all base concepts.
+		auto baseConcepts = GetAllBaseConcepts();
+		//Delete all rows.
+		_db->DeleteRowsInTable(BaseConceptTable);
+
+		_db->BeginTransaction();
+
+		for (auto base : baseConcepts)
+		{
+			//When re-insert the base cocnept, the hash value will be automatically computed.
+			AddBaseConcept(base);
+		}
+
+		_db->CommitTransaction();
+
+		//Non base concepts.
+
+		auto nonBaseConcepts = GetAllNonBaseConcepts();
+		//Delete all rows.
+		_db->DeleteRowsInTable(NonBaseConceptTable);
+
+		_db->BeginTransaction();
+
+		for (auto concept : nonBaseConcepts)
+		{
+			//When re-insert the concept, the hash value will be automatically computed.
+			AddNonBaseConcept(concept->GetWord(),concept->GetId());
+		}
+		_db->CommitTransaction();
 	}
 
 	vector<DBRow> ConceptDatabase::QueryRows(const CommonTool::QueryStatement& state)

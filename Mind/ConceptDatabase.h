@@ -29,6 +29,8 @@ namespace Mind
 		const string NonBaseConceptTable;
 
 		vector<string> _tables;
+
+		friend class DataPrepareForHopeLove;
 	public:
 		ConceptDatabase();
 		~ConceptDatabase();
@@ -105,6 +107,17 @@ namespace Mind
 		vector<CommonTool::DBRow> QueryForTables(const vector<CommonTool::QueryStatement>& statements);
 
 		vector<CommonTool::QueryStatement> CreateQryForTables() const;
+
+
+		vector<shared_ptr<BaseConcept>> GetAllBaseConcepts();
+		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
+
+		string GenerateConceptPrimaryKey(const string word, const int id);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Change primary key of each row to a hash value computed from word and id.
+		//////////////////////////////////////////////////////////////////////////
+		void ChangePrimaryKeyToHash();
 	};
 }
 

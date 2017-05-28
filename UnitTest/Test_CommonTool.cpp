@@ -79,15 +79,15 @@ TEST(Test_CommonStringFunction, StringFormat)
 	ASSERT_EQ(expect, res);
 }
 
-TEST(Test_CommonStringFunction, GenerateID)
+TEST(Test_CommonStringFunction, GenerateHash)
 {
 	string str1 = "0-Äã";
 	string str2 = "1-Äã";
 	string str3 = "0-ÎÒ";
 
-	string id1 = GenerateID(str1);
-	string id2 = GenerateID(str2);
-	string id3 = GenerateID(str3);
+	string id1 = GenerateHash(str1);
+	string id2 = GenerateHash(str2);
+	string id3 = GenerateHash(str3);
 
 	ASSERT_NE(id1, id2);
 	ASSERT_NE(id2, id3);

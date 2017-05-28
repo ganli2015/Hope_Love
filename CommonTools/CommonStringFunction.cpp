@@ -150,7 +150,7 @@ namespace CommonTool
 		return buff;
 	}
 
-	string GenerateID(const string str)
+	string GenerateHash(const string str)
 	{
 		hashwrapper *myWrapper = new md5wrapper();
 		string res = myWrapper->getHashFromString(str);

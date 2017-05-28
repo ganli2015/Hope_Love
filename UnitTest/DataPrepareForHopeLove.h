@@ -5,6 +5,7 @@
 namespace Mind
 {
 	class GrammarSet;
+	class ConceptDatabase;
 }
 
 class DataPrepareForHopeLove
@@ -14,6 +15,8 @@ public:
 	~DataPrepareForHopeLove() {};
 
 	static void InitializeWeightsForGrammarSet(const string sampleFile, Mind::GrammarSet* grammarSet);
+
+	static void ChangePrimaryKeyToHash(Mind::ConceptDatabase* db);
 
 private:
 

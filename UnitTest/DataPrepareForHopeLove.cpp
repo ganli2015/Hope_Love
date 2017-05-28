@@ -7,6 +7,7 @@
 #include "../Mind/GrammarModel.h"
 #include "../Mind/GrammaSet.h"
 #include "../Mind/ConceptSet.h"
+#include "../Mind/ConceptDatabase.h"
 
 #include "../CommonTools/DBoperator.h"
 
@@ -58,6 +59,15 @@ TEST(Preparation, CollectNewBaseConcept)
 	conceptSet.CollectNewBaseConcepts("E:\\Artificial Intelligence\\Document\\DataBase\\myconv.txt");
 }
 
+TEST(Preparation, ChangePrimaryKeyToHash)
+{
+	CHECK_SKIP;
+	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
+	auto conceptDB = new Mind::ConceptDatabase;
+	DataPrepareForHopeLove::ChangePrimaryKeyToHash(conceptDB);
+	delete conceptDB;
+}
+
 TEST(Preparation, TestPOS)
 {
 	CHECK_SKIP;
@@ -80,4 +90,9 @@ TEST(Preparation, TestPOS)
 void DataPrepareForHopeLove::InitializeWeightsForGrammarSet(const string sampleFile, GrammarSet* grammarSet)
 {
 	grammarSet->InitializeWeights(sampleFile);
+}
+
+void DataPrepareForHopeLove::ChangePrimaryKeyToHash(Mind::ConceptDatabase* db)
+{
+	db->ChangePrimaryKeyToHash();
 }

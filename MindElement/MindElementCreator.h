@@ -26,6 +26,7 @@ namespace Mind
 		//baseID: ID fro base concept.
 		//////////////////////////////////////////////////////////////////////////
 		virtual shared_ptr<BaseConcept> CreateBaseConcept(const shared_ptr<DataCollection::Word> word,const int conceptID,const int baseID) const ;
+		virtual shared_ptr<BaseConcept> CreateBaseConcept(const CommonTool::DBRow& dbRow) const;
 
 		virtual shared_ptr<iConceptChain> CreateConceptChain(const ElementType type) const ;
 		virtual shared_ptr<iConceptChain> CreateConceptChain(const vector<shared_ptr<iConcept>>& val,const ElementType type) const ;
