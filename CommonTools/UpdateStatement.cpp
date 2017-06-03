@@ -49,7 +49,7 @@ namespace CommonTool
 		}
 		else
 		{
-			res += "where ";
+			res += "Set ";
 
 			//Join all updates.
 			for (int i = 0; i < updateTerms.size(); ++i)
@@ -59,6 +59,13 @@ namespace CommonTool
 				{
 					res += ",";
 				}
+			}
+
+			//Add constraints.
+			auto constraint = _constraint->GetString();
+			if (constraint != "")
+			{
+				res += constraint;
 			}
 
 			return res;
@@ -78,6 +85,26 @@ namespace CommonTool
 	void UpdateStatement::Update(const string fieldName, const long val)
 	{
 		_longForUpdate.push_back(make_pair(fieldName, val));
+	}
+
+	void UpdateStatement::EQ(const string fieldName, const string val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void UpdateStatement::EQ(const string fieldName, const int val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void UpdateStatement::EQ(const string fieldName, const long val)
+	{
+		_constraint->EQ(fieldName, val);
+	}
+
+	void UpdateStatement::Like(const string fieldName, const string format)
+	{
+		_constraint->Like(fieldName, format);
 	}
 
 }

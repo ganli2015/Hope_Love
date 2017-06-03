@@ -10,6 +10,12 @@ namespace CommonTool
 	}
 
 
+	QueryStatement::QueryStatement(const QueryStatement& other)
+	{
+		this->_tableName = other._tableName;
+		this->_constraint = new ConstraintStatement(*other._constraint);
+	}
+
 	QueryStatement::~QueryStatement()
 	{
 		delete _constraint;
@@ -71,6 +77,14 @@ namespace CommonTool
 	ConstraintStatement::ConstraintStatement()
 	{
 
+	}
+
+	ConstraintStatement::ConstraintStatement(const ConstraintStatement& other)
+	{
+		this->_eqConditionsString = other._eqConditionsString;
+		this->_eqConditionsInt = other._eqConditionsInt;
+		this->_eqConditionsLong = other._eqConditionsLong;
+		this->_likeConditions = other._likeConditions;
 	}
 
 	ConstraintStatement::~ConstraintStatement()

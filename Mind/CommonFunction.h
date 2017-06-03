@@ -23,6 +23,7 @@ namespace Mind
 	struct Edge_Info//表示从文件读取的ConceptEdge的信息
 	{
 		Identity to;
+		string modStr;//String of <modifications>.
 		shared_ptr<iConceptInteractTable> modifications;
 	};
 	struct Connection_Info

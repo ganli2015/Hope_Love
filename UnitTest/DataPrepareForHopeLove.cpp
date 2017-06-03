@@ -68,6 +68,24 @@ TEST(Preparation, ChangePrimaryKeyToHash)
 	delete conceptDB;
 }
 
+TEST(Preparation, ReadConceptConnectionFromFile)
+{
+	CHECK_SKIP;
+	auto conceptDB = new Mind::ConceptDatabase;
+	conceptDB->Connect();
+	DataPrepareForHopeLove::ReadConceptConnectionFromFile("D:\\Projects\\Hope_Love\\Mind\\HopeLoveData\\ConceptConnections_Initial.txt",conceptDB);
+	delete conceptDB;
+}
+
+TEST(Preparation, RefreshConceptConnection)
+{
+	CHECK_SKIP;
+	auto conceptDB = new Mind::ConceptDatabase;
+	conceptDB->Connect();
+	DataPrepareForHopeLove::RefreshConceptConnectionInConceptTable(conceptDB);
+	delete conceptDB;
+}
+
 TEST(Preparation, TestPOS)
 {
 	CHECK_SKIP;
@@ -95,4 +113,14 @@ void DataPrepareForHopeLove::InitializeWeightsForGrammarSet(const string sampleF
 void DataPrepareForHopeLove::ChangePrimaryKeyToHash(Mind::ConceptDatabase* db)
 {
 	db->ChangePrimaryKeyToHash();
+}
+
+void DataPrepareForHopeLove::ReadConceptConnectionFromFile(const string filePath, Mind::ConceptDatabase* db)
+{
+	db->ReadConceptConnectionFromFile(filePath);
+}
+
+void DataPrepareForHopeLove::RefreshConceptConnectionInConceptTable(Mind::ConceptDatabase* db)
+{
+	db->RefreshConceptConnectionInConceptTable();
 }

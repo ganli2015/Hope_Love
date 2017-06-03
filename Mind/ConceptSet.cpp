@@ -87,13 +87,13 @@ namespace Mind
 
 	void ConceptSet::Initialize()
 	{
-		ConceptSetInitializer::InitializeBaseConcept(this,GetHopeLoveMindPath()+BaseConceptsStringFilename);
+//		ConceptSetInitializer::InitializeBaseConcept(this,GetHopeLoveMindPath()+BaseConceptsStringFilename);
 //		cout << "Base concepts initialized." << endl;
 
-		ConceptSetInitializer::InitializeNonBaseConcept(this,GetHopeLoveMindPath()+NonBaseConceptString_InitialFilename);
+//		ConceptSetInitializer::InitializeNonBaseConcept(this,GetHopeLoveMindPath()+NonBaseConceptString_InitialFilename);
 //		cout << "Non-Base concepts initialized." << endl;
 
-		ConceptSetInitializer::InitializeConceptConnection(this,GetHopeLoveMindPath()+ConceptConnections_InitialFilename);
+//		ConceptSetInitializer::InitializeConceptConnection(this,GetHopeLoveMindPath()+ConceptConnections_InitialFilename);
 //		cout << "Concept connection initialized." << endl;
 
 
@@ -300,37 +300,19 @@ namespace Mind
 
 	void ConceptSet::CheckWordIDExist(const shared_ptr<DataCollection::Word> word, const int id )
 	{
-		string str=word->GetString();
-		//get concepts with same string.
-		auto concepts = _conceptDB->GetConceptsWithWord(str);
-
-		for (auto concept : concepts)
+		auto concept = _conceptDB->GetNonBaseConcept(id, word->GetString());
+		if (concept != NULL)
 		{
-			if (concept->GetWord()->IsSame(word) && concept->GetId() == id)
-			{
-				throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", str.c_str(), id));
-			}
+			throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", word->GetString().c_str(), id));
 		}
 	}
 
 	void ConceptSet::CheckBaseWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const BaseConceptMap& conceptset )
 	{
-		string str=word->GetString();
-		const_baseConceptIter beg=conceptset.lower_bound(str);
-		const_baseConceptIter end=conceptset.upper_bound(str);
-		while(beg!=end)
+		auto concept = _conceptDB->GetBaseConcept(id, word->GetString());
+		if (concept != NULL)
 		{
-			if(word->Type()==beg->second->GetPartOfSpeech())
-			{
-				throw runtime_error("Error in AddConcept:One POS of the word can only have one concept!");
-			}
-
-			int id_exist=beg->second->GetId();
-			if(id==id_exist)
-			{
-				throw logic_error("Error in AddConcept: id exists!");
-			}
-			beg++;
+			throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", word->GetString().c_str(), id));
 		}
 	}
 

@@ -31,6 +31,17 @@ namespace CommonTool
 		void Update(const string fieldName, const string val);
 		void Update(const string fieldName, const int val);
 		void Update(const string fieldName, const long val);
+
+		/*---------------------------------------Constraints-------------------------------*/
+
+		void EQ(const string fieldName, const string val);
+		void EQ(const string fieldName, const int val);
+		void EQ(const string fieldName, const long val);
+
+		void Like(const string fieldName, const string format);
+
+		/*--------------------------------------------------------------------------------*/
+
 	};
 
 }

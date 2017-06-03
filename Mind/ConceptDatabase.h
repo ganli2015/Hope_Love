@@ -27,6 +27,7 @@ namespace Mind
 	{
 		const string BaseConceptTable;
 		const string NonBaseConceptTable;
+		const string ConceptConnectionTable;
 
 		vector<string> _tables;
 
@@ -49,9 +50,13 @@ namespace Mind
 		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word,const int id);
 
 		//////////////////////////////////////////////////////////////////////////
-		//<index> is the index in database.
+		//<baseID> is the baseID in database.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<BaseConcept> GetBaseConcept(const long index);
+		shared_ptr<BaseConcept> GetBaseConcept(const long baseID);
+		//////////////////////////////////////////////////////////////////////////
+		//<baseID> is the baseID in database.
+		//////////////////////////////////////////////////////////////////////////
+		shared_ptr<BaseConcept> GetBaseConcept(const int id, const string word);
 		//////////////////////////////////////////////////////////////////////////
 		//<id> is the ID of concepts with same words.
 		//////////////////////////////////////////////////////////////////////////
@@ -102,6 +107,9 @@ namespace Mind
 		CommonTool::DBRow GetBaseConceptRow(const long index);
 		CommonTool::DBRow GetNonBaseConceptRow(const int id, const string word);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Get rows from concept table.
+		//////////////////////////////////////////////////////////////////////////
 		vector<CommonTool::DBRow> GetRowsWithWord(const string word);
 
 		vector<CommonTool::DBRow> QueryForTables(const vector<CommonTool::QueryStatement>& statements);
@@ -118,6 +126,17 @@ namespace Mind
 		//Change primary key of each row to a hash value computed from word and id.
 		//////////////////////////////////////////////////////////////////////////
 		void ChangePrimaryKeyToHash();
+
+		//////////////////////////////////////////////////////////////////////////
+		//Read concept connection from a file, and parse connections and add them to database.
+		//////////////////////////////////////////////////////////////////////////
+		void ReadConceptConnectionFromFile(const string filePath);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Clear connection column in the Non base concept table,
+		//and then append connection from concept connection table to the connection column.
+		//////////////////////////////////////////////////////////////////////////
+		void RefreshConceptConnectionInConceptTable();
 	};
 }
 

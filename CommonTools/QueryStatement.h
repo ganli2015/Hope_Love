@@ -17,6 +17,7 @@ namespace CommonTool
 	public:
 		QueryStatement(const string tableName);
 		~QueryStatement();
+		QueryStatement(const QueryStatement&);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Generate sql sentence from <me>.
@@ -50,6 +51,7 @@ namespace CommonTool
 	public:
 		ConstraintStatement();
 		~ConstraintStatement();
+		ConstraintStatement(const ConstraintStatement&);
 
 		//////////////////////////////////////////////////////////////////////////
 		//The statement start with 'where'.
