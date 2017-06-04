@@ -120,7 +120,7 @@ namespace Mind
 
 		auto row = GetNonBaseConceptRow(id, word);
 
-		return _elemCreator->CreateConcept(row);
+		return ConvertRowToConcept(row);
 	}
 
 	shared_ptr<Concept> ConceptDatabase::GetConcept(const shared_ptr<DataCollection::Word> word)
@@ -139,7 +139,7 @@ namespace Mind
 			return NULL;
 		else
 		{
-			return _elemCreator->CreateConcept(rows.front());
+			return ConvertRowToConcept(rows.front());
 		}
 	}
 
@@ -159,7 +159,26 @@ namespace Mind
 			return NULL;
 		else
 		{
-			return _elemCreator->CreateConcept(rows.front());
+			return ConvertRowToConcept(rows.front());
+		}
+	}
+
+	shared_ptr<Concept> ConceptDatabase::GetConcept(const string conceptID)
+	{
+		auto statements = CreateQryForTables();
+		for (int i = 0; i < statements.size(); ++i)
+		{
+			auto &state = statements[i];
+
+			state.EQ("conceptID", conceptID);
+		}
+
+		auto rows = QueryForTables(statements);
+		if (rows.empty())
+			return NULL;
+		else
+		{
+			return ConvertRowToConcept(rows.front());
 		}
 	}
 
@@ -213,7 +232,7 @@ namespace Mind
 		vector<shared_ptr<Concept>> res;
 		for (auto row : rows)
 		{
-			auto concept = this->_elemCreator->CreateConcept(row);
+			auto concept = ConvertRowToConcept(row);
 			res.push_back(concept);
 		}
 
@@ -236,7 +255,7 @@ namespace Mind
 		vector<shared_ptr<Concept>> res;
 		for (auto row : rows)
 		{
-			auto concept = this->_elemCreator->CreateConcept(row);
+			auto concept = ConvertRowToConcept(row);
 			res.push_back(concept);
 		}
 
@@ -258,7 +277,7 @@ namespace Mind
 		vector<shared_ptr<Concept>> res;
 		for (auto row : rows)
 		{
-			auto concept = this->_elemCreator->CreateConcept(row);
+			auto concept = ConvertRowToConcept(row);
 			res.push_back(concept);
 		}
 
@@ -339,15 +358,36 @@ namespace Mind
 		}
 	}
 
+	CommonTool::DBRow ConceptDatabase::GetRow(const string pk, const string pkColName, const string table)
+	{
+		QueryStatement qryState(table);
+		qryState.EQ(pkColName, pk);
+		DBQry qry(qryState.GetString(), *_db);
+		auto rows = qry.GetRows();
+		//There must be only one row.
+		return rows.front();
+	}
+
 	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
 	{
 		auto statements = CreateQryForTables();
-		for (auto state : statements)
+		for (auto &state : statements)
 		{
 			state.EQ("word", word);
 		}
 
 		return QueryForTables(statements);
+	}
+
+	CommonTool::DBRow ConceptDatabase::GetRowInConceptTables(const string pk)
+	{
+		auto statements = CreateQryForTables();
+		for (auto &state : statements)
+		{
+			state.EQ(NonBaseConceptField::ConceptID, pk);
+		}
+
+		return QueryForTables(statements).front();
 	}
 
 	vector<CommonTool::DBRow> ConceptDatabase::QueryForTables(const vector<CommonTool::QueryStatement>& statements)
@@ -394,7 +434,7 @@ namespace Mind
 		vector<shared_ptr<Concept>> res;
 		for (auto row : allrows)
 		{
-			res.push_back(_elemCreator->CreateConcept(row));
+			res.push_back(ConvertRowToConcept(row));
 		}
 
 		return res;
@@ -407,6 +447,82 @@ namespace Mind
 		string newID = GenerateHash(joinStr);
 
 		return newID;
+	}
+
+	bool ConceptDatabase::IsModTable(const vector<string>& modSplit)
+	{
+		if (modSplit.size() > 1)
+		{
+			return false;
+		}
+		else
+		{
+			//Mod table only contains one single string.
+			return true;
+		}
+	}
+
+	void ConceptDatabase::AddConnectionToConcept(const CommonTool::DBRow& row, shared_ptr<Concept> concept)
+	{
+		if (!row.HasColumn(NonBaseConceptField::Connection)) return;
+
+		auto connectionStr = row.GetText(NonBaseConceptField::Connection);
+		auto connectionIDs = SplitString(connectionStr, ' ');//There may be many connections.
+		for (auto id : connectionIDs)
+		{
+			//There must be only one row.
+			auto row = GetRow(id, ConceptConnectionField::ConnectionID,ConceptConnectionTable);
+			//Get 'to concept'.
+			auto to_conceptID = row.GetText(ConceptConnectionField::ToConcept);
+			auto toConceptRow = GetRowInConceptTables(to_conceptID);
+			auto to_ID = toConceptRow.GetLong(NonBaseConceptField::ID);
+			auto to_Word = toConceptRow.GetText(NonBaseConceptField::Word);
+			//Recursively get toConcept as it may depend on other concepts.
+			//Recursion will stop when the current concept is a base concept which depends nothing.
+			auto to_Concept = GetConcept(to_Word, to_ID);
+
+			concept->AddForwardConcept(to_Concept);
+
+			//Add modification.
+			auto modStr = row.GetText(ConceptConnectionField::Modification);
+			if (modStr != "")
+			{
+				auto modTable = ConvertModStringToConceptTable(modStr);
+				concept->AddForwardModification(to_Concept, modTable);
+			}
+		}
+		
+	}
+
+	shared_ptr<iConceptInteractTable> ConceptDatabase::ConvertModStringToConceptTable(const string modStr)
+	{
+		vector<pair<shared_ptr<iConcept>, shared_ptr<iConcept>>> res;
+
+		auto modStrSplit = SplitString(modStr, ' ');
+		for (auto modPair : modStrSplit)
+		{
+			//modPair is like 'xxxx-yyyyy'.
+			auto conceptSplit = SplitString(modPair, '-');
+			assert(conceptSplit.size() == 2);
+
+			//Find concept by conceptID.
+			shared_ptr<iConcept> fromConcept = GetConcept(conceptSplit[0]);
+			shared_ptr<iConcept> toConcept = GetConcept(conceptSplit[1]);
+
+			res.push_back(make_pair(fromConcept, toConcept));
+		}
+
+		return _elemCreator->CreateConceptInteractTable(res);
+	}
+
+	shared_ptr<Concept> ConceptDatabase::ConvertRowToConcept(const CommonTool::DBRow& row)
+	{
+		//Get a concept with no connection.
+		auto concept = _elemCreator->CreateConcept(row);
+		//Append connection.
+		AddConnectionToConcept(row, concept);
+
+		return concept;
 	}
 
 	void ConceptDatabase::ChangePrimaryKeyToHash()
@@ -471,6 +587,21 @@ namespace Mind
 				
 				string conncetionID = GenerateHash(me_ID + to_ID);
 
+				//Handle modification string.
+				string modStr = "";
+				if (edge.modStr != "")
+				{
+					auto modSplit = SplitString(edge.modStr, ' ');
+					if (IsModTable(modSplit))
+					{
+						modStr = ConvertModTableString(modSplit.front());
+					}
+					else
+					{
+						modStr = ConvertSingleMod(modSplit, to_ID);
+					}
+				}
+
 				//Insert to database.
 				string insertCmd = StringFormat("Insert into %s(connectionID,concept, toConcept,modification)\
 					VALUES(:connectionID,:concept, :toConcept,:modification) ", ConceptConnectionTable.c_str());
@@ -479,13 +610,68 @@ namespace Mind
 				cmd.Bind(":connectionID", conncetionID);
 				cmd.Bind(":concept", me_ID);
 				cmd.Bind(":toConcept", to_ID);
-				cmd.Bind(":modification", AsciiToUtf8(edge.modStr));
+				cmd.Bind(":modification", AsciiToUtf8(modStr));
 
 				cmd.Execute();
 			}
 		}
 
 		_db->CommitTransaction();
+	}
+
+	std::string ConceptDatabase::ConvertModTableString(const string modTableStr)
+	{
+		string res = "";
+
+		auto modTableSplit = SplitString(modTableStr, ',');
+		for (int i = 0; i < modTableSplit.size(); ++i)
+		{
+			auto pair = modTableSplit[i];
+
+			auto pairSplit = SplitString(pair, '-');
+			assert(pairSplit.size() == 2);
+
+			auto conceptFrom = pairSplit[0];
+			auto conceptTo = pairSplit[1];
+			//From concept.
+			auto conceptFromSplit = SplitString(conceptFrom, '@');
+			auto fromWord = conceptFromSplit[1];
+			auto fromID = CommonTool::StrToInt(conceptFromSplit[0]);
+			string fromConceptID = GenerateConceptPrimaryKey(fromWord, fromID);
+			//To concept.
+			auto conceptToSplit = SplitString(conceptTo, '@');
+			auto toWord = conceptToSplit[1];
+			auto toID = CommonTool::StrToInt(conceptToSplit[0]);
+			string toConceptID = GenerateConceptPrimaryKey(toWord, toID);
+
+			res += fromConceptID + "-" + toConceptID;
+			if (i != modTableSplit.size() - 1)
+			{
+				res += " ";
+			}
+		}
+
+		return res;
+	}
+
+	std::string ConceptDatabase::ConvertSingleMod(const vector<string>& singleModStr, const string toConceptID)
+	{
+		string res = "";
+
+		for (int i = 0; i < singleModStr.size(); i += 2)
+		{
+			auto id = CommonTool::StrToInt(singleModStr[i]);
+			auto word= singleModStr[i+1];
+
+			string conceptID = GenerateConceptPrimaryKey(word, id);
+			res += conceptID + '-' + toConceptID;
+			if (i != singleModStr.size() - 2)
+			{
+				res += " ";
+			}
+		}
+
+		return res;
 	}
 
 	void ConceptDatabase::RefreshConceptConnectionInConceptTable()
@@ -535,8 +721,6 @@ namespace Mind
 		DBQry qry(cmd, *_db);
 		auto rows = qry.GetRows();
 		return rows;
-
-		//return vector<CommonTool::DBRow>();
 	}
 
 }

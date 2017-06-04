@@ -13,8 +13,12 @@ namespace Mind
 {
 	class MindDatabase;
 	class MindParameterDatabase;
+	class MindElementCreator;
 	class ConceptDatabase;
 
+	//////////////////////////////////////////////////////////////////////////
+	//The database in <me> is a test database in "TestSample/test.db".
+	//////////////////////////////////////////////////////////////////////////
 	class Test_Database :public testing::Test
 	{
 	protected:
@@ -54,6 +58,21 @@ namespace Mind
 		//Add base concept "Œ“" with POS noun to database.
 		//////////////////////////////////////////////////////////////////////////
 		void AddBaseConceptToDB_WO_Noun(ConceptDatabase *db);
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	//The database in <me> is a normal database in "HopeLoveData/data.db".
+	//////////////////////////////////////////////////////////////////////////
+	class Test_Database_Normal :public testing::Test
+	{
+	protected:
+		static CommonTool::DBoperator *_DBOperator;
+
+		static void SetUpTestCase();
+		static void TearDownTestCase();
+
+		static void SetDBOperator(MindDatabase* db, CommonTool::DBoperator* dbope);
+		static void SetElemCreator(MindDatabase* db, MindElementCreator* creator);
 	};
 }
 

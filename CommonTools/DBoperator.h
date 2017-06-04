@@ -93,10 +93,11 @@ namespace CommonTool
 
 		long GetLong(const string colName) const;
 		string GetText(const string colName) const;
-	private:
 
 		void Insert(const string colName, const long val);
 		void Insert(const string colName, const string val);
+	private:
+
 	};
 
 	class _COMMONTOOLSINOUT DBQry

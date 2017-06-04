@@ -101,7 +101,7 @@ namespace CommonTool
 		//Like constraint.
 		for (auto like : _likeConditions)
 		{
-			string append = StringFormat("%s LIKE '%s'", like.first,
+			string append = StringFormat("%s LIKE '%s'", like.first.c_str(),
 				CommonTool::AsciiToUtf8(like.second).c_str());
 			conditions.push_back(append);
 		}

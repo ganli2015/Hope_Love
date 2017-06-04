@@ -70,6 +70,9 @@ TEST(Preparation, ChangePrimaryKeyToHash)
 
 TEST(Preparation, ReadConceptConnectionFromFile)
 {
+	//Read concept connection data from file,
+	//and build connection table in the databases.
+
 	CHECK_SKIP;
 	auto conceptDB = new Mind::ConceptDatabase;
 	conceptDB->Connect();
@@ -79,6 +82,8 @@ TEST(Preparation, ReadConceptConnectionFromFile)
 
 TEST(Preparation, RefreshConceptConnection)
 {
+	//Relate connection table with concept tables.
+
 	CHECK_SKIP;
 	auto conceptDB = new Mind::ConceptDatabase;
 	conceptDB->Connect();

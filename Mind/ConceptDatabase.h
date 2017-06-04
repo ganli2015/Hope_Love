@@ -19,6 +19,7 @@ namespace Mind
 {
 	class BaseConcept;
 	class Concept;
+	class iConceptInteractTable;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Database for Base Concept, NonBase Concept and Concept Connection.
@@ -69,6 +70,10 @@ namespace Mind
 		//Get the first concept with the same word string and id.
 		//////////////////////////////////////////////////////////////////////////
 		shared_ptr<Concept> GetConcept(const string word,const int id);
+		//////////////////////////////////////////////////////////////////////////
+		//Get the first concept with conceptID.
+		//////////////////////////////////////////////////////////////////////////
+		shared_ptr<Concept> GetConcept(const string conceptID);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get total count of base concept.
@@ -108,9 +113,19 @@ namespace Mind
 		CommonTool::DBRow GetNonBaseConceptRow(const int id, const string word);
 
 		//////////////////////////////////////////////////////////////////////////
+		//Get row from primary key in the table.
+		//////////////////////////////////////////////////////////////////////////
+		CommonTool::DBRow GetRow(const string pk,const string pkColName, const string table);
+
+		//////////////////////////////////////////////////////////////////////////
 		//Get rows from concept table.
 		//////////////////////////////////////////////////////////////////////////
 		vector<CommonTool::DBRow> GetRowsWithWord(const string word);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Query for both NonBaseConcept table and BaseConceptTable.
+		//////////////////////////////////////////////////////////////////////////
+		CommonTool::DBRow GetRowInConceptTables(const string pk);
 
 		vector<CommonTool::DBRow> QueryForTables(const vector<CommonTool::QueryStatement>& statements);
 
@@ -123,6 +138,25 @@ namespace Mind
 		string GenerateConceptPrimaryKey(const string word, const int id);
 
 		//////////////////////////////////////////////////////////////////////////
+		//Check if mod string is a ConceptInteractTable.
+		//////////////////////////////////////////////////////////////////////////
+		bool IsModTable(const vector<string>& modSplit);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Extract connection data from <row> and add to <concept>.
+		//////////////////////////////////////////////////////////////////////////
+		void AddConnectionToConcept(const CommonTool::DBRow& row, shared_ptr<Concept> concept);
+		shared_ptr<iConceptInteractTable> ConvertModStringToConceptTable(const string modStr);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Convert <row> to concept which contains connection data.
+		//The returned concept is either a Non base concept or base concept.
+		//////////////////////////////////////////////////////////////////////////
+		shared_ptr<Concept> ConvertRowToConcept(const CommonTool::DBRow& row);
+
+
+
+		//////////////////////////////////////////////////////////////////////////
 		//Change primary key of each row to a hash value computed from word and id.
 		//////////////////////////////////////////////////////////////////////////
 		void ChangePrimaryKeyToHash();
@@ -131,12 +165,38 @@ namespace Mind
 		//Read concept connection from a file, and parse connections and add them to database.
 		//////////////////////////////////////////////////////////////////////////
 		void ReadConceptConnectionFromFile(const string filePath);
+		//////////////////////////////////////////////////////////////////////////
+		//Convert mod table string in the file to a single string in which concepts are represented by conceptID.
+		//////////////////////////////////////////////////////////////////////////
+		string ConvertModTableString(const string modTableStr);
+		//////////////////////////////////////////////////////////////////////////
+		//Convert single mod to a single string in which concepts are represented by conceptID.
+		//Note!<singleModStr> is like '0','×Ô¼º','0','Äã'...
+		//////////////////////////////////////////////////////////////////////////
+		string ConvertSingleMod(const vector<string>& singleModStr,const string toConceptID);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Clear connection column in the Non base concept table,
 		//and then append connection from concept connection table to the connection column.
 		//////////////////////////////////////////////////////////////////////////
 		void RefreshConceptConnectionInConceptTable();
+	};
+
+	namespace NonBaseConceptField
+	{
+		static const string ConceptID = "conceptID";
+		static const string ID = "id";
+		static const string Word = "word";
+		static const string POS = "pos";
+		static const string Connection = "connection";
+	};
+
+	namespace ConceptConnectionField
+	{
+		static const string ConnectionID = "connectionID";
+		static const string Concept = "concept";
+		static const string ToConcept = "toConcept";
+		static const string Modification = "modification";
 	};
 }
 

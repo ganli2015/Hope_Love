@@ -154,8 +154,10 @@
     <ClInclude Include="ConceptTableCreator.h" />
     <ClInclude Include="LeafCreator.h" />
     <ClInclude Include="Matchers.h" />
+    <ClInclude Include="MockConcept.h" />
     <ClInclude Include="MockExpression.h" />
     <ClInclude Include="MockiCerebrum.h" />
+    <ClInclude Include="MockMindElementCreator.h" />
     <ClInclude Include="MockNumber.h" />
     <ClInclude Include="PerformanceTester.h" />
     <ClInclude Include="PublicHeader.h" />
@@ -167,8 +169,10 @@
     <ClCompile Include="ConceptCreator.cpp" />
     <ClCompile Include="ConceptTableCreator.cpp" />
     <ClCompile Include="LeafCreator.cpp" />
+    <ClCompile Include="MockConcept.cpp" />
     <ClCompile Include="MockExpression.cpp" />
     <ClCompile Include="MockiCerebrum.cpp" />
+    <ClCompile Include="MockMindElementCreator.cpp" />
     <ClCompile Include="MockNumber.cpp" />
     <ClCompile Include="PerformanceTester.cpp" />
     <ClCompile Include="RelationSample.cpp" />

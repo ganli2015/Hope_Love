@@ -14,7 +14,16 @@
 
 #include "../Mathmatic/MathTool.h"
 
+#include "../UTFacility/MockConcept.h"
+#include "../UTFacility/MockMindElementCreator.h"
+#include "../UTFacility/ConceptTableCreator.h"
+
+#include <gmock/gmock.h>
+#include <gmock/gmock-spec-builders.h>
+
 using namespace DataCollection;
+using ::testing::StrictMock;
+using ::testing::NiceMock;
 
 namespace Mind
 {
@@ -212,6 +221,7 @@ namespace Mind
 
 		auto concepts = db->GetConceptsWithHead(chara);
 
+		ASSERT_EQ(3, concepts.size());
 		//Check all start with "我".
 		for (auto concept : concepts)
 		{
@@ -240,6 +250,72 @@ namespace Mind
 		ASSERT_EQ("我", word2->GetString());
 		ASSERT_EQ(Noun, word2->Type());
 	}
+
+	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithNoMod)
+	{
+		//Get Non base concept with no modification.
+		//Expect <AddForwardConcept> is called.
+
+		//Test word is “我”.
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
+		//Prepare mock objects.
+		shared_ptr<StrictMock<MockConcept>> mockConcept (new StrictMock<MockConcept>(word));
+		//Add expect for to_concept.
+		Identity toIdentity("自己", 0);
+		mockConcept->AddExpectCall_AddForwardConcept(toIdentity,1);
+		MockMindElementCreator* mockElemCreator = new MockMindElementCreator;
+		//Add condition for creating mock concept.
+		CommonTool::DBRow meRow;
+		meRow.Insert("word", "我");
+		meRow.Insert("id", 0);
+		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
+
+		//Inject mock object.
+		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
+		SetDBOperator(db, _DBOperator);
+		SetElemCreator(db, mockElemCreator);
+
+		auto concept = db->GetNonBaseConcept(0, "我");
+
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(mockConcept.get()));
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(db));
+	}
+
+	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithOneSingleMod)
+	{
+		//Get Non base concept with one forward concept.
+		//And the forward edge has one single modification.
+
+		//Test word is “喜欢”.
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord("喜欢", Verb);
+		//Prepare mock objects.
+		shared_ptr<StrictMock<MockConcept>> mockConcept(new StrictMock<MockConcept>(word));
+		//Add expect for to_concept.
+		Identity toIdentity("好感", 0);
+		mockConcept->AddExpectCall_AddForwardConcept(toIdentity, 1);
+		//Add expect for modification table.
+		ConceptTableCreator tableCreator;
+		auto modTable = tableCreator.SimpleCreate("大-好感");
+		mockConcept->AddExpectCall_AddForwardModification(toIdentity, modTable, 1);
+
+		MockMindElementCreator* mockElemCreator = new MockMindElementCreator;
+		//Add condition for creating mock concept.
+		CommonTool::DBRow meRow;
+		meRow.Insert("word", "喜欢");
+		meRow.Insert("id", 0);
+		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
+
+		//Inject mock object.
+		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
+		SetDBOperator(db, _DBOperator);
+		SetElemCreator(db, mockElemCreator);
+
+		ASSERT_NO_FATAL_FAILURE(db->GetNonBaseConcept(0, "喜欢"));
+
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(mockConcept.get()));
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(db));
+	}
+
 
 	void Test_Database::SetUpTestCase()
 	{
@@ -271,6 +347,7 @@ namespace Mind
 	void Test_Database::SetUp()
 	{
 		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
+		_testDBOperator->DeleteRowsInTable("NonBaseConcept");
 	}
 
 	void Test_Database::AddBaseConceptToDB_WO(ConceptDatabase *db)
@@ -326,6 +403,28 @@ namespace Mind
 	Math::Rand Test_Database::_rand;
 
 	CommonTool::DBoperator * Test_Database::_testDBOperator;
+
+	void Test_Database_Normal::SetUpTestCase()
+	{
+		_DBOperator = new CommonTool::DBoperator(Mind::GetDatabasePath());
+	}
+
+	void Test_Database_Normal::TearDownTestCase()
+	{
+		delete _DBOperator;
+	}
+
+	void Test_Database_Normal::SetDBOperator(MindDatabase* db, CommonTool::DBoperator* dbope)
+	{
+		db->_db = dbope;
+	}
+
+	void Test_Database_Normal::SetElemCreator(MindDatabase* db, MindElementCreator* creator)
+	{
+		db->_elemCreator = creator;
+	}
+
+	CommonTool::DBoperator * Test_Database_Normal::_DBOperator=NULL;
 
 }
 

@@ -19,3 +19,6 @@ using namespace std;
 #else
 #define _UTFACILITYINOUT _declspec(dllimport)
 #endif
+
+
+#define  UNLIMITED_TIMES 1e6

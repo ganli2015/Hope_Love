@@ -18,6 +18,7 @@ namespace Mind
 	class _MINDINOUT MindDatabase
 	{
 		friend class Test_Database;
+		friend class Test_Database_Normal;
 	protected:
 		CommonTool::DBoperator *_db;
 		MindElementCreator *_elemCreator;

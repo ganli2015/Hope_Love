@@ -141,7 +141,7 @@ namespace CommonTool
 		va_list args;
 		va_start(args, format);
 
-		const int bufferSize = 1024;
+		const int bufferSize = 4096;
 		char buff[bufferSize];
 		int result = vsnprintf(buff, bufferSize - 1, format, args);
 
