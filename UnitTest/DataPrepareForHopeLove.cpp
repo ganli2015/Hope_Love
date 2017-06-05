@@ -129,3 +129,4 @@ void DataPrepareForHopeLove::RefreshConceptConnectionInConceptTable(Mind::Concep
 {
 	db->RefreshConceptConnectionInConceptTable();
 }
+

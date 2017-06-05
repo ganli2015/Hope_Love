@@ -230,14 +230,12 @@ namespace FuncForTest
 
 void InitCerebrum::SetUp()
 {
-	_initObjectCount=MyObject::GetObjectCount();
 	iCerebrum::SetInstance(Cerebrum::Instance());
 }
 
 void InitCerebrum::TearDown()
 {
 	iCerebrum::KillInstance();
-	Check(_initObjectCount==MyObject::GetObjectCount());
 }
 
 void AddPatternToCerebrum::SetUp()

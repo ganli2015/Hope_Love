@@ -255,67 +255,41 @@ namespace Mind
 	{
 		//Get Non base concept with no modification.
 		//Expect <AddForwardConcept> is called.
-
 		//Test word is “我”.
-		shared_ptr<Word> word = LanguageFunc::GetParticularWord("我", Pronoun);
-		//Prepare mock objects.
-		shared_ptr<StrictMock<MockConcept>> mockConcept (new StrictMock<MockConcept>(word));
-		//Add expect for to_concept.
+
+		Identity meIdentity("我", 0);
 		Identity toIdentity("自己", 0);
-		mockConcept->AddExpectCall_AddForwardConcept(toIdentity,1);
-		MockMindElementCreator* mockElemCreator = new MockMindElementCreator;
-		//Add condition for creating mock concept.
-		CommonTool::DBRow meRow;
-		meRow.Insert("word", "我");
-		meRow.Insert("id", 0);
-		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
+		string modStr = "";
 
-		//Inject mock object.
-		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
-		SetDBOperator(db, _DBOperator);
-		SetElemCreator(db, mockElemCreator);
-
-		auto concept = db->GetNonBaseConcept(0, "我");
-
-		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(mockConcept.get()));
-		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(db));
+		GetNonBaseConceptWithMock(meIdentity, Pronoun, toIdentity, modStr);
 	}
 
 	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithOneSingleMod)
 	{
-		//Get Non base concept with one forward concept.
+		//Get Non base concept with one forward concept edge.
 		//And the forward edge has one single modification.
-
 		//Test word is “喜欢”.
-		shared_ptr<Word> word = LanguageFunc::GetParticularWord("喜欢", Verb);
-		//Prepare mock objects.
-		shared_ptr<StrictMock<MockConcept>> mockConcept(new StrictMock<MockConcept>(word));
-		//Add expect for to_concept.
+
+		Identity meIdentity("喜欢", 0);
 		Identity toIdentity("好感", 0);
-		mockConcept->AddExpectCall_AddForwardConcept(toIdentity, 1);
-		//Add expect for modification table.
-		ConceptTableCreator tableCreator;
-		auto modTable = tableCreator.SimpleCreate("大-好感");
-		mockConcept->AddExpectCall_AddForwardModification(toIdentity, modTable, 1);
+		string modStr = "大-好感";
 
-		MockMindElementCreator* mockElemCreator = new MockMindElementCreator;
-		//Add condition for creating mock concept.
-		CommonTool::DBRow meRow;
-		meRow.Insert("word", "喜欢");
-		meRow.Insert("id", 0);
-		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
-
-		//Inject mock object.
-		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
-		SetDBOperator(db, _DBOperator);
-		SetElemCreator(db, mockElemCreator);
-
-		ASSERT_NO_FATAL_FAILURE(db->GetNonBaseConcept(0, "喜欢"));
-
-		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(mockConcept.get()));
-		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(db));
+		GetNonBaseConceptWithMock(meIdentity, Verb, toIdentity, modStr);
 	}
 
+	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithTwoSingleMod)
+	{
+		//Get Non base concept with one forward concept edge.
+		//And the forward edge has two single modifications.
+		//Test word is “爱”.The connection is "0 爱 to 0 喜欢 0 深深 0 非常"
+		//which has two modifications.
+
+		Identity meIdentity("爱", 0);
+		Identity toIdentity("喜欢", 0);
+		string modStr = "深深-喜欢,非常-喜欢";
+
+		GetNonBaseConceptWithMock(meIdentity, Verb, toIdentity, modStr);
+	}
 
 	void Test_Database::SetUpTestCase()
 	{
@@ -422,6 +396,42 @@ namespace Mind
 	void Test_Database_Normal::SetElemCreator(MindDatabase* db, MindElementCreator* creator)
 	{
 		db->_elemCreator = creator;
+	}
+
+	void Test_Database_Normal::GetNonBaseConceptWithMock(const Identity meIdentity, const PartOfSpeech mePOS,
+		const Identity toIdentity, 
+		const string tableStr)
+	{
+		shared_ptr<Word> word = LanguageFunc::GetParticularWord(meIdentity.str, mePOS);
+		//Prepare mock objects.
+		shared_ptr<StrictMock<MockConcept>> mockConcept(new StrictMock<MockConcept>(word));
+		//Add expect for to_concept.
+		mockConcept->AddExpectCall_AddForwardConcept(toIdentity, 1);
+
+		if (tableStr != "")
+		{
+			//Add expect for modification table.
+			ConceptTableCreator tableCreator;
+			auto modTable = tableCreator.SimpleCreate(tableStr);
+			mockConcept->AddExpectCall_AddForwardModification(toIdentity, modTable, 1);
+		}
+
+		MockMindElementCreator* mockElemCreator = new MockMindElementCreator;
+		//Add condition for creating mock concept.
+		CommonTool::DBRow meRow;
+		meRow.Insert("word", meIdentity.str);
+		meRow.Insert("id", meIdentity.id);
+		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
+
+		//Inject mock object.
+		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
+		SetDBOperator(db, _DBOperator);
+		SetElemCreator(db, mockElemCreator);
+
+		ASSERT_NO_FATAL_FAILURE(db->GetNonBaseConcept(meIdentity.id, meIdentity.str));
+
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(mockConcept.get()));
+		ASSERT_TRUE(testing::Mock::VerifyAndClearExpectations(db));
 	}
 
 	CommonTool::DBoperator * Test_Database_Normal::_DBOperator=NULL;

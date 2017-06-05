@@ -4,9 +4,16 @@
 
 #include "../Mathmatic/Rand.h"
 
+#include "../MindInterface/CommonFunction.h"
+
 namespace CommonTool
 {
 	class DBoperator;
+}
+
+namespace DataCollection
+{
+	enum PartOfSpeech;
 }
 
 namespace Mind
@@ -73,6 +80,14 @@ namespace Mind
 
 		static void SetDBOperator(MindDatabase* db, CommonTool::DBoperator* dbope);
 		static void SetElemCreator(MindDatabase* db, MindElementCreator* creator);
+
+		//////////////////////////////////////////////////////////////////////////
+		//<meIdentity> : concept to get.
+		//<toIdentity> : concept that <meIdentity> depends on.
+		//<tableStr> : the concept interactive table string between <meIdentity> and  <toIdentity>.
+		//////////////////////////////////////////////////////////////////////////
+		static void GetNonBaseConceptWithMock(const Identity meIdentity,  const DataCollection::PartOfSpeech mePOS, 
+			const Identity toIdentity, const string tableStr);
 	};
 }
 

@@ -44,12 +44,14 @@ TEST_F(TestAlgorithm, TestPOSTagging_OneSentence)
 
 void TestAlgorithm::SetUp()
 {
+	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
 	iCerebrum::SetInstance(Cerebrum::Instance());
 }
 
 void TestAlgorithm::TearDown()
 {
+	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::SimpleDataPath);
 	iCerebrum::KillInstance();
 }
