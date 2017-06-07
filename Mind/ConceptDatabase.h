@@ -6,6 +6,7 @@ namespace CommonTool
 	class DBoperator;
 	class DBRow;
 	class QueryStatement;
+	class UpdateStatement;
 }
 
 namespace DataCollection
@@ -20,6 +21,7 @@ namespace Mind
 	class BaseConcept;
 	class Concept;
 	class iConceptInteractTable;
+	class iConcept;
 
 	//////////////////////////////////////////////////////////////////////////
 	//Database for Base Concept, NonBase Concept and Concept Connection.
@@ -49,6 +51,20 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word);
 		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word,const int id);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Add connection between two concepts.
+		//////////////////////////////////////////////////////////////////////////
+		void AddConnection(const shared_ptr<DataCollection::Word> fromWord, const int fromId,
+			const shared_ptr<DataCollection::Word> toWord, const int toId);
+
+		//////////////////////////////////////////////////////////////////////////
+		//Add Modification between connection of two concepts.
+		//The modification is represented by <modTable>.
+		//////////////////////////////////////////////////////////////////////////
+		void AddModification(const shared_ptr<DataCollection::Word> fromWord, const int fromId,
+			const shared_ptr<DataCollection::Word> toWord, const int toId,
+			const shared_ptr<iConceptInteractTable> modTable);
 
 		//////////////////////////////////////////////////////////////////////////
 		//<baseID> is the baseID in database.
@@ -116,6 +132,7 @@ namespace Mind
 		//Get row from primary key in the table.
 		//////////////////////////////////////////////////////////////////////////
 		CommonTool::DBRow GetRow(const string pk,const string pkColName, const string table);
+		bool HasRow(const string pk, const string pkColName, const string table);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get rows from concept table.
@@ -136,6 +153,7 @@ namespace Mind
 		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
 
 		string GenerateConceptPrimaryKey(const string word, const int id);
+		string GenerateConceptPrimaryKey(const shared_ptr<iConcept> concept);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Check if mod string is a ConceptInteractTable.
@@ -154,7 +172,14 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		shared_ptr<Concept> ConvertRowToConcept(const CommonTool::DBRow& row);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Append a new segment to the tail of the raw string.
+		//If the raw string is empty, then returned string equals the new segment.
+		//Otherwise, append a blank between the raw string and the new segment.
+		//////////////////////////////////////////////////////////////////////////
+		void AppendSegmentToString(const string segment, string& raw);
 
+		void UpdateDatabase(const CommonTool::UpdateStatement& statement);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Change primary key of each row to a hash value computed from word and id.

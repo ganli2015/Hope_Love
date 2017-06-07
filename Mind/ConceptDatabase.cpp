@@ -8,6 +8,7 @@
 #include "../MindElement/MindElementCreator.h"
 
 #include "../MindInterface/iMindElementCreator.h"
+#include "../MindInterface/iConceptInteractTable.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
@@ -16,6 +17,7 @@
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/QueryStatement.h"
 #include "../CommonTools/UpdateStatement.h"
+#include "../CommonTools/MyException.h"
 
 using namespace CommonTool;
 using namespace DataCollection;
@@ -87,6 +89,89 @@ namespace Mind
 		AddNonBaseConcept(id, word->GetString(), word->Type());
 	}
 
+	void ConceptDatabase::AddConnection(const shared_ptr<DataCollection::Word> fromWord, const int fromId, 
+		const shared_ptr<DataCollection::Word> toWord, const int toId)
+	{
+		//Generate connection ID.
+		auto fromPk = GenerateConceptPrimaryKey(fromWord->GetString(), fromId);
+		auto toPk = GenerateConceptPrimaryKey(toWord->GetString(), toId);
+		auto connectionID = CommonTool::GenerateHash(fromPk + toPk);
+
+		if (HasRow(connectionID, ConceptConnectionField::ConnectionID, ConceptConnectionTable))
+		{
+			//If the connection exists, then do nothing.
+			return;
+		}
+
+		//Insert to connection table.
+		string insertCmd = StringFormat("Insert into %s(connectionID,concept, toConcept,modification)\
+					VALUES(:connectionID,:concept, :toConcept,:modification) ", ConceptConnectionTable.c_str());
+
+		DBCmd cmd(insertCmd, *_db);
+		cmd.Bind(":connectionID", connectionID);
+		cmd.Bind(":concept", fromPk);
+		cmd.Bind(":toConcept", toPk);
+		cmd.Bind(":modification", "");
+		cmd.Execute();
+
+		//Get connection string of fromConcept.
+		QueryStatement qryState(NonBaseConceptTable);
+		qryState.EQ(NonBaseConceptField::ConceptID, fromPk);
+		auto fromConceptRow = QueryRows(qryState).front();
+		string connectionStr = fromConceptRow.GetText(NonBaseConceptField::Connection);
+		auto connectionIDs = SplitString(connectionStr, ' ');
+		if (find(connectionIDs.begin(), connectionIDs.end(), fromPk) == connectionIDs.end())
+		{
+			//If find no existing connection ID, then append it and update NonBaseConceptTable.
+			AppendSegmentToString(fromPk, connectionStr);
+
+			//Update concept table.
+			UpdateStatement updateState(NonBaseConceptTable);
+			updateState.EQ(NonBaseConceptField::ConceptID, fromPk);
+			updateState.Update(NonBaseConceptField::Connection, connectionStr);
+
+			UpdateDatabase(updateState);
+		}
+	}
+
+	void ConceptDatabase::AddModification(const shared_ptr<DataCollection::Word> fromWord, const int fromId, 
+		const shared_ptr<DataCollection::Word> toWord, const int toId, 
+		const shared_ptr<iConceptInteractTable> modTable)
+	{
+		//Generate connection ID.
+		auto fromPk = GenerateConceptPrimaryKey(fromWord->GetString(), fromId);
+		auto toPk = GenerateConceptPrimaryKey(toWord->GetString(), toId);
+		auto connectionID = CommonTool::GenerateHash(fromPk + toPk);
+
+		//Get modification string.
+		QueryStatement qryState(ConceptConnectionTable);
+		qryState.EQ(ConceptConnectionField::ConnectionID, connectionID);
+		auto connectionRow = QueryRows(qryState).front();
+		auto modStr = connectionRow.GetText(ConceptConnectionField::Modification);
+		auto modIDs = SplitString(modStr, ' ');
+
+		//Handle each modification pairs.
+		for (auto conceptPair : modTable->GetAllRelations())
+		{
+			auto concept1 = conceptPair.first;
+			auto concept2 = conceptPair.second;
+			auto newModPairStr = GenerateConceptPrimaryKey(concept1) + "-"
+				+ GenerateConceptPrimaryKey(concept2);
+
+			if (find(modIDs.begin(), modIDs.end(), newModPairStr) == modIDs.end())
+			{
+				//If find no existing modification pair, then append it and update ConceptConnectionTable.
+				AppendSegmentToString(newModPairStr, modStr);
+			}
+		}
+
+		//Update connection table.
+		UpdateStatement updateState(ConceptConnectionTable);
+		updateState.EQ(ConceptConnectionField::ConnectionID, connectionID);
+		updateState.Update(ConceptConnectionField::Modification, modStr);
+		UpdateDatabase(updateState);
+	}
+
 	shared_ptr<BaseConcept> ConceptDatabase::GetBaseConcept(const long baseID)
 	{
 		CheckConnect();
@@ -110,7 +195,7 @@ namespace Mind
 		}
 		else
 		{
-			throw runtime_error("Invalid word: " + word);
+			throw DatabaseException(BaseConceptTable, "Invalid word: " + word);
 		}
 	}
 
@@ -335,7 +420,7 @@ namespace Mind
 		}
 		else
 		{
-			throw runtime_error("Invalid id: " + baseID);
+			throw DatabaseException(BaseConceptTable,"Invalid id: " + baseID);
 		}
 	}
 
@@ -354,7 +439,7 @@ namespace Mind
 		}
 		else
 		{
-			throw runtime_error("Invalid word: " + word);
+			throw DatabaseException(NonBaseConceptTable,"Invalid word: " + word);
 		}
 	}
 
@@ -366,6 +451,16 @@ namespace Mind
 		auto rows = qry.GetRows();
 		//There must be only one row.
 		return rows.front();
+	}
+
+	bool ConceptDatabase::HasRow(const string pk, const string pkColName, const string table)
+	{
+		QueryStatement qryState(table);
+		qryState.EQ(pkColName, pk);
+		DBQry qry(qryState.GetString(), *_db);
+		auto rows = qry.GetRows();
+
+		return !rows.empty();
 	}
 
 	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
@@ -449,6 +544,12 @@ namespace Mind
 		return newID;
 	}
 
+	std::string ConceptDatabase::GenerateConceptPrimaryKey(const shared_ptr<iConcept> concept)
+	{
+		auto word = concept->GetWord();
+		return GenerateConceptPrimaryKey(word->GetString(), concept->GetId());
+	}
+
 	bool ConceptDatabase::IsModTable(const vector<string>& modSplit)
 	{
 		if (modSplit.size() > 1)
@@ -525,7 +626,19 @@ namespace Mind
 		return concept;
 	}
 
-	void ConceptDatabase::ChangePrimaryKeyToHash()
+	void ConceptDatabase::AppendSegmentToString(const string segment, string& raw)
+	{
+		if (raw == "")
+		{
+			raw = segment;
+		}
+		else
+		{
+			raw += " " + segment;
+		}
+	}
+
+void ConceptDatabase::ChangePrimaryKeyToHash()
 	{
 		//Get all base concepts.
 		auto baseConcepts = GetAllBaseConcepts();
@@ -704,14 +817,19 @@ namespace Mind
 			UpdateStatement updateQry(NonBaseConceptTable);
 			updateQry.Update("connection", idStr);
 			updateQry.EQ("conceptID", conceptID);
-			DBCmd cmd(updateQry.GetString(), *_db);
-			cmd.Execute();
+			UpdateDatabase(updateQry);
 		}
 	}
 
 	vector<DBRow> ConceptDatabase::QueryRows(const CommonTool::QueryStatement& state)
 	{
 		return QueryRows(state.GetString());
+	}
+
+	void ConceptDatabase::UpdateDatabase(const CommonTool::UpdateStatement& statement)
+	{
+		DBCmd cmd(statement.GetString(), *_db);
+		cmd.Execute();
 	}
 
 	vector<CommonTool::DBRow> ConceptDatabase::QueryRows(const string& cmd)
