@@ -117,8 +117,15 @@ namespace Mind
 		//Get connection string of fromConcept.
 		QueryStatement qryState(NonBaseConceptTable);
 		qryState.EQ(NonBaseConceptField::ConceptID, fromPk);
-		auto fromConceptRow = QueryRows(qryState).front();
-		string connectionStr = fromConceptRow.GetText(NonBaseConceptField::Connection);
+		auto fromConceptRows = QueryRows(qryState);
+		if (fromConceptRows.empty())
+		{
+			throw DatabaseException(NonBaseConceptTable, "Cannot find key: " + fromPk);
+		}
+		auto fromConceptRow = fromConceptRows.front();
+
+		string connectionStr = fromConceptRow.HasColumn(NonBaseConceptField::Connection)?
+			fromConceptRow.GetText(NonBaseConceptField::Connection) : "";
 		auto connectionIDs = SplitString(connectionStr, ' ');
 		if (find(connectionIDs.begin(), connectionIDs.end(), fromPk) == connectionIDs.end())
 		{

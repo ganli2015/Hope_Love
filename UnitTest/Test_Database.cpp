@@ -8,6 +8,9 @@
 #include "../MindElement/BaseConcept.h"
 
 #include "../CommonTools/DBoperator.h"
+#include "../CommonTools/MyException.h"
+#include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/QueryStatement.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
@@ -251,6 +254,40 @@ namespace Mind
 		ASSERT_EQ(Noun, word2->Type());
 	}
 
+	TEST_F(Test_Database, FailToAddConnectionIfThereIsNoConceptInConceptTable)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddNonBaseConceptToDB_WO(db);//"我"
+
+		auto fromWord = LanguageFunc::GetParticularWord("你", Pronoun);
+		auto toWord = LanguageFunc::GetParticularWord("她", Pronoun);
+
+		ASSERT_THROW(db->AddConnection(fromWord, 0, toWord, 0),CommonTool::DatabaseException);
+	}
+
+	TEST_F(Test_Database, AddConnectionIfConceptHasNoSuchConnection)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddNonBaseConceptToDB_WO(db);//"我"
+
+		auto fromWord = LanguageFunc::GetParticularWord("我", Pronoun);
+		auto toWord = LanguageFunc::GetParticularWord("她", Pronoun);//to_concept does not need to be in the database.
+
+		db->AddConnection(fromWord, 0, toWord, 0);
+
+		string conncetionStr = GetConnection("我", 0);
+		auto connectionIDs = CommonTool::SplitString(conncetionStr, ' ');
+		ASSERT_EQ(1, connectionIDs.size());//Only one connection.
+
+		db->AddConnection(fromWord, 0, toWord, 0);
+
+		string conncetionStr2 = GetConnection("我", 0);
+		auto connectionIDs2 = CommonTool::SplitString(conncetionStr2, ' ');
+		ASSERT_EQ(1, connectionIDs2.size());//If there is already the same connection, the new one will not append.
+	}
+
 	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithNoMod)
 	{
 		//Get Non base concept with no modification.
@@ -322,6 +359,7 @@ namespace Mind
 	{
 		_testDBOperator->DeleteRowsInTable("BaseConceptsString");
 		_testDBOperator->DeleteRowsInTable("NonBaseConcept");
+		_testDBOperator->DeleteRowsInTable("ConceptConnection");
 	}
 
 	void Test_Database::AddBaseConceptToDB_WO(ConceptDatabase *db)
@@ -372,6 +410,22 @@ namespace Mind
 		concept->SetId(1);
 
 		db->AddBaseConcept(concept);
+	}
+
+	void Test_Database::AddNonBaseConceptToDB_WO(ConceptDatabase *db)
+	{
+		db->AddNonBaseConcept(LanguageFunc::GetParticularWord("我", Pronoun), 0);
+	}
+
+	std::string Test_Database::GetConnection(const string word, const int id)
+	{
+		CommonTool::QueryStatement qryState("NonBaseConcept");
+		qryState.EQ("word", word);
+		qryState.EQ("id", id);
+		CommonTool::DBQry query(qryState.GetString(), *_testDBOperator);
+		auto row = query.GetRows().front();
+
+		return row.GetText("connection");
 	}
 
 	Math::Rand Test_Database::_rand;

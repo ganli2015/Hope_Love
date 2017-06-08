@@ -135,6 +135,7 @@ namespace CommonTool
 			DBRow dbRow;
 			for (int j = 0; j < qry->column_count(); ++j)
 			{
+				auto type = row.column_type(j);
 				if (row.column_type(j) == SQLITE3_TEXT)
 				{
 					//Parse string from utf8 to ascii.
