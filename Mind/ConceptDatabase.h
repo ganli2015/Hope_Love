@@ -120,19 +120,12 @@ namespace Mind
 		vector<shared_ptr<Concept>> GetConceptsWithPOS(const DataCollection::PartOfSpeech pos);
 
 	private:
-		vector<CommonTool::DBRow> QueryRows(const CommonTool::QueryStatement& cmd);
-		vector<CommonTool::DBRow> QueryRows(const string& cmd);
+
 
 		void AddBaseConcept(const long index, const int id, const string word, const DataCollection::PartOfSpeech pos);
 		void AddNonBaseConcept(const int id, const string word, const DataCollection::PartOfSpeech pos);
 		CommonTool::DBRow GetBaseConceptRow(const long index);
 		CommonTool::DBRow GetNonBaseConceptRow(const int id, const string word);
-
-		//////////////////////////////////////////////////////////////////////////
-		//Get row from primary key in the table.
-		//////////////////////////////////////////////////////////////////////////
-		CommonTool::DBRow GetRow(const string pk,const string pkColName, const string table);
-		bool HasRow(const string pk, const string pkColName, const string table);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get rows from concept table.
@@ -178,8 +171,6 @@ namespace Mind
 		//Otherwise, append a blank between the raw string and the new segment.
 		//////////////////////////////////////////////////////////////////////////
 		void AppendSegmentToString(const string segment, string& raw);
-
-		void UpdateDatabase(const CommonTool::UpdateStatement& statement);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Change primary key of each row to a hash value computed from word and id.

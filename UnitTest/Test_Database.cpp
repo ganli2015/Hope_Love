@@ -11,6 +11,7 @@
 #include "../CommonTools/MyException.h"
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/QueryStatement.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
@@ -288,6 +289,54 @@ namespace Mind
 		ASSERT_EQ(1, connectionIDs2.size());//If there is already the same connection, the new one will not append.
 	}
 
+	TEST_F(Test_Database, AddModificationWithOnePair)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddNonBaseConceptToDB_WO(db);//"我"
+
+		auto fromWord = LanguageFunc::GetParticularWord("我", Pronoun);
+		auto toWord = LanguageFunc::GetParticularWord("她", Pronoun);
+
+		//Build table.
+		auto conceptTable = ConceptTableCreator::SimpleCreate("你-我");
+
+		db->AddModification(fromWord, 0, toWord, 0, conceptTable);
+
+		auto connectionRows = GetConnectionRows();
+
+		ASSERT_EQ(1, connectionRows.size());
+
+		auto modStr = connectionRows.front().GetText("modification");
+		auto modSplit = CommonTool::SplitString(modStr, ' ');
+
+		ASSERT_EQ(1, modSplit.size());
+	}
+
+	TEST_F(Test_Database, AddModificationWithTwoPair)
+	{
+		ConceptDatabase *db = new ConceptDatabase();
+		SetDBOperator(db, _testDBOperator);
+		AddNonBaseConceptToDB_WO(db);//"我"
+
+		auto fromWord = LanguageFunc::GetParticularWord("我", Pronoun);
+		auto toWord = LanguageFunc::GetParticularWord("她", Pronoun);
+
+		//Build table.
+		auto conceptTable = ConceptTableCreator::SimpleCreate("你-我,他-我");
+
+		db->AddModification(fromWord, 0, toWord, 0, conceptTable);
+
+		auto connectionRows = GetConnectionRows();
+
+		ASSERT_EQ(1, connectionRows.size());
+
+		auto modStr = connectionRows.front().GetText("modification");
+		auto modSplit = CommonTool::SplitString(modStr, ' ');
+
+		ASSERT_EQ(2, modSplit.size());
+	}
+
 	TEST_F(Test_Database_Normal, GetNonBaseConcept_WithNoMod)
 	{
 		//Get Non base concept with no modification.
@@ -426,6 +475,13 @@ namespace Mind
 		auto row = query.GetRows().front();
 
 		return row.GetText("connection");
+	}
+
+	vector<CommonTool::DBRow> Test_Database::GetConnectionRows()
+	{
+		CommonTool::QueryStatement qryState("ConceptConnection");
+		CommonTool::DBQry query(qryState.GetString(), *_testDBOperator);
+		return query.GetRows();
 	}
 
 	Math::Rand Test_Database::_rand;

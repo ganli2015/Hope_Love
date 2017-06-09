@@ -1,1 +1,1 @@
-Test_Database.AddConnectionIfConceptHasNoSuchConnection
+Test_Database.*

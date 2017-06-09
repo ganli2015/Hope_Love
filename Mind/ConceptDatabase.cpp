@@ -153,8 +153,17 @@ namespace Mind
 		//Get modification string.
 		QueryStatement qryState(ConceptConnectionTable);
 		qryState.EQ(ConceptConnectionField::ConnectionID, connectionID);
-		auto connectionRow = QueryRows(qryState).front();
-		auto modStr = connectionRow.GetText(ConceptConnectionField::Modification);
+		auto connectionRows = QueryRows(qryState);
+		string modStr = "";
+		if (connectionRows.empty())
+		{
+			//If there is no connection, create one.
+			AddConnection(fromWord, fromId, toWord, toId);
+		}
+		else
+		{
+			modStr = connectionRows.front().GetText(ConceptConnectionField::Modification);
+		}
 		auto modIDs = SplitString(modStr, ' ');
 
 		//Handle each modification pairs.
@@ -448,26 +457,6 @@ namespace Mind
 		{
 			throw DatabaseException(NonBaseConceptTable,"Invalid word: " + word);
 		}
-	}
-
-	CommonTool::DBRow ConceptDatabase::GetRow(const string pk, const string pkColName, const string table)
-	{
-		QueryStatement qryState(table);
-		qryState.EQ(pkColName, pk);
-		DBQry qry(qryState.GetString(), *_db);
-		auto rows = qry.GetRows();
-		//There must be only one row.
-		return rows.front();
-	}
-
-	bool ConceptDatabase::HasRow(const string pk, const string pkColName, const string table)
-	{
-		QueryStatement qryState(table);
-		qryState.EQ(pkColName, pk);
-		DBQry qry(qryState.GetString(), *_db);
-		auto rows = qry.GetRows();
-
-		return !rows.empty();
 	}
 
 	vector<DBRow> ConceptDatabase::GetRowsWithWord(const string word)
@@ -826,26 +815,6 @@ void ConceptDatabase::ChangePrimaryKeyToHash()
 			updateQry.EQ("conceptID", conceptID);
 			UpdateDatabase(updateQry);
 		}
-	}
-
-	vector<DBRow> ConceptDatabase::QueryRows(const CommonTool::QueryStatement& state)
-	{
-		return QueryRows(state.GetString());
-	}
-
-	void ConceptDatabase::UpdateDatabase(const CommonTool::UpdateStatement& statement)
-	{
-		DBCmd cmd(statement.GetString(), *_db);
-		cmd.Execute();
-	}
-
-	vector<CommonTool::DBRow> ConceptDatabase::QueryRows(const string& cmd)
-	{
-		CheckConnect();
-
-		DBQry qry(cmd, *_db);
-		auto rows = qry.GetRows();
-		return rows;
 	}
 
 }

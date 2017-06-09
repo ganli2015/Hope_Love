@@ -9,6 +9,7 @@
 namespace CommonTool
 {
 	class DBoperator;
+	class DBRow;
 }
 
 namespace DataCollection
@@ -76,6 +77,8 @@ namespace Mind
 		//Get connection string of a concept from non base concept table.
 		//////////////////////////////////////////////////////////////////////////
 		string GetConnection(const string word, const int id);
+
+		vector<CommonTool::DBRow> GetConnectionRows();
 	};
 
 	//////////////////////////////////////////////////////////////////////////
