@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-06-10T19:42:28" time="12.983" name="AllTests">
+  <testsuite name="Test_Cerebrum" tests="1" failures="0" disabled="0" errors="0" time="12.981">
+    <testcase name="FindConceptWithMatchedDisc" status="run" time="12.978" classname="Test_Cerebrum" />
+  </testsuite>
+</testsuites>

@@ -91,6 +91,8 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		shared_ptr<Concept> GetConcept(const string conceptID);
 
+		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
+
 		//////////////////////////////////////////////////////////////////////////
 		//Get total count of base concept.
 		//////////////////////////////////////////////////////////////////////////
@@ -143,7 +145,6 @@ namespace Mind
 
 
 		vector<shared_ptr<BaseConcept>> GetAllBaseConcepts();
-		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
 
 		string GenerateConceptPrimaryKey(const string word, const int id);
 		string GenerateConceptPrimaryKey(const shared_ptr<iConcept> concept);

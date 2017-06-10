@@ -71,6 +71,7 @@ void RunUnitTest(int argc, _TCHAR* argv[])
 
 #endif // !_RUN_INTEGRATION_TEST
 
+	testing::GTEST_FLAG(output) = "xml:unit_test_report.xml";
 	testing::InitGoogleTest(&argc, argv);
 
 	MEMOCHECK;

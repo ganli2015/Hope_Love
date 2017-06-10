@@ -248,7 +248,6 @@ void AddPatternToCerebrum::SetUp()
 void AddPatternToCerebrum::TearDown()
 {
 	iCerebrum::KillInstance();
-	Check(_initObjectCount==MyObject::GetObjectCount());
 }
 
 bool Flags::UNIT_TEST = false;

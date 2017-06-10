@@ -20,9 +20,9 @@ namespace Mind
 
 	class _MINDINOUT ConceptSet : public Obj<ConceptSet> , public MindObject
 	{
-		typedef std::multimap<std::string,shared_ptr<Concept>> ConceptMap;
+		typedef std::vector<shared_ptr<Concept>> ConceptMap;
 		typedef std::multimap<std::string,shared_ptr<BaseConcept>> BaseConceptMap;
-		ConceptMap _conceptset;
+		//ConceptMap _conceptset;
 		//BaseConceptMap _baseConceptset;
 		unique_ptr<ConceptDatabase> _conceptDB;
 
@@ -50,8 +50,7 @@ namespace Mind
 		//暂定：任何词性的word都只能和名词以及与其自身相同词性的word连接
 		void MakeConnection(const shared_ptr<DataCollection::Word> from,const shared_ptr<DataCollection::Word> to);
 		
-		///Add modification betweeen <from> and <to>.
-		void AddModification(const Identity& from,const Identity& to,const Identity& modification);
+		///Add modification between <from> and <to>.
 		void AddModification(const Identity& from,const Identity& to,const shared_ptr<iConceptInteractTable>& modification);
 		
 		//Get the concept of <word>.The returned concept is copy of the one in <me>.

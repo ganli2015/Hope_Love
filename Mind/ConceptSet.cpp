@@ -190,22 +190,10 @@ namespace Mind
 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
 		}
 
-		pfromConcept->AddForwardConcept(ptoConcept);
-		ptoConcept->AddBackwardConcept(pfromConcept);
-	}
+		int fromID = pfromConcept->GetId();
+		int toID = ptoConcept->GetId();
 
-	void ConceptSet::AddModification(const Identity& from,const Identity& to,const Identity& modification)
-	{
-		shared_ptr<Concept> pfromConcept=GetConceptRef(from);
-		shared_ptr<Concept> ptoConcept=GetConceptRef(to);
-		shared_ptr<Concept> pmodConcept=GetConceptRef(modification);
-		if(pfromConcept==NULL || ptoConcept==NULL || pmodConcept==NULL)
-		{
-			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
-		}
-
-		pfromConcept->AddForwardModification(ptoConcept,pmodConcept);
-//		ptoConcept->AddBackwardModification(pfromConcept,pmodConcept);
+		_conceptDB->AddConnection(pfromConcept->GetWord(), fromID, ptoConcept->GetWord(), toID);
 	}
 
 	void ConceptSet::AddModification( const Identity& from,const Identity& to,const shared_ptr<iConceptInteractTable>& modification )
@@ -217,8 +205,10 @@ namespace Mind
 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
 		}
 
-		pfromConcept->AddForwardModification(ptoConcept,modification);
-//		ptoConcept->AddBackwardModification(pfromConcept,pmodConcept);
+		int fromID = pfromConcept->GetId();
+		int toID = ptoConcept->GetId();
+
+		_conceptDB->AddModification(pfromConcept->GetWord(), fromID, ptoConcept->GetWord(), toID, modification);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef(const shared_ptr<DataCollection::Word> word) const 
@@ -356,9 +346,9 @@ namespace Mind
 			CheckMatch(const shared_ptr<iConceptInteractTable> description):_description(description){}
 			~CheckMatch(){}
 
-			bool operator()(const pair<std::string,shared_ptr<Concept>>& concept)
+			bool operator()(const shared_ptr<Concept>& concept)
 			{
-				if(concept.second->MatchWithDescription(_description))
+				if(concept->MatchWithDescription(_description))
 				{
 					return true;
 				}
@@ -368,15 +358,17 @@ namespace Mind
 				}
 			}
 		};
-
+		//Get all non base concepts from database.
+		auto allNonbaseConcepts = _conceptDB->GetAllNonBaseConcepts();
+		
 		vector<shared_ptr<iConcept>> res;
 
-		const_conceptIter matchedIter=find_if(_conceptset.begin(),_conceptset.end(),CheckMatch(description));
-		while(matchedIter!=_conceptset.end())//Go through all concepts until reaching the end.
+		const_conceptIter matchedIter=find_if(allNonbaseConcepts.begin(), allNonbaseConcepts.end(),CheckMatch(description));
+		while(matchedIter!= allNonbaseConcepts.end())//Go through all concepts until reaching the end.
 		{
-			res.push_back(matchedIter->second);
+			res.push_back(*matchedIter);
 			++matchedIter;
-			matchedIter=find_if(matchedIter,_conceptset.end(),CheckMatch(description));
+			matchedIter=find_if(matchedIter, allNonbaseConcepts.cend(),CheckMatch(description));
 		}
 
 		return res;
@@ -394,15 +386,15 @@ namespace Mind
 			GenerateMatchInfo(const shared_ptr<iConceptInteractTable> description):_description(description){}
 			~GenerateMatchInfo(){}
 
-			void operator()(const pair<std::string,shared_ptr<Concept>>& concept)
+			void operator()(const shared_ptr<Concept>& concept)
 			{
 				shared_ptr<iConcept> toConcept;
 
-				if(concept.second->MatchWithDescription(_description,toConcept))
+				if(concept->MatchWithDescription(_description,toConcept))
 				{
 					assert(toConcept!=NULL);
 					DescMatchedConceptInfo info;
-					info.matchedConcept=concept.second;
+					info.matchedConcept=concept;
 					info.toConcept=toConcept;
 					_infos.push_back(info);
 
@@ -412,10 +404,13 @@ namespace Mind
 			vector<DescMatchedConceptInfo> GetResult() const {return _infos; }
 		};
 
+		//Get all non base concepts from database.
+		auto allNonbaseConcepts = _conceptDB->GetAllNonBaseConcepts();
+
 		matchedInfos.clear();
 		
 		GenerateMatchInfo genarate(description);
-		genarate=for_each(_conceptset.begin(),_conceptset.end(),genarate);
+		genarate=for_each(allNonbaseConcepts.begin(), allNonbaseConcepts.end(),genarate);
 
 		matchedInfos=genarate.GetResult();
 	}
