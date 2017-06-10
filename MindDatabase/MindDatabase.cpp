@@ -11,7 +11,7 @@ using namespace CommonTool;
 
 namespace Mind
 {
-	MindDatabase::MindDatabase():_db(NULL)
+	MindDatabase::MindDatabase(const string dbPath):_db(NULL),_dbPath(dbPath)
 	{
 		_elemCreator = new MindElementCreator();
 	}
@@ -42,7 +42,7 @@ namespace Mind
 	{
 		if (_db == NULL)
 		{
-			_db = new DBoperator(GetDatabasePath());
+			_db = new DBoperator(_dbPath);
 		}
 	}
 

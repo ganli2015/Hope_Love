@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Test_Database.h"
 
-#include "../Mind/MindParameterDatabase.h"
-#include "../Mind/GrammarFeatureDatabase.h"
-#include "../Mind/ConceptDatabase.h"
+#include "../Mind/FilePath.h"
+#include "../Mind/GrammarFeatureModel.h"
+
+#include "../MindDatabase/Headers.h"
 
 #include "../MindElement/BaseConcept.h"
 
@@ -33,7 +34,7 @@ namespace Mind
 {
 	TEST_F(Test_Database, ReadWriteGrammarFeatureModelWeight)
 	{
-		MindParameterDatabase *db = new MindParameterDatabase();
+		MindParameterDatabase *db = CreateParamDB();
 		SetDBOperator(db, _testDBOperator);
 
 		double weight = GetRandomDecimal();
@@ -46,7 +47,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteGrammarLocalModelWeight)
 	{
-		MindParameterDatabase *db = new MindParameterDatabase();
+		MindParameterDatabase *db = CreateParamDB();
 		SetDBOperator(db, _testDBOperator);
 
 		double weight = GetRandomDecimal();
@@ -59,7 +60,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteGrammarPatternModelWeight)
 	{
-		MindParameterDatabase *db = new MindParameterDatabase();
+		MindParameterDatabase *db = CreateParamDB();
 		SetDBOperator(db, _testDBOperator);
 
 		double weight = GetRandomDecimal();
@@ -72,7 +73,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteGrammarFeatureWeights)
 	{
-		MindParameterDatabase *db = new MindParameterDatabase();
+		MindParameterDatabase *db = CreateParamDB();
 		SetDBOperator(db, _testDBOperator);
 
 		//Set feature type in MindParameterDatabase.
@@ -107,7 +108,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteBaseConcept)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 
 		long index = 0;
@@ -133,7 +134,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteNonBaseConcept)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 
 		auto word= LanguageFunc::GetParticularWord("你", Pronoun);
@@ -157,7 +158,7 @@ namespace Mind
 
 	TEST_F(Test_Database, ReadWriteNonBaseConcept_IDAutomaticallyIncrease)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 
 		auto word = LanguageFunc::GetParticularWord("你", Pronoun);
@@ -172,7 +173,7 @@ namespace Mind
 
 	TEST_F(Test_Database, GetBaseConceptCount)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 
 		//Add base concept to database.
@@ -185,7 +186,7 @@ namespace Mind
 
 	TEST_F(Test_Database, HasWord_ConceptDatabase)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddBaseConceptToDB_WO(db);
 
@@ -195,7 +196,7 @@ namespace Mind
 
 	TEST_F(Test_Database, NotHasWord_ConceptDatabase)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddBaseConceptToDB_WO(db);
 
@@ -205,7 +206,7 @@ namespace Mind
 
 	TEST_F(Test_Database, HasString_ConceptDatabase)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddBaseConceptToDB_WO(db);
 
@@ -214,7 +215,7 @@ namespace Mind
 
 	TEST_F(Test_Database, GetConceptsWithHead)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddBaseConceptToDB_WO(db);
 		AddBaseConceptToDB_WOYAO(db);
@@ -236,7 +237,7 @@ namespace Mind
 
 	TEST_F(Test_Database, GetConceptsWithWord)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddBaseConceptToDB_WO(db);//Pronoun 
 		AddBaseConceptToDB_WO_Noun(db);//Noun
@@ -257,7 +258,7 @@ namespace Mind
 
 	TEST_F(Test_Database, FailToAddConnectionIfThereIsNoConceptInConceptTable)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddNonBaseConceptToDB_WO(db);//"我"
 
@@ -269,7 +270,7 @@ namespace Mind
 
 	TEST_F(Test_Database, AddConnectionIfConceptHasNoSuchConnection)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddNonBaseConceptToDB_WO(db);//"我"
 
@@ -291,7 +292,7 @@ namespace Mind
 
 	TEST_F(Test_Database, AddModificationWithOnePair)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddNonBaseConceptToDB_WO(db);//"我"
 
@@ -315,7 +316,7 @@ namespace Mind
 
 	TEST_F(Test_Database, AddModificationWithTwoPair)
 	{
-		ConceptDatabase *db = new ConceptDatabase();
+		ConceptDatabase *db = CreateConceptDB();
 		SetDBOperator(db, _testDBOperator);
 		AddNonBaseConceptToDB_WO(db);//"我"
 
@@ -484,6 +485,16 @@ namespace Mind
 		return query.GetRows();
 	}
 
+	MindParameterDatabase* Test_Database::CreateParamDB()
+	{
+		return new MindParameterDatabase(GetDatabasePath(), GrammarFeatureModel::GetFeatureTypesCount());
+	}
+
+	ConceptDatabase* Test_Database::CreateConceptDB()
+	{
+		return new ConceptDatabase(GetDatabasePath());
+	}
+
 	Math::Rand Test_Database::_rand;
 
 	CommonTool::DBoperator * Test_Database::_testDBOperator;
@@ -534,7 +545,7 @@ namespace Mind
 		mockElemCreator->SetCreatedConcept(meRow, mockConcept);
 
 		//Inject mock object.
-		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>();
+		StrictMock<ConceptDatabase> *db = new StrictMock<ConceptDatabase>(GetDatabasePath());
 		SetDBOperator(db, _DBOperator);
 		SetElemCreator(db, mockElemCreator);
 

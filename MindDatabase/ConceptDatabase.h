@@ -26,7 +26,7 @@ namespace Mind
 	//////////////////////////////////////////////////////////////////////////
 	//Database for Base Concept, NonBase Concept and Concept Connection.
 	//////////////////////////////////////////////////////////////////////////
-	class _MINDINOUT ConceptDatabase : public MindDatabase
+	class _MINDDATABASEINOUT ConceptDatabase : public MindDatabase
 	{
 		const string BaseConceptTable;
 		const string NonBaseConceptTable;
@@ -36,7 +36,7 @@ namespace Mind
 
 		friend class DataPrepareForHopeLove;
 	public:
-		ConceptDatabase();
+		ConceptDatabase(const string dbPath);
 		~ConceptDatabase();
 
 		void AddBaseConcept(const shared_ptr<BaseConcept> concept);

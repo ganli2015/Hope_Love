@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Database">
-      <UniqueIdentifier>{71dd3d29-21a2-436d-92f4-e331101f0eb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Grammar">
       <UniqueIdentifier>{83575a96-f645-4871-be47-ad6e9eaeca27}</UniqueIdentifier>
     </Filter>
@@ -59,12 +56,6 @@
     <ClInclude Include="ReactionValueEvaluation.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GrammarFeatureDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="MindParameterDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="GrammaTree.h">
       <Filter>Grammar</Filter>
     </ClInclude>
@@ -83,17 +74,8 @@
     <ClInclude Include="GrammaSet.h">
       <Filter>Grammar</Filter>
     </ClInclude>
-    <ClInclude Include="DBContainer.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="MindDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="MindObject.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ConceptDatabase.h">
-      <Filter>Database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,12 +118,6 @@
     <ClCompile Include="ReactionValueEvaluation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="GrammarFeatureDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="MindParameterDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="GrammaTree.cpp">
       <Filter>Grammar</Filter>
     </ClCompile>
@@ -160,17 +136,8 @@
     <ClCompile Include="GrammarFeatureModel.cpp">
       <Filter>Grammar</Filter>
     </ClCompile>
-    <ClCompile Include="DBContainer.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="MindDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="MindObject.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ConceptDatabase.cpp">
-      <Filter>Database</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

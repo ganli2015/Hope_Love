@@ -7,7 +7,8 @@
 #include "../Mind/GrammarModel.h"
 #include "../Mind/GrammaSet.h"
 #include "../Mind/ConceptSet.h"
-#include "../Mind/ConceptDatabase.h"
+
+#include "../MindDatabase/ConceptDatabase.h"
 
 #include "../CommonTools/DBoperator.h"
 
@@ -63,7 +64,7 @@ TEST(Preparation, ChangePrimaryKeyToHash)
 {
 	CHECK_SKIP;
 	Mind::SetHopeLoveMindPath(FuncForTest::LargeDataPath);
-	auto conceptDB = new Mind::ConceptDatabase;
+	auto conceptDB = new Mind::ConceptDatabase(GetDatabasePath());
 	DataPrepareForHopeLove::ChangePrimaryKeyToHash(conceptDB);
 	delete conceptDB;
 }
@@ -74,7 +75,7 @@ TEST(Preparation, ReadConceptConnectionFromFile)
 	//and build connection table in the databases.
 
 	CHECK_SKIP;
-	auto conceptDB = new Mind::ConceptDatabase;
+	auto conceptDB = new Mind::ConceptDatabase(GetDatabasePath());
 	conceptDB->Connect();
 	DataPrepareForHopeLove::ReadConceptConnectionFromFile("D:\\Projects\\Hope_Love\\Mind\\HopeLoveData\\ConceptConnections_Initial.txt",conceptDB);
 	delete conceptDB;
@@ -85,7 +86,7 @@ TEST(Preparation, RefreshConceptConnection)
 	//Relate connection table with concept tables.
 
 	CHECK_SKIP;
-	auto conceptDB = new Mind::ConceptDatabase;
+	auto conceptDB = new Mind::ConceptDatabase(GetDatabasePath());
 	conceptDB->Connect();
 	DataPrepareForHopeLove::RefreshConceptConnectionInConceptTable(conceptDB);
 	delete conceptDB;

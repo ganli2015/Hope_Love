@@ -3,8 +3,6 @@
 #include "CommonFunction.h"
 #include "ConceptSetInitializer.h"
 #include "FindConnectConcept.h"
-#include "DBContainer.h"
-#include "ConceptDatabase.h"
 #include <fstream>
 #include <deque>
 #include <sstream>
@@ -21,6 +19,8 @@
 #include "../MindElement/ConceptInteractTable.h"
 #include "../MindElement/BaseConcept.h"
 #include "../MindElement/MindElementCreator.h"
+
+#include "../MindDatabase/Headers.h"
 
 #include "../MindInterface/iCerebrum.h"
 

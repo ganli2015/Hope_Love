@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "GrammarFeatureModel.h"
-#include "GrammarFeatureDatabase.h"
-#include "MindParameterDatabase.h"
 #include "CommonFunction.h"
-#include "DBContainer.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/LogWriter.h"
@@ -15,6 +12,8 @@
 
 #include "../Mathmatic/MathTool.h"
 #include "../Mathmatic/NumericalOptimization.h"
+
+#include "../MindDatabase/Headers.h"
 
 #include <stdlib.h>
 
@@ -94,7 +93,7 @@ namespace Mind
 		//Write all weights to database.
 		vector<double> allWeights = weights;
 		allWeights.push_back(ComputeLastWeight(weights));
-		auto mindPramDB = _dbContainer->GetMindParameterDatabase();
+		auto mindPramDB = _dbContainer->GetMindParameterDatabase(featureTypes.size());
 		mindPramDB->UpdateGrammarFeatureWeights(allWeights);
 	}
 
@@ -320,7 +319,7 @@ namespace Mind
 
 	void GrammarFeatureModel::ReadWeightsInDB()
 	{
-		auto db=_dbContainer->GetMindParameterDatabase();
+		auto db=_dbContainer->GetMindParameterDatabase(GetFeatureTypesCount());
 		vector<double> weights = db->GetGrammarFeatureWeights();
 		if (weights.size() != _featureTypes.size())
 		{

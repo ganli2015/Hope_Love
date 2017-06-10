@@ -3,8 +3,6 @@
 #include "FilePath.h"
 #include "GrammarFeatureModel.h"
 #include "GrammarLocalModel.h"
-#include "MindParameterDatabase.h"
-#include "DBContainer.h"
 
 #include "../CommonTools/LogWriter.h"
 
@@ -18,6 +16,8 @@
 #include "../CommonTools/CommonStringFunction.h"
 
 #include "../Mathmatic/FindSequence.h"
+
+#include "../MindDatabase/Headers.h"
 
 #include <tinyxml.h>
 
@@ -472,7 +472,7 @@ namespace Mind
 		_featureModel->ClearFeatures();
 
 		//Write weights to database.
-		auto paramDB = _dbContainer->GetMindParameterDatabase();
+		auto paramDB = _dbContainer->GetMindParameterDatabase(GrammarFeatureModel::GetFeatureTypesCount());
 		paramDB->WriteGrammarFeatureModelWeight(model.GetModelWeight(_featureModel));
 		paramDB->WriteGrammarLocalModelWeight(model.GetModelWeight(_localModel));
 		paramDB->WriteGrammarPatternModelWeight(model.GetModelWeight(_patternModel));
@@ -502,7 +502,7 @@ namespace Mind
 
 	void GrammarSet::ReadWeights()
 	{
-		auto paramDB = _dbContainer->GetMindParameterDatabase();
+		auto paramDB = _dbContainer->GetMindParameterDatabase(GrammarFeatureModel::GetFeatureTypesCount());
 		
 		double patternModelWeight = paramDB->GetGrammarPatternModelWeight();
 		LOG_FORMAT("Weight for gramamr pattern model is %lf.", patternModelWeight);

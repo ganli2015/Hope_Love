@@ -161,7 +161,6 @@
   <ItemGroup>
     <ClInclude Include="Cerebrum.h" />
     <ClInclude Include="CommonFunction.h" />
-    <ClInclude Include="ConceptDatabase.h" />
     <ClInclude Include="ConceptInteractTableContainer.h" />
     <ClInclude Include="ConceptReactImp.h" />
     <ClInclude Include="ConceptReactImp_1212.h" />
@@ -169,10 +168,8 @@
     <ClInclude Include="ConceptReactSystem.h" />
     <ClInclude Include="ConceptSet.h" />
     <ClInclude Include="ConceptSetInitializer.h" />
-    <ClInclude Include="DBContainer.h" />
     <ClInclude Include="FindConnectConcept.h" />
     <ClInclude Include="FilePath.h" />
-    <ClInclude Include="GrammarFeatureDatabase.h" />
     <ClInclude Include="GrammarFeatureModel.h" />
     <ClInclude Include="GrammarLocalModel.h" />
     <ClInclude Include="GrammarModel.h" />
@@ -180,16 +177,13 @@
     <ClInclude Include="GrammaSet.h" />
     <ClInclude Include="GrammaTree.h" />
     <ClInclude Include="InOut.h" />
-    <ClInclude Include="MindDatabase.h" />
     <ClInclude Include="MindObject.h" />
-    <ClInclude Include="MindParameterDatabase.h" />
     <ClInclude Include="ReactionValueEvaluation.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cerebrum.cpp" />
     <ClCompile Include="CommonFunction.cpp" />
-    <ClCompile Include="ConceptDatabase.cpp" />
     <ClCompile Include="ConceptInteractTableContainer.cpp" />
     <ClCompile Include="ConceptReactImp.cpp" />
     <ClCompile Include="ConceptReactImp_1212.cpp" />
@@ -197,19 +191,15 @@
     <ClCompile Include="ConceptReactSystem.cpp" />
     <ClCompile Include="ConceptSet.cpp" />
     <ClCompile Include="ConceptSetInitializer.cpp" />
-    <ClCompile Include="DBContainer.cpp" />
     <ClCompile Include="FindConnectConcept.cpp" />
     <ClCompile Include="FilePath.cpp" />
-    <ClCompile Include="GrammarFeatureDatabase.cpp" />
     <ClCompile Include="GrammarFeatureModel.cpp" />
     <ClCompile Include="GrammarLocalModel.cpp" />
     <ClCompile Include="GrammarModel.cpp" />
     <ClCompile Include="GrammarPatternModel.cpp" />
     <ClCompile Include="GrammaSet.cpp" />
     <ClCompile Include="GrammaTree.cpp" />
-    <ClCompile Include="MindDatabase.cpp" />
     <ClCompile Include="MindObject.cpp" />
-    <ClCompile Include="MindParameterDatabase.cpp" />
     <ClCompile Include="ReactionValueEvaluation.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -232,6 +222,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Mathmatic\Mathmatic.vcxproj">
       <Project>{e077393a-a460-43cf-869e-d4b3ea36dc3b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MindDatabase\MindDatabase.vcxproj">
+      <Project>{e4bf2da1-32fa-4e8f-a40d-6b50bad1b6f7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MindElement\MindElement.vcxproj">
       <Project>{0270e5bd-21c1-4423-9969-0ef1ce1b0274}</Project>

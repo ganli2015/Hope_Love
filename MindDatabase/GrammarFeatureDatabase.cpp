@@ -6,14 +6,13 @@
 
 #include "../DataCollection/GrammarFeature.h"
 
-#include "FilePath.h"
-
 
 using namespace CommonTool;
 
 namespace Mind
 {
-	GrammarFeatureDatabase::GrammarFeatureDatabase() :TableName("GrammarFeature")
+	GrammarFeatureDatabase::GrammarFeatureDatabase(const string dbPath) :MindDatabase(dbPath),
+		TableName("GrammarFeature")
 	{
 		//CheckHasTable();
 	}

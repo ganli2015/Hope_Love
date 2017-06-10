@@ -79,6 +79,10 @@ namespace Mind
 		string GetConnection(const string word, const int id);
 
 		vector<CommonTool::DBRow> GetConnectionRows();
+
+		MindParameterDatabase* CreateParamDB();
+		ConceptDatabase* CreateConceptDB();
+
 	};
 
 	//////////////////////////////////////////////////////////////////////////

@@ -18,15 +18,17 @@ namespace Mind
 	//////////////////////////////////////////////////////////////////////////
 	//The base class of Database classes for Mind.
 	//////////////////////////////////////////////////////////////////////////
-	class _MINDINOUT MindDatabase
+	class _MINDDATABASEINOUT MindDatabase
 	{
+		string _dbPath;
+
 		friend class Test_Database;
 		friend class Test_Database_Normal;
 	protected:
 		CommonTool::DBoperator *_db;
 		MindElementCreator *_elemCreator;
 	public:
-		MindDatabase();
+		MindDatabase(const string dbPath);
 		~MindDatabase();
 
 		void Connect();

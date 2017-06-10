@@ -9,12 +9,13 @@ namespace DataCollection
 
 namespace Mind
 {
+	typedef vector<shared_ptr<DataCollection::GrammarFeature>> FeatureList;
 
-	class GrammarFeatureDatabase : public MindDatabase
+	class _MINDDATABASEINOUT GrammarFeatureDatabase : public MindDatabase
 	{
 		const string TableName;
 	public:
-		GrammarFeatureDatabase();
+		GrammarFeatureDatabase(const string dbPath);
 		~GrammarFeatureDatabase();
 
 

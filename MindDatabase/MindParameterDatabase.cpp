@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "MindParameterDatabase.h"
-#include "GrammarFeatureModel.h"
 
 #include "../CommonTools/DBoperator.h"
 #include "../CommonTools/CommonStringFunction.h"
@@ -10,7 +9,9 @@ using namespace CommonTool;
 
 namespace Mind
 {
-	MindParameterDatabase::MindParameterDatabase() :TableName("MindParam"),
+	MindParameterDatabase::MindParameterDatabase(const string dbPath, const int grammarFeatureTypeCount) :MindDatabase(dbPath),
+		_grammarFeatureTypeCount(grammarFeatureTypeCount),
+		TableName("MindParam"),
 		ParamIDTag("name"),
 		ParamValueTag("value"),
 		FeaturegwID("featuregw"),
@@ -97,7 +98,7 @@ namespace Mind
 
 	void MindParameterDatabase::PrepareFeatureWeightID()
 	{
-		unsigned weightCount = GrammarFeatureModel::GetFeatureTypesCount();
+		unsigned weightCount = _grammarFeatureTypeCount;
 		for (unsigned i = 0; i < weightCount; ++i)
 		{
 			//Get id of the weight.
