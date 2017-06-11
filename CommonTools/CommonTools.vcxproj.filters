@@ -68,6 +68,15 @@
     <ClInclude Include="UpdateStatement.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="CacheManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadWorker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IJob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -117,6 +126,12 @@
     </ClCompile>
     <ClCompile Include="UpdateStatement.cpp">
       <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="CacheManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadWorker.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

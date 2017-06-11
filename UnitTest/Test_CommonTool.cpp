@@ -9,6 +9,7 @@
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/MemoryDetector.h"
+#include "../CommonTools/CacheManager.h"
 
 #include <Windows.h>
 
@@ -91,4 +92,35 @@ TEST(Test_CommonStringFunction, GenerateHash)
 
 	ASSERT_NE(id1, id2);
 	ASSERT_NE(id2, id3);
+}
+
+
+TEST(Test_CacheManager, RaiseOnMonitor)
+{
+	//Check if the monitor event is raised after an interval.
+
+	class CacheManagerTester: public CacheManager<int>
+	{
+		bool &_raiseFlag;
+	public:
+		CacheManagerTester(bool &flag) :_raiseFlag(flag) {};
+	private:
+
+		void OnMonitor()
+		{
+			_raiseFlag = true;
+		}
+	};
+
+	bool raiseFlag = false;
+	CacheManagerTester tester(raiseFlag);
+	tester.SetReleaseInterval(3);
+	tester.RunMonitor();
+
+	Sleep(1000);
+	//Not raised after one second.
+	ASSERT_FALSE(raiseFlag);
+
+	Sleep(3000);
+	ASSERT_TRUE(raiseFlag);
 }
