@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-06-11T16:43:58" time="10.541" name="AllTests">
-  <testsuite name="Test_CacheManager" tests="1" failures="0" disabled="0" errors="0" time="10.538">
-    <testcase name="RaiseOnMonitor" status="run" time="10.537" classname="Test_CacheManager" />
+<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-06-12T01:08:46" time="4.006" name="AllTests">
+  <testsuite name="Test_CacheManager" tests="1" failures="0" disabled="0" errors="0" time="4.003">
+    <testcase name="RaiseOnMonitor" status="run" time="4.001" classname="Test_CacheManager" />
   </testsuite>
 </testsuites>

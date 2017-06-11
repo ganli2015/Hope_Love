@@ -152,8 +152,8 @@
   <ItemGroup>
     <ClInclude Include="assertions.h" />
     <ClInclude Include="CacheManager.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="CommonCompareFunction.h" />
-    <ClInclude Include="CommonFindFunction.h" />
     <ClInclude Include="CommonStringFunction.h" />
     <ClInclude Include="CommonTranslateFunction.h" />
     <ClInclude Include="ConfigureInfoManager.h" />
@@ -166,6 +166,7 @@
     <ClInclude Include="MemoryDetector.h" />
     <ClInclude Include="MyException.h" />
     <ClInclude Include="MyObject.h" />
+    <ClInclude Include="NonCopyable.h" />
     <ClInclude Include="QueryStatement.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="Stdafx.h" />
@@ -173,10 +174,9 @@
     <ClInclude Include="UpdateStatement.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CacheManager.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="CommonCompareFunction.cpp" />
     <ClCompile Include="CommonDeleteFunction.cpp" />
-    <ClCompile Include="CommonFindFunction.cpp" />
     <ClCompile Include="CommonStringFunction.cpp" />
     <ClCompile Include="CommonTranslateFunction.cpp" />
     <ClCompile Include="ConfigureInfoManager.cpp" />

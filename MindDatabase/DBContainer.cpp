@@ -7,19 +7,15 @@
 
 namespace Mind
 {
-
-	DBContainer* DBContainer::_instance = NULL;
-
-	DBContainer* DBContainer::Instance()
+	DBContainer::DBContainer()
 	{
-		if (_instance == NULL)
-		{
-			_instance = new DBContainer();
-		}
-
-		return _instance;
 	}
 
+
+	DBContainer::~DBContainer()
+	{
+	}
+	
 	unique_ptr<GrammarFeatureDatabase> DBContainer::GetGrammarFeatureDatabase() const
 	{
 		unique_ptr<GrammarFeatureDatabase> db(new GrammarFeatureDatabase(_dbPath));
@@ -44,13 +40,5 @@ namespace Mind
 		return db;
 	}
 
-	DBContainer::DBContainer()
-	{
-	}
-
-
-	DBContainer::~DBContainer()
-	{
-	}
 }
 

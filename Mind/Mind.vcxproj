@@ -166,6 +166,7 @@
     <ClInclude Include="ConceptReactImp_1212.h" />
     <ClInclude Include="ConceptReactImp_1234.h" />
     <ClInclude Include="ConceptReactSystem.h" />
+    <ClInclude Include="ConceptReadWriter.h" />
     <ClInclude Include="ConceptSet.h" />
     <ClInclude Include="ConceptSetInitializer.h" />
     <ClInclude Include="FindConnectConcept.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="ConceptReactImp_1212.cpp" />
     <ClCompile Include="ConceptReactImp_1234.cpp" />
     <ClCompile Include="ConceptReactSystem.cpp" />
+    <ClCompile Include="ConceptReadWriter.cpp" />
     <ClCompile Include="ConceptSet.cpp" />
     <ClCompile Include="ConceptSetInitializer.cpp" />
     <ClCompile Include="FindConnectConcept.cpp" />

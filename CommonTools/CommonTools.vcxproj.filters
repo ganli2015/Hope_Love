@@ -23,9 +23,6 @@
     <ClInclude Include="CommonCompareFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CommonFindFunction.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="assertions.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -77,15 +74,18 @@
     <ClInclude Include="IJob.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="NonCopyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CommonCompareFunction.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonFindFunction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CommonDeleteFunction.cpp">
@@ -127,10 +127,10 @@
     <ClCompile Include="UpdateStatement.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="CacheManager.cpp">
+    <ClCompile Include="ThreadWorker.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadWorker.cpp">
+    <ClCompile Include="Common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

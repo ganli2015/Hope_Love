@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include "NonCopyable.h"
 
 #include <thread>
 
@@ -10,7 +11,7 @@ namespace CommonTool
 	//////////////////////////////////////////////////////////////////////////
 	//Thread class.
 	//////////////////////////////////////////////////////////////////////////
-	class _COMMONTOOLSINOUT ThreadWorker
+	class _COMMONTOOLSINOUT ThreadWorker : public NonCopyable
 	{
 		std::thread *_thread;
 		shared_ptr<IJob> _job;

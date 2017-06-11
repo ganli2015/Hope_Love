@@ -77,6 +77,9 @@
     <ClInclude Include="MindObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ConceptReadWriter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -137,6 +140,9 @@
       <Filter>Grammar</Filter>
     </ClCompile>
     <ClCompile Include="MindObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConceptReadWriter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

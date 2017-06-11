@@ -37,7 +37,7 @@ namespace Mind
 		friend class DataPrepareForHopeLove;
 	public:
 		ConceptDatabase(const string dbPath);
-		~ConceptDatabase();
+		virtual ~ConceptDatabase();
 
 		void AddBaseConcept(const shared_ptr<BaseConcept> concept);
 		//////////////////////////////////////////////////////////////////////////
@@ -69,27 +69,27 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		//<baseID> is the baseID in database.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<BaseConcept> GetBaseConcept(const long baseID);
+		virtual shared_ptr<BaseConcept> GetBaseConcept(const long baseID);
 		//////////////////////////////////////////////////////////////////////////
 		//<baseID> is the baseID in database.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<BaseConcept> GetBaseConcept(const int id, const string word);
+		virtual shared_ptr<BaseConcept> GetBaseConcept(const int id, const string word);
 		//////////////////////////////////////////////////////////////////////////
 		//<id> is the ID of concepts with same words.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<Concept> GetNonBaseConcept(const int id,const string word);
+		virtual shared_ptr<Concept> GetNonBaseConcept(const int id,const string word);
 		//////////////////////////////////////////////////////////////////////////
 		//Get the first concept with the same word.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<Concept> GetConcept(const shared_ptr<DataCollection::Word> word);
+		virtual shared_ptr<Concept> GetConcept(const shared_ptr<DataCollection::Word> word);
 		//////////////////////////////////////////////////////////////////////////
 		//Get the first concept with the same word string and id.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<Concept> GetConcept(const string word,const int id);
+		virtual shared_ptr<Concept> GetConcept(const string word,const int id);
 		//////////////////////////////////////////////////////////////////////////
 		//Get the first concept with conceptID.
 		//////////////////////////////////////////////////////////////////////////
-		shared_ptr<Concept> GetConcept(const string conceptID);
+		virtual shared_ptr<Concept> GetConcept(const string conceptID);
 
 		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
 
@@ -110,16 +110,16 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		//Get all concepts whose word starts with <headChara>.
 		//////////////////////////////////////////////////////////////////////////
-		vector<shared_ptr<Concept>> GetConceptsWithHead(const shared_ptr<DataCollection::Character> headChara);
+		virtual vector<shared_ptr<Concept>> GetConceptsWithHead(const shared_ptr<DataCollection::Character> headChara);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get all concepts whose word string is <word>.
 		//////////////////////////////////////////////////////////////////////////
-		vector<shared_ptr<Concept>> GetConceptsWithWord(const string word);
+		virtual vector<shared_ptr<Concept>> GetConceptsWithWord(const string word);
 		//////////////////////////////////////////////////////////////////////////
 		//Get all concepts whose POS is <pos>.
 		//////////////////////////////////////////////////////////////////////////
-		vector<shared_ptr<Concept>> GetConceptsWithPOS(const DataCollection::PartOfSpeech pos);
+		virtual vector<shared_ptr<Concept>> GetConceptsWithPOS(const DataCollection::PartOfSpeech pos);
 
 	private:
 

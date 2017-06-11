@@ -2,7 +2,8 @@
 #include "ConfigureManager.h"
 
 #include "../Mind/Cerebrum.h"
-#include "../Mind/GrammarFeatureDatabase.h"
+
+#include "../MindDatabase/GrammarFeatureDatabase.h"
 
 #include "../MindElement/MindElementCreator.h"
 

@@ -4,6 +4,8 @@
 #include "IJob.h"
 #include "ThreadWorker.h"
 #include "LogWriter.h"
+#include "NonCopyable.h"
+#include "Common.h"
 
 namespace CommonTool
 {
@@ -12,20 +14,20 @@ namespace CommonTool
 	//Cache objects can be released or retrieved from <me>.
 	//////////////////////////////////////////////////////////////////////////
 	template<class ObjType>
-	class CacheManager
+	class CacheManager : public NonCopyable
 	{
 		class CacheMonitor;
 
-		map<string, ObjType> _objs;
 		shared_ptr<CacheMonitor> _cacheMonitor;
 		ThreadWorker* _bwWorker;
+		map<string, shared_ptr<ObjType>> _objs;
+
 	public:
 		CacheManager() : _bwWorker(NULL) ,_cacheMonitor(NULL)
 		{
 		};
-		~CacheManager()
+		virtual ~CacheManager()
 		{
-
 			//Delete CacheMonitor
 			StopMonitor();
 
@@ -139,16 +141,23 @@ namespace CommonTool
 
 			virtual void Run()
 			{
+				const int loopInterval = 1;
+				int periodDuration = 0;
+
 				_running = true;
 				while (true)
 				{
 					if (_cancelled) break;
 
-					Sleep(_interval * 1000);
+					SleepForSeconds(loopInterval);
 
 					if (_cancelled) break;
 
-					_cacheManager->OnMonitor();
+					periodDuration += loopInterval;
+					if (periodDuration > _interval)
+					{
+						_cacheManager->OnMonitor();
+					}
 				}
 
 				_running = false;

@@ -610,12 +610,16 @@ namespace Mind
 		return _elemCreator->CreateConceptInteractTable(res);
 	}
 
+	static vector<shared_ptr<Concept>> cs;
+
 	shared_ptr<Concept> ConceptDatabase::ConvertRowToConcept(const CommonTool::DBRow& row)
 	{
 		//Get a concept with no connection.
 		auto concept = _elemCreator->CreateConcept(row);
 		//Append connection.
 		AddConnectionToConcept(row, concept);
+
+		//cs.push_back(concept);
 
 		return concept;
 	}

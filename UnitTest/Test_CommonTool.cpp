@@ -114,7 +114,7 @@ TEST(Test_CacheManager, RaiseOnMonitor)
 
 	bool raiseFlag = false;
 	CacheManagerTester tester(raiseFlag);
-	tester.SetReleaseInterval(3);
+	tester.SetReleaseInterval(2);
 	tester.RunMonitor();
 
 	Sleep(1000);

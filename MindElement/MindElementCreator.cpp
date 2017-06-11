@@ -16,8 +16,6 @@
 
 namespace Mind
 {
-	static vector<shared_ptr<Concept>> caches;
-
 	MindElementCreator::MindElementCreator(void)
 	{
 
@@ -35,7 +33,6 @@ namespace Mind
 		case Host::ConceptD:
 			{
 				auto concept= shared_ptr<Concept>(new Concept());
-				caches.push_back(concept);
 				return concept;
 				break;
 			}
@@ -53,7 +50,6 @@ namespace Mind
 		case Host::ConceptD:
 			{
 				auto concept = shared_ptr<Concept>(new Concept(word));
-				caches.push_back(concept);
 				return concept;
 				break;
 			}
@@ -88,7 +84,6 @@ namespace Mind
 			concept = make_shared<Concept>(word);
 			concept->SetId(id);
 		}
-		caches.push_back(concept);
 
 		return concept;
 	}
@@ -100,7 +95,6 @@ namespace Mind
 		newConcept->SetId(conceptID);
 		newConcept->SetBaseId(baseID);
 
-		caches.push_back(newConcept);
 		return newConcept;
 	}
 
@@ -116,8 +110,6 @@ namespace Mind
 		shared_ptr<BaseConcept> newConcept = make_shared<BaseConcept>(word);
 		newConcept->SetId(id);
 		newConcept->SetBaseId(baseID);
-
-		caches.push_back(newConcept);
 
 		return newConcept;
 	}
