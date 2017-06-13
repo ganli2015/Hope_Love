@@ -111,7 +111,10 @@ namespace CommonTool
 				if (_cacheMonitor->IsRunning())
 				{
 					_cacheMonitor->Cancel();
-					while (_cacheMonitor->IsRunning());
+					while (_cacheMonitor->IsRunning())
+					{
+
+					}
 				}
 			}
 		}

@@ -3,7 +3,7 @@
 
 namespace Mind
 {
-	static std::string DataDir = "HopeLoveData\\";
+	static std::string DataDir = "HopeLoveData\\large\\";
 
 	std::string GetHopeLoveMindPath()
 	{

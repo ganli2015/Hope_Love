@@ -14,10 +14,9 @@
 namespace Mind
 {
 	ConceptReadWriter::ConceptReadWriter(const string dbPath):ConceptDatabase(dbPath),
-		_monitorInterval(CACHE_MONITOR_INTERVAL),
 		_conceptIndex(0)
 	{
-
+		SetReleaseInterval(CACHE_MONITOR_INTERVAL);
 	}
 
 
@@ -27,7 +26,6 @@ namespace Mind
 
 	void ConceptReadWriter::Initialize()
 	{
-		SetReleaseInterval(_monitorInterval);
 		RunMonitor();
 	}
 
@@ -54,7 +52,6 @@ namespace Mind
 	void ConceptReadWriter::SetCacheMonitorInterval(const int seconds)
 	{
 		SetReleaseInterval(seconds);
-		_monitorInterval = seconds;
 	}
 
 	void ConceptReadWriter::AddConceptToCache(const shared_ptr<Concept> concept)
@@ -73,7 +70,10 @@ namespace Mind
 	shared_ptr<Concept> ConceptReadWriter::GetConcept(const shared_ptr<DataCollection::Word> word)
 	{
 		auto concept = ConceptDatabase::GetConcept(word);
-		AddConceptToCache(concept);
+		if (concept != NULL)
+		{
+			AddConceptToCache(concept);
+		}
 		return concept;
 	}
 

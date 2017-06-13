@@ -102,7 +102,7 @@ namespace Mind
 		for (unsigned i = 0; i < weightCount; ++i)
 		{
 			//Get id of the weight.
-			char buffer[10];
+			char buffer[20];
 			sprintf_s(buffer, "fw%d", i);
 			string id(buffer);
 

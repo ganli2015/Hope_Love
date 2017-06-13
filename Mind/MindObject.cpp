@@ -4,6 +4,8 @@
 #include "ConceptReadWriter.h"
 
 #include "../CommonTools/Common.h"
+#include "../CommonTools/ConfigureInfoManager.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 #include "../MindElement/MindElementCreator.h"
 
@@ -39,6 +41,14 @@ namespace Mind
 
 	unique_ptr<ConceptDatabase> CachedDBContainer::GetConceptDatabase() const
 	{
+		//Try to get Monitor interval in the config file.
+		string intervalStr = CommonTool::ConfigureInfoManager::GetInstance()->GetValue("CACHE_MONITOR_INTERVAL");
+		if (intervalStr != "")
+		{
+			int interval = CommonTool::StringToNum<int>(intervalStr);
+			_conceptReadWriter->SetCacheMonitorInterval(interval);
+		}
+
 		_conceptReadWriter->Initialize();
 		unique_ptr<ConceptDatabase> db(_conceptReadWriter);
 		db->Connect();

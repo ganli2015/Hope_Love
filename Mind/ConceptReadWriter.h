@@ -23,8 +23,6 @@ namespace Mind
 		//Default interval.(seconds)
 		static const int CACHE_MONITOR_INTERVAL = 10 * 60;
 
-		int _monitorInterval;
-
 		long _conceptIndex;
 	public:
 		ConceptReadWriter(const string dbPath);

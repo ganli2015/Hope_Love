@@ -24,6 +24,7 @@ namespace CommonTool
 		_infos.clear();
 
 		ifstream in(_configureFilename);
+		if (!in) return;
 
 		string line="";
 		while(getline(in,line))
@@ -45,7 +46,21 @@ namespace CommonTool
 	bool ConfigureInfoManager::IsTagOn( const string tag ) const
 	{
 		ConfigureInfo outInfo;
-		return FindTagInfo(tag, outInfo);
+		if (FindTagInfo(tag, outInfo))
+		{
+			if (outInfo.value == "ON")
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	std::string ConfigureInfoManager::GetValue(const string tag) const
