@@ -163,7 +163,6 @@
     <ClInclude Include="MyInt.h" />
     <ClInclude Include="NumericalOptimization.h" />
     <ClInclude Include="Rand.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorEigen.h" />
