@@ -15,6 +15,8 @@ namespace DataCollection
 {
 	shared_ptr<Punctuations> LanguageFunc::_punctures(new Punctuations());
 
+	unordered_map<DataCollection::PartOfSpeech, string> LanguageFunc::_pos_term= LanguageFunc::InitPOSTerm();
+
 	DataCollection::LanguageFunc::LanguageFunc(void)
 	{
 	}
@@ -298,7 +300,7 @@ namespace DataCollection
 		return left.IsSameWith(right);
 	}
 
-	std::string LanguageFunc::ConvertWordsToString( const vector<shared_ptr<Word>> words )
+	std::string LanguageFunc::ConvertWordsToString(const vector<shared_ptr<Word>> words)
 	{
 		string res="";
 		for (size_t i=0;i<words.size();++i)
@@ -318,6 +320,38 @@ namespace DataCollection
 		}
 
 		return wordStr;
+	}
+
+	std::string LanguageFunc::GetChineseTern(const DataCollection::PartOfSpeech pos)
+	{
+		if (_pos_term.count(pos) == 0)
+		{
+			return "未知";
+		}
+		else
+		{
+			return _pos_term[pos];
+		}
+	}
+
+	unordered_map<DataCollection::PartOfSpeech, string> LanguageFunc::InitPOSTerm()
+	{
+		unordered_map<DataCollection::PartOfSpeech, string> res;
+		res[Noun] = "名词";
+		res[Verb] = "动词";
+		res[Adjective] = "形容词";
+		res[Numeral] = "数词";
+		res[Quantifier] = "量词";
+		res[Pronoun] = "代词";
+		res[Adverb] = "副词";
+		res[Preposition] = "介词";
+		res[Conjunction] = "连词";
+		res[Auxiliary] = "助词";
+		res[Onomatopoeia] = "拟声词";
+		res[Interjection] = "叹词";
+		res[Punctuation] = "标点";
+
+		return res;
 	}
 
 }

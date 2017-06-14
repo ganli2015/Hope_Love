@@ -2,6 +2,7 @@
 #include "SpeakCommand.h"
 
 #include "../DataCollection/Sentence.h"
+#include "../DataCollection/LanguageFunc.h"
 
 #include "../DataWrapperCPP/DataWrapper.h"
 
@@ -36,6 +37,11 @@ void SpeakCommand::Update()
 	shared_ptr<Mind::iConceptInteractTable> interactTable=sentenceParser->GetInteractTable();
 	_datawrapper->AddParsedInputSentence(parsedSentence);
 
+	//Output POS tagging as result.
+	auto posTagging = ConvertToPOSString(sentenceParser->GetPOSTagging());
+	_datawrapper->AddOutputSentence(posTagging);
+	return;
+
 	vector<shared_ptr<DataCollection::Sentence>> reactInputSentence;
 	reactInputSentence.push_back(parsedSentence);
 	shared_ptr<SpeakReaction> reaction(new SpeakReaction(reactInputSentence,interactTable));
@@ -50,4 +56,15 @@ void SpeakCommand::Update()
 	string reactStr=reactSentence->GetString();
 
 	_datawrapper->AddOutputSentence(reactStr);
+}
+
+std::string SpeakCommand::ConvertToPOSString(const vector<shared_ptr<DataCollection::Word>>& words) const
+{
+	string res = "";
+	for (auto word : words)
+	{
+		res += word->GetString() + "/" + DataCollection::LanguageFunc::GetChineseTern(word->Type()) + " ";
+	}
+
+	return res;
 }

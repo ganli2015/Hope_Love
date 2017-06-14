@@ -12,6 +12,8 @@
 #include <log4cpp/NDC.hh>
 
 #include "StackWalker.h"
+#include "ConfigureInfoManager.h"
+#include "CommonStringFunction.h"
 
 namespace CommonTool
 {
@@ -63,7 +65,18 @@ namespace CommonTool
 		appender2->setLayout(fileLayout);
 
 		_root = &log4cpp::Category::getRoot();
-		_root->setPriority(log4cpp::Priority::DEBUG);
+
+		//Try to read log level from config file.
+		string logLevelStr = ConfigureInfoManager::GetInstance()->GetValue("LOG_LEVEL");
+		if (logLevelStr != "")
+		{
+			int logLevel = StringToNum<int>(logLevelStr);
+			_root->setPriority(log4cpp::Priority::PriorityLevel(logLevel));
+		}
+		else
+		{
+			_root->setPriority(log4cpp::Priority::DEBUG);
+		}
 		_root->addAppender(appender1);
 		_root->addAppender(appender2);
 	}

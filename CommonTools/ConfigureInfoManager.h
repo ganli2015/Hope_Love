@@ -25,7 +25,6 @@ namespace CommonTool
 		vector<ConfigureInfo> _infos;
 
 	public:
-		ConfigureInfoManager(void);
 		~ConfigureInfoManager(void);
 
 		//Get unique instance of ConfigureInfoManager.
@@ -47,6 +46,7 @@ namespace CommonTool
 
 	private:
 		
+		ConfigureInfoManager(void);
 		bool FindTagInfo(const string tag, ConfigureInfo& outInfo) const;
 	};
 }

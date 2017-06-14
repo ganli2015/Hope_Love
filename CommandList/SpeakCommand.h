@@ -1,6 +1,10 @@
 #pragma once
 #include "command.h"
 
+namespace DataCollection
+{
+	class Word;
+}
 
 class _COMMANDINOUT SpeakCommand :
 	public Command
@@ -13,5 +17,9 @@ public:
 	SpeakCommand(DataWrapperCPP::DataWrapper_Sentence* datawrapper);
 
 	void Update();
+
+private:
+
+	string ConvertToPOSString(const vector<shared_ptr<DataCollection::Word>>& words) const;
 };
 

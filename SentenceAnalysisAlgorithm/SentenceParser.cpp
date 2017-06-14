@@ -4,6 +4,7 @@
 #include "WordRelationTableBuilder.h"
 
 #include "../DataCollection/Word.h"
+#include "../DataCollection/Sentence.h"
 
 #include "../MindElement/Concept.h"
 #include "../MindInterface/iConceptInteractTable.h"
@@ -50,6 +51,11 @@ void SentenceParser::Execute()
 	LOG("WordRelationTableBuilder");
 
 	Cout_WordRelations();
+}
+
+vector<shared_ptr<DataCollection::Word>> SentenceParser::GetPOSTagging() const
+{
+	return _parsedSentence->GetGrammard();
 }
 
 void SentenceParser::Cout_WordRelations()

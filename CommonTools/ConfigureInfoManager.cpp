@@ -12,6 +12,7 @@ namespace CommonTool
 
 	ConfigureInfoManager::ConfigureInfoManager(void):_configureFilename("config.ini")
 	{
+		UpdateConfigure();
 	}
 
 
@@ -59,7 +60,7 @@ namespace CommonTool
 		}
 		else
 		{
-			return "";
+			return false;
 		}
 	}
 
