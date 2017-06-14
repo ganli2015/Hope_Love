@@ -41,9 +41,9 @@ namespace LogicSystem
 		//Get all sub pairs of condition.
 		vector<vector<MindType::ConceptPair>> subConceptPairs=Math::GetAllSubSequence<MindType::ConceptPair>::Get(totalPairs);
 		//The max length of sub concept pairs that satisfy the condition.
-		unsigned int maxSatisfiedSubLength = 0;
+		size_t maxSatisfiedSubLength = 0;
 		//Search a sub pair sequence that satisfied the relation.
-		for (unsigned int i=0;i<subConceptPairs.size();++i)
+		for (size_t i=0;i<subConceptPairs.size();++i)
 		{
 			//Divide the raw concept pairs into two part one of which for deduction.
 			//If satisfy, then connect with the other part.

@@ -85,34 +85,29 @@ void ReactionParser::Execute()
 
 void ReactionParser::DisplayReactChains( const vector<ConceptChainProperty>& chains ) const
 {
-	cout<<"React Chains:"<<endl;
-	for (unsigned int i=0;i<chains.size();++i)
+	DEBUGLOG("React Chains:");
+	for (size_t i=0;i<chains.size();++i)
 	{
 		DisplayChain(chains[i].chain);
 	}
-
-	cout<<endl;
 }
 
 void ReactionParser::DisplayChain( const shared_ptr<Mind::iConceptChain>& chain ) const
 {
 	vector<shared_ptr<iConcept> > concepts=chain->GetConceptVec();
-	for (unsigned int j=0;j<concepts.size();++j)
+	for (size_t j=0;j<concepts.size();++j)
 	{
-		cout<<concepts[j]->GetString()<<" ";
+		DEBUGLOG(concepts[j]->GetString());
 	}
-	cout<<endl;
 }
 
 void ReactionParser::DisplayHyperChains( const vector<shared_ptr<Mind::iConceptChain>>& chains ) const
 {
-	cout<<"Hyper Chains:"<<endl;
-	for (unsigned int i=0;i<chains.size();++i)
+	DEBUGLOG("Hyper Chains:");
+	for (size_t i=0;i<chains.size();++i)
 	{
 		DisplayChain(chains[i]);
 	}
-
-	cout<<endl;
 }
 
 shared_ptr<DataCollection::Sentence> ReactionParser::GetReactSentence() const
@@ -131,10 +126,10 @@ vector<shared_ptr<DataCollection::Word>> ReactionParser::CountUnknownWords( cons
 
 	vector<shared_ptr<DataCollection::Word>> res;
 
-	for (unsigned int i=0;i<sentences.size();++i)
+	for (size_t i=0;i<sentences.size();++i)
 	{
 		vector<shared_ptr<Word>> words=sentences[i]->GetGrammard();
-		for (unsigned int j=0;j<words.size();++j)
+		for (size_t j=0;j<words.size();++j)
 		{
 			if(words[j]->Type()==Punctuation)
 			{
@@ -162,18 +157,14 @@ vector<shared_ptr<DataCollection::Sentence>> ReactionParser::GenerateByConceptCh
 	vector<Mind::ConceptChainProperty> reactChains=chainGenerator.GetReactChains();
 	LOG("ChainGenerator");
 
-#ifdef _COUT_DEBUG_INFO
 	DisplayReactChains(reactChains);
-#endif // _DEBUG
 
 	ChainAnalyzer chainAnalyzer;
 	chainAnalyzer.Analyze(reactChains);
 	vector<shared_ptr<Mind::iConceptChain>> hyperChains=chainAnalyzer.GetHyperChains();
 	LOG("ChainAnalyzer");
 
-#ifdef _COUT_DEBUG_INFO
 	DisplayHyperChains(hyperChains);
-#endif // _DEBUG
 
 	SentenceGenerator sentenceGenerator;
 	sentenceGenerator.Generate(hyperChains);

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iterator>
 #include "../CommonTools/CommonTranslateFunction.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace std;
 using namespace CommonTool;
@@ -26,7 +27,7 @@ namespace DataCollection
 	{
 		//TO Chinese characters, each character contains two chars
 		//and convert string to characters two by two.
-		for (unsigned int i=0;i<word.size();i+=2)
+		for (size_t i=0;i<word.size();i+=2)
 		{
 			string aword;
 			aword.push_back(word[i]);
@@ -43,7 +44,7 @@ namespace DataCollection
 	Word::Word(const Word& word)
 	{
 		_word.clear();
-		for (unsigned int i=0;i<word._word.size();++i)
+		for (size_t i=0;i<word._word.size();++i)
 		{
 			_word.push_back(word._word[i]);
 		}
@@ -61,7 +62,7 @@ namespace DataCollection
 		}
 
 		long long sumIndex=0;
-		for (unsigned int i=0;i<indexset.size();++i)
+		for (size_t i=0;i<indexset.size();++i)
 		{
 			sumIndex+=sumIndex*i*10000+indexset[i];
 		}
@@ -69,9 +70,21 @@ namespace DataCollection
 		return sumIndex;
 	}
 
-	bool Word::IsSame(const shared_ptr<Word> word ) const
+	vector<Character> Word::GetCharatcters() const
+	{
+		vector<Character> res;
+		for (auto ch : _word)
+		{
+			res.push_back(*ch);
+		}
+		return res;
+	}
+
+	bool Word::IsSame(const shared_ptr<Word> word) const
 	{
 		if(word->NumOfChara()!=NumOfChara())
+			return false;
+		if (Type() != word->Type())
 			return false;
 
 		if(ToInt()==word->ToInt())
@@ -79,13 +92,19 @@ namespace DataCollection
 		else return false;
 	}
 
-	std::string Word::GetString() const
+	std::string Word::GetString(const Word::Encode encode) const
 	{
 		string str("");
-		for (unsigned int i=0;i<_word.size();++i)
+		for (size_t i=0;i<_word.size();++i)
 		{
 			str+=_word[i]->GetString();
 		}
+
+		if (encode == Word::Utf8)
+		{
+			str = CommonTool::AsciiToUtf8(str);
+		}
+
 		return str;
 	}
 

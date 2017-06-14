@@ -50,12 +50,12 @@ namespace NeuralNetwork
 		return Transfer(vec);
 	}
 
-	unsigned int Neuron::GetInputDimension()
+	size_t Neuron::GetInputDimension()
 	{
 		return _i;
 	}
 
-	unsigned int Neuron::GetOutputDimension()
+	size_t Neuron::GetOutputDimension()
 	{
 		return _j;
 	}

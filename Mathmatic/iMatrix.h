@@ -37,13 +37,13 @@ namespace Math
 		Matrix(const Matrix& mat);
 
 
-		unsigned int Columns()const;
+		size_t Columns()const;
 
-		unsigned int Rows() const;
+		size_t Rows() const;
 
-		Vector nthColumn(unsigned int col) const;
+		Vector nthColumn(size_t col) const;
 
-		Vector nthRow(unsigned int row) const;
+		Vector nthRow(size_t row) const;
 
 		void SetElem(int row,int col,double val);
 

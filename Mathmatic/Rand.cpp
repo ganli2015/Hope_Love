@@ -53,7 +53,7 @@ namespace Math
 
 		////找到randIndex对应哪个权重值
 		//int searchIndex=0;
-		//for (unsigned int i=0;i<int_weights.size();++i)
+		//for (size_t i=0;i<int_weights.size();++i)
 		//{
 		//	searchIndex+=int_weights[i];
 		//	if(randIndex<=searchIndex)
@@ -69,7 +69,7 @@ namespace Math
 
 		//找到randDouble对应哪个权重值
 		double searchIndex=0;
-		for (unsigned int i=0;i<normed.size();++i)
+		for (size_t i=0;i<normed.size();++i)
 		{
 			searchIndex+=normed[i];
 			if(randDouble<=searchIndex)

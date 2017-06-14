@@ -15,7 +15,7 @@ namespace Math
 
 		friend class Matrix;
 	public:
-		Vector(const unsigned int d);
+		Vector(const size_t d);
 
 		~Vector(void);
 
@@ -27,7 +27,7 @@ namespace Math
 
 		std::vector<double> GetVector() const;
 
-		unsigned int Dimension() const;
+		size_t Dimension() const;
 
 		double Norm() const;
 
@@ -35,8 +35,8 @@ namespace Math
 
 		bool IsOrthogonoality(const Vector& vec,double tol=1e-6);
 
-		void Set_ithVal(unsigned int i,double val);
-		double Get_ithVal(unsigned int i) const;
+		void Set_ithVal(size_t i,double val);
+		double Get_ithVal(size_t i) const;
 
 		double Dot(const Vector& val) const;
 
@@ -50,9 +50,9 @@ namespace Math
 
 		Vector Multiply(const Matrix& mat) const;
 
-		float& operator[]( unsigned int i);
+		float& operator[]( size_t i);
 
-		const double operator[]( unsigned int i) const;
+		const double operator[]( size_t i) const;
 
 		Vector& operator=(const Vector& vec);
 

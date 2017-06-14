@@ -1,12 +1,18 @@
 #include "StdAfx.h"
 #include "MindElementCreator.h"
 #include "Concept.h"
+#include "BaseConcept.h"
 #include "ConceptEdge.h"
 #include "ConceptChain.h"
 #include "ConceptInteractTable_iConcept.h"
 #include "ConceptInteractTable_Identity.h"
 #include "ConceptInteractTable_MultiSet.h"
 #include "ConceptLevelTable.h"
+
+#include "../CommonTools/DBoperator.h"
+
+#include "../DataCollection/Word.h"
+#include "../DataCollection/LanguageFunc.h"
 
 namespace Mind
 {
@@ -26,7 +32,8 @@ namespace Mind
 		{
 		case Host::ConceptD:
 			{
-				return shared_ptr<Concept>(new Concept());
+				auto concept= shared_ptr<Concept>(new Concept());
+				return concept;
 				break;
 			}
 		default:
@@ -42,7 +49,8 @@ namespace Mind
 		{
 		case Host::ConceptD:
 			{
-				return shared_ptr<Concept>(new Concept(word));
+				auto concept = shared_ptr<Concept>(new Concept(word));
+				return concept;
 				break;
 			}
 		default:
@@ -52,7 +60,61 @@ namespace Mind
 		}
 	}
 
-	shared_ptr<iConceptChain> MindElementCreator::CreateConceptChain( const ElementType type ) const
+	shared_ptr<Concept> MindElementCreator::CreateConcept(const CommonTool::DBRow& dbRow) const
+	{
+		//Get common parameters.
+		int id = dbRow.GetLong("id");
+		string wordStr = dbRow.GetText("word");
+		DataCollection::PartOfSpeech pos = (DataCollection::PartOfSpeech)dbRow.GetLong("pos");
+		shared_ptr<DataCollection::Word> word = DataCollection::LanguageFunc::GetParticularWord(wordStr, pos);
+
+		shared_ptr<Concept> concept;
+		//Check type of row.
+		if (dbRow.HasColumn("baseID"))
+		{
+			//It is base concept.
+
+			auto baseID = dbRow.GetLong("baseID");
+			concept = CreateBaseConcept(word, id, baseID);
+		}
+		else
+		{
+			//It is non base concept.
+
+			concept = make_shared<Concept>(word);
+			concept->SetId(id);
+		}
+
+		return concept;
+	}
+
+
+	shared_ptr<BaseConcept> MindElementCreator::CreateBaseConcept(const shared_ptr<DataCollection::Word> word, const int conceptID, const int baseID) const
+	{
+		shared_ptr<BaseConcept> newConcept = make_shared<BaseConcept>(word);
+		newConcept->SetId(conceptID);
+		newConcept->SetBaseId(baseID);
+
+		return newConcept;
+	}
+
+	shared_ptr<BaseConcept> MindElementCreator::CreateBaseConcept(const CommonTool::DBRow& dbRow) const
+	{
+		long baseID = dbRow.GetLong("baseID");
+		int id = dbRow.GetLong("id");
+		string wordStr = dbRow.GetText("word");
+		auto pos = (DataCollection::PartOfSpeech)dbRow.GetLong("pos");
+
+		shared_ptr<DataCollection::Word> word = DataCollection::LanguageFunc::GetParticularWord(wordStr, pos);
+
+		shared_ptr<BaseConcept> newConcept = make_shared<BaseConcept>(word);
+		newConcept->SetId(id);
+		newConcept->SetBaseId(baseID);
+
+		return newConcept;
+	}
+
+	shared_ptr<iConceptChain> MindElementCreator::CreateConceptChain(const ElementType type) const
 	{
 		switch(type)
 		{
@@ -132,7 +194,7 @@ namespace Mind
 
 		if(res!=NULL)
 		{
-			for (unsigned int i=0;i<pairs.size();++i)
+			for (size_t i=0;i<pairs.size();++i)
 			{
 				res->Add(pairs[i].first,pairs[i].second);
 			}

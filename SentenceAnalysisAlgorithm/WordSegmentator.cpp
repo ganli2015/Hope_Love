@@ -5,6 +5,8 @@
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
 
+#include "../CommonTools/LogWriter.h"
+
 #include "../MindInterface/iCerebrum.h"
 
 #include "../Mathmatic/FindSequence.h"
@@ -39,11 +41,11 @@ void WordSegmentator::GetAllPossibleSequentialCombine(const vector<shared_ptr<Wo
 	//Each combination can be divide into two parts:
 	//first few continuous words and all combinations of remaining words.
 	//Then connect them.
-	for (unsigned int i=0;i<words.size();++i)
+	for (size_t i=0;i<words.size();++i)
 	{
 		//Collect first few continuous words.
 		Word newword=*words[0];
-		for (unsigned int j=1;j<=i;++j)
+		for (size_t j=1;j<=i;++j)
 		{
 			newword=newword+*words[j];
 		}
@@ -73,7 +75,7 @@ vector<vector<shared_ptr<Word>>> WordSegmentator::ConnectCurrentWordWithSubCombi
 	}
 	else
 	{
-		for (unsigned int j = 0; j < sub_combinations.size(); ++j)
+		for (size_t j = 0; j < sub_combinations.size(); ++j)
 		{
 			vector<shared_ptr<Word>> new_combination;
 			new_combination.push_back(shared_ptr<Word>(new Word(newword)));
@@ -92,13 +94,13 @@ void WordSegmentator::AppendLastKnownWordsToCombinations(const vector<shared_ptr
 	//there is only one combination.
 	vector<shared_ptr<Word>> lastWords;
 	int startIndex = *seqs_UandA.back().rbegin() + 1;
-	for (unsigned int i = startIndex; i < words.size(); ++i)
+	for (size_t i = startIndex; i < words.size(); ++i)
 	{
 		lastWords.push_back(words[i]);
 	}
 
 	//Connect combinations with the last words.
-	for (unsigned int i = 0; i < combinations.size(); ++i)
+	for (size_t i = 0; i < combinations.size(); ++i)
 	{
 		vector<shared_ptr<Word>> newComb = combinations[i];
 		newComb.insert(newComb.end(), lastWords.begin(), lastWords.end());
@@ -133,7 +135,7 @@ vector<vector<shared_ptr<Word>>> WordSegmentator::GenerateNewCombinations(const 
 	const vector<vector<shared_ptr<Word>>>& combinations_UandA, vector<vector<shared_ptr<Word>>>& combinations)
 {
 	vector<vector<shared_ptr<Word>>> newCombinations;
-	for (unsigned int i = 0; i < combinations_UandA.size(); ++i)
+	for (size_t i = 0; i < combinations_UandA.size(); ++i)
 	{
 		//If <index> is zero, <combinations> is empty.
 		//Then connect  <forwardWords> and current U_A words for the first combination.
@@ -148,7 +150,7 @@ vector<vector<shared_ptr<Word>>> WordSegmentator::GenerateNewCombinations(const 
 		}
 		else
 		{
-			for (unsigned int j = 0; j < combinations.size(); ++j)
+			for (size_t j = 0; j < combinations.size(); ++j)
 			{
 				vector<shared_ptr<Word>> aCombination;
 				aCombination.insert(aCombination.end(), combinations[j].begin(), combinations[j].end());
@@ -175,7 +177,7 @@ void WordSegmentator::MergeCombination_UandA(const vector<shared_ptr<Word>>& wor
 	
 	//Collect all U_A words of current sequence and search all possible combinations.
 	vector<shared_ptr<Word>> uandAwords(seqs_UandA[index].size());
-	for (unsigned int i=0;i<seqs_UandA[index].size();++i)
+	for (size_t i=0;i<seqs_UandA[index].size();++i)
 	{
 		uandAwords[i]=words[seqs_UandA[index][i]];
 	}
@@ -199,7 +201,7 @@ void WordSegmentator::SegmentMannersAccordingToUandA(const vector<shared_ptr<Wor
 	vector<vector<int>> seqs_UandA=ComputeUandAIndexes(words); 
 
 	//If the number of continuous U&A words is too larger, then do not find all combination of it yet.
-	unsigned int largestUandAWords = 5;
+	size_t largestUandAWords = 5;
 	if (seqs_UandA.size() > largestUandAWords)
 	{
 		segmented.push_back(words);
@@ -235,7 +237,7 @@ vector<vector<int>> WordSegmentator::ComputeUandAIndexes(const vector<shared_ptr
 {
 	Mind::iCerebrum *brain = Mind::iCerebrum::Instance();
 
-	unsigned int i = 0;
+	size_t i = 0;
 	vector<vector<int>> seqs_UandA;
 	while (i < words.size())
 	{
@@ -258,7 +260,8 @@ vector<vector<int>> WordSegmentator::ComputeUandAIndexes(const vector<shared_ptr
 
 bool WordSegmentator::Segment(  )
 {
-	for (unsigned int i=0;i<_unsegmented->Count_SubSentence();++i)
+	NDC_SECTION("Word Segmentation");
+	for (size_t i=0;i<_unsegmented->Count_SubSentence();++i)
 	{
 		SegmentSubsentence(_unsegmented->GetSubSentence(i));
 	}
@@ -291,7 +294,7 @@ void WordSegmentator::SegmentSubsentence( const string subsentence )
 
 	//Recover punctuations.
 	vector<shared_ptr<Word>> punc_words=LanguageFunc::ConvertPuncturesToWords(punc);
-	for (unsigned int i=0;i<segmented.size();++i)
+	for (size_t i=0;i<segmented.size();++i)
 	{
 		vector<shared_ptr<Word>> seg_withPunc=segmented[i];
 		seg_withPunc.insert(seg_withPunc.end(),punc_words.begin(),punc_words.end());
@@ -305,7 +308,7 @@ vector<shared_ptr<Word>> WordSegmentator::ForwardSegment(const vector<Character>
 	vector<CharacterProperty> vec_characterProperty;
 	//Find the candidate word of each character.
 	//The first character of each word is <chara>.
-	for (unsigned int i = 0; i < raw_noPunc.size(); ++i)
+	for (size_t i = 0; i < raw_noPunc.size(); ++i)
 	{
 		Character chara = raw_noPunc[i];
 		CharacterProperty characterProperty = GenerateCharacterProperty(chara, i, raw_noPunc);
@@ -315,7 +318,7 @@ vector<shared_ptr<Word>> WordSegmentator::ForwardSegment(const vector<Character>
 
 	//Pick the longest candidate word of each character to compose the sentence.
 	//It is experiential.We assume the sentence made with fewest words as possible.
-	unsigned int index(0);
+	size_t index(0);
 	vector<shared_ptr<Word>> initial_segmented;
 	while (index < raw_noPunc.size())
 	{
@@ -389,9 +392,9 @@ WordSegmentator::CharacterProperty WordSegmentator::GenerateCharacterProperty(co
 
 	//Determine the longest candidate of <character>.
 	//We do not need to search to the end of the sentence, but only to search to the max possible length of candidates.
-	unsigned int maxLength_Word=brain->MaxLength_WordWithHead(shared_ptr<Character>(new Character(chara)));//Get the max length of the forward adjacent word, to determine how further I should search in the raw sentence.
+	size_t maxLength_Word=brain->MaxLength_WordWithHead(shared_ptr<Character>(new Character(chara)));//Get the max length of the forward adjacent word, to determine how further I should search in the raw sentence.
 	Word possibleWord(chara.GetString());//find the possible word related with the character
-	for (unsigned int j=1;j<=maxLength_Word;++j)
+	for (size_t j=1;j<=maxLength_Word;++j)
 	{
 		if(myIndex+j>=raw_noPunc.size())//if exceed the raw sentence.
 			break;
@@ -411,7 +414,7 @@ std::vector<Character> WordSegmentator::GetRawSentence( shared_ptr<DataCollectio
 {
 	vector<shared_ptr<Character>> raw=sentence->GetRawSentence();
 	vector<Character> res;
-	for (unsigned int i=0;i<raw.size();++i)
+	for (size_t i=0;i<raw.size();++i)
 	{
 		res.push_back(*raw[i]);
 	}
@@ -424,7 +427,7 @@ std::vector<DataCollection::Character> WordSegmentator::ConvertStringToCharacter
 	vector<shared_ptr<Character>> ptrCharas=LanguageFunc::ConvertStringToCharacter(str);
 	vector<Character> res;
 	res.reserve(ptrCharas.size());
-	for (unsigned int i=0;i<ptrCharas.size();++i)
+	for (size_t i=0;i<ptrCharas.size();++i)
 	{
 		res.push_back(*ptrCharas[i]);
 	}
@@ -437,7 +440,7 @@ vector<shared_ptr<DataCollection::SegmentedSentence>> WordSegmentator::GetAllSeg
 	//Collect all manners of segmentation of all sub sentences.
 	//Each element of <subSentenSeg> is all manners of segmentation of one sub sentence.
 	vector<vector<shared_ptr<SegmentedSentence>>> subSentenSeg; 
-	for (unsigned int i=0;i<_unsegmented->Count_SubSentence();++i)
+	for (size_t i=0;i<_unsegmented->Count_SubSentence();++i)
 	{
 		string subStr=_unsegmented->GetSubSentence(i);
 		multimap<string,shared_ptr<SegmentedSentence>>::const_iterator beg=_segmented.lower_bound(subStr);
@@ -458,11 +461,11 @@ vector<shared_ptr<DataCollection::SegmentedSentence>> WordSegmentator::GetAllSeg
 	
 	vector<shared_ptr<SegmentedSentence>> res;
 	res.reserve(segSequence.size());
-	for (unsigned int i=0;i<segSequence.size();++i)
+	for (size_t i=0;i<segSequence.size();++i)
 	{
 		vector<shared_ptr<Word>> wholeWords;
 		vector<shared_ptr<SegmentedSentence>> oneSequence=segSequence[i];
-		for (unsigned int j=0;j<oneSequence.size();++j)
+		for (size_t j=0;j<oneSequence.size();++j)
 		{
 			vector<shared_ptr<Word>> oneSeqWords=oneSequence[j]->Get();
 			wholeWords.insert(wholeWords.end(),oneSeqWords.begin(),oneSeqWords.end());

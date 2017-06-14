@@ -16,7 +16,7 @@ namespace Math
 
 		friend class MatrixEigen;
 	public:
-		VectorEigen(const unsigned int d);
+		VectorEigen(const size_t d);
 
 		virtual ~VectorEigen(void);
 
@@ -26,13 +26,13 @@ namespace Math
 
 		virtual std::vector<double> GetVector() const ;
 
-		virtual unsigned int Dimension() const ;
+		virtual size_t Dimension() const ;
 
 		virtual double Norm() const;
 
-		virtual void Set_ithVal(unsigned int i, double val);
-		virtual double Get_ithVal(unsigned int i) const ;
-		virtual float& Get_ithValRef(unsigned int i);
+		virtual void Set_ithVal(size_t i, double val);
+		virtual double Get_ithVal(size_t i) const ;
+		virtual float& Get_ithValRef(size_t i);
 
 		virtual VectorImp* Normalized() const;
 

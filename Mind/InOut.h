@@ -25,7 +25,22 @@ using namespace std;
 #define _MINDINOUT _declspec(dllimport)
 #endif
 
+#ifdef MINDTESTEXPORT
+#define _MINDTESTEXPORT _declspec(dllexport)
+#else
+#define _MINDTESTEXPORT _declspec(dllimport)
+#endif // MINDTESTEXPORT
 
 //#define _Extract_Initial_Grammar_Pattern
 //#define _Train_Initial_React_Network
 //#define _CheckInitialConceptData
+
+namespace DataCollection
+{
+	class GrammarFeature;
+}
+
+namespace Mind
+{
+	typedef vector<shared_ptr<DataCollection::GrammarFeature>> FeatureList;
+}

@@ -25,7 +25,7 @@ namespace LogicSystem
 	{
 		string res="";
 
-		for (unsigned int i=0;i<_subRelations.size();++i)
+		for (size_t i=0;i<_subRelations.size();++i)
 		{
 			res+='(';
 			res+=_subRelations[i]->GetString();
@@ -105,7 +105,7 @@ namespace LogicSystem
 			return;
 		}
 
-		for (unsigned int i=0;i<firstSeq.size();++i)
+		for (size_t i=0;i<firstSeq.size();++i)
 		{
 			vector<ConceptPair> remainPairs=ExcludeConceptPairsFromSequence(conceptPairs,firstSeq[i]);
 			vector<PairSequence> subSequence;
@@ -128,7 +128,7 @@ namespace LogicSystem
 	vector<iRelation::ConceptPair> RelationNode::ExcludeConceptPairsFromSequence( const vector<ConceptPair>& rawPairs,PairSequence sequence ) const
 	{
 		vector<iRelation::ConceptPair> res;
-		for (unsigned int i=0;i<rawPairs.size();++i)
+		for (size_t i=0;i<rawPairs.size();++i)
 		{
 			if(!ConceptPairInSequenceAndRemovePair(rawPairs[i],sequence))
 			{
@@ -184,7 +184,7 @@ namespace LogicSystem
 		}
 
 		res.reserve(manySeqs.size());
-		for (unsigned int i=0;i<manySeqs.size();++i)
+		for (size_t i=0;i<manySeqs.size();++i)
 		{
 			PairSequence newSeq=oneSeq;
 			newSeq.insert(newSeq.end(),manySeqs[i].begin(),manySeqs[i].end());
@@ -204,7 +204,7 @@ namespace LogicSystem
 		shared_ptr<iRelationNode> res(new RelationNode());
 		res->SetState(_state);
 
-		for (unsigned int i=0;i<_subRelations.size();++i)
+		for (size_t i=0;i<_subRelations.size();++i)
 		{
 			shared_ptr<iRelation> subRelation=_subRelations[i]->GenerateSpecialRelation();
 			if(subRelation==NULL)
@@ -223,7 +223,7 @@ namespace LogicSystem
 	shared_ptr<Mind::iConceptInteractTable> RelationNode::GenerateConceptTable() const
 	{
 		shared_ptr<Mind::iConceptInteractTable> res=iMindElementCreator::CreateConceptInteractTable();
-		for (unsigned int i=0;i<_subRelations.size();++i)
+		for (size_t i=0;i<_subRelations.size();++i)
 		{
 			shared_ptr<Mind::iConceptInteractTable> subTable=_subRelations[i]->GenerateConceptTable();
 			res->Absorb(subTable);
@@ -239,7 +239,7 @@ namespace LogicSystem
 		//Otherwise return Null.
 
 		vector<shared_ptr<iConcept>> concepts;
-		for (unsigned int i=0;i<_subRelations.size();++i)
+		for (size_t i=0;i<_subRelations.size();++i)
 		{
 			shared_ptr<iConcept> con = _subRelations[i]->GenerateSingleConcept();
 			if (con != NULL)

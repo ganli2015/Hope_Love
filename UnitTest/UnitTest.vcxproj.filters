@@ -30,6 +30,12 @@
     <Filter Include="CommonTool">
       <UniqueIdentifier>{d78b37a9-8617-42ca-88b0-cc23b8e919aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataCollection">
+      <UniqueIdentifier>{7bb132c4-b054-444e-a31f-ffe63c548f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestAndPreparation">
+      <UniqueIdentifier>{1c72c7c1-59b3-469f-9fc2-ef2deee0fe7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -92,6 +98,33 @@
     <ClInclude Include="IntegrationTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Test_GrammarFeature.h">
+      <Filter>DataCollection</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_DBoperator.h">
+      <Filter>CommonTool</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_NumericalOptimization.h">
+      <Filter>Mathmatic</Filter>
+    </ClInclude>
+    <ClInclude Include="DataPrepareForHopeLove.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAlgorithm.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPOSTagging.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_GrammarModel.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Database.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_MindElementCreator.h">
+      <Filter>Mind</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -150,6 +183,33 @@
     </ClCompile>
     <ClCompile Include="IntegrationTest.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_GrammarFeature.cpp">
+      <Filter>DataCollection</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_DBoperator.cpp">
+      <Filter>CommonTool</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_NumericalOptimization.cpp">
+      <Filter>Mathmatic</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPrepareForHopeLove.cpp">
+      <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAlgorithm.cpp">
+      <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPOSTagging.cpp">
+      <Filter>TestAndPreparation</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_GrammarModel.cpp">
+      <Filter>Mind</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Database.cpp">
+      <Filter>Mind</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_MindElementCreator.cpp">
+      <Filter>Mind</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

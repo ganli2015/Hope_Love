@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "GrammaSet.h"
 #include "FilePath.h"
+#include "GrammarFeatureModel.h"
+#include "GrammarLocalModel.h"
 
 #include "../CommonTools/LogWriter.h"
 
@@ -15,6 +17,8 @@
 
 #include "../Mathmatic/FindSequence.h"
 
+#include "../MindDatabase/Headers.h"
+
 #include <tinyxml.h>
 
 #include <fstream>
@@ -28,7 +32,7 @@ using namespace Math;
 
 namespace Mind
 {
-	GrammarSet::GrammarSet(void)
+	GrammarSet::GrammarSet(void):_featureModel(shared_ptr<GrammarFeatureModel>(new GrammarFeatureModel()))
 	{
 		Initialize();
 		LOG("Initialized GrammarSet");
@@ -40,14 +44,24 @@ namespace Mind
 	{
 	}
 
+	void GrammarSet::InitializeGrammarModel()
+	{
+		_featureModel = make_shared<GrammarFeatureModel>();
+
+		_localModel = make_shared<GrammarLocalModel>();
+		_localModel->ReadGrammarLocal();
+
+		_patternModel = make_shared<GrammarPatternModel>(this);
+
+		ReadWeights();
+	}
+
 	void GrammarSet::Initialize()
 	{
 #ifdef _Extract_Initial_Grammar_Pattern
 		ExtractGrammarPatternFromInitialFile();
 #endif // _Extract_Initial_Grammar_Pattern
 
-		//ExtractGrammarLocalDistribution();
-		ReadGrammarLocal();
 
 		//Input the grammar patterns from the file.
 		vector<GrammarAttribute> patterns=InputGrammaPatterns(GetHopeLoveMindPath()+GrammaPatterns_InitialFilename);
@@ -62,19 +76,12 @@ namespace Mind
 		}
 
 		//Add patterns to <me>.
-		for (unsigned int i=0;i<patterns.size();++i)
+		for (size_t i=0;i<patterns.size();++i)
 		{
 			GrammarPattern pattern=patterns[i].pattern;
 			_patterns.push_back(patterns[i]);
 
 			//AddPatternToTree(pattern);
-		}
-
-		ReadWeights();
-
-		CFG_SECTION(COMPUTE_GRAMMAR_WEIGHTS)
-		{
-			InitializeWeights();
 		}
 	}
 
@@ -105,7 +112,7 @@ namespace Mind
 // 
 // 			vector<PartOfSpeech> pattern_enum;
 // 			pattern_enum.reserve(pattern_int.size());
-// 			for (unsigned int i=0;i<pattern_int.size();++i)
+// 			for (size_t i=0;i<pattern_int.size();++i)
 // 			{
 // 				pattern_enum.push_back((PartOfSpeech)pattern_int[i]);
 // 			}
@@ -120,7 +127,7 @@ namespace Mind
 			vector<string> splits_withBlanks = CommonTool::SplitString(line, ' ');
 			//Erase null strings
 			vector<string> splits;
-			for (unsigned int i=0;i<splits_withBlanks.size();++i)
+			for (size_t i=0;i<splits_withBlanks.size();++i)
 			{
 				if (splits_withBlanks[i] != "")
 				{
@@ -129,7 +136,7 @@ namespace Mind
 			}
 
 			vector<PartOfSpeech> pattern_enum;
-			for (unsigned int i = 0; i < splits.size() - 1; ++i)
+			for (size_t i = 0; i < splits.size() - 1; ++i)
 			{
 				pattern_enum.push_back((PartOfSpeech)atoi(splits[i].c_str()));
 			}
@@ -276,7 +283,7 @@ namespace Mind
 
 	void GrammarSet::AddPatternToTree( const DataCollection::GrammarPattern& pattern )
 	{
-		for (unsigned int j=-1;j<pattern.Size();++j)
+		for (size_t j=-1;j<pattern.Size();++j)
 		{
 			pair<GrammarPattern,GrammarPattern> pattern_pair=pattern.Divide(j);
 			GrammarPattern former=pattern_pair.first;
@@ -406,102 +413,22 @@ namespace Mind
 		return res;
 	}
 
-	vector<GrammarSet::Sen_Gra> GrammarSet::InputGraSamples(string file) const
-	{
-		vector<Sen_Gra> samples;
-
-		ifstream in(file);
-		if (!in) return samples;
-
-		while(!in.eof())
-		{
-			Sen_Gra sample;
-
-			int count;
-			in>>count;
-//			Vector array(NUM_PARTOFSPEECH);
-			vector<int> gra;
-			gra.reserve(count);
-			for (int i=1;i<=count;++i)
-			{
-				int elem;
-				in>>elem;
-//				++array[elem];
-				gra.push_back(elem);
-			}
-
-			sample.gra=gra;
-//			array.Normalize();
-			samples.push_back(sample);
-		}
-
-		return samples;
-	}
-
-	
-
-	void GrammarSet::ExtractGrammarLocalDistribution()
-	{
-		vector<Sen_Gra> samples=InputGraSamples(GetHopeLoveMindPath()+StringGrammar_InitialFilename);
-		if (samples.empty()) return;
-
-		//Initialize each POS with GrammarLocal.
-		map<PartOfSpeech,GrammarLocal> grammarLocalTable;
-		for (int i=0;i<NUM_PARTOFSPEECH;++i)
-		{
-			_grammarLocalTable[PartOfSpeech(i)]=shared_ptr<GrammarLocal>(new GrammarLocal(PartOfSpeech(i)));
-		}
-
-		//Statistic the distribution of frequencies of POS from <samples>.
-		for (unsigned int i=0;i<samples.size();++i)
-		{
-			vector<int> gra=samples[i].gra;
-			for (unsigned int j=0;j<gra.size();++j)
-			{
-				PartOfSpeech curPos=PartOfSpeech(gra[j]);
-				if(j==0)
-				{
-					_grammarLocalTable[curPos]->AddForward(PartOfSpeech(gra[j+1]));
-				}
-				else if(j==gra.size()-1)
-				{
-					_grammarLocalTable[curPos]->AddBackward(PartOfSpeech(gra[j-1]));
-				}
-				else
-				{
-					_grammarLocalTable[curPos]->AddForward(PartOfSpeech(gra[j+1]));
-					_grammarLocalTable[curPos]->AddBackward(PartOfSpeech(gra[j-1]));
-				}
-			}
-		}
-	}
-
-	double GrammarSet::GetP_Forward( const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& forward ) const
-	{
-		return _grammarLocalTable.at(me)->GetRatio_Forward(forward);
-	}
-
-	double GrammarSet::GetP_Backward( const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward ) const
-	{
-		return _grammarLocalTable.at(me)->GetRatio_Backward(backward);
-	}
-
-
-	double GrammarSet::ComputePossibility(const DataCollection::GrammarPattern& pattern) const
-	{
-		//The final possibility takes local grammar and grammar patterns of <pattern> into consideration.
-		//And the above two components has weights respectively.
-		MyInt totalFreq = GetTotalFrequency();
-		double localP = ComputeP_GrammarLocalAnalysis(pattern);
-		double patternP = ComputePossibilityGrammarPattern(pattern, totalFreq);
-		double res = _wPattern*patternP + _wLocal*localP;
-		
-		//Adjust the possibility such that it is in the interval of 0 to 1.
-		res = min(1., res);
-		res = max(0., res);
-
-		return res;
-	}
+// 	double GrammarSet::ComputePossibility(const DataCollection::GrammarPattern& pattern) const
+// 	{
+// 		//The final possibility takes local grammar and grammar patterns of <pattern> into consideration.
+// 		//And the above two components has weights respectively.
+// 		MyInt totalFreq = GetTotalFrequency();
+// 		double localP = ComputeP_GrammarLocalAnalysis(pattern);
+// 		double patternP = _patternModel->ComputePossiblity(pattern, totalFreq);
+// 		//DEBUG_FORMAT2("Local grammar possibility is %.10lf.Grammar pattern possibility is %.10lf.", localP, patternP);
+// 		double res = _wPattern*patternP + _wLocal*localP;
+// 		
+// 		//Adjust the possibility such that it is in the interval of 0 to 1.
+// 		res = min(1., res);
+// 		res = max(0., res);
+// 
+// 		return res;
+// 	}
 
 	map<double, PartOfSpeech> GrammarSet::ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const
 	{
@@ -509,81 +436,46 @@ namespace Mind
 
 		for (int i=0;i<NUM_PARTOFSPEECH;++i)
 		{
-			double possi = ComputeP_GrammarLocal((PartOfSpeech)i, forwardPos, backwardPos);
+			double possi =_localModel->ComputeP_GrammarLocal((PartOfSpeech)i, forwardPos, backwardPos);
 			res[possi]= (PartOfSpeech)i;
 		}
 
 		return res;
 	}
 
-	double GrammarSet::ComputeP_GrammarLocalAnalysis(const DataCollection::GrammarPattern& pattern) const
+	double GrammarSet::ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		vector<PartOfSpeech> poses = pattern.GetPattern();
-		//Remove punctuations as they may interfere computation.
-		for (vector<PartOfSpeech>::iterator it = poses.begin(); it != poses.end();)
+		if (!_featureModel->FeaturesLoaded())
 		{
-			if (*it == Punctuation)
-			{
-				it = poses.erase(it);
-			}
-			else
-			{
-				++it;
-			}
+			_featureModel->LoadAllFeatures();
 		}
 
-		if (poses.size() <= 1) return 0.;
-
-		double res = 0.;
-		for (unsigned int i = 0; i<poses.size(); ++i)
-		{
-			PartOfSpeech curPos = poses[i];
-			if (i == 0)//第一个词性只考虑与第二个词性之间的置信度.
-			{
-				double p_cur_for = GetP_Forward(curPos, poses[i + 1]);
-				double p_for_cur = GetP_Backward(poses[i + 1], curPos);
-				res += p_for_cur*p_cur_for;
-			}
-			else if (i == poses.size() - 1)//最后一个词性只考虑与倒数第二个之间的置信度.
-			{
-				double p_cur_back = GetP_Backward(curPos, poses[i - 1]);
-				double p_back_cur = GetP_Forward(poses[i - 1], curPos);
-				res += p_back_cur*p_cur_back;
-			}
-			else
-			{
-				res += ComputeP_GrammarLocal(curPos, poses[i + 1], poses[i - 1]);
-			}
-		}
-
-		return res / poses.size();
+		return _featureModel->ComputePossiblity(sentence);
 	}
 
-	void GrammarSet::InitializeWeights()
+	double GrammarSet::ComputeP_GrammarLocalAnalysis(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		vector<Sen_Gra> samples = InputGraSamples(GetHopeLoveMindPath() + StringGrammar_InitialFilename);
+		return _localModel->ComputePossiblity(sentence);
+	}
 
-		//Compute possibilities of grammar patterns and local grammar of each pattern.
-		MyInt totalFreq = GetTotalFrequency();
-		vector<double> localPVec;
-		vector<double> patternPVec;
-		for (unsigned int i = 0; i < samples.size(); ++i)
-		{
-			//Compute the possibility of local grammar.
-			GrammarPattern pattern=LanguageFunc::ConvertToPattern(samples[i].gra);
-			double localP = ComputeP_GrammarLocalAnalysis(pattern);
-			localPVec.push_back(localP);
+	void GrammarSet::InitializeWeights(const string filePath)
+	{
+		GrammarModelTrainer model;
+		model.SetSampleFilePath(filePath);
+		model.AddGrammarModel(_featureModel);
+		model.AddGrammarModel(_localModel);
+		model.AddGrammarModel(_patternModel);
 
-			//Compute the possibility of matched patterns.
-			double patternP = ComputePossibilityGrammarPattern(pattern, totalFreq);
-			patternPVec.push_back(patternP);
-		}
+		//Load features.
+		_featureModel->LoadAllFeatures();
+		model.OptimizeWeights();
+		_featureModel->ClearFeatures();
 
-		//Optimize <_wPattern> and <_wLocal> until possibility of each sample is close to 1.
-		_wPattern = 0.5, _wLocal = 0.5;
-		ComputeWeights(patternPVec, localPVec, _wPattern, _wLocal);
-
-		WriteWeights(_wPattern, _wLocal);
+		//Write weights to database.
+		auto paramDB = _dbContainer->GetMindParameterDatabase(GrammarFeatureModel::GetFeatureTypesCount());
+		paramDB->WriteGrammarFeatureModelWeight(model.GetModelWeight(_featureModel));
+		paramDB->WriteGrammarLocalModelWeight(model.GetModelWeight(_localModel));
+		paramDB->WriteGrammarPatternModelWeight(model.GetModelWeight(_patternModel));
 	}
 
 	void GrammarSet::WriteWeights(const double wPattern, const double wLocal)
@@ -610,133 +502,60 @@ namespace Mind
 
 	void GrammarSet::ReadWeights()
 	{
-		string paramFile = GetHopeLoveMindPath()+"MindParam.txt";
-		TiXmlDocument *myDocument = new TiXmlDocument(paramFile.c_str());
-		if (!myDocument->LoadFile())
-		{
-			cout << "Cannot read weights in GrammarSet" << endl;
-			return;
-		}
-		TiXmlNode *root = myDocument->FirstChild("Root");
+		auto paramDB = _dbContainer->GetMindParameterDatabase(GrammarFeatureModel::GetFeatureTypesCount());
+		
+		double patternModelWeight = paramDB->GetGrammarPatternModelWeight();
+		LOG_FORMAT("Weight for gramamr pattern model is %lf.", patternModelWeight);
+		_weights[_patternModel] = patternModelWeight;
 
-		TiXmlNode *doubleParamNode=root->FirstChild("DoubleParam");
-		TiXmlElement *wPatternNode=doubleParamNode->FirstChildElement("wPattern");
-		TiXmlElement *wLocalNode = doubleParamNode->FirstChildElement("wLocal");
+		double localModelWeight = paramDB->GetGrammarLocalModelWeight();
+		LOG_FORMAT("Weight for gramamr local model is %lf.", localModelWeight);
+		_weights[_localModel] = localModelWeight;
 
-		if (wPatternNode == nullptr || wLocalNode == nullptr)
-		{
-			throw runtime_error("Error in ReadWeights: cannot read weights from file.");
-		}
+		double featureModelWeight = paramDB->GetGrammarFeatureModelWeight();
+		LOG_FORMAT("Weight for gramamr feature model is %lf.", featureModelWeight);
+		_weights[_featureModel] = featureModelWeight;
 
-		const char* wpatternStr=wPatternNode->Attribute("value");
-		const char* wlocalStr = wLocalNode->Attribute("value");
-
-		_wPattern= strtod(wpatternStr, NULL);
-		_wLocal = strtod(wlocalStr, NULL);
-
-		delete myDocument;
+		LOG("Finish read grammar model weights");
 	}
 
-	void GrammarSet::ReadGrammarLocal()
+
+	double GrammarSet::GetP_Forward(const DataCollection::PartOfSpeech& me, const DataCollection::PartOfSpeech& forward) const
 	{
-		ifstream in(GetHopeLoveMindPath()+GrammarLocal_InitialFilename);
-		if (!in)
-		{
-			LOG("Cannot find file: " + GrammarLocal_InitialFilename);
-			return;
-		}
-
-		//The total POS for local grammar analysis is 15, including punctuations.
-		int NUM_POS_FOR_LOCAL = NUM_PARTOFSPEECH+3;
-
-		//Initialize each POS with GrammarLocal.
-		map<PartOfSpeech, GrammarLocal> grammarLocalTable;
-		for (int i = 0; i < NUM_POS_FOR_LOCAL; ++i)
-		{
-			shared_ptr<GrammarLocal> grammarLocal ( new GrammarLocal(PartOfSpeech(i)));
-			grammarLocal->Read(in);
-			_grammarLocalTable[PartOfSpeech(i)] = grammarLocal;
-		}
-
-
+		return _localModel->GetP_Forward(me, forward);
 	}
 
-	void GrammarSet::ComputeWeights(const vector<double>& patternP, const vector<double>& localP,
-		double& wPattern, double& wLocal) const
+	double GrammarSet::GetP_Backward(const DataCollection::PartOfSpeech& me, const DataCollection::PartOfSpeech& backward) const
 	{
-		double gradPattern, gradLocal;
-		double deltaStep = 1e-4;
-		double divergeTol = 1e-5;
-		int iterCount = 0;
-		int maxIterCount = 10000;
-		do 
-		{
-			double dev = ComputeDeviation(patternP, localP, wPattern, wLocal);
-			//Numerically compute the gradient of each weight.
-			double deltaPattern= ComputeDeviation(patternP, localP, wPattern+ deltaStep, wLocal)-dev;
-			double deltaLocal = ComputeDeviation(patternP, localP, wPattern , wLocal + deltaStep) - dev;
-			gradPattern = deltaPattern / deltaStep;
-			gradLocal = deltaLocal / deltaStep;
-
-			//Adjust each weight simply by gradient.
-			wPattern -= gradPattern;
-			wLocal -= gradLocal;
-
-			if (++iterCount > maxIterCount)
-			{
-				break;
-			};
-
-			//Iterate until both weights are not changed within tolerance.
-		} while (Math::DoubleCompare(gradPattern,0,divergeTol)!=0 && Math::DoubleCompare(gradLocal, 0, divergeTol) != 0);
-
+		return _localModel->GetP_Backward(me, backward);
 	}
 
-	double GrammarSet::ComputeDeviation(const vector<double>& patternP, const vector<double>& localP,
-		const double wPattern, const double wLocal) const
+	double GrammarSet::ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		assert(patternP.size() == localP.size());
+		//The final possibility takes all grammar models into consideration.
+		//And the above components has weights respectively.
+
+		if (!_featureModel->FeaturesLoaded())
+		{
+			_featureModel->LoadAllFeatures();
+		}
+
 
 		double res = 0;
-		for (unsigned int i=0;i<patternP.size();++i)
+		for (auto modelWeight : _weights)
 		{
-			//Each element of <patternP> and the element in <localP> of the same index correspond to one grammar pattern.
-			//Sum possibilities of each grammar patterns and compute the deviation from one.
-			res += pow(patternP[i] * wPattern + localP[i] * wLocal-1,2);
+			double p = modelWeight.first->ComputePossiblity(sentence);
+			double weight = modelWeight.second;
+			res += weight*p;
+			DEBUG_FORMAT2("The P computed by model '%s' is %lf.", typeid(*modelWeight.first).name(), weight*p);
 		}
 
-		//Normalize deviation.
-		return res/patternP.size();
+		//Adjust the possibility such that it is in the interval of 0 to 1.
+		res = min(1., res);
+		res = max(0., res);
+
+		return res;
 	}
-
-	double GrammarSet::ComputePossibilityGrammarPattern(const GrammarPattern& pattern, const MyInt totalFreq) const
-	{
-		//Possibility equals the sum of ratio of each grammar pattern.
-		//Therefore, possibility must be in the interval of 0 to 1.
-
-		double sumFreq = 0.;
-		vector<GrammarPattern> matchedPattern = ContainSubsequence(pattern);
-		for (unsigned int j = 0; j < matchedPattern.size(); ++j)
-		{
-			MyInt curFreq ( GetFreqencyofPattern(matchedPattern[j]));
-			sumFreq += curFreq / totalFreq;
-		}
-
-		return sumFreq;
-	}
-
-	double GrammarSet::ComputeP_GrammarLocal(const PartOfSpeech& curPos, const PartOfSpeech& forwardPos, const PartOfSpeech& backwardPos) const
-	{
-		double p_cur_for = GetP_Forward(curPos, forwardPos);
-		double p_cur_back = GetP_Backward(curPos, backwardPos);
-		double p_for_cur = GetP_Backward(forwardPos, curPos);
-		double p_back_cur = GetP_Forward(backwardPos, curPos);
-
-
-		return (p_cur_for*p_for_cur + p_cur_back*p_back_cur) / 2;
-	}
-
-	
 
 }
 

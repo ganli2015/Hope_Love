@@ -15,6 +15,8 @@
 #include "../MindElement/ConceptChain.h"
 #include "../Mind/CommonFunction.h"
 
+#include "../CommonTools/LogWriter.h"
+
 using namespace Mind;
 using namespace Math;
 
@@ -29,8 +31,9 @@ ChainAnalyzer::~ChainAnalyzer(void)
 
 void ChainAnalyzer::Analyze(const vector<Mind::ConceptChainProperty>& baseChains)
 {
+	DEBUGLOG("Begin ChainAnalyzer.");
 	ofstream out("DebugInfo//HyperChains.txt");
-	for (unsigned int i=0;i<baseChains.size();++i)
+	for (size_t i=0;i<baseChains.size();++i)
 	{
 		//Base chains constitute of base concepts which hardly construct a sentence.
 		//Then I search concepts over base concepts, which are hyper concepts.
@@ -38,6 +41,7 @@ void ChainAnalyzer::Analyze(const vector<Mind::ConceptChainProperty>& baseChains
 		ConceptChainProperty property=baseChains[i];
 		vector<shared_ptr<iConceptChain>> hyperChains;
 		ComputeHyperChains(property.chain,hyperChains);
+		DEBUG_FORMAT("hyperChains size :%d", hyperChains.size());
 		if(hyperChains.empty()) continue;
 
 		//Currently I select hyper chains of the max level.
@@ -47,10 +51,7 @@ void ChainAnalyzer::Analyze(const vector<Mind::ConceptChainProperty>& baseChains
 		ComputeHyperChainLevels(hyperChains,baseChains[i].chain,levels);
 		vector<HyperChainInfo> hyperInfos=AssembleHyperChainInfo(hyperChains,levels,property.confidence);
 
-
-#ifdef _COUT_DEBUG_INFO
 		OutputHyperChains(hyperInfos,baseChains[i].chain,out);
-#endif // _DEBUG
 
 		vector<HyperChainInfo> selectedHyperInfos=SelectHyperChainsOfMaxLevels(hyperInfos);
 
@@ -68,7 +69,7 @@ void ChainAnalyzer::ComputeHyperChains( const shared_ptr<iConceptChain> baseChai
 	//Each element of <backwardConceptSequence> is collection of hyper concepts of a base concept in <baseChain>.
 	vector<vector<shared_ptr<iConcept>>> backwardConceptSequence;
 	backwardConceptSequence.reserve(conceptSequence.size());
-	for (unsigned int i=0;i<conceptSequence.size();++i)
+	for (size_t i=0;i<conceptSequence.size();++i)
 	{
 		//Hyper concepts are actually backward concepts.
 		vector<shared_ptr<iConcept>> backConcepts=_brain->SearchBackwardConcepts(conceptSequence[i]);
@@ -79,7 +80,7 @@ void ChainAnalyzer::ComputeHyperChains( const shared_ptr<iConceptChain> baseChai
 	//Transform hyper chain collection to all possible combinations of concept chains.
 	//Each element of <combinations> is concepts in one hyper chain.
 	vector<vector<shared_ptr<iConcept>>> combinations=Math::GetAllCombinations<shared_ptr<iConcept>>::Get(backwardConceptSequence);
-	for (unsigned int i=0;i<combinations.size();++i)
+	for (size_t i=0;i<combinations.size();++i)
 	{
 		//Compute chains that cover base concepts in <baseChain>.
 		//The result <properCombi> may be not as long as <combinations> and it is perhaps a sub chain of <combinations>.
@@ -96,7 +97,7 @@ vector<shared_ptr<iConceptChain>> ChainAnalyzer::ComputeProperCombination( const
 	//All sub sequences of combinations are taken into consideration
 	//as sub sequences may be enough and proper to express a complete sentence if they cover the base chain. 
 	vector<vector<shared_ptr<iConcept>>> subSequences=GetAllSubSequence<shared_ptr<iConcept>>::Get(combination);
-	for (unsigned int i=0;i<subSequences.size();++i)
+	for (size_t i = 0; i < subSequences.size(); ++i)
 	{
 		if(CoverBase(subSequences[i],baseChain))
 		{
@@ -109,16 +110,23 @@ vector<shared_ptr<iConceptChain>> ChainAnalyzer::ComputeProperCombination( const
 
 bool ChainAnalyzer::CoverBase(const vector<shared_ptr<iConcept>>& hyperChain,const shared_ptr<iConceptChain>& baseChain) const
 {
+	if (hyperChain.size() == 1)
+	{
+		//Handle the case that there is only on concept in the <hyperChain>.
+		//In this case, we cannot compute interaction in the <hyperChain>.
+		return OneConceptCoverBase(hyperChain[0], baseChain);
+	}
+	
 	typedef pair<shared_ptr<Mind::iConcept>,shared_ptr<Mind::iConcept>> ConceptPair;
 
 	//Compute interactions of adjacent concepts in <hyperChain>.
 	//Derive all concepts pairs which are base concepts.
 	vector<ConceptPair> allPairs;
-	for (unsigned int i=0;i<hyperChain.size()-1;++i)
+	for (size_t i=0;i<hyperChain.size()-1;++i)
 	{
 		shared_ptr<iConceptInteractTable> interactTable=hyperChain[i]->DeepInteractWith(hyperChain[i+1]);
 		vector<ConceptPair> basePairs=interactTable->GetAllRelations();
-		allPairs.insert(allPairs.end(),basePairs.begin(),basePairs.end());
+		allPairs.insert(allPairs.end(), basePairs.begin(), basePairs.end());
 	}
 
 	//Extract concept chains in <allPairs>.
@@ -133,7 +141,7 @@ bool ChainAnalyzer::CoverBase(const vector<shared_ptr<iConcept>>& hyperChain,con
 	}
 	//Check all chains until <baseChain> is a sub sequence of one chain.
 	//It means <baseChains> is incorporated in <hyperChain> and its order is consistent with order of <hyperChain>.
-	for (unsigned int i=0;i<chains.size();++i)
+	for (size_t i=0;i<chains.size();++i)
 	{
 		if(baseChain->IsSubSequenceOf(chains[i]))
 		{
@@ -143,10 +151,28 @@ bool ChainAnalyzer::CoverBase(const vector<shared_ptr<iConcept>>& hyperChain,con
 	return false;
 }
 
-int ChainAnalyzer::OverlappedCount( const int startIndex,const vector<shared_ptr<iConcept>>& checkChain,const vector<shared_ptr<iConcept>>& testChain ) const
+bool ChainAnalyzer::OneConceptCoverBase(const shared_ptr<Mind::iConcept> hyperChain,
+	const shared_ptr<Mind::iConceptChain>& baseChain) const
+{
+	DEBUGLOG("Only one concept in hyperChain.");
+	//Only if all of concepts in <baseChain> are base of <hyperChain>, return true.
+
+	auto baseChainConceptVec = baseChain->GetConceptVec();
+	for (size_t i=0;i<baseChainConceptVec.size();++i)
+	{
+		if (!baseChainConceptVec[i]->IsBaseOf(hyperChain))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+int ChainAnalyzer::OverlappedCount(const int startIndex, const vector<shared_ptr<iConcept>>& checkChain, const vector<shared_ptr<iConcept>>& testChain) const
 {
 	int count=0;
-	for (unsigned int i=startIndex;i<checkChain.size();++i)
+	for (size_t i=startIndex;i<checkChain.size();++i)
 	{
 		if(CommonFunction::IndexOf(testChain,checkChain[i])>=0)//checkChain[i]是testChain的一个元素。
 		{
@@ -165,14 +191,14 @@ void ChainAnalyzer::OutputHyperChains( const vector<HyperChainInfo>& hyperChainI
 {
 	if(hyperChainInfos.empty()) return;
 
-	out<<"Base Chain: "<<endl;
-	CommonFunction::WriteConcepts(baseChain->GetConceptVec(),out);
-	out<<"Confidence: "<<hyperChainInfos[0].baseChainConfidence<<endl;
-	out<<"HyperChains: "<<endl;
-	for (unsigned int i=0;i<hyperChainInfos.size();++i)
+	DEBUGLOG("Base Chain: ");
+	CommonFunction::LogConcepts(baseChain->GetConceptVec());
+	DEBUG_FORMAT("Confidence: %lf",hyperChainInfos[0].baseChainConfidence);
+	DEBUGLOG("HyperChains: ");
+	for (size_t i=0;i<hyperChainInfos.size();++i)
 	{
-		CommonFunction::WriteConcepts(hyperChainInfos[i].hyperChain->GetConceptVec(),out);
-		out<<"Level: "<<hyperChainInfos[i].meanLevel<<endl;
+		CommonFunction::LogConcepts(hyperChainInfos[i].hyperChain->GetConceptVec());
+		DEBUG_FORMAT("Level: %lf", hyperChainInfos[i].meanLevel);
 	}
 	out<<endl;
 }
@@ -201,13 +227,13 @@ double ChainAnalyzer::ComputeHyperChainMeanLevel( const shared_ptr<Mind::iConcep
 	vector<shared_ptr<iConcept>> hyperConcepts=hyperChain->GetConceptVec();
 	vector<shared_ptr<iConcept>> baseConcepts=baseChain->GetConceptVec();
 	vector<int> levels;
-	for (unsigned int i=0;i<hyperConcepts.size();++i)
+	for (size_t i=0;i<hyperConcepts.size();++i)
 	{
 		shared_ptr<iConceptLevelTable> levelTable=hyperConcepts[i]->GetLevelTable();
 		int minLevel=BigInt;
 		//Select the minimum level in <levelTable>.
 		//Why minimun? It actually needs more consideration. 
-		for (unsigned int j=0;j<baseConcepts.size();++j)
+		for (size_t j=0;j<baseConcepts.size();++j)
 		{
 			int level=levelTable->LevelTo(baseConcepts[j]);
 			if(level>=0 && level<minLevel)
@@ -229,7 +255,7 @@ vector<ChainAnalyzer::HyperChainInfo> ChainAnalyzer::AssembleHyperChainInfo( con
 	res.reserve(hyperChains.size());
 
 	Check(hyperChains.size()==levels.size());
-	for (unsigned int i=0;i<hyperChains.size();++i)
+	for (size_t i=0;i<hyperChains.size();++i)
 	{
 		HyperChainInfo info;
 		info.hyperChain=hyperChains[i];

@@ -51,7 +51,7 @@ shared_ptr<Mind::iConceptInteractTable> ConceptTableCreator::Parse( const string
 
 	//split ','
 	vector<string> pariStr=CommonTool::SplitString(str,',');
-	for (unsigned int i=0;i<pariStr.size();++i)
+	for (size_t i=0;i<pariStr.size();++i)
 	{
 		//split '-'
 		vector<string> fromTo=CommonTool::SplitString(pariStr[i],'-');

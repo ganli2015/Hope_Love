@@ -36,7 +36,7 @@ namespace LogicSystem
 	shared_ptr<iExpression> LogicElementCreator::CreateExpression( const vector<string> str ) const
 	{
 		shared_ptr<CompositeExpression> com(new CompositeExpression());
-		for (unsigned int i=0;i<str.size();++i)
+		for (size_t i=0;i<str.size();++i)
 		{
 			com->AddExpression(str[i]);
 		}
@@ -52,7 +52,7 @@ namespace LogicSystem
 	shared_ptr<iExpression> LogicElementCreator::CreateExpression( const vector<shared_ptr<DataCollection::Sentence>> val ) const
 	{
 		shared_ptr<CompositeExpression> com(new CompositeExpression());
-		for (unsigned int i=0;i<val.size();++i)
+		for (size_t i=0;i<val.size();++i)
 		{
 			com->AddExpression(val[i]);
 		}

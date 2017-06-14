@@ -49,23 +49,7 @@ namespace Mind
 		//Concept Related Functions
 		virtual bool IsInMind(const std::string str) const;
 		virtual bool IsInMind(const shared_ptr<DataCollection::Word> word) const;
-        
-        //与<chara>或<word>同根的词的数量，只记向前的。
-        //比如概念集里只有“天”“天空”“天上”这三个词语，那么“天”的Count_ForwardAdjWord就等于3.
-        //而“天空”的Count_ForwardAdjWord就等于1.
-		int Count_ForwardAdjWord(const shared_ptr<DataCollection::Character> chara) const;
-        int Count_ForwardAdjWord(const shared_ptr<DataCollection::Word> word) const;
-        //找出相邻的前向词。
-        //比如概念集里只有“天”“天空”“天空空”这三个词语，那么“天”的<forAdjword>就是“天”“天空”“天空空”，
-        //而“天空”的<forAdjword>就是“天空”“天空空”.
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& forAdjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<std::string>& forAdjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& forAdjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& forAdjword) const;
-        //最大的同根词的长度。
-        //比如概念集里只有“天”“天空”“天空空”这三个词语，那么“天”和“天空”的MaxLength_AdjacentWord都等于3。
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara) const;
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word) const;
+
 		int MaxLength_WordWithHead(const shared_ptr<DataCollection::Character> headChara) const;
 
 		//得到已知的所有词性的<word>。
@@ -97,8 +81,9 @@ namespace Mind
 		//获得me的前一个词性是backward的概率.
 		virtual double GetP_Backward(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward) const;
 
-		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const ;
-		virtual double ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const;
+		virtual double ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+		virtual double ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const;
+		virtual double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const ;
 
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
 		map<double,DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const;

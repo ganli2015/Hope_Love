@@ -16,7 +16,7 @@ PerformanceTester::~PerformanceTester()
 
 void PerformanceTester::RunAll()
 {
-	for (unsigned int i=0;i<_tests.size();++i)
+	for (size_t i=0;i<_tests.size();++i)
 	{
 		_tests[i]->Run();
 

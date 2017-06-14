@@ -89,7 +89,7 @@ namespace LogicSystem
 
 		shared_ptr<iRelation> conditions=ParseRelationCollection(node,ConditionCollectionNode,ConditionNode);
 		vector<shared_ptr<iRelationConstraint>> constraints=ParseConstraints(node);
-		for (unsigned int i=0;i<constraints.size();++i)
+		for (size_t i=0;i<constraints.size();++i)
 		{
 			conditions->AddConstraint(constraints[i]);
 		}
@@ -140,7 +140,7 @@ namespace LogicSystem
 	{
 		vector<shared_ptr<iRelationConstraint>> res;
 
-		for (unsigned int i=0;i<_constraintNodeTag.size();++i)//Parse each constraint node type.
+		for (size_t i=0;i<_constraintNodeTag.size();++i)//Parse each constraint node type.
 		{
 			const TiXmlElement *constraintNode=node->FirstChildElement(_constraintNodeTag[i].c_str());
 

@@ -17,8 +17,8 @@ namespace DataCollection
 		~StructuredSentence(void);
 		StructuredSentence(const std::vector<shared_ptr<DataCollection::Word>>& vec);
 
-		void SetIntensity(const unsigned int i,const unsigned int j,double intensity);
-		double GetIntensity(const unsigned int i,const unsigned int j);
+		void SetIntensity(const size_t i,const size_t j,double intensity);
+		double GetIntensity(const size_t i,const size_t j);
 
 		///Check whether this sentence is analyzed.
 		///Once <SetIntensity> is called , <Analyzed> will be true.

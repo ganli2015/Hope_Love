@@ -5,4 +5,5 @@
 #pragma once
 
 #define MINDAPI
+#define MINDTESTEXPORT
 

@@ -23,7 +23,7 @@ namespace DataCollection
 	GrammarPattern::GrammarPattern(const std::vector<PartOfSpeech>& val):_id(-1)
 	{
 		_pattern.clear();
-		for (unsigned int i=0;i<val.size();++i)
+		for (size_t i=0;i<val.size();++i)
 		{
 			_pattern.push_back((int)val[i]);
 		}
@@ -42,7 +42,7 @@ namespace DataCollection
 		reverse(former.begin(),former.end());
 		//Get the latter pattern.
 		vector<int> latter;
-		for (unsigned int i=index+1;i<_pattern.size();++i)
+		for (size_t i=index+1;i<_pattern.size();++i)
 		{
 			latter.push_back(_pattern[i]);
 		}
@@ -59,7 +59,7 @@ namespace DataCollection
 	{
 		vector<PartOfSpeech> res;
 		res.reserve(_pattern.size());
-		for (unsigned int i=0;i<_pattern.size();++i)
+		for (size_t i=0;i<_pattern.size();++i)
 		{
 			res.push_back((PartOfSpeech)_pattern[i]);
 		}
@@ -83,7 +83,7 @@ namespace DataCollection
 			return false;
 		}
 
-		for (unsigned int i=0;i<_pattern.size();++i)
+		for (size_t i=0;i<_pattern.size();++i)
 		{
 			if(_pattern[i]!=pattern._pattern[i])
 			{

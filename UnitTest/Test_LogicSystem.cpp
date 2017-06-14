@@ -53,6 +53,18 @@ typedef AddPatternToCerebrum Test_LogicKnowledgeInitializer;
 
 namespace LogicSystem
 {
+	MockiCerebrum* CreateMockCerebrum()
+	{
+		MockiCerebrum* brain = new MockiCerebrum;
+
+		EXPECT_CALL(*brain, FindConceptWithMatchedDisc(_, _)).WillRepeatedly(Return());
+
+		EXPECT_CALL(*brain, Deduce(Matcher<shared_ptr<iConceptInteractTable>>(_)))
+			.WillRepeatedly(Return(vector<shared_ptr<iDeduceResult>>()));
+
+		return brain;
+	}
+
 	TEST_F(Test_LogicKnowledgeInitializer,ParseRelation)
 	{
 		string filename=FuncForTest::TestSampleDir+"Test_LogicKnowledgeInitializer_ParseRelation.txt";
@@ -265,13 +277,13 @@ namespace LogicSystem
 		//Create mock expression of condition.
 		shared_ptr<MockExpression> expre=MockExpression::SimpleCreate(param.inputExpreTable);
 
-		MockiCerebrum* mockBrain=MockiCerebrum::Create();
+		MockiCerebrum* mockBrain=CreateMockCerebrum();
 
 		//Prepare data for FindConceptWithMatchedDisc.
 		mockBrain->AddExpectCall_FindConceptWithMatchedDisc(param.matchedConceptParam);
 
 		//Prepare data for iCerebrum::Deduce
-		for (unsigned int i=0;i<param.condition_deduce.size();++i)
+		for (size_t i=0;i<param.condition_deduce.size();++i)
 		{
 			mockBrain->AddExpectCall_Deduce(param.condition_deduce[i].first,param.condition_deduce[i].second);
 		}
@@ -317,7 +329,7 @@ namespace LogicSystem
 		vector<shared_ptr<iReduceResult>> results=logic.Reduce(param.inputTable);
 
 		ASSERT_EQ(results.size(),param.results.size());
-		for (unsigned int i=0;i<results.size();++i)
+		for (size_t i=0;i<results.size();++i)
 		{
 			ASSERT_TRUE(FuncForTest::SameLogicResult(param.results[i].tablePairs,param.results[i].conceptStr,results[i]))
 				<<"expect: \n"+FuncForTest::TablePairToString(param.results[i].tablePairs)
@@ -531,7 +543,7 @@ namespace LogicSystem
 			Param_Reduce param;
 			param.inputTable=tableCreator->SimpleCreate("二-加,加-一,加-一");
 
-			param.mockCerebrum=MockiCerebrum::Create();
+			param.mockCerebrum= CreateMockCerebrum();
 			param.mockCerebrum->AddExpectCall_FindConceptWithMatchedDisc("二-加,加-一",
 				"三",
 				"二",
@@ -560,7 +572,7 @@ namespace LogicSystem
 			Param_Reduce param;
 			param.inputTable=tableCreator->SimpleCreate("二-加,加-一,加-一,加-一");
 
-			param.mockCerebrum=MockiCerebrum::Create();
+			param.mockCerebrum= CreateMockCerebrum();
 			param.mockCerebrum->AddExpectCall_FindConceptWithMatchedDisc("二-加,加-一",
 				"三",
 				"二",
@@ -594,7 +606,7 @@ namespace LogicSystem
 			Param_Reduce param;
 			param.inputTable=tableCreator->SimpleCreate("二-加,加-一");
 
-			param.mockCerebrum=MockiCerebrum::Create();
+			param.mockCerebrum= CreateMockCerebrum();
 			param.mockCerebrum->AddExpectCall_FindConceptWithMatchedDisc("二-加,加-一",
 				"三",
 				"二",

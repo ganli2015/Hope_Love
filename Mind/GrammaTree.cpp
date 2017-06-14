@@ -87,7 +87,7 @@ namespace Mind
 	{
 		vector<DataCollection::PartOfSpeech> pattern_enum;
 		pattern_enum.reserve(vec.size());
-		for (unsigned int i=0;i<vec.size();++i)
+		for (size_t i=0;i<vec.size();++i)
 		{
 			pattern_enum.push_back((DataCollection::PartOfSpeech)vec[i]);
 		}
@@ -111,7 +111,7 @@ namespace Mind
 		if(pos[0]!=_val) return -1;
 
 		shared_ptr<GrammaTreeNode> curNode(new GrammaTreeNode(*this));
-		for (unsigned int i=1;i<pos.size();++i)
+		for (size_t i=1;i<pos.size();++i)
 		{
 			if(curNode->_children.find(pos[i])==curNode->_children.end())
 			{
@@ -151,7 +151,7 @@ namespace Mind
 		vector<DataCollection::PartOfSpeech> gra_seq_enum=pattern.GetPattern();
 		vector<int> gra_seq;
 		gra_seq.reserve(gra_seq_enum.size());
-		for (unsigned int i=0;i<gra_seq_enum.size();++i)
+		for (size_t i=0;i<gra_seq_enum.size();++i)
 		{
 			gra_seq.push_back((int)gra_seq_enum[i]);
 		}
@@ -166,7 +166,7 @@ namespace Mind
 		if(gra_seq.size()==1) return;//if there is only one element, do not modify the gramma ID of the root.
 
 		shared_ptr<GrammaTreeNode> curNode=_root;//track the node which is being operated.
-		for (unsigned int i=1;i<gra_seq.size();++i)
+		for (size_t i=1;i<gra_seq.size();++i)
 		{
 			std::map<int,shared_ptr<GrammaTreeNode>> &children=curNode->_children;
 			int index=gra_seq[i];

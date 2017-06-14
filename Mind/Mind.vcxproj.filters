@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Grammar">
+      <UniqueIdentifier>{83575a96-f645-4871-be47-ad6e9eaeca27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -21,12 +24,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Cerebrum.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GrammaTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GrammaSet.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="FilePath.h">
@@ -59,7 +56,28 @@
     <ClInclude Include="ReactionValueEvaluation.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
+    <ClInclude Include="GrammaTree.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarFeatureModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarLocalModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarPatternModel.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammaSet.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="MindObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ConceptReadWriter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,12 +86,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Cerebrum.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GrammaTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GrammaSet.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="FilePath.cpp">
@@ -107,6 +119,30 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ReactionValueEvaluation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammaTree.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammaSet.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarPatternModel.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarModel.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarLocalModel.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarFeatureModel.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="MindObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConceptReadWriter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

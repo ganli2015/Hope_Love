@@ -12,13 +12,13 @@ namespace Math
 		MatrixImp();
 		virtual ~MatrixImp();
 
-		virtual unsigned int Columns()const =0;
+		virtual size_t Columns()const =0;
 		
-		virtual unsigned int Rows() const = 0;
+		virtual size_t Rows() const = 0;
 		
-		virtual VectorImp* nthColumn(unsigned int col) const = 0;
+		virtual VectorImp* nthColumn(size_t col) const = 0;
 		
-		virtual VectorImp* nthRow(unsigned int row) const = 0;
+		virtual VectorImp* nthRow(size_t row) const = 0;
 		
 		virtual void SetElem(int row, int col, double val) = 0;
 		

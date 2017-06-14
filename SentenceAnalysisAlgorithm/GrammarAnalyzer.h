@@ -81,5 +81,7 @@ private:
 	GrammarAnalyzer::AnalyzeResult AnalyzeEachSegmented(const vector<shared_ptr<DataCollection::Word>>& segmented, vector<shared_ptr<DataCollection::Word>> &optimal);
 	vector<WordRep> SearchAllWordRep(const vector<shared_ptr<DataCollection::Word>>& segmented_withNoPunc);
 
+	void LogOptimalCombinations(const vector<vector<shared_ptr<DataCollection::Word>>>& combinations, const vector<double>& values) const;
+
 };
 

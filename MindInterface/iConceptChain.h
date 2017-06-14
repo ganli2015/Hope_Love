@@ -26,7 +26,7 @@ namespace Mind
 		virtual shared_ptr<iConceptChain> Copy() const =0;
 		virtual bool Same(const shared_ptr<iConceptChain> chain) const =0;
 		virtual bool Contain(const shared_ptr<iConcept> concept) const =0;
-		virtual unsigned int Size() const =0;
+		virtual size_t Size() const =0;
 
 		//////////////////////////////////////////////////////////////////////////
 		///Check whether <me> is a Continuous sub sequence of <parentChain>.

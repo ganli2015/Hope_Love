@@ -24,6 +24,7 @@ namespace Mind
 		_conceptInteractTableContainer(new ConceptInteractTableContainer)
 	{
 		_conceptReactSystem=(new ConceptReactSystem(_conceptset));
+		_grammaset->InitializeGrammarModel();
 	}
 
 	Cerebrum::~Cerebrum()
@@ -63,46 +64,6 @@ namespace Mind
 	bool Cerebrum::IsInMind( const shared_ptr<DataCollection::Word> word ) const
 	{
 		return IsInMind(word->GetString());
-	}
-
-	int Cerebrum::Count_ForwardAdjWord(const  shared_ptr<DataCollection::Character> chara ) const
-	{
-		return _conceptset->Count_ForwardAdjWord(chara);
-	}
-
-	int Cerebrum::Count_ForwardAdjWord(const  shared_ptr<DataCollection::Word> word ) const
-	{
-		return _conceptset->Count_ForwardAdjWord(word);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(chara,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(word,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord(const  shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(chara,adjword);
-	}
-
-	void Cerebrum::GetForwardAdjWord( const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword ) const
-	{
-		_conceptset->GetForwardAdjWord(word,adjword);
-	}
-
-	int Cerebrum::MaxLength_AdjacentWord( const shared_ptr<DataCollection::Character> chara ) const
-	{
-		return _conceptset->MaxLength_AdjacentWord(chara);
-	}
-
-	int Cerebrum::MaxLength_AdjacentWord( const shared_ptr<DataCollection::Word> word ) const
-	{
-		return _conceptset->MaxLength_AdjacentWord(word);
 	}
 
 	std::vector<shared_ptr<DataCollection::Word>> Cerebrum::GetAllKindsofWord( const shared_ptr<DataCollection::Word> word ) const
@@ -223,14 +184,19 @@ namespace Mind
 		return _grammaset->GetP_Backward(me,backward);
 	}
 
-	double Cerebrum::ComputePossibility(const DataCollection::GrammarPattern& pattern) const
+	double Cerebrum::ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		return _grammaset->ComputePossibility(pattern);
+		return _grammaset->ComputePossibility(sentence);
 	}
 
-	double Cerebrum::ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const
+	double Cerebrum::ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
 	{
-		return _grammaset->ComputeP_GrammarLocalAnalysis(pattern);
+		return _grammaset->ComputeP_GrammarLocalAnalysis(sentence);
+	}
+
+	double Cerebrum::ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const
+	{
+		return _grammaset->ComputeGrammarPossibility(sentence);
 	}
 
 	map<double, DataCollection::PartOfSpeech> Cerebrum::ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const

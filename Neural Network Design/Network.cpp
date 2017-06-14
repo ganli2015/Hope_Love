@@ -67,7 +67,7 @@ namespace NeuralNetwork
 			throw runtime_error("Error in ErrorConverge");
 		}
 
-		for (unsigned int i=0;i<prev.size();++i)
+		for (size_t i=0;i<prev.size();++i)
 		{
 			if(Math::DoubleCompare(prev[i],cur[i],tol)!=0)
 			{
@@ -101,7 +101,7 @@ namespace NeuralNetwork
 
 	void Network::OutputMatrix( const Math::Matrix& mat,ofstream& out ) const
 	{
-		for (unsigned int i=0;i<mat.Columns();++i)
+		for (size_t i=0;i<mat.Columns();++i)
 		{
 			Math::Vector col=mat.nthColumn(i);
 			OutputVec(col,out);
@@ -157,7 +157,7 @@ namespace NeuralNetwork
 
 	void Network::OutputVec( const Math::Vector& vec,std::ofstream& out ) const
 	{
-		for (unsigned int j=0;j<vec.Dimension();++j)
+		for (size_t j=0;j<vec.Dimension();++j)
 		{
 			out<<vec[j]<<" ";
 		}

@@ -39,12 +39,19 @@ namespace Mind
 
 		static void CheckInitialConceptData(const ConceptSet* conceptSet);
 
+		//////////////////////////////////////////////////////////////////////////
+		//Parse string to <Connection_Info> whose <modifications> is null and <modStr> will be parsed.
+		//////////////////////////////////////////////////////////////////////////
+		static Connection_Info ParseStrToSimpleConnectionInfo(const string line);
+		
 	private:
 		//初始化ConceptSet时使用
 		static vector<Word_ID> InputWordFromFile( string filename );
 		//初始化ConceptSet时使用
-		static vector<Connection_Info> InputConnectionFromFile(string filename,const ConceptSet* conceptSet);
-		static Connection_Info ParseStrToConnectionInfo(const string line,const ConceptSet* conceptSet);
+		static vector<Connection_Info> InputConnectionFromFile(string filename, const ConceptSet* conceptSet);
+
+		static Connection_Info ParseStrToConnectionInfo(const string line, const ConceptSet* conceptSet);
+
 
 		//检查wholeConcepts里是否有重复的单词（相同字符串同时ID也相同的单词）.
 		static void CheckNonBaseConceptString(const vector<Word_ID>& wholeConcepts,ofstream& out);

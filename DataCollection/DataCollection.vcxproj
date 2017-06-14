@@ -160,6 +160,8 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="GrammaPattern.h" />
     <ClInclude Include="GrammardSentence.h" />
+    <ClInclude Include="GrammarFeature.h" />
+    <ClInclude Include="GrammarFeatureTemplate.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="Punctuations.h" />
     <ClInclude Include="Sentence.h" />
@@ -172,6 +174,8 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="GrammaPattern.cpp" />
     <ClCompile Include="GrammardSentence.cpp" />
+    <ClCompile Include="GrammarFeature.cpp" />
+    <ClCompile Include="GrammarFeatureTemplate.cpp" />
     <ClCompile Include="Punctuations.cpp" />
     <ClCompile Include="Sentence.cpp" />
     <ClCompile Include="Stdafx.cpp">
@@ -187,6 +191,9 @@
   <ItemGroup>
     <ProjectReference Include="..\CommonTools\CommonTools.vcxproj">
       <Project>{e3ce7562-e989-4069-ad9f-fd7d45b1dc46}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Mathmatic\Mathmatic.vcxproj">
+      <Project>{e077393a-a460-43cf-869e-d4b3ea36dc3b}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

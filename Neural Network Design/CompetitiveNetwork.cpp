@@ -81,7 +81,7 @@ namespace NeuralNetwork
 
 	int find_nonzero_index(const shared_ptr<iDataArray> array)
 	{
-		for (unsigned int i=0;i<array->Dimension();++i)
+		for (size_t i=0;i<array->Dimension();++i)
 		{
 			if(Math::DoubleCompare(array->Get_ithVal(i),0)!=0)
 			{

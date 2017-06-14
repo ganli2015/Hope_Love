@@ -32,10 +32,10 @@ namespace DataCollection
 		//Convert grammar information into a new structure:
 		//a word and its associated grammar patterns as well as indexes of words each of grammar pattern is related with.
 		//In this way, for each word, which words it connects to is easily to be seen.
-		for (unsigned int i=0;i<indexes.size();++i)
+		for (size_t i=0;i<indexes.size();++i)
 		{
 			vector<int> indexSeq=indexes[i];
-			for (unsigned int j=0;j<indexSeq.size();++j)
+			for (size_t j=0;j<indexSeq.size();++j)
 			{
 				GraAssoInfo info;
 				info.indexes=indexSeq;
@@ -50,7 +50,7 @@ namespace DataCollection
 		if(_gra.empty()) return false;
 
 		GrammarPattern raw=LanguageFunc::ConvertToPattern(_gra);
-		for (unsigned int i=0;i<grammarPatterns.size();++i)
+		for (size_t i=0;i<grammarPatterns.size();++i)
 		{
 // 			if(grammarPatterns[i].GetID()<0)
 // 			{
@@ -96,8 +96,8 @@ namespace DataCollection
 	void GrammardSentence::GetIndexOfMatchedPattern( 
 		const GrammarPattern& patternRaw,
 		const GrammarPattern& patternMatch,
-		const unsigned int rawStartIndex,
-		const unsigned int matchStartIndex,
+		const size_t rawStartIndex,
+		const size_t matchStartIndex,
 		vector<vector<int>>& indexes )
 	{
 		if(rawStartIndex>patternRaw.Size()-1)
@@ -115,7 +115,7 @@ namespace DataCollection
 		//And for each <patternMatch>, there are several matched indexes.
 		int patternSize=patternMatch.Size();
 		PartOfSpeech matchPOS=patternMatch.Get_ithElem(matchStartIndex);
-		for (unsigned int i=rawStartIndex;i<patternRaw.Size();++i)
+		for (size_t i=rawStartIndex;i<patternRaw.Size();++i)
 		{
 			PartOfSpeech rawPOS=patternRaw.Get_ithElem(i);
 			//Find the next matched POS in <patternRaw>.
@@ -143,7 +143,7 @@ namespace DataCollection
 			}
 			
 			//Connect results in substructure with current results.
-			for (unsigned int j=0;j<tmpIndexes.size();++j)
+			for (size_t j=0;j<tmpIndexes.size();++j)
 			{
 				vector<int> newPattern;
 				newPattern.push_back(i);
@@ -153,7 +153,7 @@ namespace DataCollection
 		}
 	}
 
-	void GrammardSentence::GetAssociationInfo( const unsigned int i,vector<vector<int>>& associatedIndexes,vector<GrammarPattern>& associatedPatterns )
+	void GrammardSentence::GetAssociationInfo( const size_t i,vector<vector<int>>& associatedIndexes,vector<GrammarPattern>& associatedPatterns )
 	{
 		if(i>=_gra.size())
 		{

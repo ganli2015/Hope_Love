@@ -47,6 +47,12 @@
     <ClInclude Include="MockNumber.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MockConcept.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MockMindElementCreator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -77,6 +83,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MockNumber.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MockConcept.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MockMindElementCreator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

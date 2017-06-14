@@ -38,9 +38,6 @@
     <ClInclude Include="MyInt.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="VectorEigen.h">
       <Filter>imp</Filter>
     </ClInclude>
@@ -52,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="MatrixEigen.h">
       <Filter>imp</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalOptimization.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="MatrixEigen.cpp">
       <Filter>imp</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalOptimization.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

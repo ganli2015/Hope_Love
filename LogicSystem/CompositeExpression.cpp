@@ -38,7 +38,7 @@ namespace LogicSystem
 		if(_expres.empty()) return NULL;
 
 		shared_ptr<iConceptInteractTable> res=_expres.front()->GetBaseInteractTable();
-		for (unsigned int i=1;i<_expres.size();++i)
+		for (size_t i=1;i<_expres.size();++i)
 		{
 			res->Absorb(_expres[i]->GetBaseInteractTable());
 		}
@@ -51,7 +51,7 @@ namespace LogicSystem
 		if(_expres.empty()) return NULL;
 
 		shared_ptr<iConceptInteractTable> res=_expres.front()->GetProtoInteractTable();
-		for (unsigned int i=1;i<_expres.size();++i)
+		for (size_t i=1;i<_expres.size();++i)
 		{
 			res->Absorb(_expres[i]->GetProtoInteractTable());
 		}

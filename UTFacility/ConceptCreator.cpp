@@ -34,7 +34,7 @@ shared_ptr<Mind::iConcept> SimpleConceptCreator::Create( const string str, const
 
 shared_ptr<Mind::BaseConcept> SimpleConceptCreator::CreateBaseConcept(const string str, const int i /*= 0*/) const
 {
-	shared_ptr<Word> w(new Word(str));
+	shared_ptr<Word> w(new noun(str));
 
 	shared_ptr<Mind::BaseConcept> base(new Mind::BaseConcept(w));
 	base->SetId(i);

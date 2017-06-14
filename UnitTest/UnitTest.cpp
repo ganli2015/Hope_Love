@@ -13,6 +13,10 @@ using namespace std;
 #include "UTInitializer.h"
 #include "IntegrationTest.h"
 
+#include "../Mind/FilePath.h"
+
+#include "../CommonTools/MemoryDetector.h"
+#include "../CommonTools/LogWriter.h"
 
 class MyGlobal: public testing::Environment
 {
@@ -27,12 +31,17 @@ public:
 
 void MyGlobal::SetUp()
 {
-	_startObjCount=MyObject::GetObjectCount();
+	LOG("----------------------------------------Unit Test----------------------------------------");
+	_startObjCount = MyObject::GetObjectCount();
 }
 
 void MyGlobal::TearDown()
 {
 	ASSERT_EQ(MyObject::GetObjectCount(),_startObjCount);
+
+	LOG("/n");
+	LOG("/n");
+	LOG("/n");
 }
 
 void RunFilter(const string filterStr);
@@ -40,7 +49,21 @@ void RunFilter(const string filterStr);
 
 void RunUnitTest(int argc, _TCHAR* argv[])
 {
-//	RunFilter("Test_Matrix*");
+	//Check if unit testing.
+	if (argc == 2 )
+	{
+		Flags::UNIT_TEST = true;
+	}
+
+	//Read filter information from file.
+	ifstream in("config.txt");
+	string line;
+	getline(in, line);
+
+	if (line != "")
+	{
+		RunFilter(line);
+	}
 
 #ifdef _RUN_INTEGRATION_TEST
 
@@ -48,11 +71,11 @@ void RunUnitTest(int argc, _TCHAR* argv[])
 
 #endif // !_RUN_INTEGRATION_TEST
 
+	testing::GTEST_FLAG(output) = "xml:unit_test_report.xml";
 	testing::InitGoogleTest(&argc, argv);
+
 	MEMOCHECK;
 	RUN_ALL_TESTS();
-	RELEASE_MEMOCHECK;
-
 }
 
 //#define _RUN_PERFORMANCE

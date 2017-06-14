@@ -8,7 +8,7 @@ namespace CommonTool
 	template<class T>
 	void ConcoleDisplay(const vector<T>& vec)
 	{
-		for (unsigned int i=0;i<vec.size();++i)
+		for (size_t i=0;i<vec.size();++i)
 		{
 			cout<<vec[i]<<" ";
 		}

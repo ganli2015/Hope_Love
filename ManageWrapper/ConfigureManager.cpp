@@ -3,6 +3,8 @@
 
 #include "../Mind/Cerebrum.h"
 
+#include "../MindDatabase/GrammarFeatureDatabase.h"
+
 #include "../MindElement/MindElementCreator.h"
 
 #include "../LogicSystem/LogicElementCreator.h"
@@ -21,6 +23,7 @@ namespace ManageWrapper
 	void ConfigureManager::Configure()
 	{
 		LOG("--------------------------Start-----------------------");
+
 		///ConfigureInfoManager
 		shared_ptr<CommonTool::ConfigureInfoManager> cfgInfo=CommonTool::ConfigureInfoManager::GetInstance();
 		cfgInfo->UpdateConfigure();
@@ -43,6 +46,7 @@ namespace ManageWrapper
 		knowledgeInit.Initialize("HopeLoveData\\LogicStatements.txt",knowledge);
 		LOG("Initialized LogicKnowledge.");
 		brain->SetLogicKnowledge(knowledge);
+
 	}
 }
 

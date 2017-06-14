@@ -73,19 +73,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;..\thirdpart\hashlib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;..\thirdpart\hashlib\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;..\thirdpart\hashlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;..\thirdpart\hashlib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>..\thirdpart\log4cpp\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\thirdpart\log4cpp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;..\thirdpart\hashlib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;..\thirdpart\hashlib\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\thirdpart\log4cpp\include;..\thirdpart\sqlite3pp\include;..\thirdpart\hashlib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\thirdpart\log4cpp\lib;..\thirdpart\sqlite3pp\lib;..\thirdpart\hashlib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,7 +101,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppD.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3ppD.lib;hashlib_d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -106,11 +110,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>log4cppD.lib;sqlite3ppD.lib;hashlib_d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,7 +126,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cppLIB.lib</AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3pp.lib;hashlib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,11 +134,14 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <CallingConvention>StdCall</CallingConvention>
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>log4cppLIB.lib;sqlite3pp.lib;hashlib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,31 +151,42 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assertions.h" />
+    <ClInclude Include="CacheManager.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="CommonCompareFunction.h" />
-    <ClInclude Include="CommonFindFunction.h" />
     <ClInclude Include="CommonStringFunction.h" />
     <ClInclude Include="CommonTranslateFunction.h" />
     <ClInclude Include="ConfigureInfoManager.h" />
+    <ClInclude Include="DBoperator.h" />
     <ClInclude Include="GeneralFunctor.h" />
+    <ClInclude Include="IJob.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="IOFunction.h" />
     <ClInclude Include="LogWriter.h" />
+    <ClInclude Include="MemoryDetector.h" />
     <ClInclude Include="MyException.h" />
     <ClInclude Include="MyObject.h" />
+    <ClInclude Include="NonCopyable.h" />
+    <ClInclude Include="QueryStatement.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="ThreadWorker.h" />
+    <ClInclude Include="UpdateStatement.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="CommonCompareFunction.cpp" />
     <ClCompile Include="CommonDeleteFunction.cpp" />
-    <ClCompile Include="CommonFindFunction.cpp" />
     <ClCompile Include="CommonStringFunction.cpp" />
     <ClCompile Include="CommonTranslateFunction.cpp" />
     <ClCompile Include="ConfigureInfoManager.cpp" />
+    <ClCompile Include="DBoperator.cpp" />
     <ClCompile Include="IOFunction.cpp" />
     <ClCompile Include="LogWriter.cpp" />
+    <ClCompile Include="MemoryDetector.cpp" />
     <ClCompile Include="MyException.cpp" />
     <ClCompile Include="MyObject.cpp" />
+    <ClCompile Include="QueryStatement.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -176,6 +194,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThreadWorker.cpp" />
+    <ClCompile Include="UpdateStatement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CommonTools.vcxproj.user" />
