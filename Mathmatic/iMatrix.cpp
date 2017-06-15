@@ -30,12 +30,12 @@ namespace Math
 		delete _imp;
 	}
 
-	Math::Vector Math::Matrix::nthColumn( unsigned int col ) const
+	Math::Vector Math::Matrix::nthColumn( size_t col ) const
 	{
 		return _imp->nthColumn(col);
 	}
 
-	Math::Vector Math::Matrix::nthRow( unsigned int row ) const
+	Math::Vector Math::Matrix::nthRow( size_t row ) const
 	{
 		return _imp->nthRow(row);
 	}
@@ -82,12 +82,12 @@ namespace Math
 		return _imp->Same(mat._imp, tol);
 	}
 
-	unsigned int Matrix::Columns() const
+	size_t Matrix::Columns() const
 	{
 		return _imp->Columns();
 	}
 
-	unsigned int Matrix::Rows() const
+	size_t Matrix::Rows() const
 	{
 		return _imp->Rows();
 	}
@@ -99,7 +99,7 @@ namespace Math
 
 		Matrix res(left.Rows(),left.Columns());
 
-		for (unsigned int i=0;i<left.Columns();++i)
+		for (size_t i=0;i<left.Columns();++i)
 		{
 			Vector resColumn=left.nthColumn(i)+right.nthColumn(i);
 			res.Set_jthColumn(i,resColumn);
@@ -113,7 +113,7 @@ namespace Math
 		Check(Rows()==right.Rows());
 		Check(Columns()==right.Columns());
 
-		for (unsigned int i=0;i<Columns();++i)
+		for (size_t i=0;i<Columns();++i)
 		{
 			Vector resColumn=nthColumn(i)+right.nthColumn(i);
 			Set_jthColumn(i,resColumn);
@@ -130,9 +130,9 @@ namespace Math
 	MatrixImp* Matrix::ConstructMat(const Matrix& mat) const
 	{
 		MatrixEigen* res = new MatrixEigen(mat.Rows(), mat.Columns());
-		for (unsigned int i = 0; i < mat.Rows(); ++i)
+		for (size_t i = 0; i < mat.Rows(); ++i)
 		{
-			for (unsigned int j = 0; j < mat.Columns(); ++j)
+			for (size_t j = 0; j < mat.Columns(); ++j)
 			{
 				res->SetElem(i, j, mat.GetElem(i, j));
 			}
@@ -169,7 +169,7 @@ namespace Math
 	Matrix operator*( const Matrix& left,const double& right )
 	{
 		Matrix res(left);
-		for (unsigned int i=0;i<res.Columns();++i)
+		for (size_t i=0;i<res.Columns();++i)
 		{
 			Vector newCol=res.nthColumn(i)*right;
 			res.Set_jthColumn(i,newCol);
@@ -184,7 +184,7 @@ namespace Math
 		Check(DoubleCompare(right,0)!=0);
 
 		Matrix res(left);
-		for (unsigned int i=0;i<res.Columns();++i)
+		for (size_t i=0;i<res.Columns();++i)
 		{
 			Vector newCol=res.nthColumn(i)/right;
 			res.Set_jthColumn(i,newCol);

@@ -167,7 +167,7 @@ namespace Mind
 	{
 		ofstream out(_commonWordDistriFilepath);
 
-		for (unsigned int i=0;i<_commonWords.size();++i)
+		for (size_t i=0;i<_commonWords.size();++i)
 		{
 			int count = CountInConversation(_commonWords[i].word);
 
@@ -266,7 +266,7 @@ namespace Mind
 		ofstream out(_commonWordIDFFilepath);
 		out.precision(10);
 
-		for (unsigned int i=0;i<commonWords.size();++i)
+		for (size_t i=0;i<commonWords.size();++i)
 		{
 			out << commonWords[i].word << " " << commonWords[i].IDF<<" "<<commonWords[i].count;
 

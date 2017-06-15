@@ -23,7 +23,7 @@ namespace Mind
 		return _imp->CreateConcept(word,type);
 	}
 
-	shared_ptr<iConceptChain> iMindElementCreator::CreateConceptChain( const ElementType type/*=ConceptChainD*/ )
+	shared_ptr<iConceptChain> iMindElementCreator::CreateConceptChain(const ElementType type/*=ConceptChainD*/)
 	{
 		return _imp->CreateConceptChain(type);
 	}

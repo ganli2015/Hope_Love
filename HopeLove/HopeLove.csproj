@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{FD2C96E5-32AC-4F7F-924A-F0C332EAA221}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HopeLove</RootNamespace>
     <AssemblyName>HopeLove</AssemblyName>
@@ -59,6 +59,25 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -91,10 +110,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ExtractChatting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,9 +127,6 @@
     <Compile Include="CommonForAppendForm.cs" />
     <Compile Include="CommonWordTable.xaml.cs">
       <DependentUpon>CommonWordTable.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExtractChatting.xaml.cs">
-      <DependentUpon>ExtractChatting.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -174,11 +186,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy  "$(SolutionDir)$(ConfigurationName)\*.dll" "$(TargetDir)"
+    <PostBuildEvent>copy  "$(SolutionDir)$(PlatformName)\$(ConfigurationName)\*.dll" "$(TargetDir)"
 copy  "$(SolutionDir)Mind\HopeLoveData\*.txt" "$(TargetDir)HopeLoveData"
 copy  "$(SolutionDir)LogicSystem\HopeLoveData\*.txt" "$(TargetDir)HopeLoveData"
 if not exist "$(TargetDir)HopeLoveData\large" mkdir "$(TargetDir)HopeLoveData\large"
-copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(TargetDir)HopeLoveData\large"</PostBuildEvent>
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.txt" "$(TargetDir)HopeLoveData\large"
+copy  "$(SolutionDir)Mind\HopeLoveData\*.db" "$(TargetDir)HopeLoveData"
+copy  "$(SolutionDir)Mind\HopeLoveData\large\*.db" "$(TargetDir)HopeLoveData\large"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>If NOT exist "HopeLoveData" mkdir "HopeLoveData" 

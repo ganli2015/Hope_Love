@@ -18,5 +18,10 @@ namespace Mind
 		DataDir = str;
 	}
 
+	std::string GetDatabasePath()
+	{
+		return GetHopeLoveMindPath()+"data.db";
+	}
+
 }
 

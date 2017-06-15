@@ -17,4 +17,6 @@ namespace Mind
 
 	_declspec(dllexport) std::string GetHopeLoveMindPath();
 	_declspec(dllexport) void SetHopeLoveMindPath(const std::string str);
+
+	_declspec(dllexport) string GetDatabasePath();
 }

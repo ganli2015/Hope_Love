@@ -18,7 +18,7 @@ namespace NeuralNetwork
 
 	void MultilayerNetworkTrainImp::OutputDebugInfo() 
 	{
-		DEBUG_FORMAT("The object function value is %f", _obj);
+		DEBUG_FORMAT("The object function value is %lf", _obj);
 	}
 
 }

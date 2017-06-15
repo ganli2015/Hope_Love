@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{c4d1b22d-542f-437f-8f29-f4f3ed112a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stdafx.h">
@@ -18,9 +21,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CommonCompareFunction.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonFindFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="assertions.h">
@@ -53,15 +53,39 @@
     <ClInclude Include="StackWalker.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryDetector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryStatement.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBoperator.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateStatement.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="CacheManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadWorker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IJob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NonCopyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CommonCompareFunction.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonFindFunction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CommonDeleteFunction.cpp">
@@ -89,6 +113,24 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StackWalker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryDetector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryStatement.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBoperator.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateStatement.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadWorker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

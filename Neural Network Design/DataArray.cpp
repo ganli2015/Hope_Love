@@ -62,7 +62,7 @@ namespace NeuralNetwork
 		return *this;
 	}
 
-	double DataArray::operator[](unsigned int i) const
+	double DataArray::operator[](size_t i) const
 	{
 		return _vec->Get_ithVal(i);
 	}

@@ -15,16 +15,16 @@ namespace Math
 	public:
 		virtual std::vector<double> GetVector() const =0;
 
-		virtual unsigned int Dimension() const = 0;
+		virtual size_t Dimension() const = 0;
 
 		virtual double Norm() const = 0;
 
-		virtual void Set_ithVal(unsigned int i, double val) = 0;
-		virtual double Get_ithVal(unsigned int i) const = 0;
+		virtual void Set_ithVal(size_t i, double val) = 0;
+		virtual double Get_ithVal(size_t i) const = 0;
 		//////////////////////////////////////////////////////////////////////////
 		//Get the reference of an element.
 		//////////////////////////////////////////////////////////////////////////
-		virtual float& Get_ithValRef(unsigned int i) = 0;
+		virtual float& Get_ithValRef(size_t i) = 0;
 
 		virtual VectorImp* Normalized() const = 0;
 

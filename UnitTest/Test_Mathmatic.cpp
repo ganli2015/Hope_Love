@@ -245,11 +245,11 @@ TEST(Test_GetAllCombinations,GetAllCombinations)
 	vector<vector<string>> res=GetAllCombinations<string>::Get(vec);
 
 	vector<vector<string>> expect;
-	for (unsigned int i=0;i<a.size();++i)
+	for (size_t i=0;i<a.size();++i)
 	{
-		for (unsigned int j=0;j<b.size();++j)
+		for (size_t j=0;j<b.size();++j)
 		{
-			for (unsigned int k=0;k<c.size();++k)
+			for (size_t k=0;k<c.size();++k)
 			{
 				string str[]={a[i],b[j],c[k]};
 				vector<string> strvec=Tovector(str,3);
@@ -291,7 +291,7 @@ TEST(Test_GetAllSubSequence,GetAllSubSequence)
 	vector<vector<int> > res=GetAllSubSequence<int>::Get(vec);
 
 	vector<vector<int> > expect;
-	for (unsigned int i=0;i<vec.size();++i)
+	for (size_t i=0;i<vec.size();++i)
 	{
 		vector<int> e1;
 		e1.push_back(vec[i]);
@@ -326,7 +326,7 @@ TEST(Test_Rand,GetRandInt)
 	weights.push_back(0.6);
 
 	vector<int> counts(weights.size());
-	for (unsigned int i=0;i<10000;++i)
+	for (size_t i=0;i<10000;++i)
 	{
 		counts[Math::Rand::GetRandInt(weights)]++;
 	}
@@ -341,7 +341,7 @@ TEST(Test_Rand,GetRandInt2)
 	weights.push_back(0.7);
 
 	vector<int> counts(weights.size());
-	for (unsigned int i=0;i<10000;++i)
+	for (size_t i=0;i<10000;++i)
 	{
 		counts[Math::Rand::GetRandInt(weights)]++;
 	}
@@ -357,7 +357,7 @@ TEST(Test_Rand,GetRandInt3)
 	weights.push_back(0.4);
 
 	vector<int> counts(weights.size());
-	for (unsigned int i=0;i<10000;++i)
+	for (size_t i=0;i<10000;++i)
 	{
 		counts[Math::Rand::GetRandInt(weights)]++;
 	}
@@ -374,7 +374,7 @@ TEST(Test_Rand,GetRandInt4)
 	weights.push_back(10);
 
 	vector<int> counts(weights.size());
-	for (unsigned int i=0;i<10000;++i)
+	for (size_t i=0;i<10000;++i)
 	{
 		counts[Math::Rand::GetRandInt(weights)]++;
 		//Sleep(1);

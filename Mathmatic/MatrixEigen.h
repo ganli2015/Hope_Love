@@ -18,13 +18,13 @@ namespace Math
 
 		MatrixEigen(const std::vector<Vector>& val);
 
-		virtual unsigned int Columns()const ;
+		virtual size_t Columns()const ;
 
-		virtual unsigned int Rows() const ;
+		virtual size_t Rows() const ;
 
-		virtual VectorImp* nthColumn(unsigned int col) const ;
+		virtual VectorImp* nthColumn(size_t col) const ;
 
-		virtual VectorImp* nthRow(unsigned int row) const ;
+		virtual VectorImp* nthRow(size_t row) const ;
 
 		virtual void SetElem(int row, int col, double val) ;
 

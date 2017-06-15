@@ -56,7 +56,7 @@ bool SentenceTypeDetermination::IsInterrogative(const shared_ptr<DataCollection:
 {
 	//Find the index of interrogative pronoun in <sen>.
 	int interrogativeIndex = -1;
-	for (unsigned int i=0;i<sen->GrammarWordCount();++i)
+	for (size_t i=0;i<sen->GrammarWordCount();++i)
 	{
 		shared_ptr<Word> word = sen->GetGrammardWord(i);
 		if(LanguageFunc::IndexOf(_interrogativePronouns,word)>=0)

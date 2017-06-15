@@ -2,29 +2,30 @@
 #include "MemoryChecker.h"
 #include "../CommonTools/MyObject.h"
 #include "../CommonTools/assertions.h"
+#include "../CommonTools/MemoryDetector.h"
 
 #include <gTest/gtest.h>
 
-std::ofstream MemoryChecker::out("MemoryChecker.txt");
 
-MemoryChecker::MemoryChecker(void):_startObjCount(MyObject::GetObjectCount())
+MemoryChecker::MemoryChecker(void)
 {
+	_detector = new CommonTool::MemoryDetector();
+	_detector->Snapshot();
 }
 
-MemoryChecker::MemoryChecker( const std::string function ):_functionName(function),_startObjCount(MyObject::GetObjectCount())
+MemoryChecker::MemoryChecker( const std::string function )
 {
-
+	_detector = new CommonTool::MemoryDetector();
+	_detector->Snapshot();
 }
 
 
 MemoryChecker::~MemoryChecker(void)
 {
-	int curObjCount=MyObject::GetObjectCount();
-	if(_startObjCount!=curObjCount)
+	_detector->Snapshot();
+	if (!_detector->UnchangedSnapshot())
 	{
-		out<<_functionName<<endl;
-		out<<MyObject::CurrentObjInfo()<<endl;
-		cout<<"Memory leak!!"<<endl;
+		cout << "Memory leak!!" << endl;
 	}
-	
+	delete _detector;
 }

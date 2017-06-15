@@ -24,10 +24,10 @@ namespace DataCollection
 		void SetID(const int id){_id=id;}
 		int GetID() const {return _id;};
 		///The number of POS contained in <me>.
-		unsigned int Size() const {return _pattern.size();}
+		size_t Size() const {return _pattern.size();}
 		std::vector<PartOfSpeech> GetPattern() const;
 		///Get the ith POS of <me>.
-		PartOfSpeech Get_ithElem(const unsigned int i) const {assert(i>=0 && i<_pattern.size()); return (PartOfSpeech)_pattern[i];}
+		PartOfSpeech Get_ithElem(const size_t i) const {assert(i>=0 && i<_pattern.size()); return (PartOfSpeech)_pattern[i];}
 
 		//Divide the pattern into two patterns from the location after <index>th element.
 		//The first in pair is the former pattern after divide and the second is the latter.

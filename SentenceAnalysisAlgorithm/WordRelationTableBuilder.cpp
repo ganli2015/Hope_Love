@@ -34,9 +34,9 @@ bool WordRelationTableBuilder::Build()
 	//Only if the intensity of two concepts is above the limit,then the pair will contribute to the result.
 	double intensity_lowerlimit=1./10;
 
-	for (unsigned int i=0;i<_raw_sen->GrammarWordCount();++i)
+	for (size_t i=0;i<_raw_sen->GrammarWordCount();++i)
 	{
-		for (unsigned int j=i+1;j<_raw_sen->GrammarWordCount();++j)
+		for (size_t j=i+1;j<_raw_sen->GrammarWordCount();++j)
 		{
 			double intensity=_raw_sen->GetWordIntensity(i,j);
 			if(intensity>intensity_lowerlimit)

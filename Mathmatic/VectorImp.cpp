@@ -43,7 +43,7 @@ namespace Math
 			return false;
 		}
 
-		for (unsigned int i = 0; i < Dimension(); ++i)
+		for (size_t i = 0; i < Dimension(); ++i)
 		{
 			if (DoubleCompare(Get_ithVal(i), v->Get_ithVal(i), tol) != 0)
 			{

@@ -87,7 +87,7 @@ void IntegrationTest::Initialize()
 
 bool IntegrationTest::StringInVector(const string str, const vector<string>& strVec)
 {
-	for (unsigned int i=0;i<strVec.size();++i)
+	for (size_t i=0;i<strVec.size();++i)
 	{
 		if (str == strVec[i])
 		{

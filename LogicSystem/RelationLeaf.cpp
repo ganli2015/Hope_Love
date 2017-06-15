@@ -48,7 +48,7 @@ namespace LogicSystem
 	std::string RelationLeaf::GetString() const
 	{
 		string res="";
-		for (unsigned int i=0;i<_relations.size();++i)
+		for (size_t i=0;i<_relations.size();++i)
 		{
 			res+=_relations[i].First()->GetString();
 			res+=_connectTag;
@@ -132,7 +132,7 @@ namespace LogicSystem
 		//Go through <cPairs>.
 		//for each matched cPair, delete it from <cPairs> and delete the matched symbol from <sPairs>.
 		//Then search for the remaining <cPairs> and <sPairs>.
-		for (unsigned int i=0;i<cPairs.size();++i)
+		for (size_t i=0;i<cPairs.size();++i)
 		{
 			if(!ConPairSymPairMatch(cPairs[i], curSymbolPair)) continue;//Not matched
 			
@@ -150,7 +150,7 @@ namespace LogicSystem
 				vector<PairSequence> subSequence;
 				Recursive_FindMatchedPairSequence(remainingSymbolPairs,remainingCPairs,subSequence);
 				//Merge each subSequence with current sequence. 
-				for (unsigned int j=0;j<subSequence.size();++j)
+				for (size_t j=0;j<subSequence.size();++j)
 				{
 					PairSequence seq=CreateSequenceWithOneElem(curSymbolPair,cPairs[i]);
 					seq.insert(seq.end(),subSequence[j].begin(),subSequence[j].end());
@@ -214,7 +214,7 @@ namespace LogicSystem
 	{
 		shared_ptr<RelationLeaf> res(new RelationLeaf());
 
-		for (unsigned int i=0;i<_relations.size();++i)
+		for (size_t i=0;i<_relations.size();++i)
 		{
 			//Generate a symbol pair or symbol pairs according to the repetition number.
 			//After using method <Satisfy>, each symbol has binded to a concrete concept.
@@ -225,7 +225,7 @@ namespace LogicSystem
 				return NULL;
 			}
 
-			for (unsigned int j=0;j<specialSymbolPairs.size();++j)
+			for (size_t j=0;j<specialSymbolPairs.size();++j)
 			{
 				res->AddRelation(specialSymbolPairs[j].First(),specialSymbolPairs[j].Second());
 			}
@@ -238,7 +238,7 @@ namespace LogicSystem
 	{
 		shared_ptr<iConceptInteractTable> res=iMindElementCreator::CreateConceptInteractTable();
 
-		for (unsigned int i=0;i<_relations.size();++i)
+		for (size_t i=0;i<_relations.size();++i)
 		{
 			shared_ptr<iConcept> firstObj=_relations[i].First()->GetReferredObject();
 			shared_ptr<iConcept> secondObj=_relations[i].Second()->GetReferredObject();

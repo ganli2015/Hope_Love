@@ -1,6 +1,7 @@
 #pragma once
 #include "InOut.h"
 #include "CommonFunction.h"
+#include "MindObject.h"
 #include "../MindElement/Concept.h"
 #include "../MindElement/BaseConcept.h"
 
@@ -13,15 +14,17 @@ namespace DataCollection
 
 namespace Mind
 {
+	class ConceptDatabase;
 	class iConceptInteractTable;
 	struct DescMatchedConceptInfo;
 
-	class _MINDINOUT ConceptSet : public Obj<ConceptSet>
+	class _MINDINOUT ConceptSet : public Obj<ConceptSet> , public MindObject
 	{
-		typedef std::multimap<std::string,shared_ptr<Concept>> ConceptMap;
+		typedef std::vector<shared_ptr<Concept>> ConceptMap;
 		typedef std::multimap<std::string,shared_ptr<BaseConcept>> BaseConceptMap;
-		ConceptMap _conceptset;
-		BaseConceptMap _baseConceptset;
+		//ConceptMap _conceptset;
+		//BaseConceptMap _baseConceptset;
+		unique_ptr<ConceptDatabase> _conceptDB;
 
 		typedef ConceptMap::iterator conceptIter;
 		typedef ConceptMap::const_iterator const_conceptIter;
@@ -47,8 +50,7 @@ namespace Mind
 		//暂定：任何词性的word都只能和名词以及与其自身相同词性的word连接
 		void MakeConnection(const shared_ptr<DataCollection::Word> from,const shared_ptr<DataCollection::Word> to);
 		
-		///Add modification betweeen <from> and <to>.
-		void AddModification(const Identity& from,const Identity& to,const Identity& modification);
+		///Add modification between <from> and <to>.
 		void AddModification(const Identity& from,const Identity& to,const shared_ptr<iConceptInteractTable>& modification);
 		
 		//Get the concept of <word>.The returned concept is copy of the one in <me>.
@@ -74,20 +76,16 @@ namespace Mind
 		shared_ptr<iConceptInteractTable> GetInteractTable(const shared_ptr<iConcept> from,const shared_ptr<iConcept> to,double level=0);
 		shared_ptr<iConceptInteractTable> GetDeepInteractTable(const shared_ptr<iConcept> from,const shared_ptr<iConcept> to);
 
-		int BaseConceptCount() const {return _baseConceptset.size();}
+		int BaseConceptCount() const;
 
 		vector<shared_ptr<iConcept>> FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description) const ;		
 		void FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description, vector<DescMatchedConceptInfo>& matchedInfos) const ;	
 
-
-		int Count_ForwardAdjWord(const shared_ptr<DataCollection::Character> chara) const;
-		int Count_ForwardAdjWord(const shared_ptr<DataCollection::Word> word) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword) const;
-		void GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword) const;
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara) const;
-		int MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word) const;
+		//////////////////////////////////////////////////////////////////////////
+		//Collect new base concepts from the sample file <filePath>.
+		//The file should be POS tagged.
+		//////////////////////////////////////////////////////////////////////////
+		void CollectNewBaseConcepts(const string filePath);
 
 	private:
 		void Initialize();
@@ -98,12 +96,26 @@ namespace Mind
 		shared_ptr<Concept> GetConceptRef(const shared_ptr<iConcept> concept) const ;
 
 		Identity GetIdentity(const Concept& concept) const;
-		void CheckWordIDExist(const shared_ptr<DataCollection::Word> word,const int id,const ConceptMap& conceptset);
+		void CheckWordIDExist(const shared_ptr<DataCollection::Word> word,const int id);
 		void CheckBaseWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const BaseConceptMap& conceptset );
 
 	};
 
-	
+	class ConceptCollector
+	{
+		ConceptDatabase *_conceptDB;
+	public:
+		ConceptCollector(ConceptDatabase *db) :_conceptDB(db) {};
+		~ConceptCollector() {};
+
+		//////////////////////////////////////////////////////////////////////////
+		//Collect new base concepts from the sample file <filePath>.
+		//The file should be POS tagged.
+		//////////////////////////////////////////////////////////////////////////
+		void Collect(const string filePath);
+
+	private:
+	};
 }
 
 

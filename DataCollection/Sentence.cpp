@@ -17,7 +17,7 @@ namespace DataCollection
 	Sentence::~Sentence(void)
 	{
 // 		DeleteVectorPtr(_rawSentence);
-// 		for (unsigned int i=0;i<_segmented.size();++i)
+// 		for (size_t i=0;i<_segmented.size();++i)
 // 		{
 // 			DeleteVectorPtr(_segmented[i]);
 // 		}
@@ -37,17 +37,6 @@ namespace DataCollection
 	std::vector<shared_ptr<Character>> Sentence::GetRawSentence() const
 	{
 		return _raw;
-	}
-
-	bool Sentence::InSentence(const shared_ptr<Word> word) const
-	{
-		//There must be sub sentences and <me> constitutes of Words instead of a string.
-		if (_subInfos.empty()) return false;
-
-		for (unsigned int i=0;i<_subInfos.size();++i)
-		{
-
-		}
 	}
 
 	void Sentence::SetGrammard(const std::vector<shared_ptr<DataCollection::Word>> vec)
@@ -94,7 +83,7 @@ namespace DataCollection
 		}
 	}
 
-	unsigned int Sentence::GrammarWordCount() const
+	size_t Sentence::GrammarWordCount() const
 	{
 		if(_grammard!=NULL)
 		{
@@ -107,7 +96,7 @@ namespace DataCollection
 		}
 	}
 
-	void Sentence::SetWordIntensity( const unsigned int i_word,const unsigned int j_word,double intensity )
+	void Sentence::SetWordIntensity( const size_t i_word,const size_t j_word,double intensity )
 	{
 		if(_structured!=NULL)
 		{
@@ -119,7 +108,7 @@ namespace DataCollection
 		}
 	}
 
-	double Sentence::GetWordIntensity( const unsigned int i_word,const unsigned int j_word )
+	double Sentence::GetWordIntensity( const size_t i_word,const size_t j_word )
 	{
 		if(_structured!=NULL)
 		{
@@ -157,14 +146,14 @@ namespace DataCollection
 		return _subInfos.size();
 	}
 
-	std::string Sentence::GetSubSentence( const unsigned int i ) const
+	std::string Sentence::GetSubSentence( const size_t i ) const
 	{
 		return _subInfos[i].GetSentence()->GetString();
 	}
 
 	bool Sentence::SearchSubInfo( const string str,int& infoIndex ) const
 	{
-		for (unsigned int i=0;i<_subInfos.size();++i)
+		for (size_t i=0;i<_subInfos.size();++i)
 		{
 			if(_subInfos[i].GetString()==str)
 			{
@@ -176,7 +165,7 @@ namespace DataCollection
 		return false;
 	}
 
-	shared_ptr<Word> Sentence::GetGrammardWord( const unsigned int i ) const
+	shared_ptr<Word> Sentence::GetGrammardWord( const size_t i ) const
 	{
 		if(i>GrammarWordCount())
 		{
@@ -248,7 +237,7 @@ namespace DataCollection
 		if (_seg.empty()) return res;
 
 		res += _seg.front()->GetString();
-		for (unsigned int i=1;i<_seg.size();++i)
+		for (size_t i=1;i<_seg.size();++i)
 		{
 			res += "/" + _seg[i]->GetString();
 		}

@@ -14,10 +14,10 @@ namespace Math
 
 	}
 
-	VectorEigen::VectorEigen(const unsigned int d)
+	VectorEigen::VectorEigen(const size_t d)
 	{
 		_vec = VectorXf(d);
-		for (unsigned int i = 0; i < d; ++i)
+		for (size_t i = 0; i < d; ++i)
 		{
 			_vec[i] = 0;
 		}
@@ -28,7 +28,7 @@ namespace Math
 		if (r.empty()) return;
 
 		_vec = VectorXf(r.size());
-		for (unsigned int i=0;i<r.size();++i)
+		for (size_t i=0;i<r.size();++i)
 		{
 			_vec[i] = (float)r[i];
 		}
@@ -51,7 +51,7 @@ namespace Math
 	{
 		vector<double> res(Dimension());
 
-		for (unsigned int i=0;i<res.size();++i)
+		for (size_t i=0;i<res.size();++i)
 		{
 			res[i] = _vec[i];
 		}
@@ -59,7 +59,7 @@ namespace Math
 		return res;
 	}
 
-	unsigned int VectorEigen::Dimension() const
+	size_t VectorEigen::Dimension() const
 	{
 		return _vec.rows();
 	}
@@ -69,12 +69,12 @@ namespace Math
 		return _vec.norm();
 	}
 
-	void VectorEigen::Set_ithVal(unsigned int i, double val)
+	void VectorEigen::Set_ithVal(size_t i, double val)
 	{
 		_vec[i] = (float)val;
 	}
 
-	double VectorEigen::Get_ithVal(unsigned int i) const
+	double VectorEigen::Get_ithVal(size_t i) const
 	{
 		return _vec[i];
 	}
@@ -92,7 +92,7 @@ namespace Math
 	VectorImp* VectorEigen::Negate() const
 	{
 		VectorImp* res(new VectorEigen(_vec));
-		for (unsigned int i=0;i<Dimension();++i)
+		for (size_t i=0;i<Dimension();++i)
 		{
 			res->Set_ithVal(i, -res->Get_ithVal(i));
 		}
@@ -122,7 +122,7 @@ namespace Math
 		}
 	}
 
-	float& VectorEigen::Get_ithValRef(unsigned int i)
+	float& VectorEigen::Get_ithValRef(size_t i)
 	{
 		float& res = (float&)_vec[i];
 		return res;

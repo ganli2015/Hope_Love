@@ -219,7 +219,7 @@ namespace LogicSystem
 		vector<ConceptPair> conceptPairs=conceptTable->GetAllRelations();
 		//Get all sub sequence of <conceptPairs>.
 		vector<vector<ConceptPair>> allSubConceptPairs=Math::GetAllSubSequence<ConceptPair>::Get(conceptPairs);
-		for (unsigned int i=0;i<allSubConceptPairs.size();++i)
+		for (size_t i=0;i<allSubConceptPairs.size();++i)
 		{
 			vector<ConceptPair> subPairs=allSubConceptPairs[i];
 			vector<shared_ptr<iReduceResult>> reduceResult=ReduceConceptPairSequence(subPairs,conceptPairs,brain);
@@ -243,7 +243,7 @@ namespace LogicSystem
 		END_SECTION(ReduceConceptPairSequence_FindConceptWithMatchedDisc);
 
 		vector<ConceptPair> remainingPairs=FilterPartialConceptPairs(totalPairs,subPairs);
-		for (unsigned int j=0;j<matchedInfos.size();++j)
+		for (size_t j=0;j<matchedInfos.size();++j)
 		{
 			shared_ptr<iReduceResult> reduceResult = ReduceFromMatchedConcept(matchedInfos[j], subPairs, remainingPairs);
 			if (reduceResult != NULL)
@@ -388,7 +388,7 @@ namespace LogicSystem
 	{
 		list<shared_ptr<Mind::iConcept>> res;
 
-		for (unsigned int i = 0; i < deduceResults.size(); ++i)
+		for (size_t i = 0; i < deduceResults.size(); ++i)
 		{
 			shared_ptr<iConcept> table = deduceResults[i]->GetSingleConcept();
 
@@ -405,7 +405,7 @@ namespace LogicSystem
 	{
 		list<shared_ptr<Mind::iConceptInteractTable>> res;
 
-		for (unsigned int i=0;i<deduceResults.size();++i)
+		for (size_t i=0;i<deduceResults.size();++i)
 		{
 			shared_ptr<iConceptInteractTable> table=deduceResults[i]->GetConceptTable();
 
@@ -422,7 +422,7 @@ namespace LogicSystem
 	{
 		list<shared_ptr<Mind::iConceptInteractTable>> res;
 
-		for (unsigned int i=0;i<reduceResults.size();++i)
+		for (size_t i=0;i<reduceResults.size();++i)
 		{
 			shared_ptr<iConceptInteractTable> table=reduceResults[i]->GetConceptTable();
 			if(table!=NULL)
@@ -438,7 +438,7 @@ namespace LogicSystem
 	{
 		list<shared_ptr<Mind::iConcept>> res;
 
-		for (unsigned int i=0;i<reduceResults.size();++i)
+		for (size_t i=0;i<reduceResults.size();++i)
 		{
 			shared_ptr<iConcept> con=reduceResults[i]->GetSingleConcept();
 			if(con!=NULL)

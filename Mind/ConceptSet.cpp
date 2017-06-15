@@ -18,6 +18,9 @@
 
 #include "../MindElement/ConceptInteractTable.h"
 #include "../MindElement/BaseConcept.h"
+#include "../MindElement/MindElementCreator.h"
+
+#include "../MindDatabase/Headers.h"
 
 #include "../MindInterface/iCerebrum.h"
 
@@ -32,7 +35,7 @@ int ToInt(char str)
 namespace Mind
 {
 
-	ConceptSet::ConceptSet(void)
+	ConceptSet::ConceptSet(void):_conceptDB(_dbContainer->GetConceptDatabase())
 	{
 		Initialize();
 		LOG("Initialized ConceptSet.");
@@ -45,7 +48,7 @@ namespace Mind
 
 	bool ConceptSet::IsConceptExist( const std::string str ) const
 	{
-		if(_conceptset.find(str)!=_conceptset.end())
+		if (_conceptDB->HasString(str))
 			return true;
 		else if(LanguageFunc::IsPuncture(shared_ptr<Word>(new Word(str))))
 		{
@@ -54,184 +57,29 @@ namespace Mind
 		else return false;
 	}
 
-	int ConceptSet::Count_ForwardAdjWord(const shared_ptr<DataCollection::Character> chara ) const
+	void ConceptSet::CollectNewBaseConcepts(const string filePath)
 	{
-		int count(0);
+		auto conceptDB = this->_conceptDB.release();
+		ConceptCollector collector(conceptDB);
+		collector.Collect(filePath);
 
-		string str=chara->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-			return count;//count =0
-		else 
+		this->_conceptDB.reset(conceptDB);
+	}
+
+	int ConceptSet::MaxLength_WordWithHead(const shared_ptr<DataCollection::Character> headChara) const
+	{
+		//Get all concepts with head <headChara>.
+		auto conceptsWithHead = _conceptDB->GetConceptsWithHead(headChara);
+
+		int maxLength = 0;
+		for (auto concept : conceptsWithHead)
 		{
-			size_t step=_conceptset.count(str);
-			advance(it,step);
-			++count;
-			if(it==_conceptset.end())
-				return count;//count =1
-
-			do 
+			auto word = concept->GetWord();
+			auto length = word->NumOfChara();
+			if (length > maxLength)
 			{
-				string str_next=it->first;
-				
-				if(ToInt(str[0])==ToInt(str_next[0]) && ToInt(str[1])==ToInt(str_next[1]))
-				{
-					++count;
-				}
-				else
-					break;
-
-				step=_conceptset.count(str_next);
-				advance(it,step);
-
-			} while (it!=_conceptset.end());
-		}
-
-		return count;
-	}
-
-	int ConceptSet::Count_ForwardAdjWord(const shared_ptr<DataCollection::Word> word ) const
-	{
-		int count(0);
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-			return count;//count =0
-		else 
-		{
-			size_t step=_conceptset.count(str);
-			advance(it,step);//跳过相同的str
-			++count;
-			if(it==_conceptset.end())
-				return count;//count =1
-
-			do 
-			{
-				string str_next=it->first;//取下一个同根字符串
-
-				if(str_next.size()<str.size())//默认长度是从小到大排列的
-				{
-					return count;
-				}
-
-				bool isAdj(true);//判断是否同根
-				for (unsigned int i=0;i<str.size();++i)
-				{
-					if(str[i]!=str_next[i])
-					{
-						isAdj=false;
-						break;
-					}
-				}
-
-				if(!isAdj)//不是同根的话立即跳出
-					break;
-				else
-				{
-					++count;
-				}
-				
-				step=_conceptset.count(str_next);
-				advance(it,step);//跳过相同的str_next
-			} while (it!=_conceptset.end());
-		}
-
-		return count;
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<std::string>& adjword ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		GetForwardAdjWord(aword,adjword);
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<std::string>& adjword ) const
-	{
-		adjword.clear();
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-		{
-			return;
-		}
-
-		int num=Count_ForwardAdjWord(word);
-		for (int i=0;i<num;++i)
-		{
-			adjword.push_back(it->first);
-			size_t step=_conceptset.count(it->first);
-			advance(it,step);
-		}
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Word> word,std::vector<DataCollection::Word>& adjword ) const
-	{
-		adjword.clear();
-
-		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		if(it==_conceptset.end())
-		{
-			return;
-		}
-
-		int num=Count_ForwardAdjWord(word);
-		for (int i=0;i<num;++i)
-		{
-			Word aword(it->first);
-			adjword.push_back(aword);
-			size_t step=_conceptset.count(it->first);
-			advance(it,step);
-		}
-	}
-
-	void ConceptSet::GetForwardAdjWord(const shared_ptr<DataCollection::Character> chara,std::vector<DataCollection::Word>& adjword ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		GetForwardAdjWord(aword,adjword);
-	}
-
-	int ConceptSet::MaxLength_AdjacentWord(const shared_ptr<DataCollection::Character> chara ) const
-	{
-		shared_ptr<Word> aword(new Word(chara->GetString()));
-		int length=MaxLength_AdjacentWord(aword);
-		return length;
-	}
-
-	int ConceptSet::MaxLength_AdjacentWord(const shared_ptr<DataCollection::Word> word ) const
-	{
-		vector<Word> adjword;
-		GetForwardAdjWord(word,adjword);
-		int maxLength(0);
-		for (unsigned int i=0;i<adjword.size();++i)
-		{
-			int curlength=adjword[i].NumOfChara();
-			if(curlength>maxLength)
-			{
-				maxLength=curlength;
+				maxLength = length;
 			}
-		}
-
-		return maxLength;
-	}
-
-	int ConceptSet::MaxLength_WordWithHead( const shared_ptr<DataCollection::Character> headChara ) const
-	{
-		int maxLength=0;
-		string str=headChara->GetString();
-		for (const_conceptIter it=_conceptset.begin();it!=_conceptset.end();++it)
-		{
-			string conceptStr=it->first;
-			if(str[0]==conceptStr[0] && str[1]==conceptStr[1])//第一个字是否相同
-			{
-				int length=it->second->GetWord()->NumOfChara();
-				if(length>maxLength)
-				{
-					maxLength=length;
-				}
-			}			
 		}
 
 		return maxLength;
@@ -239,13 +87,13 @@ namespace Mind
 
 	void ConceptSet::Initialize()
 	{
-		ConceptSetInitializer::InitializeBaseConcept(this,GetHopeLoveMindPath()+BaseConceptsStringFilename);
+//		ConceptSetInitializer::InitializeBaseConcept(this,GetHopeLoveMindPath()+BaseConceptsStringFilename);
 //		cout << "Base concepts initialized." << endl;
 
-		ConceptSetInitializer::InitializeNonBaseConcept(this,GetHopeLoveMindPath()+NonBaseConceptString_InitialFilename);
+//		ConceptSetInitializer::InitializeNonBaseConcept(this,GetHopeLoveMindPath()+NonBaseConceptString_InitialFilename);
 //		cout << "Non-Base concepts initialized." << endl;
 
-		ConceptSetInitializer::InitializeConceptConnection(this,GetHopeLoveMindPath()+ConceptConnections_InitialFilename);
+//		ConceptSetInitializer::InitializeConceptConnection(this,GetHopeLoveMindPath()+ConceptConnections_InitialFilename);
 //		cout << "Concept connection initialized." << endl;
 
 
@@ -272,27 +120,16 @@ namespace Mind
 		}
 
 		string str=word->GetString();
-		const_conceptIter it=_conceptset.find(str);
-		
-		vector<shared_ptr<Word>> rep;
-		if(it==_conceptset.end())
+		//Get all concepts with word <str>.
+		auto concepts = _conceptDB->GetConceptsWithWord(str);
+		//Collect words in concepts.
+		vector<shared_ptr<Word>> res;
+		for (auto concept : concepts)
 		{
-			return rep;
+			res.push_back(concept->GetWord());
 		}
 
-		const_conceptIter beg=_conceptset.lower_bound(str);
-		const_conceptIter end=_conceptset.upper_bound(str);
-		while(beg!=end)
-		{
-			shared_ptr<Word> aword=LanguageFunc::GetParticularWord(str,beg->second->GetPartOfSpeech());
-			if(aword!=NULL)
-			{
-				rep.push_back(aword);
-			}
-			beg++;
-		}
-
-		return rep;
+		return res;
 	}
 
 	vector<shared_ptr<iConcept>> ConceptSet::SearchForwardConcepts( const shared_ptr<iConcept> concept ) const
@@ -321,81 +158,31 @@ namespace Mind
 
 	void ConceptSet::AddConcept(const shared_ptr<DataCollection::Word> word)
 	{
-		string str=word->GetString();
-		if(_conceptset.find(str)==_conceptset.end())
-		{
-			_conceptset.insert(make_pair(str,shared_ptr<Concept>(new Concept(word))));
-		}
-		else//如果存在这个字符串的单词，判断是否已经存在该词性单词的Concept。
-			//如果是，则抛出异常；否则新添加这个单词的Concept，其id为当前的最大id+1.
-		{
-			conceptIter beg=_conceptset.lower_bound(str);
-			conceptIter end=_conceptset.upper_bound(str);
-			int maxId(-1);
-			while(beg!=end)
-			{
-				if(word->Type()==beg->second->GetPartOfSpeech())
-				{
-					throw runtime_error("Error in AddConcept:One POS of the word can only have one concept!");
-				}
-
-				int id=beg->second->GetId();
-				if(id>maxId)
-				{
-					maxId=id;
-				}
-				beg++;
-			}
-			assert(maxId>=0);
-
-			shared_ptr<Concept> newConcept(new Concept(word));
-			newConcept->SetId(maxId+1);
-			_conceptset.insert(make_pair(str,newConcept));
-		}
+		_conceptDB->AddNonBaseConcept(word);
 	}
 
 	void ConceptSet::AddConcept(const shared_ptr<DataCollection::Word> word,int id)
 	{
-		CheckWordIDExist(word,id,_conceptset);			
+		CheckWordIDExist(word,id);			
 
-		shared_ptr<Concept> newConcept(new Concept(word));
-		newConcept->SetId(id);
-		string str=word->GetString();
-		_conceptset.insert(make_pair(str,newConcept));
-
+		_conceptDB->AddNonBaseConcept(word, id);
 	}
 
 	void ConceptSet::AddBaseConcept(const shared_ptr<DataCollection::Word> word,int id )
 	{
 		//Add to _baseConceptset
-		CheckBaseWordIDExist(word,id,_baseConceptset);
-		shared_ptr<BaseConcept> newConcept(new BaseConcept(word));
-		newConcept->SetId(id);
-		newConcept->SetBaseId(_baseConceptset.size());
+		//CheckBaseWordIDExist(word,id,_baseConceptset);
+		shared_ptr<BaseConcept> newConcept = this->_elemCreator->
+			CreateBaseConcept(word, id, _conceptDB->GetBaseConceptCount());
 		string str=word->GetString();
-		_baseConceptset.insert(make_pair(str,newConcept));
+		_conceptDB->AddBaseConcept(newConcept);
 
 		//Add to _conceptset
-		CheckWordIDExist(word,id,_conceptset);
-		_conceptset.insert(make_pair(str,newConcept));
+		AddConcept(word, id);
 	}
 
 	void ConceptSet::MakeConnection( const shared_ptr<Word> from,const shared_ptr<Word> to )
 	{
-// 		Concept fromConcept,toConcept;
-// 		if(!GetConcept(from,fromConcept) || !GetConcept(to,toConcept))
-// 		{
-// 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
-// 		}
-// 
-// 		if(from->Type()!=to->Type() && to->Type()!=Noun)
-// 		{
-// 			throw runtime_error("Error in MakeConnection: POS not matched!");
-// 		}
-// 
-// 		Identity fromIdentity=GetIdentity(fromConcept);
-// 		Identity toIdentity=GetIdentity(toConcept);
-		
 		shared_ptr<Concept> pfromConcept=GetConceptRef(from);
 		shared_ptr<Concept> ptoConcept=GetConceptRef(to);
 		if(pfromConcept==NULL || ptoConcept==NULL)
@@ -403,22 +190,10 @@ namespace Mind
 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
 		}
 
-		pfromConcept->AddForwardConcept(ptoConcept);
-		ptoConcept->AddBackwardConcept(pfromConcept);
-	}
+		int fromID = pfromConcept->GetId();
+		int toID = ptoConcept->GetId();
 
-	void ConceptSet::AddModification(const Identity& from,const Identity& to,const Identity& modification)
-	{
-		shared_ptr<Concept> pfromConcept=GetConceptRef(from);
-		shared_ptr<Concept> ptoConcept=GetConceptRef(to);
-		shared_ptr<Concept> pmodConcept=GetConceptRef(modification);
-		if(pfromConcept==NULL || ptoConcept==NULL || pmodConcept==NULL)
-		{
-			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
-		}
-
-		pfromConcept->AddForwardModification(ptoConcept,pmodConcept);
-//		ptoConcept->AddBackwardModification(pfromConcept,pmodConcept);
+		_conceptDB->AddConnection(pfromConcept->GetWord(), fromID, ptoConcept->GetWord(), toID);
 	}
 
 	void ConceptSet::AddModification( const Identity& from,const Identity& to,const shared_ptr<iConceptInteractTable>& modification )
@@ -430,50 +205,20 @@ namespace Mind
 			throw runtime_error("Error in MakeConnection: Cannot find the concept!");
 		}
 
-		pfromConcept->AddForwardModification(ptoConcept,modification);
-//		ptoConcept->AddBackwardModification(pfromConcept,pmodConcept);
+		int fromID = pfromConcept->GetId();
+		int toID = ptoConcept->GetId();
+
+		_conceptDB->AddModification(pfromConcept->GetWord(), fromID, ptoConcept->GetWord(), toID, modification);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef(const shared_ptr<DataCollection::Word> word) const 
 	{
-		const_conceptIter beg=_conceptset.lower_bound(word->GetString());
-		const_conceptIter end=_conceptset.upper_bound(word->GetString());
-		if(beg==_conceptset.end() && end==_conceptset.end())
-		{
-			return false;
-		}
-
-		while(beg!=end)
-		{
-			if(beg->second->GetPartOfSpeech()==word->Type())
-			{
-				return beg->second;
-			}
-			beg++;
-		}
-
-		return NULL;
+		return _conceptDB->GetConcept(word);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef( const Identity identity ) const
 	{
-		const_conceptIter beg=_conceptset.lower_bound(identity.str);
-		const_conceptIter end=_conceptset.upper_bound(identity.str);
-		if(beg==_conceptset.end() && end==_conceptset.end())
-		{
-			return NULL;
-		}
-
-		while(beg!=end)
-		{
-			if(beg->second->GetId()==identity.id)
-			{
-				return beg->second;
-			}
-			beg++;
-		}
-
-		return NULL;
+		return _conceptDB->GetConcept(identity.str, identity.id);
 	}
 
 	shared_ptr<Concept> ConceptSet::GetConceptRef(const shared_ptr<iConcept> concept) const 
@@ -525,74 +270,45 @@ namespace Mind
 		return res;
 	}
 
-	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS( const PartOfSpeech pos ) const
+	int ConceptSet::BaseConceptCount() const
+	{
+		return _conceptDB->GetBaseConceptCount();
+	}
+
+	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS(const PartOfSpeech pos) const
 	{
 		vector<shared_ptr<Word>> res;
 
-		for (const_conceptIter iter=_conceptset.begin();iter!=_conceptset.end();++iter)
+		auto conceptsWithPOS = _conceptDB->GetConceptsWithPOS(pos);
+		for (auto concept : conceptsWithPOS)
 		{
-			if(iter->second->GetPartOfSpeech()==pos)
-			{
-				res.push_back(iter->second->GetWord());
-			}
+			res.push_back(concept->GetWord());
 		}
 
 		return res;
 	}
 
-	void ConceptSet::CheckWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const ConceptMap& conceptset )
+	void ConceptSet::CheckWordIDExist(const shared_ptr<DataCollection::Word> word, const int id )
 	{
-		string str=word->GetString();
-		const_conceptIter beg=conceptset.lower_bound(str);
-		const_conceptIter end=conceptset.upper_bound(str);
-		while(beg!=end)
+		auto concept = _conceptDB->GetNonBaseConcept(id, word->GetString());
+		if (concept != NULL)
 		{
-			if(word->Type()==beg->second->GetPartOfSpeech())
-			{
-				throw runtime_error("Error in AddConcept:One POS of the word can only have one concept! Error word: "+word->GetString());
-			}
-
-			int id_exist=beg->second->GetId();
-			if(id==id_exist)
-			{
-				throw logic_error("Error in AddConcept: id exists!");
-			}
-			beg++;
+			throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", word->GetString().c_str(), id));
 		}
 	}
 
 	void ConceptSet::CheckBaseWordIDExist(const shared_ptr<DataCollection::Word> word, const int id,const BaseConceptMap& conceptset )
 	{
-		string str=word->GetString();
-		const_baseConceptIter beg=conceptset.lower_bound(str);
-		const_baseConceptIter end=conceptset.upper_bound(str);
-		while(beg!=end)
+		auto concept = _conceptDB->GetBaseConcept(id, word->GetString());
+		if (concept != NULL)
 		{
-			if(word->Type()==beg->second->GetPartOfSpeech())
-			{
-				throw runtime_error("Error in AddConcept:One POS of the word can only have one concept!");
-			}
-
-			int id_exist=beg->second->GetId();
-			if(id==id_exist)
-			{
-				throw logic_error("Error in AddConcept: id exists!");
-			}
-			beg++;
+			throw runtime_error(CommonTool::StringFormat("Word %s and ID %d already exist.", word->GetString().c_str(), id));
 		}
 	}
 
 	shared_ptr<BaseConcept> ConceptSet::GetBaseConcept( const int id ) const
 	{
-		for (const_baseConceptIter it=_baseConceptset.begin();it!=_baseConceptset.end();++it)
-		{
-			if(it->second->GetBaseId()==id)
-			{
-				return it->second;
-			}
-		}
-
-		return NULL;
+		return _conceptDB->GetBaseConcept(id);
 	}
 
 	shared_ptr<iConcept> ConceptSet::GetConceptPtr( const shared_ptr<DataCollection::Word> word ) const
@@ -630,9 +346,9 @@ namespace Mind
 			CheckMatch(const shared_ptr<iConceptInteractTable> description):_description(description){}
 			~CheckMatch(){}
 
-			bool operator()(const pair<std::string,shared_ptr<Concept>>& concept)
+			bool operator()(const shared_ptr<Concept>& concept)
 			{
-				if(concept.second->MatchWithDescription(_description))
+				if(concept->MatchWithDescription(_description))
 				{
 					return true;
 				}
@@ -642,15 +358,17 @@ namespace Mind
 				}
 			}
 		};
-
+		//Get all non base concepts from database.
+		auto allNonbaseConcepts = _conceptDB->GetAllNonBaseConcepts();
+		
 		vector<shared_ptr<iConcept>> res;
 
-		const_conceptIter matchedIter=find_if(_conceptset.begin(),_conceptset.end(),CheckMatch(description));
-		while(matchedIter!=_conceptset.end())//Go through all concepts until reaching the end.
+		const_conceptIter matchedIter=find_if(allNonbaseConcepts.begin(), allNonbaseConcepts.end(),CheckMatch(description));
+		while(matchedIter!= allNonbaseConcepts.end())//Go through all concepts until reaching the end.
 		{
-			res.push_back(matchedIter->second);
+			res.push_back(*matchedIter);
 			++matchedIter;
-			matchedIter=find_if(matchedIter,_conceptset.end(),CheckMatch(description));
+			matchedIter=find_if(matchedIter, allNonbaseConcepts.cend(),CheckMatch(description));
 		}
 
 		return res;
@@ -668,15 +386,15 @@ namespace Mind
 			GenerateMatchInfo(const shared_ptr<iConceptInteractTable> description):_description(description){}
 			~GenerateMatchInfo(){}
 
-			void operator()(const pair<std::string,shared_ptr<Concept>>& concept)
+			void operator()(const shared_ptr<Concept>& concept)
 			{
 				shared_ptr<iConcept> toConcept;
 
-				if(concept.second->MatchWithDescription(_description,toConcept))
+				if(concept->MatchWithDescription(_description,toConcept))
 				{
 					assert(toConcept!=NULL);
 					DescMatchedConceptInfo info;
-					info.matchedConcept=concept.second;
+					info.matchedConcept=concept;
 					info.toConcept=toConcept;
 					_infos.push_back(info);
 
@@ -686,12 +404,36 @@ namespace Mind
 			vector<DescMatchedConceptInfo> GetResult() const {return _infos; }
 		};
 
+		//Get all non base concepts from database.
+		auto allNonbaseConcepts = _conceptDB->GetAllNonBaseConcepts();
+
 		matchedInfos.clear();
 		
 		GenerateMatchInfo genarate(description);
-		genarate=for_each(_conceptset.begin(),_conceptset.end(),genarate);
+		genarate=for_each(allNonbaseConcepts.begin(), allNonbaseConcepts.end(),genarate);
 
 		matchedInfos=genarate.GetResult();
+	}
+
+	void ConceptCollector::Collect(const string filePath)
+	{
+		auto allPOSsentences = CommonFunction::ParseSampleSentences(filePath);
+		LOG_FORMAT("Finish parse sample sentences.The count of sentences is %d.", allPOSsentences.size());
+
+		int newConceptCount = 0;
+		for (auto sentence : allPOSsentences)
+		{
+			for (auto word : sentence)
+			{
+				//Check the word existence in database.
+				if(_conceptDB->HasWord(word)) continue;
+
+				this->_conceptDB->AddBaseConcept(word);
+				++newConceptCount;
+			}
+		}
+
+		LOG_FORMAT("%d new base concepts are added.", newConceptCount);
 	}
 
 }

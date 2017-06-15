@@ -31,7 +31,7 @@ TestClass::~TestClass(void)
 
 void TestClass::RunTest()
 {
-	for (unsigned int i=0;i<_tests.size();++i)
+	for (size_t i=0;i<_tests.size();++i)
 	{
 		_tests[i]->Run();
 	}

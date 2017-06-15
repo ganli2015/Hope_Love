@@ -52,7 +52,7 @@ namespace Mind
 		//Default
 		EXPECT_CALL(*mockCerebrum,FindConceptWithMatchedDisc(_,_)).WillRepeatedly(Return());
 
-		for (unsigned int i=0;i<param.size();++i)
+		for (size_t i=0;i<param.size();++i)
 		{
 			FindMatchConceptParam p=param[i];
 			AddFindMatchedConceptExpectCall(p.conceptTableStr,p.matchedConceptStr,p.toConceptStr,myTableCreator,myConceptCreator);			
@@ -81,7 +81,7 @@ namespace Mind
 		shared_ptr<iConceptInteractTable> conceptTable=myTableCreator->SimpleCreate(inputTable);
 
 		vector<shared_ptr<iDeduceResult>> results;
-		for (unsigned int i=0;i<outputResults.size();++i)
+		for (size_t i=0;i<outputResults.size();++i)
 		{
 			shared_ptr<iConceptInteractTable> resTable=myTableCreator->SimpleCreate(outputResults[i]);
 			results.push_back(shared_ptr<iDeduceResult>(new DeduceResult<iConceptInteractTable>(resTable)));
@@ -106,11 +106,6 @@ namespace Mind
 	Mind::MockiCerebrum* MockiCerebrum::Create()
 	{
 		MockiCerebrum* brain= new MockiCerebrum;
-
-		EXPECT_CALL(*brain,FindConceptWithMatchedDisc(_,_)).WillRepeatedly(Return());
-
-		EXPECT_CALL(*brain,Deduce(Matcher<shared_ptr<iConceptInteractTable>>(_)))
-			.WillRepeatedly(Return(vector<shared_ptr<iDeduceResult>>()));
 
 		return brain;
 	}

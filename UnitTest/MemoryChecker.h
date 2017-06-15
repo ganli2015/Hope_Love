@@ -2,15 +2,23 @@
 #include <string>
 #include <fstream>
 
+#include "PublicHeader.h"
+
+#ifdef _DEBUG
+#define MEMOCHECK
+#else
 #define MEMOCHECK MemoryChecker mc(__FUNCTION__)
-#define RELEASE_MEMOCHECK mc.~MemoryChecker()
+#endif // _DEBUG
+
+
+namespace CommonTool
+{
+	class MemoryDetector;
+}
 
 class MemoryChecker
 {
-	int _startObjCount;
-	std::string _functionName;
-
-	static std::ofstream out;
+	CommonTool::MemoryDetector* _detector;
 public:
 	MemoryChecker(void);
 	MemoryChecker(const std::string function);

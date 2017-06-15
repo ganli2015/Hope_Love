@@ -26,7 +26,7 @@ namespace Mind
 		vector<shared_ptr<iConcept>> conceptVec;
 		conceptVec.reserve(combination.size());
 		double variance=0.0;
-		for (unsigned int i=0;i<combination.size();++i)
+		for (size_t i=0;i<combination.size();++i)
 		{
 			conceptVec.push_back(combination[i].concept);
 			variance+=pow(combination[i].arrayComponent-(i+1),2);
@@ -67,7 +67,7 @@ namespace Mind
 	{
 		vector<ConceptInfo> res;
 
-		for (unsigned int i=0;i<array->Dimension();++i)
+		for (size_t i=0;i<array->Dimension();++i)
 		{
 			double component=array->Get_ithVal(i);
 			if(component>upVal || component<=lowVal) continue;//不考虑超出界限的成分。

@@ -8,11 +8,14 @@
 #include "../LogicSystem/LogicKnowledge.h"
 
 #include "../CommonTools/CommonStringFunction.h"
+#include "../CommonTools/MemoryDetector.h"
+#include "../CommonTools/CacheManager.h"
 
 #include <Windows.h>
 
 using namespace Mind;
 using namespace LogicSystem;
+using namespace CommonTool;
 
 TEST(MemoryLeak,ConceptSet)
 {
@@ -65,4 +68,59 @@ TEST(Test_CommonStringFunction,TrimBeginEndBlank)
 	CommonTool::TrimBeginEndBlank(origin);
 
 	ASSERT_EQ("°¡°¡°¡",origin);
+}
+
+TEST(Test_CommonStringFunction, StringFormat)
+{
+	char* format = "%d %s %lf";
+	string res = StringFormat(format, 1, "hello", 2.5);
+
+	string expect = "1 hello 2.500000";
+
+	ASSERT_EQ(expect, res);
+}
+
+TEST(Test_CommonStringFunction, GenerateHash)
+{
+	string str1 = "0-Äã";
+	string str2 = "1-Äã";
+	string str3 = "0-ÎÒ";
+
+	string id1 = GenerateHash(str1);
+	string id2 = GenerateHash(str2);
+	string id3 = GenerateHash(str3);
+
+	ASSERT_NE(id1, id2);
+	ASSERT_NE(id2, id3);
+}
+
+
+TEST(Test_CacheManager, RaiseOnMonitor)
+{
+	//Check if the monitor event is raised after an interval.
+
+	class CacheManagerTester: public CacheManager<int>
+	{
+		bool &_raiseFlag;
+	public:
+		CacheManagerTester(bool &flag) :_raiseFlag(flag) {};
+	private:
+
+		void OnMonitor()
+		{
+			_raiseFlag = true;
+		}
+	};
+
+	bool raiseFlag = false;
+	CacheManagerTester tester(raiseFlag);
+	tester.SetReleaseInterval(2);
+	tester.RunMonitor();
+
+	Sleep(1000);
+	//Not raised after one second.
+	ASSERT_FALSE(raiseFlag);
+
+	Sleep(3000);
+	ASSERT_TRUE(raiseFlag);
 }

@@ -44,22 +44,6 @@ namespace Mind
 				if(str.empty()) return;
 
 				_val->AddConcept(word,word_id.id);
-
-// 				if(str.size()>2)//insert guide word
-// 				{
-// 					string tmpstr("");
-// 					tmpstr+=str[0];
-// 					tmpstr+=str[1];
-// 					if(_val->IsConceptExist(tmpstr))
-// 					{
-// 						return;
-// 					}
-// 					else
-// 					{
-// 						_val->AddConcept(shared_ptr<Word>(new Word(tmpstr)),-1);//导航词的id是-1
-// 					}
-// 
-// 				}
 			}
 
 		};
@@ -110,7 +94,7 @@ namespace Mind
 				Identity meID=connection_info.me;
 				shared_ptr<Word> word_me=_val->SearchWord(meID);
 
-				for (unsigned int i=0;i<connection_info.edge_infos.size();++i)
+				for (size_t i=0;i<connection_info.edge_infos.size();++i)
 				{
 					//找到依赖单词对应的Word（含有词性）
 					Identity toID=connection_info.edge_infos[i].to;
@@ -169,7 +153,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::ExistDuplicatedIDAndPOS(const Word_ID word_id,const int index,const vector<Word_ID>& list,Word_ID& duplicated)
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(i==index) continue;
 
@@ -188,7 +172,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::IdentityExist(const Identity identity,const vector<Word_ID>& list)
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(list[i].id==identity.id && list[i].word->GetString()==identity.str)
 			{
@@ -211,7 +195,7 @@ namespace Mind
 
 	void ConceptSetInitializer::CheckNonBaseConceptString(const vector<Word_ID>& wholeConcepts, ofstream& out )
 	{
-		for (unsigned int i=0;i<wholeConcepts.size();++i)
+		for (size_t i=0;i<wholeConcepts.size();++i)
 		{
 			Word_ID duplicated;
 			if(ExistDuplicatedIDAndPOS(wholeConcepts[i],i,wholeConcepts,duplicated))
@@ -231,7 +215,7 @@ namespace Mind
 	void ConceptSetInitializer::CheckConceptConnection(const vector<Connection_Info>& connectionInfos, const vector<Word_ID>& wholeConcepts,const vector<Word_ID>& baseConcepts, ofstream& out )
 	{
 		//检查ConceptConnection里的concept是否存在于读取的word_id中。
-		for (unsigned int i=0;i<connectionInfos.size();++i)
+		for (size_t i=0;i<connectionInfos.size();++i)
 		{
 			if(!IdentityExist(connectionInfos[i].me,wholeConcepts))
 			{
@@ -254,7 +238,7 @@ namespace Mind
 
 
 			//检查Edge
-			for (unsigned int j=0;j<connectionInfos[i].edge_infos.size();++j)
+			for (size_t j=0;j<connectionInfos[i].edge_infos.size();++j)
 			{
 				if(!IdentityExist(connectionInfos[i].edge_infos[j].to,wholeConcepts))
 				{
@@ -269,7 +253,7 @@ namespace Mind
 				shared_ptr<iConceptInteractTable> modTable=connectionInfos[i].edge_infos[j].modifications;
 				if(modTable==NULL) continue;
 				vector<MindType::ConceptPair> pairs=modTable->GetAllRelations();
-				for (unsigned int k=0;k<pairs.size();++k)
+				for (size_t k=0;k<pairs.size();++k)
 				{
 					Identity fromID=pairs[k].first->GetIdentity();
 					Identity toD=pairs[k].second->GetIdentity();
@@ -298,7 +282,7 @@ namespace Mind
 
 	void ConceptSetInitializer::CheckBaseConcept( const vector<Word_ID>& base,const vector<Word_ID>& nonBaseConcepts,ofstream& out )
 	{
-		for (unsigned int i=0;i<base.size();++i)
+		for (size_t i=0;i<base.size();++i)
 		{
 			Word_ID duplicated;
 			if(ExistDuplicatedIDAndPOS(base[i],i,base,duplicated))
@@ -330,7 +314,7 @@ namespace Mind
 
 	bool ConceptSetInitializer::WordIDExist( const Word_ID word_id,const vector<Word_ID>& list )
 	{
-		for (unsigned int i=0;i<list.size();++i)
+		for (size_t i=0;i<list.size();++i)
 		{
 			if(list[i].id==word_id.id && list[i].word->IsSame(word_id.word))
 			{
@@ -347,7 +331,7 @@ namespace Mind
 
 		//split ','
 		vector<string> pariStr=CommonTool::SplitString(str,',');
-		for (unsigned int i=0;i<pariStr.size();++i)
+		for (size_t i=0;i<pariStr.size();++i)
 		{
 			//split '-'
 			vector<string> fromTo=CommonTool::SplitString(pariStr[i],'-');
@@ -377,7 +361,7 @@ namespace Mind
 		return res;
 	}
 
-	vector<Connection_Info> ConceptSetInitializer::InputConnectionFromFile( string filename ,const ConceptSet* conceptSet)
+	vector<Connection_Info> ConceptSetInitializer::InputConnectionFromFile( string filename, const ConceptSet* conceptSet)
 	{
 		ifstream in(filename);
 		vector<Connection_Info> res;
@@ -392,29 +376,53 @@ namespace Mind
 		return res;
 	}
 
-	Mind::Connection_Info ConceptSetInitializer::ParseStrToConnectionInfo( const string line,const ConceptSet* conceptSet )
+	Mind::Connection_Info ConceptSetInitializer::ParseStrToConnectionInfo( const string line, const ConceptSet* conceptSet)
 	{
-		vector<string> split=CommonTool::SplitString(line,' ');
+		Connection_Info simpleInfo = ParseStrToSimpleConnectionInfo(line);
+		//Parse modStr to <modifications>.
+		for (auto &edge: simpleInfo.edge_infos)
+		{
+			if(edge.modStr=="") continue; //There is no modification.
 
-		if(split.size()<2)
+			auto splitMod = CommonTool::SplitString(edge.modStr, ' ');
+			shared_ptr<iConceptInteractTable> modifications = NULL;
+			if (IsConceptTableStr(splitMod.begin(), splitMod.end()))
+			{
+				modifications=ParseStrToTable(splitMod.front(),conceptSet);
+			}
+			else
+			{
+				modifications=ParseSingleMod(splitMod.begin(), splitMod.end(), edge.to,conceptSet);
+			}
+
+			edge.modifications = modifications;
+		}
+		return simpleInfo;
+	}
+
+	Mind::Connection_Info ConceptSetInitializer::ParseStrToSimpleConnectionInfo(const string line)
+	{
+		vector<string> split = CommonTool::SplitString(line, ' ');
+
+		if (split.size() < 2)
 		{
 			throw logic_error("Error in InputConnectionFromFile");
 		}
 
 		Connection_Info connnection_info;
 		//读取当前的word和id
-		connnection_info.me=CommonFunction::TransformToIdentity(split[0],split[1]);
+		connnection_info.me = CommonFunction::TransformToIdentity(split[0], split[1]);
 
-		if(split.size()==2)//没有ConceptEdge就继续下个循环
+		if (split.size() == 2)//没有ConceptEdge就继续下个循环
 		{
 			return connnection_info;
 		}
 
 		//读取Edge
-		int index=2;//开始遍历后面的string
-		while(true)
+		int index = 2;//开始遍历后面的string
+		while (true)
 		{
-			if(split[index]!="to")
+			if (split[index] != "to")
 			{
 				throw runtime_error("Error in InputConnectionFromFile");
 			}
@@ -425,43 +433,42 @@ namespace Mind
 
 			//读取依赖的word及其id
 			Edge_Info edge_info;
-			edge_info.to=CommonFunction::TransformToIdentity(split[index],split[index+1]);
-			index+=2;
+			edge_info.to = CommonFunction::TransformToIdentity(split[index], split[index + 1]);
+			index += 2;
 
-			if(split.begin()+index==split.end())
+			if (split.begin() + index == split.end())
 			{
 				connnection_info.edge_infos.push_back(edge_info);
 				break;
 			}
 
 			//读取修饰词
-			vector<string>::iterator find_next_to=find(split.begin()+index,split.end(),"to");
+			vector<string>::iterator find_next_to = find(split.begin() + index, split.end(), "to");
 
-			shared_ptr<iConceptInteractTable> modifications;
-			if(IsConceptTableStr(split.begin()+index,split.end()))
+			//Read string to the next 'to'.
+			string modStr = "";
+			for (vector<string>::iterator it = split.begin() + index; it != find_next_to; it ++)
 			{
-				modifications=ParseStrToTable(*(split.begin()+index),conceptSet);
+				modStr += *it;
+				if(it!=find_next_to-1)
+					modStr += " ";
 			}
-			else
-			{
-				modifications=ParseSingleMod(split.begin()+index,find_next_to,edge_info.to,conceptSet);
-			}
-			edge_info.modifications=modifications;
+			edge_info.modStr = modStr;
 
 			connnection_info.edge_infos.push_back(edge_info);
 
-			if(find_next_to==split.end())
+			if (find_next_to == split.end())
 			{
 				break;
 			}
 
-			index+=distance(split.begin()+index,find_next_to);//移动index到下一个to的位置。
+			index += distance(split.begin() + index, find_next_to);//移动index到下一个to的位置。
 		}
 
 		return connnection_info;
 	}
 
-	shared_ptr<iConceptInteractTable> ConceptSetInitializer::ParseSingleMod( const vector<string>::iterator& beg,const vector<string>::iterator& end ,const Identity& toID,const ConceptSet* conceptSet)
+	shared_ptr<iConceptInteractTable> ConceptSetInitializer::ParseSingleMod(const vector<string>::iterator& beg, const vector<string>::iterator& end, const Identity& toID, const ConceptSet* conceptSet)
 	{
 		if(distance(beg,end)%2!=0)//string的个数必须是偶数，因为word和id总是成对出现
 		{

@@ -67,7 +67,7 @@ namespace LogicSystem
 
 	shared_ptr<Mind::iConcept> SingleExpression::GetProtoConcept() const
 	{
-		unsigned int wordCount=_sen->GrammarWordCount();
+		size_t wordCount=_sen->GrammarWordCount();
 		if(wordCount!=1)
 		{
 			return NULL;

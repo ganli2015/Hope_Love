@@ -11,6 +11,7 @@
 #include "../Mathmatic/iMatrix.h"
 
 #include "../CommonTools/LogWriter.h"
+#include "../CommonTools/MemoryDetector.h"
 
 namespace NeuralNetwork
 {
@@ -46,6 +47,8 @@ namespace NeuralNetwork
 			{
 				if(ErrorConverge(prev_errors,cur_errors,_tol))
 				{
+					//Errors are not changed any more which means
+					//we can hardly make errors approach zero and we stop iteration.
 					result=DeviationConverge;
 					break;
 				}
@@ -162,7 +165,7 @@ namespace NeuralNetwork
 		Matrix& deltaMat,
 		Vector& deltaBias ) const
 	{
-		for (unsigned int n=0;n<s_m->Dimension();++n)
+		for (size_t n=0;n<s_m->Dimension();++n)
 		{
 			Math::Vector deltaColumn=-_learningRate*s_m->Get_ithVal(n)*(a_m_prev->GetArray());//W_m_j_new=W_m_j_old-alpha*s_m_j*a_m-1
 			deltaMat.Set_jthColumn(n,deltaColumn);
@@ -182,7 +185,7 @@ namespace NeuralNetwork
 		shared_ptr<iNeuron> tmpNeu=neo_backward->second;
 		if(neo_backward==_myNeurons.rbegin())
 		{
-			for (unsigned int i=0;i<e.Dimension();++i)
+			for (size_t i=0;i<e.Dimension();++i)
 			{
 				double s_i=-2*e[i]*myFun->D1(n_m->Get_ithVal(i));//s_m_i=-2*e_i*df(n_m_i)
 				s_m->Set_ithVal(i,s_i);
@@ -194,7 +197,7 @@ namespace NeuralNetwork
 		{
 			assert(s_m_next!=NULL);
 			assert(n_m->Dimension()==tmpNeu->GetOutputDimension());
-			for (unsigned int i=0;i<tmpNeu->GetOutputDimension();++i)
+			for (size_t i=0;i<tmpNeu->GetOutputDimension();++i)
 			{
 				double D1_i=myFun->D1(n_m->Get_ithVal(i));
 				Vector w_i=mat_next->nthRow(i);
@@ -255,12 +258,12 @@ namespace NeuralNetwork
 		Check(deltaMat.size()==neurons.size());
 		Check(deltaBias.size()==neurons.size());
 
-		for (unsigned int i=0;i<neurons.size();++i)
+		for (size_t i=0;i<neurons.size();++i)
 		{
 			shared_ptr<iNeuron> tmpNeu=neurons[i];
 			Matrix deltaM=deltaMat[i];
 			Vector deltaB=deltaBias[i];
-			for (unsigned int j=0;j<tmpNeu->GetOutputDimension();++j)
+			for (size_t j=0;j<tmpNeu->GetOutputDimension();++j)
 			{
 				Math::Vector newColumn=tmpNeu->Get_jthColumn(j)+deltaM.nthColumn(j);//W_m_j_new=W_m_j_old-alpha*s_m_j*a_m-1
 				tmpNeu->Set_jthColumn(j,newColumn);

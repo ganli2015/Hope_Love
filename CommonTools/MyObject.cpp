@@ -25,7 +25,7 @@ std::string MyObject::CurrentObjInfo()
 {
 	string res="";
 
-	for (unsigned int i=0;i<objectsVec.size();++i)
+	for (size_t i=0;i<objectsVec.size();++i)
 	{
 		res+=objectsVec[i].classname+"\n";
 	}

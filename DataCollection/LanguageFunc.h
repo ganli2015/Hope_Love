@@ -1,6 +1,7 @@
 #pragma once
 #include "InOut.h"
 #include <utility>
+#include <unordered_map>
 
 namespace DataCollection
 {
@@ -13,6 +14,7 @@ namespace DataCollection
 	{
 
 		static shared_ptr<Punctuations> _punctures;
+		static unordered_map<DataCollection::PartOfSpeech, string> _pos_term;
 	public:
 		LanguageFunc(void);
 		~LanguageFunc(void);
@@ -44,6 +46,9 @@ namespace DataCollection
 		static vector<shared_ptr<Word>> RemovePuncs(const vector<shared_ptr<Word>>& words);
 		static bool IsPuncture(const shared_ptr<Word> word);
 		static string ConvertWordsToString(const vector<shared_ptr<Word>> words);
+		static string WordListString(const vector<shared_ptr<Word>>  & wordList);
+		//Get Chinese term of a POS.
+		static string GetChineseTern(const DataCollection::PartOfSpeech pos);
 
 	//grammar pattern
 		//////////////////////////////////////////////////////////////////////////
@@ -53,6 +58,10 @@ namespace DataCollection
 		static GrammarPattern ConvertToPattern(const vector<int> posInt);
 
 		static bool SameGrammarPattern(const GrammarPattern& left,const GrammarPattern& right);
+
+	private:
+
+		static unordered_map<DataCollection::PartOfSpeech, string> InitPOSTerm();
 	};
 }
 

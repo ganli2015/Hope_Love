@@ -15,6 +15,20 @@ namespace CommonTool
 
 	};
 
-	
+	//////////////////////////////////////////////////////////////////////////
+	//Exception for database functions.
+	//////////////////////////////////////////////////////////////////////////
+	class _COMMONTOOLSINOUT DatabaseException : public exception
+	{
+		string _tableName;
+		string _msg;
+	public:
+		DatabaseException();
+		DatabaseException(string tableName,string msg="");
+		DatabaseException(const DatabaseException&);
+		~DatabaseException() {};
+
+		virtual char const* what() const;
+	};
 }
 

@@ -10,8 +10,9 @@ namespace CommonTool
 
 	shared_ptr<ConfigureInfoManager> ConfigureInfoManager::_instance;
 
-	ConfigureInfoManager::ConfigureInfoManager(void):_configureFilename("ConfigureInfo.ini")
+	ConfigureInfoManager::ConfigureInfoManager(void):_configureFilename("config.ini")
 	{
+		UpdateConfigure();
 	}
 
 
@@ -24,27 +25,31 @@ namespace CommonTool
 		_infos.clear();
 
 		ifstream in(_configureFilename);
+		if (!in) return;
 
 		string line="";
 		while(getline(in,line))
 		{
-			if(line!="")
-			{
-				CommonTool::TrimBeginEndBlank(line);
+			if (line.find('=') == string::npos) continue;
 
-				ConfigureInfo info;
-				info.message=line;
-				_infos.push_back(info);
-			}
+			CommonTool::TrimBeginEndBlank(line);
+			auto split = SplitString(line, '=');
+
+			ConfigureInfo info;
+			info.var = split[0];
+			info.value = split[1];
+			_infos.push_back(info);
 		}
 
 		in.close();
 	}
 
-	bool ConfigureInfoManager::HasTag( const string tag ) const
+	bool ConfigureInfoManager::IsTagOn( const string tag ) const
 	{
-		CREATE_FUNCTOR_IR(SameCfgInfo,string,ConfigureInfo,bool,
-			if(input.message==_init)
+		ConfigureInfo outInfo;
+		if (FindTagInfo(tag, outInfo))
+		{
+			if (outInfo.value == "ON")
 			{
 				return true;
 			}
@@ -52,18 +57,49 @@ namespace CommonTool
 			{
 				return false;
 			}
-			);
-			
-		vector<ConfigureInfo>::const_iterator sameIt=find_if(_infos.begin(),_infos.end(),SameCfgInfo(tag));
-		if(sameIt==_infos.end())
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	std::string ConfigureInfoManager::GetValue(const string tag) const
+	{
+		ConfigureInfo outInfo;
+		if (FindTagInfo(tag, outInfo))
+		{
+			return outInfo.value;
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+	bool ConfigureInfoManager::FindTagInfo(const string tag, ConfigureInfo& outInfo) const
+	{
+		CREATE_FUNCTOR_IR(SameCfgInfo, string, ConfigureInfo, bool,
+			if (input.var == _init)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		);
+
+		vector<ConfigureInfo>::const_iterator sameIt = find_if(_infos.begin(), _infos.end(), SameCfgInfo(tag));
+		if (sameIt == _infos.end())
 		{
 			return false;
 		}
 		else
 		{
+			outInfo = *sameIt;
 			return true;
 		}
-
 	}
 
 }

@@ -122,19 +122,19 @@ namespace NeuralNetwork
 
 		//遍历所有样本，计算对neuron修改的总数值。
 		vector<Math::Matrix> deltaMat_layer;
-		for (unsigned int i=0;i<deltaMats.size();++i)
+		for (size_t i=0;i<deltaMats.size();++i)
 		{
 			vector<Matrix> deltaMats_oneSample=deltaMats[i];
 			if(i==0)
 			{				
-				for (unsigned int j=0;j<deltaMats_oneSample.size();++j)
+				for (size_t j=0;j<deltaMats_oneSample.size();++j)
 				{
 					deltaMat_layer.push_back(deltaMats_oneSample[j]);
 				}
 			}
 			else
 			{
-				for (unsigned int j=0;j<deltaMats_oneSample.size();++j)
+				for (size_t j=0;j<deltaMats_oneSample.size();++j)
 				{
 					deltaMat_layer[j]+=deltaMats_oneSample[j];
 				}
@@ -142,7 +142,7 @@ namespace NeuralNetwork
 		}
 
 		//除以总样本数求平均值。
-		for (unsigned int i=0;i<deltaMat_layer.size();++i)
+		for (size_t i=0;i<deltaMat_layer.size();++i)
 		{
 			deltaMat_layer[i]=deltaMat_layer[i]/deltaMats.size();
 		}
@@ -155,19 +155,19 @@ namespace NeuralNetwork
 		Check(!deltaBiases.empty());
 
 		vector<Math::Vector> deltaBias_layer;
-		for (unsigned int i=0;i<deltaBiases.size();++i)
+		for (size_t i=0;i<deltaBiases.size();++i)
 		{
 			vector<Vector> deltaBias_oneSample=deltaBiases[i];
 			if(i==0)
 			{				
-				for (unsigned int j=0;j<deltaBias_oneSample.size();++j)
+				for (size_t j=0;j<deltaBias_oneSample.size();++j)
 				{
 					deltaBias_layer.push_back(deltaBias_oneSample[j]);
 				}
 			}
 			else
 			{
-				for (unsigned int j=0;j<deltaBias_oneSample.size();++j)
+				for (size_t j=0;j<deltaBias_oneSample.size();++j)
 				{
 					deltaBias_layer[j]+=deltaBias_oneSample[j];
 				}
@@ -175,7 +175,7 @@ namespace NeuralNetwork
 		}
 
 		//除以总样本数求平均值。
-		for (unsigned int i=0;i<deltaBias_layer.size();++i)
+		for (size_t i=0;i<deltaBias_layer.size();++i)
 		{
 			deltaBias_layer[i]=deltaBias_layer[i]/deltaBiases.size();
 		}
@@ -197,7 +197,7 @@ namespace NeuralNetwork
 		filteredDeltaBias.clear();
 
 		double gamma=momentumCoefficient;
-		for (unsigned int i=0;i<curDeltaMat.size();++i)
+		for (size_t i=0;i<curDeltaMat.size();++i)
 		{
 			Matrix newMat=prevDeltaMat[i]*gamma+curDeltaMat[i]*(1-gamma);
 			Vector newBias=prevDeltaBias[i]*gamma+curDeltaBias[i]*(1-gamma);
@@ -211,7 +211,7 @@ namespace NeuralNetwork
 	{
 		double var=0.;
 
-		for (unsigned int i=0;i<devia.size();++i)
+		for (size_t i=0;i<devia.size();++i)
 		{
 			var+=devia[i]*devia[i];
 		}

@@ -47,11 +47,6 @@ namespace HopeLove
                         myApp = new AppendLogicStatementForm();
                         break;
                     }
-                case FormType.ExtractChattingInText:
-                    {
-                        myApp = new ExtractChatting();
-                        break;
-                    }
                 default:
                     {
                         throw new ApplicationException();

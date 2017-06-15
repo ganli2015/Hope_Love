@@ -113,7 +113,7 @@ namespace Mind
 		MockiCerebrum* mockCerebrum=new MockiCerebrum();
 
 		vector<pair<Identity,shared_ptr<iConcept>>> concepts=CreateNumberConcept();
-		for (unsigned int i=0;i<concepts.size();++i)
+		for (size_t i=0;i<concepts.size();++i)
 		{
 			EXPECT_CALL(*mockCerebrum,GetConcept(testing::Eq(concepts[i].first)))
 			.WillRepeatedly(Return(concepts[i].second));

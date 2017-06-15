@@ -1,5 +1,7 @@
 #pragma once
 #pragma warning(disable:4251)
+#pragma warning(disable:4267)
+#pragma warning(disable:4244)
 #include "InOut.h"
 
 #include <map>

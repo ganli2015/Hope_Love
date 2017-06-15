@@ -104,7 +104,7 @@ namespace Mind
 		virtual vector<shared_ptr<iConcept>> FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description) const = 0;
 		//////////////////////////////////////////////////////////////////////////
 		///Find a concept which has the same meaning with the concept pairs in  <description>.
-		///Output information fo matched concept.
+		///Output information of matched concept.
 		//////////////////////////////////////////////////////////////////////////
 		virtual void FindConceptWithMatchedDisc(const shared_ptr<iConceptInteractTable> description, vector<DescMatchedConceptInfo>& matchedInfos) const = 0;
 
@@ -149,15 +149,20 @@ namespace Mind
 		virtual double GetP_Backward(const DataCollection::PartOfSpeech& me,const DataCollection::PartOfSpeech& backward) const=0;
 
 		//////////////////////////////////////////////////////////////////////////
-		///Compute the possibility of <pattern> in grammar sense.
+		///Compute the possibility of <sentence> in grammar sense.
 		//////////////////////////////////////////////////////////////////////////
-		virtual double ComputePossibility(const DataCollection::GrammarPattern& pattern) const =0;
+		virtual double ComputePossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const =0;
 		//////////////////////////////////////////////////////////////////////////
-		///Compute the possibility of <pattern> in grammar sense using local analysis.
+		///Compute the possibility of <sentence> in grammar sense using local analysis.
 		//////////////////////////////////////////////////////////////////////////
-		virtual double ComputeLocalPossibility(const DataCollection::GrammarPattern& pattern) const = 0;
+		virtual double ComputeLocalPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const = 0;
 		//Compute Possibility table of all POS in the condition that its forward POS is <forwardPos> and its backward POS is <backwardPos>.
 		virtual map<double, DataCollection::PartOfSpeech> ComputePossibilityTable(const DataCollection::PartOfSpeech& forwardPos, const DataCollection::PartOfSpeech& backwardPos) const =0;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Compute grammar confidence of such POS tagging, using grammar feature anlaysis.
+		//////////////////////////////////////////////////////////////////////////
+		virtual double ComputeGrammarPossibility(const vector<shared_ptr<DataCollection::Word>>& sentence) const = 0;
 
 		//Concept React System Functions
 		

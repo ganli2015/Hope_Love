@@ -46,7 +46,7 @@ vector<int> GetGrammarFrequence(const shared_ptr<DataCollection::Sentence> sente
 	vector<GrammarPattern> matchedPatterns=brain->ContainSubsequence(LanguageFunc::ConvertToPattern(words));
 
 	vector<int>  res;
-	for (unsigned int i=0;i<matchedPatterns.size();++i)
+	for (size_t i=0;i<matchedPatterns.size();++i)
 	{
 		res.push_back(brain->GetFreqencyofPattern(matchedPatterns[i]));
 	}
@@ -61,7 +61,7 @@ bool CheckFreqIncrease(const vector<int>& left,const vector<int>& right)
 		return false;
 	}
 
-	for (unsigned int i=0;i<left.size();++i)
+	for (size_t i=0;i<left.size();++i)
 	{
 		if(left[i]!=right[i]-1)
 		{

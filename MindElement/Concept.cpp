@@ -6,6 +6,8 @@
 #include "../DataCollection/Word.h"
 #include "../DataCollection/LanguageFunc.h"
 
+#include "../CommonTools/LogWriter.h"
+
 using namespace DataCollection;
 using namespace std;
 namespace Mind
@@ -43,7 +45,7 @@ namespace Mind
 	vector<shared_ptr<iConcept>> Concept::GetForwardConcepts() const
 	{
 		vector<shared_ptr<iConcept>> res;
-		for (unsigned int i=0;i<_forward.size();++i)
+		for (size_t i=0;i<_forward.size();++i)
 		{
 			res.push_back(_forward[i]->GetConcept());
 		}
@@ -53,7 +55,7 @@ namespace Mind
 	vector<shared_ptr<iConcept>> Concept::GetBackwardConcepts() const
 	{
 		vector<shared_ptr<iConcept>> res;
-		for (unsigned int i=0;i<_backward.size();++i)
+		for (size_t i=0;i<_backward.size();++i)
 		{
 			res.push_back(_backward[i]->GetConcept());
 		}
@@ -161,7 +163,7 @@ namespace Mind
 
 				//处理修饰词和解释词的关系
 				vector<MindType::ConceptPair> modifications=edge->GetModification()->GetAllRelations();
-				for (unsigned int i=0;i<modifications.size();++i)
+				for (size_t i=0;i<modifications.size();++i)
 				{
 					_table->Add(modifications[i].first,modifications[i].second);
 				}
@@ -182,7 +184,7 @@ namespace Mind
 		CommonFunction::AppendToInteractTable(myBase,base_to,res);
 
 		//添加_forward对<me>的作用
-		for (unsigned int i=0;i<_forward.size();++i)
+		for (size_t i=0;i<_forward.size();++i)
 		{
 			shared_ptr<ConceptInteractTable_iConcept> mod_table(new ConceptInteractTable_iConcept());
 			Recursive_GetEdgeInteractTable(_forward[i],mod_table);
@@ -190,7 +192,7 @@ namespace Mind
 		}
 
 		//添加toConcept的_forward对toConcept的作用
-		for (unsigned int i=0;i<toConcept->GetForwardEdges().size();++i)
+		for (size_t i=0;i<toConcept->GetForwardEdges().size();++i)
 		{
 			shared_ptr<ConceptInteractTable_iConcept> mod_table(new ConceptInteractTable_iConcept());
 			Recursive_GetEdgeInteractTable(toConcept->GetForwardEdges()[i],mod_table);
@@ -207,23 +209,23 @@ namespace Mind
 
 		//递归地建立toConcep所依赖的每个Edge的Table
 		vector<shared_ptr<iConceptEdge>> forwardEdges=edge->GetConcept()->GetForwardEdges();		
-		for (unsigned int i=0;i<forwardEdges.size();++i)
+		for (size_t i=0;i<forwardEdges.size();++i)
 		{
 			Recursive_GetEdgeInteractTable(forwardEdges[i],mod_table);
 		}
 
 		//递归地建立modification所依赖的每个Edge的Table
 		vector<MindType::ConceptPair> mods=edge->GetModification()->GetAllRelations();
-		for (unsigned int i=0;i<mods.size();++i)
+		for (size_t i=0;i<mods.size();++i)
 		{
 			vector<shared_ptr<iConceptEdge>> from_edges=mods[i].first->GetForwardEdges();
-			for (unsigned int j=0;j<from_edges.size();++j)
+			for (size_t j=0;j<from_edges.size();++j)
 			{
 				Recursive_GetEdgeInteractTable(from_edges[j],mod_table);
 			}
 
 			vector<shared_ptr<iConceptEdge>> to_edges=mods[i].second->GetForwardEdges();
-			for (unsigned int j=0;j<to_edges.size();++j)
+			for (size_t j=0;j<to_edges.size();++j)
 			{
 				Recursive_GetEdgeInteractTable(to_edges[j],mod_table);
 			}
@@ -248,7 +250,7 @@ namespace Mind
 	void Concept::Recursive_GetBase( const iConcept* concept,vector<shared_ptr<iConcept>>& result ) const
 	{
 		vector<shared_ptr<iConceptEdge>> edges=concept->GetForwardEdges();
-		for (unsigned int i=0;i<edges.size();++i)
+		for (size_t i=0;i<edges.size();++i)
 		{
 			shared_ptr<iConcept> toConcept=edges[i]->GetConcept();
 			if(toConcept->IsBaseConcept())
@@ -276,7 +278,7 @@ namespace Mind
 
 	bool Concept::Same( const shared_ptr<iConcept> concept ) const
 	{
-		if(_identity.str==concept->GetString() && _identity.id==concept->GetId())
+		if (_identity.str == concept->GetString() && _identity.id == concept->GetId())
 		{
 			return true;
 		}
@@ -306,7 +308,7 @@ namespace Mind
 		int nextLevel=curLevel+1;
 
 		vector<shared_ptr<iConceptEdge>> edges=concept->GetForwardEdges();
-		for (unsigned int i=0;i<edges.size();++i)
+		for (size_t i=0;i<edges.size();++i)
 		{
 			shared_ptr<iConcept> toConcept=edges[i]->GetConcept();
 			if(toConcept->IsBaseConcept())
@@ -355,7 +357,7 @@ namespace Mind
 
 	bool Concept::MatchWithDescription( const shared_ptr<iConceptInteractTable> description ) const
 	{
-		for (unsigned int i=0;i<_forward.size();++i)
+		for (size_t i=0;i<_forward.size();++i)
 		{
 			if(_forward[i]->MatchWithConceptTable(description))
 			{
@@ -368,9 +370,23 @@ namespace Mind
 
 	bool Concept::MatchWithDescription( const shared_ptr<iConceptInteractTable> description,shared_ptr<iConcept>& toConcept ) const
 	{
-		for (unsigned int i=0;i<_forward.size();++i)
+		for (size_t i=0;i<_forward.size();++i)
 		{
 			if(_forward[i]->MatchWithConceptTable(description,toConcept))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool Concept::IsBaseOf(const shared_ptr<iConcept> concept) const
+	{
+		auto bases = concept->GetBase();
+		for (size_t i=0;i<bases.size();++i)
+		{
+			if (Same(bases[i]))
 			{
 				return true;
 			}

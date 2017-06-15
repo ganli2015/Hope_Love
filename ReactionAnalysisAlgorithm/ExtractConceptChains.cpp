@@ -21,7 +21,7 @@ vector<shared_ptr<Mind::iConceptChain>> ExtractConceptChains::Extract( const vec
 
 	vector<shared_ptr<iConceptChain>> res;
 
-	for (unsigned int i=0;i<pairs_copy.size();++i)
+	for (size_t i=0;i<pairs_copy.size();++i)
 	{
 		//For each pair containing two concepts , From and To,
 		//search backward of From and get a chain whose tail is From.
@@ -104,7 +104,7 @@ void ExtractConceptChains::Recursive_Search(const SearchDir dir,
 	//They will be computed in the recursion of <curConcept>'s adjacent concepts, i.e,<adjConcepts>.
 	//All <curChains> of <adjConcepts> construct <curChains> of <curConcept>.
 	vector<shared_ptr<Mind::iConceptChain>> curChains;
-	for (unsigned int i=0;i<adjConcepts.size();++i)
+	for (size_t i=0;i<adjConcepts.size();++i)
 	{
 		//Extend <relatedChain> with <adjConcepts[i]>.
 		//<newRelatedChains> contributes to the NEW recursion in terms of <adjConcepts[i]>.
@@ -125,7 +125,7 @@ void ExtractConceptChains::Recursive_Search(const SearchDir dir,
 vector<shared_ptr<Mind::iConcept>> ExtractConceptChains::GetForwardAdjConcepts(const shared_ptr<Mind::iConcept> concept, const vector<ConceptPair>& pairs )
 {
 	vector<shared_ptr<Mind::iConcept>> res;
-	for (unsigned int i=0;i<pairs.size();++i)
+	for (size_t i=0;i<pairs.size();++i)
 	{
 		if(concept->Same(pairs[i].first))
 		{
@@ -139,7 +139,7 @@ vector<shared_ptr<Mind::iConcept>> ExtractConceptChains::GetForwardAdjConcepts(c
 vector<shared_ptr<Mind::iConcept>> ExtractConceptChains::GetBackwordAdjConcepts( const shared_ptr<Mind::iConcept> concept,const vector<ConceptPair>& pairs )
 {
 	vector<shared_ptr<Mind::iConcept>> res;
-	for (unsigned int i=0;i<pairs.size();++i)
+	for (size_t i=0;i<pairs.size();++i)
 	{
 		if(concept->Same(pairs[i].second))
 		{
@@ -172,9 +172,9 @@ vector<shared_ptr<Mind::iConceptChain>> ExtractConceptChains::Merge( const vecto
 	//Merge all combination of <backChains> and <forwardChains>.
 	vector<shared_ptr<Mind::iConceptChain>> res;
 	res.reserve(backChains.size()*forwardChains.size());
-	for (unsigned int i=0;i<backChains.size();++i)
+	for (size_t i=0;i<backChains.size();++i)
 	{		
-		for (unsigned int j=0;j<forwardChains.size();++j)
+		for (size_t j=0;j<forwardChains.size();++j)
 		{
 			shared_ptr<iConceptChain> newChain=backChains[i]->Copy();
 			//newChain->Reverse();

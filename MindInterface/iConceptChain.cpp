@@ -19,7 +19,7 @@ namespace Mind
 		string res = "";
 
 		auto conceptVec = GetConceptVec();
-		for (unsigned int i=0;i<conceptVec.size();++i)
+		for (size_t i=0;i<conceptVec.size();++i)
 		{
 			auto conceptID = conceptVec[i]->GetIdentity();
 			res += conceptID.id + " " + conceptID.str;

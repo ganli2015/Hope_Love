@@ -8,6 +8,12 @@ namespace Mind
 	class iConceptInteractTable;
 }
 
+namespace DataCollection
+{
+	class Word;
+	enum PartOfSpeech;
+}
+
 namespace LogicSystem
 {
 	class iReduceResult;
@@ -29,9 +35,30 @@ protected:
 	virtual void TearDown();
 };
 
+class Flags
+{
+public:
+	//A flag for Unit Test running.
+	static bool UNIT_TEST;
+};
+
+#define CHECK_SKIP 	if (Flags::UNIT_TEST)\
+{\
+	cout<< "[  SKIPPED ] Running Unit Test.This test is skipped."<<endl;\
+	SUCCEED() ;\
+	return;\
+}
+
+
 namespace FuncForTest
 {
 	const string TestSampleDir="TestSample\\";
+	const string dbPath = TestSampleDir + "testDB.db";
+	const string LargeDataPath = "HopeLoveData\\large\\";
+	const string SimpleDataPath = "HopeLoveData\\";
+
+
+	shared_ptr<DataCollection::Word> ToWord(const string str, const DataCollection::PartOfSpeech pos);
 
 	shared_ptr<Mind::iConcept> SimpleConcept(const string str);
 
@@ -55,6 +82,12 @@ namespace FuncForTest
 
 	shared_ptr<Mind::iConcept> GetConcept(const string str,const int id);
 
+	//////////////////////////////////////////////////////////////////////////
+	//Parse a string to word list.
+	//String should be like this: "然后/8 将/7 照片/0 贴上/1 ，/14"
+	//////////////////////////////////////////////////////////////////////////
+	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line);
+
 	///Check whether there are the same elements in v1 and v2, regardless with order.
 	template<class T>
 	bool ContainSameElements(const vector<vector<T>>& v1,const vector<vector<T>>& v2)
@@ -62,11 +95,11 @@ namespace FuncForTest
 		if(v1.size()!=v2.size()) return false;
 
 		vector<vector<T>> v2Copy=v2;
-		for (unsigned int i=0;i<v1.size();++i)
+		for (size_t i=0;i<v1.size();++i)
 		{
 			bool exist=false;
 			int existIndex=-1;
-			for (unsigned int j=0;j<v2Copy.size();++j)
+			for (size_t j=0;j<v2Copy.size();++j)
 			{
 				if(ContainSameElements(v1[i],v2Copy[j]))
 				{
@@ -98,7 +131,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<v1.size();++i)
+		for (size_t i=0;i<v1.size();++i)
 		{
 			if(v1[i]!=v2[i])
 			{

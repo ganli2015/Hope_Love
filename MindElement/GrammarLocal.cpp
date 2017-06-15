@@ -42,7 +42,11 @@ namespace Mind
 
 	double GrammarLocal::GetRatio_Forward( const DataCollection::PartOfSpeech& pos ) const
 	{
-		return _forward.at(pos)/TotalCount(_forward);
+		auto total = TotalCount(_backward);
+		if (total.GetInt() == 0)
+			return 0;
+		else
+			return _forward.at(pos) / total;
 	}
 
 	Math::MyInt GrammarLocal::TotalCount( const map<DataCollection::PartOfSpeech,Math::MyInt>& myMap ) const
@@ -58,7 +62,13 @@ namespace Mind
 
 	double GrammarLocal::GetRatio_Backward( const DataCollection::PartOfSpeech& pos ) const
 	{
-		return _backward.at(pos)/TotalCount(_backward);
+		auto total= TotalCount(_backward);
+		if (total.GetInt() == 0) 
+			return 0;
+		else
+		{
+			return _backward.at(pos) / total;
+		}
 	}
 
 	void GrammarLocal::Read(ifstream& in)

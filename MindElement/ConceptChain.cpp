@@ -64,12 +64,12 @@ namespace Mind
 		vector<shared_ptr<iConcept>> P=GetConceptVec();
 		vector<shared_ptr<iConcept>> T=parentChain->GetConceptVec();
 
-		unsigned int n=T.size();
-		unsigned int m=P.size();
+		size_t n=T.size();
+		size_t m=P.size();
 		vector<int> pi=ComputePrefixFunction(P);
 
 		int q=0;
-		for (unsigned int i=0;i<n;++i)
+		for (size_t i=0;i<n;++i)
 		{
 			while(q>0 && !P[q]->Same(T[i]))
 			{
@@ -121,9 +121,9 @@ namespace Mind
 		if(sub.empty()) return true;
 		if(full.empty()) return false;
 
-		unsigned int subIndex(0);
+		size_t subIndex(0);
 		shared_ptr<iConcept> curElem=sub[subIndex];
-		for (unsigned int i=0;i<full.size();++i)
+		for (size_t i=0;i<full.size();++i)
 		{
 			if(curElem->Same(full[i]))
 			{

@@ -12,7 +12,7 @@ namespace LogicSystem
 	{
 		//Check whether the forward concepts of <con> exists ÕûÊý concept.
 		vector<shared_ptr<Mind::iConcept>> forward=con->GetBase();
-		for (unsigned int i=0;i<forward.size();++i)
+		for (size_t i=0;i<forward.size();++i)
 		{
 			if(forward[i]->GetString()==_integerStr)
 			{

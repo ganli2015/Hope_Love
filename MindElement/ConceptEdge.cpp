@@ -45,7 +45,7 @@ namespace Mind
 		
 		vector<MindType::ConceptPair> pairs=_modTable->GetAllRelations();
 		//Go through all concept pairs and collect base interaction pairs.
-		for (unsigned int i=0;i<pairs.size();++i)
+		for (size_t i=0;i<pairs.size();++i)
 		{
 			vector<shared_ptr<iConcept>> base_from=pairs[i].first->GetBase();
 			vector<shared_ptr<iConcept>> base_to=pairs[i].second->GetBase();

@@ -4,6 +4,7 @@
 #include "WordRelationTableBuilder.h"
 
 #include "../DataCollection/Word.h"
+#include "../DataCollection/Sentence.h"
 
 #include "../MindElement/Concept.h"
 #include "../MindInterface/iConceptInteractTable.h"
@@ -49,9 +50,12 @@ void SentenceParser::Execute()
 	_conceptTable->Absorb(baseConceptTable);
 	LOG("WordRelationTableBuilder");
 
-#ifdef _COUT_DEBUG_INFO //≤‚ ‘WordRelationTableBuilder
 	Cout_WordRelations();
-#endif
+}
+
+vector<shared_ptr<DataCollection::Word>> SentenceParser::GetPOSTagging() const
+{
+	return _parsedSentence->GetGrammard();
 }
 
 void SentenceParser::Cout_WordRelations()
@@ -59,10 +63,6 @@ void SentenceParser::Cout_WordRelations()
 	Mind::iCerebrum* brain=Mind::iCerebrum::Instance();
 	vector<pair<shared_ptr<Mind::iConcept>,shared_ptr<Mind::iConcept>>> relations=_conceptTable->GetAllRelations();
 
-	cout<<"Test Word Relations"<<endl;
-
+	DEBUGLOG("Test Word Relations");
 	CommonFunction::OutputConceptPairs(relations,cout);
-
-	cout<<endl;
-	
 }

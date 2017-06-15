@@ -31,7 +31,7 @@ void SentenceGenerator::Generate( const vector<shared_ptr<Mind::iConceptChain>>&
 	
 	vector<SentenceInfo> sentenceInfo;
 	sentenceInfo.reserve(hyperChains.size());
-	for (unsigned int i=0;i<hyperChains.size();++i)
+	for (size_t i=0;i<hyperChains.size();++i)
 	{
 		//Select a hyper chain, get grammar patterns it contains and compute their total frequency.
 		//The higher frequency is desired.
@@ -64,7 +64,7 @@ DataCollection::GrammarPattern SentenceGenerator::ChainToPattern( const shared_p
 	vector<PartOfSpeech> pos;
 	pos.reserve(conceptVec.size());
 
-	for (unsigned int i=0;i<conceptVec.size();++i)
+	for (size_t i=0;i<conceptVec.size();++i)
 	{
 		pos.push_back(conceptVec[i]->GetPartOfSpeech());
 	}
@@ -86,7 +86,7 @@ void SentenceGenerator::OutputChainAndPatternInfo(
 int SentenceGenerator::ComputeTotalFreq( const vector<DataCollection::GrammarPattern>& patterns ) const
 {
 	int freq_sum(0);
-	for (unsigned int j=0;j<patterns.size();++j)
+	for (size_t j=0;j<patterns.size();++j)
 	{
 		freq_sum+=_brain->GetFreqencyofPattern(patterns[j]);
 	}
@@ -140,7 +140,7 @@ shared_ptr<DataCollection::Sentence> SentenceGenerator::ChainToSentence( const s
 	vector<shared_ptr<iConcept>> conceptVec=chain->GetConceptVec();
 
 	string sen="";
-	for (unsigned int i=0;i<conceptVec.size();++i)
+	for (size_t i=0;i<conceptVec.size();++i)
 	{
 		sen+=conceptVec[i]->GetString();
 	}
@@ -151,7 +151,7 @@ shared_ptr<DataCollection::Sentence> SentenceGenerator::ChainToSentence( const s
 // void SentenceGenerator::SearchPossibleSentenceCombination(const SentenceInfo& centerSentence,
 // 	const vector<SentenceInfo>& otherSentence)
 // {
-// 	for (unsigned int i=0;i<otherSentence.size();++i)
+// 	for (size_t i=0;i<otherSentence.size();++i)
 // 	{
 // 
 // 	}

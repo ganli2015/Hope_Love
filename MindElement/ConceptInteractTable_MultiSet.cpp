@@ -102,7 +102,7 @@ namespace Mind
 		int sameCount = 0;
 		PairSet myIdentityPair_Copy = _identityPairs;
 		//Determine how many pairs are duplicated in <me> and <other>
-		for (unsigned int i=0;i<otherPairs.size();++i)
+		for (size_t i=0;i<otherPairs.size();++i)
 		{
 			Identity fromID = otherPairs[i].first->GetIdentity();
 			Identity toID = otherPairs[i].second->GetIdentity();

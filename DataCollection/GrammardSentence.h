@@ -45,10 +45,10 @@ namespace DataCollection
 		///Get grammar association of the word of the index <i>.
 		///Each of <associatedIndexes> is indexes of words with corresponding grammar pattern in <associatedPatterns>.
 		///<associatedIndexes> and <associatedPatterns> are one-to-one.
-		void GetAssociationInfo(const unsigned int i,vector<vector<int>>& associatedIndexes,vector<GrammarPattern>& associatedPatterns);
+		void GetAssociationInfo(const size_t i,vector<vector<int>>& associatedIndexes,vector<GrammarPattern>& associatedPatterns);
 	private:
 		bool GetIndexOfMatchedPattern(const GrammarPattern& patternRaw,const GrammarPattern& patternMatch,vector<vector<int>>& indexes);
-		void GetIndexOfMatchedPattern(const GrammarPattern& patternRaw,const GrammarPattern& patternMatch,const unsigned int rawStartIndex,const unsigned int matchStartIndex,vector<vector<int>>& indexes);
+		void GetIndexOfMatchedPattern(const GrammarPattern& patternRaw,const GrammarPattern& patternMatch,const size_t rawStartIndex,const size_t matchStartIndex,vector<vector<int>>& indexes);
 		void ClassifyGrammarInfoSet(multimap<int,GraAssoInfo>& graInfoSet,const vector<vector<int>>& indexes,const GrammarPattern& pattern);
 	};
 }

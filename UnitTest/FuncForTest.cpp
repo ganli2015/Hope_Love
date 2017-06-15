@@ -18,8 +18,10 @@
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/GrammaPattern.h"
+#include "../DataCollection/LanguageFunc.h"
 
 #include "../CommonTools/MyObject.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace Mind;
 using namespace DataCollection;
@@ -28,7 +30,12 @@ using namespace LogicSystem;
 namespace FuncForTest
 {
 
-	shared_ptr<iConcept> SimpleConcept( const string str )
+	shared_ptr<Word> ToWord(const string str, const PartOfSpeech pos)
+	{
+		return LanguageFunc::GetParticularWord(str, pos);
+	}
+
+	shared_ptr<iConcept> SimpleConcept(const string str)
 	{
 		shared_ptr<Word> w(new Word(str));
 		shared_ptr<iConcept> res=iMindElementCreator::CreateConcept(w); 
@@ -64,7 +71,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			vector<pair<shared_ptr<iConcept>,shared_ptr<iConcept>>>::iterator iter=find_if(relations.begin(),relations.end(),FindRelation(expect[i]));
 			if(iter==relations.end())
@@ -89,10 +96,10 @@ namespace FuncForTest
 
 		vector<shared_ptr<iConceptChain>> resCopy=result;
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			bool hasSameChain=false;
-			for (unsigned int j=0;j<resCopy.size();++j)
+			for (size_t j=0;j<resCopy.size();++j)
 			{
 				if(SameChain(expect[i],resCopy[j]))
 				{
@@ -119,7 +126,7 @@ namespace FuncForTest
 			return false;
 		}
 
-		for (unsigned int i=0;i<expect.size();++i)
+		for (size_t i=0;i<expect.size();++i)
 		{
 			if(expect[i]!=conVec[i]->GetString())
 			{
@@ -132,10 +139,10 @@ namespace FuncForTest
 
 	void DisplayChains( const vector<shared_ptr<Mind::iConceptChain>>& chains )
 	{
-		for (unsigned int i=0;i<chains.size();++i)
+		for (size_t i=0;i<chains.size();++i)
 		{
 			vector<shared_ptr<iConcept>> cons=chains[i]->GetConceptVec();
-			for (unsigned int j=0;j<cons.size();++j)
+			for (size_t j=0;j<cons.size();++j)
 			{
 				cout<<cons[j]->GetString()<<" ";
 			}
@@ -178,7 +185,7 @@ namespace FuncForTest
 		//Convert table to vector<pair<string,string>>.
 		vector<MindType::ConceptPair> pairs=left->GetAllRelations();
 		vector<pair<string,string>> stringPairs;
-		for (unsigned int i=0;i<pairs.size();++i)
+		for (size_t i=0;i<pairs.size();++i)
 		{
 			stringPairs.push_back(make_pair(pairs[i].first->GetString(),pairs[i].second->GetString()));
 		}
@@ -190,7 +197,7 @@ namespace FuncForTest
 	{
 		string res="";
 
-		for (unsigned int i=0;i<tablePairs.size();++i)
+		for (size_t i=0;i<tablePairs.size();++i)
 		{
 			res+=tablePairs[i].first+" "+tablePairs[i].second+"\n";
 		}
@@ -198,18 +205,37 @@ namespace FuncForTest
 		return res;
 	}
 
+	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line)
+	{
+		//Split blank and get each word.
+		auto split = CommonTool::SplitString(line, ' ');
+
+		vector<shared_ptr<DataCollection::Word>> res;
+
+		for (unsigned int i = 0; i < split.size(); ++i)
+		{
+			//Split '/' and get word string and pos.
+			auto word_POS = CommonTool::SplitString(split[i], '/');
+			if (word_POS.size() != 2)
+			{
+				throw runtime_error("Error in ParsePOSTagging");
+			}
+
+			res.push_back(LanguageFunc::GetParticularWord(word_POS[0], (PartOfSpeech)atoi(word_POS[1].c_str())));
+		}
+
+		return res;
+	}
 }
 
 void InitCerebrum::SetUp()
 {
-	_initObjectCount=MyObject::GetObjectCount();
 	iCerebrum::SetInstance(Cerebrum::Instance());
 }
 
 void InitCerebrum::TearDown()
 {
 	iCerebrum::KillInstance();
-	Check(_initObjectCount==MyObject::GetObjectCount());
 }
 
 void AddPatternToCerebrum::SetUp()
@@ -222,5 +248,6 @@ void AddPatternToCerebrum::SetUp()
 void AddPatternToCerebrum::TearDown()
 {
 	iCerebrum::KillInstance();
-	Check(_initObjectCount==MyObject::GetObjectCount());
 }
+
+bool Flags::UNIT_TEST = false;

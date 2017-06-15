@@ -22,15 +22,15 @@ namespace DataCollection
 	void StructuredSentence::InitializeMatrix()
 	{
 		_intensityMatrix.clear();
-		unsigned int size=_sen.size();
-		for (unsigned int i=0;i<size;++i)
+		size_t size=_sen.size();
+		for (size_t i=0;i<size;++i)
 		{
 			vector<double> tmpVec(size,0);
 			_intensityMatrix.push_back(tmpVec);
 		}
 	}
 
-	void StructuredSentence::SetIntensity( const unsigned int i,const unsigned int j,double intensity )
+	void StructuredSentence::SetIntensity( const size_t i,const size_t j,double intensity )
 	{
 		if(i>=_intensityMatrix.size() || j>=_intensityMatrix.size())
 		{
@@ -44,7 +44,7 @@ namespace DataCollection
 		_analyzed=true;
 	}
 
-	double StructuredSentence::GetIntensity( const unsigned int i,const unsigned int j )
+	double StructuredSentence::GetIntensity( const size_t i,const size_t j )
 	{
 		if(i>=_intensityMatrix.size() || j>=_intensityMatrix.size())
 		{

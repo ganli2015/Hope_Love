@@ -9,8 +9,11 @@
 #include "log4cpp/BasicLayout.hh"
 #include "log4cpp/Priority.hh"
 #include <log4cpp/PatternLayout.hh>
+#include <log4cpp/NDC.hh>
 
 #include "StackWalker.h"
+#include "ConfigureInfoManager.h"
+#include "CommonStringFunction.h"
 
 namespace CommonTool
 {
@@ -58,11 +61,22 @@ namespace CommonTool
 
 		log4cpp::Appender *appender2 = new log4cpp::FileAppender("default", "Log\\loginfo.log");
 		auto fileLayout = new log4cpp::PatternLayout();
-		fileLayout->setConversionPattern("%d [%p] %m%n");
+		fileLayout->setConversionPattern("%d [%p] [%x] %m%n");
 		appender2->setLayout(fileLayout);
 
 		_root = &log4cpp::Category::getRoot();
-		_root->setPriority(log4cpp::Priority::DEBUG);
+
+		//Try to read log level from config file.
+		string logLevelStr = ConfigureInfoManager::GetInstance()->GetValue("LOG_LEVEL");
+		if (logLevelStr != "")
+		{
+			int logLevel = StringToNum<int>(logLevelStr);
+			_root->setPriority(log4cpp::Priority::PriorityLevel(logLevel));
+		}
+		else
+		{
+			_root->setPriority(log4cpp::Priority::DEBUG);
+		}
 		_root->addAppender(appender1);
 		_root->addAppender(appender2);
 	}
@@ -187,6 +201,16 @@ namespace CommonTool
 		}
 
 		_released = true;
+	}
+
+	NDCObject::NDCObject(const string context)
+	{
+		log4cpp::NDC::push(context);
+	}
+
+	NDCObject::~NDCObject()
+	{
+		log4cpp::NDC::pop();
 	}
 
 }
