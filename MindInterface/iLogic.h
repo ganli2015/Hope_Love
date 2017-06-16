@@ -26,7 +26,7 @@ namespace LogicSystem
 	{
 	public:
 		iLogic(void);
-		~iLogic(void);
+		virtual ~iLogic(void);
 
 		//////////////////////////////////////////////////////////////////////////
 		///Check whether <conclusion> can be deduced by <condition>.

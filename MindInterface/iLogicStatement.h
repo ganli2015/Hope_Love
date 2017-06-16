@@ -21,7 +21,7 @@ namespace LogicSystem
 
 	public:
 		iLogicStatement(void);
-		~iLogicStatement(void);
+		virtual ~iLogicStatement(void);
 
 		//////////////////////////////////////////////////////////////////////////
 		///Deduce results from <condition>.

@@ -5,7 +5,15 @@ namespace CommonTool
 {
 	void _COMMONTOOLSINOUT SleepForSeconds(const int seconds);
 
-	void _COMMONTOOLSINOUT TryDeletePointer(void *ptr);
+	template<class T>
+	void TryDeletePointer(T *ptr)
+	{
+		if (ptr != NULL)
+		{
+			delete ptr;
+			ptr = NULL;
+		}
+	}
 }
 
 

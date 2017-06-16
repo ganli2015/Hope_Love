@@ -11,13 +11,4 @@ namespace CommonTool
 		Sleep(seconds * 1000);
 	}
 
-	void _COMMONTOOLSINOUT TryDeletePointer(void *ptr)
-	{
-		if (ptr != NULL)
-		{
-			delete ptr;
-			ptr = NULL;
-		}
-	}
-
 }

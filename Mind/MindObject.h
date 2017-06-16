@@ -21,17 +21,17 @@ namespace Mind
 		MindElementCreator* _elemCreator;
 	public:
 		MindObject();
-		~MindObject();
+		virtual ~MindObject();
 	};
 
 	class CachedDBContainer : public DBContainer
 	{
-		ConceptReadWriter *_conceptReadWriter;
+		shared_ptr<ConceptReadWriter> _conceptReadWriter;
 	public:
 		CachedDBContainer(const string dbPath);
 		virtual ~CachedDBContainer();
 
-		virtual unique_ptr<ConceptDatabase> GetConceptDatabase() const;
+		virtual shared_ptr<ConceptDatabase> GetConceptDatabase() const;
 
 	};
 }

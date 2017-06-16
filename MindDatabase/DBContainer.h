@@ -24,12 +24,12 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		//Get a unique_ptr for database.
 		//////////////////////////////////////////////////////////////////////////
-		virtual unique_ptr<GrammarFeatureDatabase> GetGrammarFeatureDatabase() const;
+		virtual shared_ptr<GrammarFeatureDatabase> GetGrammarFeatureDatabase() const;
 		//////////////////////////////////////////////////////////////////////////
 		//<grammarFeatureTypeCount> is the count of grammar feature types.
 		//////////////////////////////////////////////////////////////////////////
-		virtual unique_ptr<MindParameterDatabase> GetMindParameterDatabase(const int grammarFeatureTypeCount) const;
-		virtual unique_ptr<ConceptDatabase> GetConceptDatabase() const;
+		virtual shared_ptr<MindParameterDatabase> GetMindParameterDatabase(const int grammarFeatureTypeCount) const;
+		virtual shared_ptr<ConceptDatabase> GetConceptDatabase() const;
 	private:
 
 	};

@@ -59,11 +59,9 @@ namespace Mind
 
 	void ConceptSet::CollectNewBaseConcepts(const string filePath)
 	{
-		auto conceptDB = this->_conceptDB.release();
+		auto conceptDB = this->_conceptDB.get();
 		ConceptCollector collector(conceptDB);
 		collector.Collect(filePath);
-
-		this->_conceptDB.reset(conceptDB);
 	}
 
 	int ConceptSet::MaxLength_WordWithHead(const shared_ptr<DataCollection::Character> headChara) const

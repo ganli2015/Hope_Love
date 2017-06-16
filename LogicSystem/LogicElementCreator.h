@@ -18,7 +18,7 @@ namespace LogicSystem
 
 	public:
 		LogicElementCreator(void);
-		~LogicElementCreator(void);
+		virtual ~LogicElementCreator(void);
 
 		virtual shared_ptr<iExpression> CreateExpression(const string str) const ;
 		virtual shared_ptr<iExpression> CreateExpression(const vector<string> str) const ;

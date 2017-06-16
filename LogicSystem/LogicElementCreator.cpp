@@ -26,6 +26,17 @@ namespace LogicSystem
 
 	LogicElementCreator::~LogicElementCreator(void)
 	{
+		for (auto creator : _spSym)
+		{
+			delete creator.second;
+			creator.second = NULL;
+		}
+
+		for (auto creator : _biContr)
+		{
+			delete creator.second;
+			creator.second = NULL;
+		}
 	}
 
 	shared_ptr<iExpression> LogicElementCreator::CreateExpression( const string str ) const

@@ -21,7 +21,7 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		static set<string> _featureTypes;
 
-		unique_ptr<GrammarFeatureDatabase> _featureDB;
+		shared_ptr<GrammarFeatureDatabase> _featureDB;
 		FeatureList _features;
 		bool _loadedFeatures;
 

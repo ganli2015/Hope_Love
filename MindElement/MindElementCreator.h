@@ -16,7 +16,7 @@ namespace Mind
 	{
 	public:
 		MindElementCreator(void);
-		~MindElementCreator(void);
+		virtual ~MindElementCreator(void);
 
 		virtual shared_ptr<iConcept> CreateConcept(const ElementType type) const ;
 		virtual shared_ptr<iConcept> CreateConcept(const shared_ptr<DataCollection::Word> word,const ElementType type) const ;

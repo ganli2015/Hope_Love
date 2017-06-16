@@ -113,7 +113,7 @@ namespace CommonTool
 					_cacheMonitor->Cancel();
 					while (_cacheMonitor->IsRunning())
 					{
-
+						SleepForSeconds(2);
 					}
 				}
 			}
@@ -150,17 +150,25 @@ namespace CommonTool
 				_running = true;
 				while (true)
 				{
-					if (_cancelled) break;
-
-					SleepForSeconds(loopInterval);
-
-					if (_cancelled) break;
-
-					periodDuration += loopInterval;
-					if (periodDuration > _interval)
+					try
 					{
-						_cacheManager->OnMonitor();
+						if (_cancelled) break;
+
+						SleepForSeconds(loopInterval);
+
+						if (_cancelled) break;
+
+						periodDuration += loopInterval;
+						if (periodDuration > _interval)
+						{
+							_cacheManager->OnMonitor();
+						}
 					}
+					catch (const std::exception&)
+					{
+						break;
+					}
+					
 				}
 
 				_running = false;

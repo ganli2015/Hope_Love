@@ -4,7 +4,7 @@
 namespace Mind
 {
 
-	iCerebrum* iCerebrum::_instance;
+	iCerebrum* iCerebrum::_instance = NULL;
 
 
 	iCerebrum* iCerebrum::Instance()
@@ -19,8 +19,11 @@ namespace Mind
 
 	void iCerebrum::KillInstance()
 	{
-		delete _instance;
-		_instance=NULL;
+		if(_instance != NULL)
+		{
+			delete _instance;
+			_instance = NULL;
+		}
 	}
 
 	bool iCerebrum::Empty()

@@ -24,7 +24,7 @@ namespace Mind
 		typedef std::multimap<std::string,shared_ptr<BaseConcept>> BaseConceptMap;
 		//ConceptMap _conceptset;
 		//BaseConceptMap _baseConceptset;
-		unique_ptr<ConceptDatabase> _conceptDB;
+		shared_ptr<ConceptDatabase> _conceptDB;
 
 		typedef ConceptMap::iterator conceptIter;
 		typedef ConceptMap::const_iterator const_conceptIter;
@@ -32,7 +32,7 @@ namespace Mind
 		typedef BaseConceptMap::const_iterator const_baseConceptIter;
 	public:
 		ConceptSet(void);
-		~ConceptSet(void);
+		virtual ~ConceptSet(void);
 
 	    bool IsConceptExist(const std::string str) const;
 		//根据word添加一个Concept。

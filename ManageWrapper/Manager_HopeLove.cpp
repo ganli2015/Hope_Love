@@ -12,6 +12,8 @@
 #include "../Mind/Cerebrum.h"
 
 #include "../MindInterface/iCerebrum.h"
+#include "../MindInterface/iLogicElementCreator.h"
+#include "../MindInterface/iMindElementCreator.h"
 
 #include <string>
 
@@ -86,8 +88,13 @@ namespace ManageWrapper
 
 	void Manager_HopeLove::Kill()
 	{
+		//Kill static members.
+		LogicSystem::iLogicElementCreator::SetImp(NULL);
+		Mind::iMindElementCreator::SetImp(NULL);
+
 		Mind::iCerebrum::KillInstance();
 		delete _datawrappercpp;
+		_datawrappercpp = NULL;
 	}
 
 }

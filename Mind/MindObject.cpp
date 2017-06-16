@@ -29,17 +29,21 @@ namespace Mind
 	{
 		if (_conceptReadWriter == NULL)
 		{
-			_conceptReadWriter = new ConceptReadWriter(dbPath);
+			_conceptReadWriter = make_shared<ConceptReadWriter>(dbPath);
 			_dbPath = dbPath;
 		}
 	}
 
 	CachedDBContainer::~CachedDBContainer()
 	{
-		CommonTool::TryDeletePointer(_conceptReadWriter);
+// 		if (_conceptReadWriter.use_count() == 1)
+// 		{
+// 			//It is only used by me and if i am released then no one use it.
+// 			_conceptReadWriter.~shared_ptr();
+// 		}
 	}
 
-	unique_ptr<ConceptDatabase> CachedDBContainer::GetConceptDatabase() const
+	shared_ptr<ConceptDatabase> CachedDBContainer::GetConceptDatabase() const
 	{
 		//Try to get Monitor interval in the config file.
 		string intervalStr = CommonTool::ConfigureInfoManager::GetInstance()->GetValue("CACHE_MONITOR_INTERVAL");
@@ -50,10 +54,9 @@ namespace Mind
 		}
 
 		_conceptReadWriter->Initialize();
-		unique_ptr<ConceptDatabase> db(_conceptReadWriter);
-		db->Connect();
+		_conceptReadWriter->Connect();
 
-		return db;
+		return _conceptReadWriter;
 	}
 
 }

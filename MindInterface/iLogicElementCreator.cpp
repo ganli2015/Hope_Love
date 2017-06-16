@@ -77,7 +77,7 @@ namespace LogicSystem
 		_imp=imp;
 	}
 
-	shared_ptr<iLogicElementCreatorImp> iLogicElementCreator::_imp;
+	shared_ptr<iLogicElementCreatorImp> iLogicElementCreator::_imp = NULL;
 
 }
 

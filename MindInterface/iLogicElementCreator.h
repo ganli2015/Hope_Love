@@ -48,7 +48,7 @@ namespace LogicSystem
 
 	public:
 		iLogicElementCreator(void);
-		~iLogicElementCreator(void);
+		virtual ~iLogicElementCreator(void);
 
 		static void SetImp(const shared_ptr<iLogicElementCreatorImp> imp);
 

@@ -19,7 +19,7 @@ namespace LogicSystem
 
 	public:
 		iDeduceResult(void);
-		~iDeduceResult(void);
+		virtual ~iDeduceResult(void);
 
 		//////////////////////////////////////////////////////////////////////////
 		///Return a value indicating how matching <expre> and <me> are.

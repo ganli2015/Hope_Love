@@ -16,7 +16,7 @@ namespace LogicSystem
 	{
 	public:
 		iReduceResult(void);
-		~iReduceResult(void);
+		virtual ~iReduceResult(void);
 
 		//////////////////////////////////////////////////////////////////////////
 		///Get the result represented as .iConceptInteractTable.
