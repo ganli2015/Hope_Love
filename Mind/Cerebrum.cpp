@@ -2,7 +2,6 @@
 #include "Cerebrum.h"
 #include "ConceptSet.h"
 #include "GrammaSet.h"
-#include "WordRelationTable.h"
 #include "ConceptInteractTableContainer.h"
 #include "ConceptReactSystem.h"
 
