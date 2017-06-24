@@ -92,6 +92,7 @@ namespace Mind
 		virtual shared_ptr<Concept> GetConcept(const string conceptID);
 
 		vector<shared_ptr<Concept>> GetAllNonBaseConcepts();
+		vector<shared_ptr<BaseConcept>> GetAllBaseConcepts();
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get total count of base concept.
@@ -142,9 +143,6 @@ namespace Mind
 		vector<CommonTool::DBRow> QueryForTables(const vector<CommonTool::QueryStatement>& statements);
 
 		vector<CommonTool::QueryStatement> CreateQryForTables() const;
-
-
-		vector<shared_ptr<BaseConcept>> GetAllBaseConcepts();
 
 		string GenerateConceptPrimaryKey(const string word, const int id);
 		string GenerateConceptPrimaryKey(const shared_ptr<iConcept> concept);

@@ -67,6 +67,8 @@ namespace Mind
 
 		virtual int BaseConceptCount() const ;
 
+		virtual vector<shared_ptr<iConcept>> GetAllBaseConcepts() const ;
+
 		//Grammar Related Functions
 		//搜索<pattern>所包含的子pattern.
 		virtual std::vector<DataCollection::GrammarPattern> ContainSubsequence(const DataCollection::GrammarPattern& pattern) const;

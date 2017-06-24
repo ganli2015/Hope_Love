@@ -273,6 +273,18 @@ namespace Mind
 		return _conceptDB->GetBaseConceptCount();
 	}
 
+	vector<shared_ptr<iConcept>> ConceptSet::GetAllBaseConcepts() const
+	{
+		auto baseConcepts = _conceptDB->GetAllBaseConcepts();
+		vector<shared_ptr<iConcept>> res;
+		for (auto concept : baseConcepts)
+		{
+			res.push_back(concept);
+		}
+
+		return res;
+	}
+
 	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS(const PartOfSpeech pos) const
 	{
 		vector<shared_ptr<Word>> res;
