@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "DataPrepareForHopeLove.h"
 
+#include "AnalyzeChineseDictionary.h"
+
 #include "../Mind/GrammarFeatureModel.h"
 #include "../Mind/GrammarLocalModel.h"
 #include "../Mind/GrammarPatternModel.h"
@@ -90,6 +92,12 @@ TEST(Preparation, RefreshConceptConnection)
 	conceptDB->Connect();
 	DataPrepareForHopeLove::RefreshConceptConnectionInConceptTable(conceptDB);
 	delete conceptDB;
+}
+
+TEST(Preparation, ExtractConnection)
+{
+	AnalyzeChineseDictionary acd;
+	acd.Analyze("E:\\Artificial Intelligence\\Document\\DataBase\\ÏÖ´úººÓï´Êµä.txt");
 }
 
 TEST(Preparation, TestPOS)

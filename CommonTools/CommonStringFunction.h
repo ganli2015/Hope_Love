@@ -8,6 +8,19 @@ namespace CommonTool
 	//°´ÕÕ<splitTag>·Ö¸î×Ö·û´®<str>
 	_COMMONTOOLSINOUT vector<string> SplitString(const string& str, const char splitTag);
 
+	//Check if <str> starts with <tag>.
+	_COMMONTOOLSINOUT bool StartWith(const string str, const char tag);
+
+	//Find the location of <tag>.
+	_COMMONTOOLSINOUT string::const_iterator FindChar(const string& str, const char tag);
+	//Find the location at the front of the begin of <tag>.
+	_COMMONTOOLSINOUT string::const_iterator FindString(const string& str, const string tag);
+	//Find the location at the front of the begin of <tag>.
+	//Search from <startPos>.
+	_COMMONTOOLSINOUT string::const_iterator FindString(const string& str,const string::const_iterator& startPos, const string tag);
+	//Check if <str> contains <target>.
+	_COMMONTOOLSINOUT bool HasString(const string& str, const string& target);
+
 	_COMMONTOOLSINOUT void TrimBeginEndBlank(string& str);
 
 	//Convert to string.

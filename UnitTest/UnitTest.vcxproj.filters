@@ -125,6 +125,9 @@
     <ClInclude Include="Test_MindElementCreator.h">
       <Filter>Mind</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyzeChineseDictionary.h">
+      <Filter>TestAndPreparation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -210,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="Test_MindElementCreator.cpp">
       <Filter>Mind</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyzeChineseDictionary.cpp">
+      <Filter>TestAndPreparation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

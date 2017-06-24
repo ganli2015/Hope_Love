@@ -27,7 +27,41 @@ namespace CommonTool
 		return res;
 	}
 
-	_COMMONTOOLSINOUT int StrToInt( const string str )
+	bool StartWith(const string str, const char tag)
+	{
+		return find(str.begin(), str.end(), tag) == str.begin();
+	}
+
+	string::const_iterator FindChar(const string& str, const char tag)
+	{
+		return find(str.begin(), str.end(), tag);
+	}
+
+	string::const_iterator FindString(const string& str, const string tag)
+	{
+		return FindString(str, str.cbegin(), tag);
+	}
+
+	string::const_iterator FindString(const string& str, const string::const_iterator& startPos, const string tag)
+	{
+		size_t off = distance(str.begin(), startPos);
+		auto index = str.find(tag,off);
+		if (index == string::npos)
+		{
+			return str.cend();
+		}
+		else
+		{
+			return str.begin() + index;
+		}
+	}
+
+	bool HasString(const string& str, const string& target)
+	{
+		return FindString(str, target) != str.cend();
+	}
+
+	_COMMONTOOLSINOUT int StrToInt(const string str)
 	{
 		stringstream ss(str);
 		int res;

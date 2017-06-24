@@ -218,6 +218,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnalyzeChineseDictionary.h" />
     <ClInclude Include="DataPrepareForHopeLove.h" />
     <ClInclude Include="FuncForTest.h" />
     <ClInclude Include="IntegrationTest.h" />
@@ -249,6 +250,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="UTInitializer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnalyzeChineseDictionary.cpp" />
     <ClCompile Include="DataPrepareForHopeLove.cpp" />
     <ClCompile Include="FuncForTest.cpp" />
     <ClCompile Include="IntegrationTest.cpp" />
