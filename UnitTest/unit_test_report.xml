@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-06-25T16:33:03" time="55.239" name="AllTests">
-  <testsuite name="Preparation" tests="1" failures="0" disabled="0" errors="0" time="55.236">
-    <testcase name="ExtractConnection" status="run" time="55.235" classname="Preparation" />
+<testsuites tests="4" failures="0" disabled="0" errors="0" timestamp="2017-06-26T00:26:51" time="2.524" name="AllTests">
+  <testsuite name="Test_Graph" tests="4" failures="0" disabled="0" errors="0" time="2.521">
+    <testcase name="PointToTwoVertices" status="run" time="2.516" classname="Test_Graph" />
+    <testcase name="PointToOneVerticesAndPointedByAnotherOne" status="run" time="0" classname="Test_Graph" />
+    <testcase name="HasCycleWithThreeVertices" status="run" time="0" classname="Test_Graph" />
+    <testcase name="HasNoCycle" status="run" time="0" classname="Test_Graph" />
   </testsuite>
 </testsuites>

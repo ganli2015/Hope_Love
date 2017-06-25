@@ -53,6 +53,12 @@
     <ClInclude Include="NumericalOptimization.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DirectedGraph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BoostGraph.h">
+      <Filter>imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -89,6 +95,9 @@
       <Filter>imp</Filter>
     </ClCompile>
     <ClCompile Include="NumericalOptimization.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectedGraph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

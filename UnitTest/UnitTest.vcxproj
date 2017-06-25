@@ -238,6 +238,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="Test_GrammarFeature.h" />
     <ClInclude Include="Test_Database.h" />
     <ClInclude Include="Test_GrammarModel.h" />
+    <ClInclude Include="Test_Graph.h" />
     <ClInclude Include="Test_iRelation.h" />
     <ClInclude Include="Test_LogicSystem.h" />
     <ClInclude Include="Test_Mathmatic.h" />
@@ -273,6 +274,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClCompile Include="Test_GrammarFeature.cpp" />
     <ClCompile Include="Test_Database.cpp" />
     <ClCompile Include="Test_GrammarModel.cpp" />
+    <ClCompile Include="Test_Graph.cpp" />
     <ClCompile Include="Test_iRelation.cpp" />
     <ClCompile Include="Test_LogicSystem.cpp" />
     <ClCompile Include="Test_Mathmatic.cpp" />
