@@ -35,10 +35,17 @@ public:
 
 class AnalyzeChineseDictionary
 {
+	//The count of base concepts for extracted word from the file.
 	const int BASE_COUNT = 1000;
+	//The count of base concepts for word with single character.
+	const int BASE_COUNT_SINGLE_CHAR = 500;
 
-	vector<shared_ptr<WordDefinition>> _baseWordDefs;
-	vector<shared_ptr<WordDefinition>> _nonBaseWordDefs;
+	map<string, shared_ptr<WordDefinition>> _allWordDefs;
+
+	//Base words in Both Chinese Dictionary and iCerebrum.
+	map<string,shared_ptr<WordDefinition>> _baseWordDefs;
+	//Non Base words in Both Chinese Dictionary and iCerebrum.
+	map<string, shared_ptr<WordDefinition>> _nonBaseWordDefs;
 
 public:
 	AnalyzeChineseDictionary();
@@ -52,7 +59,7 @@ private:
 
 	string FindMeaning(const string line, const string indexTag) const;
 
-	void DistinguishBaseConceptAndNonBase(const vector<shared_ptr<WordDefinition>>& wordDefs);
+	void DistinguishBaseConceptAndNonBase();
 
 	//////////////////////////////////////////////////////////////////////////
 	//Split meaning sentences into characters.
@@ -63,6 +70,11 @@ private:
 	long ComputeFreq(const string word, multimap<string, shared_ptr<WordDefinition>>& wordDefMap) const;
 
 	bool MeaningHasWord(const shared_ptr<WordDefinition>& wordDef, const string word) const;
+
+	//////////////////////////////////////////////////////////////////////////
+	//Remove example sentence.
+	//////////////////////////////////////////////////////////////////////////
+	string ExtractMeaning(const string& line) const;
 
 	void OutputBaseWords() const;
 };

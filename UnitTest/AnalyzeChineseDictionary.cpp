@@ -34,7 +34,6 @@ void AnalyzeChineseDictionary::Analyze(const string filePath)
 	string line = "";
 
 	//Extract word and meanings from the file.
-	vector<shared_ptr<WordDefinition>> words;
 	while (getline(in,line))
 	{
 		if(line=="") continue;
@@ -42,11 +41,11 @@ void AnalyzeChineseDictionary::Analyze(const string filePath)
 		shared_ptr<WordDefinition> wordDef;
 		if (ExtractDefinition(line, wordDef))
 		{
-			words.push_back(wordDef);
+			_allWordDefs[wordDef->GetWord()] = (wordDef);
 		}
 	}
 
-	DistinguishBaseConceptAndNonBase(words);
+	DistinguishBaseConceptAndNonBase();
 
 	OutputBaseWords();
 }
@@ -72,7 +71,7 @@ bool AnalyzeChineseDictionary::ExtractDefinition(const string line, shared_ptr<W
 	{
 		//There is only one meaning.
 		string meaning(rightBra + rbra.length(), line.end());
-		def->AddMeaning(meaning);
+		def->AddMeaning(ExtractMeaning(meaning));
 	}
 	else
 	{
@@ -94,10 +93,11 @@ std::string AnalyzeChineseDictionary::FindMeaning(const string line, const strin
 	auto indexLoc = CommonTool::FindString(line, indexTag);
 	auto nextBraLoc= CommonTool::FindString(line, indexLoc + indexTag.length(),"ги");
 
-	return string(indexLoc + indexTag.length(), nextBraLoc);
+	string wholeMeaning= string(indexLoc + indexTag.length(), nextBraLoc);
+	return ExtractMeaning(wholeMeaning);
 }
 
-void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<shared_ptr<WordDefinition>>& wordDefs)
+void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase()
 {
 	iCerebrum *brain = iCerebrum::Instance();
 	auto allBaseConcepts = brain->GetAllBaseConcepts();
@@ -105,19 +105,19 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<sha
 	//Generate a map with single character string as key and word definition as value.
 	//The map makes convenience for querying concept frequency.
 	multimap<string, shared_ptr<WordDefinition>> char_wordDefs;
-	for (auto wordDef : wordDefs)
+	for (auto wordDef : _allWordDefs)
 	{
 		try
 		{
-			auto chars = GenerateCharacter(wordDef);
+			auto chars = GenerateCharacter(wordDef.second);
 			for (auto ch : chars)
 			{
-				char_wordDefs.insert(make_pair(ch, wordDef));
+				char_wordDefs.insert(make_pair(ch, wordDef.second));
 			}
 		}
 		catch (const std::exception& ex)
 		{
-			cout << ex.what() << endl;
+			continue;
 		}
 	}
 
@@ -130,7 +130,6 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<sha
 		string word = concept->GetWord()->GetString();
 		if (addedWord.find(word) != addedWord.end())
 		{
-			cout << "Duplicated word: " + word << endl;
 			continue;
 		}
 
@@ -149,27 +148,51 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<sha
 		return a.second > b.second;
 	}
 	);
-	
-	map<string, shared_ptr<WordDefinition>> word_wordDef;
-	for (auto wordDef : wordDefs)
-	{
-		word_wordDef[wordDef->GetWord()] = wordDef;
-	}
 
-	vector<shared_ptr<WordDefinition>> sortedByFreqWordDefs;
+	//Sort word definitions by frequency according to <word_freq>.
+	vector<pair<string,shared_ptr<WordDefinition>>> sortedByFreqWordDefs;
 	for (auto word_freq_pair :word_freq)//<word_freq> is sorted by frequency.
 	{
 		string word = word_freq_pair.first;
-		if (word_wordDef.count(word))
+		if (_allWordDefs.count(word))
 		{
-			auto wordDef = word_wordDef[word];
+			auto wordDef = _allWordDefs[word];
 			wordDef->Freq(word_freq_pair.second);
-			sortedByFreqWordDefs.push_back(wordDef);
+			sortedByFreqWordDefs.push_back(make_pair(word,wordDef));
 		}
 	}
 
-	_baseWordDefs = vector<shared_ptr<WordDefinition>>(sortedByFreqWordDefs.begin(), sortedByFreqWordDefs.begin() + BASE_COUNT);
-	_nonBaseWordDefs = vector<shared_ptr<WordDefinition>>(sortedByFreqWordDefs.begin()+ BASE_COUNT, sortedByFreqWordDefs.end());
+	_baseWordDefs.insert(sortedByFreqWordDefs.begin(), sortedByFreqWordDefs.begin() + BASE_COUNT);
+	_nonBaseWordDefs.insert(sortedByFreqWordDefs.begin()+ BASE_COUNT, sortedByFreqWordDefs.end());
+
+
+	//Count frequency of word with single character.
+	vector<pair<string, long>> singleChar_freq;
+	for (auto concept : allBaseConcepts)
+	{
+		auto word = concept->GetWord();
+		if(word->Type()==DataCollection::Punctuation) continue;
+		if (word->NumOfChara() == 1)
+		{
+			long freq = ComputeFreq(word->GetString(), char_wordDefs);
+			singleChar_freq.push_back(make_pair(word->GetString(),freq));
+		}
+	}
+
+	//Sort <singleChar_freq>.
+	sort(singleChar_freq.begin(), singleChar_freq.end(), [=](std::pair<string, long>& a, std::pair<string, long>& b)
+	{
+		return a.second > b.second;
+	}
+	);
+
+	//Append to <_baseWordDefs>.
+	for (int i=0;i<BASE_COUNT_SINGLE_CHAR;++i)
+	{
+		shared_ptr<WordDefinition> wordDef = make_shared<WordDefinition>(singleChar_freq[i].first);
+		wordDef->Freq(singleChar_freq[i].second);
+		_baseWordDefs[singleChar_freq[i].first] = wordDef;
+	}
 }
 
 set<string> AnalyzeChineseDictionary::GenerateCharacter(const shared_ptr<WordDefinition> line)
@@ -227,13 +250,19 @@ bool AnalyzeChineseDictionary::MeaningHasWord(const shared_ptr<WordDefinition>& 
 	return false;
 }
 
+std::string AnalyzeChineseDictionary::ExtractMeaning(const string& line) const
+{
+	auto beforeColon = CommonTool::FindString(line, "г║");
+	return string(line.begin(), beforeColon);
+}
+
 void AnalyzeChineseDictionary::OutputBaseWords() const
 {
 	ofstream out("base_words.txt");
 
 	for (auto baseDef : _baseWordDefs)
 	{
-		out << baseDef->GetWord() << "  " << baseDef->Freq() << endl;
+		out << baseDef.first << "  " << baseDef.second->Freq() << endl;
 	}
 
 	out.flush();
