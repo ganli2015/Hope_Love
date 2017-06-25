@@ -6,6 +6,8 @@
 #include "../CommonTools/Common.h"
 
 #include "../DataCollection/Word.h"
+#include "../DataCollection/Character.h"
+#include "../DataCollection/LanguageFunc.h"
 
 #include "../Mind/Cerebrum.h"
 
@@ -13,6 +15,7 @@
 
 using namespace Mind;
 using namespace CommonTool;
+using namespace DataCollection;
 
 AnalyzeChineseDictionary::AnalyzeChineseDictionary()
 {
@@ -31,12 +34,12 @@ void AnalyzeChineseDictionary::Analyze(const string filePath)
 	string line = "";
 
 	//Extract word and meanings from the file.
-	vector<WordDefinition> words;
+	vector<shared_ptr<WordDefinition>> words;
 	while (getline(in,line))
 	{
 		if(line=="") continue;
 
-		WordDefinition wordDef;
+		shared_ptr<WordDefinition> wordDef;
 		if (ExtractDefinition(line, wordDef))
 		{
 			words.push_back(wordDef);
@@ -48,7 +51,7 @@ void AnalyzeChineseDictionary::Analyze(const string filePath)
 	OutputBaseWords();
 }
 
-bool AnalyzeChineseDictionary::ExtractDefinition(const string line,WordDefinition& def) const
+bool AnalyzeChineseDictionary::ExtractDefinition(const string line, shared_ptr<WordDefinition>& def) const
 {
 	if (CommonTool::FindChar(line, '*')!=line.cend()) return false;
 
@@ -59,7 +62,7 @@ bool AnalyzeChineseDictionary::ExtractDefinition(const string line,WordDefinitio
 	auto rightBra = CommonTool::FindString(line, rbra);
 	string word = string(leftBra + lbra.length(), rightBra);
 
-	def = WordDefinition(word);
+	def = make_shared<WordDefinition>(word);
 
 	//Extract meanings.
 	string indexOne = "£¨£±£©";
@@ -69,17 +72,17 @@ bool AnalyzeChineseDictionary::ExtractDefinition(const string line,WordDefinitio
 	{
 		//There is only one meaning.
 		string meaning(rightBra + rbra.length(), line.end());
-		def.AddMeaning(meaning);
+		def->AddMeaning(meaning);
 	}
 	else
 	{
 		//Extract first Three meanings.
 		if(CommonTool::HasString(line, indexOne))
-			def.AddMeaning(FindMeaning(line, indexOne));
+			def->AddMeaning(FindMeaning(line, indexOne));
 		if (CommonTool::HasString(line, indexTwo))
-			def.AddMeaning(FindMeaning(line, indexTwo));
+			def->AddMeaning(FindMeaning(line, indexTwo));
 		if (CommonTool::HasString(line, indexThree))
-			def.AddMeaning(FindMeaning(line, indexThree));
+			def->AddMeaning(FindMeaning(line, indexThree));
 	}
 
 	return true;
@@ -94,40 +97,49 @@ std::string AnalyzeChineseDictionary::FindMeaning(const string line, const strin
 	return string(indexLoc + indexTag.length(), nextBraLoc);
 }
 
-void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<WordDefinition>& wordDefs)
+void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<shared_ptr<WordDefinition>>& wordDefs)
 {
 	iCerebrum *brain = iCerebrum::Instance();
 	auto allBaseConcepts = brain->GetAllBaseConcepts();
 
-	//Find frequency of words in iCerebrum.
-	vector<pair<string, long>> word_freq;
-	set<string> addedWords;
-	for (auto concept : allBaseConcepts)
+	//Generate a map with single character string as key and word definition as value.
+	//The map makes convenience for querying concept frequency.
+	multimap<string, shared_ptr<WordDefinition>> char_wordDefs;
+	for (auto wordDef : wordDefs)
 	{
-		long freq = 0;
-		string word = concept->GetWord()->GetString();
-		for (auto wordDef : wordDefs)
+		try
 		{
-			//Find if the word exists in Meaning of the word.
-			if (MeaningHasWord(wordDef, concept->GetWord()))
+			auto chars = GenerateCharacter(wordDef);
+			for (auto ch : chars)
 			{
-				freq += 1;
-				wordDef.AddConcept(concept);
-				addedWords.insert(word);
+				char_wordDefs.insert(make_pair(ch, wordDef));
 			}
 		}
+		catch (const std::exception& ex)
+		{
+			cout << ex.what() << endl;
+		}
+	}
 
-		//Add frequency to map.
+
+	//Find frequency of words in iCerebrum.
+	vector<pair<string, long>> word_freq;
+	set<string> addedWord;
+	for (auto concept : allBaseConcepts)
+	{
+		string word = concept->GetWord()->GetString();
+		if (addedWord.find(word) != addedWord.end())
+		{
+			cout << "Duplicated word: " + word << endl;
+			continue;
+		}
+
+		long freq = ComputeFreq(word,char_wordDefs);
+
 		if (freq != 0)
 		{
-			if(addedWords.find(word)==addedWords.end())
-			{
-				word_freq.push_back(make_pair(word,1));
-			}
-			else
-			{
-				word_freq.push_back(make_pair(word, freq));
-			}
+			word_freq.push_back(make_pair(word, freq));
+			addedWord.insert(word);
 		}
 	}
 
@@ -138,31 +150,75 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase(const vector<Wor
 	}
 	);
 	
-	map<string, WordDefinition> word_wordDef;
+	map<string, shared_ptr<WordDefinition>> word_wordDef;
 	for (auto wordDef : wordDefs)
 	{
-		word_wordDef[wordDef.GetWord()] = wordDef;
+		word_wordDef[wordDef->GetWord()] = wordDef;
 	}
 
-	vector<WordDefinition> sortedByFreqWordDefs;
-	for (auto word_freq_pair :word_freq)
+	vector<shared_ptr<WordDefinition>> sortedByFreqWordDefs;
+	for (auto word_freq_pair :word_freq)//<word_freq> is sorted by frequency.
 	{
 		string word = word_freq_pair.first;
 		if (word_wordDef.count(word))
 		{
-			sortedByFreqWordDefs.push_back(word_wordDef[word]);
+			auto wordDef = word_wordDef[word];
+			wordDef->Freq(word_freq_pair.second);
+			sortedByFreqWordDefs.push_back(wordDef);
 		}
 	}
 
-	_baseWordDefs = vector<WordDefinition>(sortedByFreqWordDefs.begin(), sortedByFreqWordDefs.begin() + BASE_COUNT);
-	_baseWordDefs = vector<WordDefinition>(sortedByFreqWordDefs.begin()+ BASE_COUNT, sortedByFreqWordDefs.end());
+	_baseWordDefs = vector<shared_ptr<WordDefinition>>(sortedByFreqWordDefs.begin(), sortedByFreqWordDefs.begin() + BASE_COUNT);
+	_nonBaseWordDefs = vector<shared_ptr<WordDefinition>>(sortedByFreqWordDefs.begin()+ BASE_COUNT, sortedByFreqWordDefs.end());
 }
 
-bool AnalyzeChineseDictionary::MeaningHasWord(const WordDefinition& wordDef, const shared_ptr<DataCollection::Word> word) const
+set<string> AnalyzeChineseDictionary::GenerateCharacter(const shared_ptr<WordDefinition> line)
 {
-	for (auto meaning : wordDef.GetMeanings())
+	set<string> res;
+	for (auto meaning : line->GetMeanings())
 	{
-		if (CommonTool::HasString(meaning, word->GetString()))
+		auto chars = LanguageFunc::ConvertStringToCharacter(meaning);
+		for (auto ch : chars)
+		{
+			res.insert(ch->GetString());
+		}
+	}
+
+	return res;
+}
+
+long AnalyzeChineseDictionary::ComputeFreq(const string word, multimap<string, shared_ptr<WordDefinition>>& wordDefMap) const
+{
+	auto chars = LanguageFunc::ConvertStringToCharacter(word);
+	//WordDefinition that contains one of <chars>.
+	set<shared_ptr<WordDefinition>> relatedWordDefs;
+	for (auto ch : chars)
+	{
+		if (wordDefMap.find(ch->GetString()) == wordDefMap.end()) continue;
+
+		//Find all word definition containing <ch>.
+		auto allDefs = FindAll(ch->GetString(), wordDefMap);
+
+		relatedWordDefs.insert(allDefs.begin(), allDefs.end());
+	}
+
+	long freq = 0;
+	for (auto wordDef : relatedWordDefs)
+	{
+		if (MeaningHasWord(wordDef, word))
+		{
+			freq++;
+		}
+	}
+
+	return freq;
+}
+
+bool AnalyzeChineseDictionary::MeaningHasWord(const shared_ptr<WordDefinition>& wordDef, const string word) const
+{
+	for (auto meaning : wordDef->GetMeanings())
+	{
+		if (CommonTool::HasString(meaning, word))
 		{
 			return true;
 		}
@@ -177,7 +233,7 @@ void AnalyzeChineseDictionary::OutputBaseWords() const
 
 	for (auto baseDef : _baseWordDefs)
 	{
-		out << baseDef.GetWord() << endl;
+		out << baseDef->GetWord() << "  " << baseDef->Freq() << endl;
 	}
 
 	out.flush();

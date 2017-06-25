@@ -16,8 +16,7 @@ class WordDefinition
 {
 	string _word;
 	vector<string> _meanings;
-
-	vector<shared_ptr<Mind::iConcept>> _concepts;
+	long _freq = 0;
 
 public:
 	WordDefinition() {};
@@ -27,18 +26,19 @@ public:
 	void AddMeaning(const string meaning) { _meanings.push_back(meaning); }
 
 	vector<string> GetMeanings() const { return _meanings; }
-
-	void AddConcept(const shared_ptr<Mind::iConcept> concept) { _concepts.push_back(concept); }
 	
 	string GetWord() const { return _word; };
+
+	long Freq() const { return _freq; }
+	void Freq(long val) { _freq = val; }
 };
 
 class AnalyzeChineseDictionary
 {
 	const int BASE_COUNT = 1000;
 
-	vector<WordDefinition> _baseWordDefs;
-	vector<WordDefinition> _nonBaseWordDefs;
+	vector<shared_ptr<WordDefinition>> _baseWordDefs;
+	vector<shared_ptr<WordDefinition>> _nonBaseWordDefs;
 
 public:
 	AnalyzeChineseDictionary();
@@ -48,13 +48,21 @@ public:
 
 private:
 
-	bool ExtractDefinition(const string line, WordDefinition& def) const;
+	bool ExtractDefinition(const string line, shared_ptr<WordDefinition>& def) const;
 
 	string FindMeaning(const string line, const string indexTag) const;
 
-	void DistinguishBaseConceptAndNonBase(const vector<WordDefinition>& wordDefs);
+	void DistinguishBaseConceptAndNonBase(const vector<shared_ptr<WordDefinition>>& wordDefs);
 
-	bool MeaningHasWord(const WordDefinition& wordDef, const shared_ptr<DataCollection::Word> word) const;
+	//////////////////////////////////////////////////////////////////////////
+	//Split meaning sentences into characters.
+	//No duplicated!
+	//////////////////////////////////////////////////////////////////////////
+	set<string> GenerateCharacter(const shared_ptr<WordDefinition> line);
+
+	long ComputeFreq(const string word, multimap<string, shared_ptr<WordDefinition>>& wordDefMap) const;
+
+	bool MeaningHasWord(const shared_ptr<WordDefinition>& wordDef, const string word) const;
 
 	void OutputBaseWords() const;
 };
