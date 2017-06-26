@@ -154,7 +154,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoostGraph.h" />
+    <ClInclude Include="BoostGraphInternal.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="FindSequence.h" />
     <ClInclude Include="iMatrix.h" />

@@ -63,6 +63,30 @@ namespace Math
 		ASSERT_TRUE(graph.HasCycle());
 	}
 
+	TEST(Test_Graph, HasCycleAroundAVertex)
+	{
+		//0->1,1->2,2->0,2->3
+		//Cycle: 0->1->2->0.
+
+		DirectedGraph graph(3);
+		auto v0 = make_shared<SimpleVertex>(0);
+		auto v1 = make_shared<SimpleVertex>(1);
+		auto v2 = make_shared<SimpleVertex>(2);
+		auto v3 = make_shared<SimpleVertex>(3);
+
+		graph.AddEdge(v0, v1);
+		graph.AddEdge(v1, v2);
+		graph.AddEdge(v2, v0);
+
+		graph.AddEdge(v2, v3);
+
+		ASSERT_TRUE(graph.HasCycle(v0));
+		ASSERT_TRUE(graph.HasCycle(v1));
+		ASSERT_TRUE(graph.HasCycle(v2));
+
+		ASSERT_FALSE(graph.HasCycle(v3));
+	}
+
 	TEST(Test_Graph, HasNoCycle)
 	{
 		DirectedGraph graph(3);
@@ -76,5 +100,6 @@ namespace Math
 
 		ASSERT_FALSE(graph.HasCycle());
 	}
+
 }
 

@@ -56,7 +56,7 @@
     <ClInclude Include="DirectedGraph.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BoostGraph.h">
+    <ClInclude Include="BoostGraphInternal.h">
       <Filter>imp</Filter>
     </ClInclude>
   </ItemGroup>

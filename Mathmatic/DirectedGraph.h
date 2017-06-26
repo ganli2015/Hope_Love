@@ -43,13 +43,25 @@ namespace Math
 		{
 			shared_ptr<IVertex> vert;
 		};
+		struct EdgeProperty
+		{
+			long from;
+			long to;
+
+			EdgeProperty(){}
+			EdgeProperty(long from, long to) :from(from), to(to)
+			{
+
+			};
+		};
+
 
 		//Use boost for temp.
 		typedef boost::adjacency_list<boost::vecS,
 			boost::vecS,
 			boost::directedS,
 			VertexProperty,
-			boost::no_property,
+			EdgeProperty,
 			boost::no_property,
 			boost::listS> GraphImp;
 
@@ -74,9 +86,27 @@ namespace Math
 
 		bool HasCycle() const;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Check if <vert> is in a cycle.
+		//////////////////////////////////////////////////////////////////////////
+		bool HasCycle(const shared_ptr<IVertex> vert) const;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Generate sub graph containing <vert>.
+		//The all vertices in the returned graph is connected to <vert>.
+		//////////////////////////////////////////////////////////////////////////
+		shared_ptr<DirectedGraph> GenerateSubGraph(const shared_ptr<IVertex> vert) const;
+
 	private:
 
 		VertexProperty& GetVertextProperty(const long id) const;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Get all edges connecting directly or indirectly to vertex with <id>.
+		//////////////////////////////////////////////////////////////////////////
+		multimap<long, long> GetAllConnectedEdges(const long id) const;
+
+
 	};
 
 }
