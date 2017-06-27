@@ -63,6 +63,12 @@ namespace Math
 
 	bool DirectedGraph::HasCycle(const shared_ptr<IVertex> vert) const
 	{
+		typename boost::graph_traits<GraphImp>::adjacency_iterator ai;
+		typename boost::graph_traits<GraphImp>::adjacency_iterator ai_end;
+		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(vert->GetID(), *_graph);
+			ai != ai_end; ++ai)
+			std::cout << (*_graph)[*ai].vert->GetID() << " ";
+
 		auto color = internal::GetDefaultColorMap<GraphImp>(*_graph);
 		
 		//Search from vert.
@@ -73,7 +79,7 @@ namespace Math
 		return has_cycle;
 	}
 
-	multimap<long, long> DirectedGraph::GetAllConnectedEdges(const long id) const
+	DirectedGraph::EdgeSet DirectedGraph::GetAllConnectedEdges(const long id) const
 	{
 		auto color = internal::GetDefaultColorMap<GraphImp>(*_graph);
 

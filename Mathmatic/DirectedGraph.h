@@ -55,6 +55,12 @@ namespace Math
 			};
 		};
 
+		enum Color
+		{
+			Black,
+			White,
+			Gray
+		};
 
 		//Use boost for temp.
 		typedef boost::adjacency_list<boost::vecS,
@@ -64,6 +70,10 @@ namespace Math
 			EdgeProperty,
 			boost::no_property,
 			boost::listS> GraphImp;
+
+		typedef multimap<long, long> EdgeSet;
+
+		typedef map<long, Color> ColorMap;
 
 	private:
 
@@ -96,7 +106,6 @@ namespace Math
 		//The all vertices in the returned graph is connected to <vert>.
 		//////////////////////////////////////////////////////////////////////////
 		shared_ptr<DirectedGraph> GenerateSubGraph(const shared_ptr<IVertex> vert) const;
-
 	private:
 
 		VertexProperty& GetVertextProperty(const long id) const;
@@ -104,8 +113,7 @@ namespace Math
 		//////////////////////////////////////////////////////////////////////////
 		//Get all edges connecting directly or indirectly to vertex with <id>.
 		//////////////////////////////////////////////////////////////////////////
-		multimap<long, long> GetAllConnectedEdges(const long id) const;
-
+		DirectedGraph::EdgeSet GetAllConnectedEdges(const long id) const;
 
 	};
 

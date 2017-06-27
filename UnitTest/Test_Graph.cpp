@@ -44,50 +44,25 @@ namespace Math
 		ASSERT_EQ(1, adjVert[0]->GetID());
 	}
 
-	TEST(Test_Graph, HasCycleWithThreeVertices)
+	TEST_F(Test_Graph, HasCycleWithThreeVertices)
 	{
 		//0,,1,2 is a cycle and 3 is not in the cycle.
-
-		DirectedGraph graph(3);
-		auto v0 = make_shared<SimpleVertex>(0);
-		auto v1 = make_shared<SimpleVertex>(1);
-		auto v2 = make_shared<SimpleVertex>(2);
-		auto v3 = make_shared<SimpleVertex>(3);
-
-		graph.AddEdge(v0, v1);
-		graph.AddEdge(v1, v2);
-		graph.AddEdge(v2, v0);
-
-		graph.AddEdge(v2, v3);
-
-		ASSERT_TRUE(graph.HasCycle());
+		ASSERT_TRUE(_graphWithCycle.HasCycle());
 	}
 
-	TEST(Test_Graph, HasCycleAroundAVertex)
+	TEST_F(Test_Graph, HasCycleAroundAVertex)
 	{
-		//0->1,1->2,2->0,2->3
 		//Cycle: 0->1->2->0.
 
-		DirectedGraph graph(3);
-		auto v0 = make_shared<SimpleVertex>(0);
-		auto v1 = make_shared<SimpleVertex>(1);
-		auto v2 = make_shared<SimpleVertex>(2);
-		auto v3 = make_shared<SimpleVertex>(3);
+		ASSERT_TRUE(_graphWithCycle.HasCycle(_v0));
+		ASSERT_TRUE(_graphWithCycle.HasCycle(_v1));
+		ASSERT_TRUE(_graphWithCycle.HasCycle(_v2));
 
-		graph.AddEdge(v0, v1);
-		graph.AddEdge(v1, v2);
-		graph.AddEdge(v2, v0);
-
-		graph.AddEdge(v2, v3);
-
-		ASSERT_TRUE(graph.HasCycle(v0));
-		ASSERT_TRUE(graph.HasCycle(v1));
-		ASSERT_TRUE(graph.HasCycle(v2));
-
-		ASSERT_FALSE(graph.HasCycle(v3));
+		//v3 has no connection to v0,v1,v2.
+		ASSERT_FALSE(_graphWithCycle.HasCycle(_v3));
 	}
 
-	TEST(Test_Graph, HasNoCycle)
+	TEST_F(Test_Graph, HasNoCycle)
 	{
 		DirectedGraph graph(3);
 		auto v0 = make_shared<SimpleVertex>(0);
@@ -100,6 +75,7 @@ namespace Math
 
 		ASSERT_FALSE(graph.HasCycle());
 	}
+
 
 }
 
