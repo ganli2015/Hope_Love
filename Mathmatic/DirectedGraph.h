@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include "GraphSearchEngine.h"
 
 #include "../CommonTools/NonCopyable.h"
 
@@ -35,8 +36,9 @@ namespace Math
 		virtual long GetID() const = 0;
 	};
 
-
-	class _MATHMATICINOUT DirectedGraph : public CommonTool::NonCopyable
+	class _MATHMATICINOUT DirectedGraph : 
+		public IGraphQuerier,
+		public CommonTool::NonCopyable
 	{
 	private:
 		struct VertexProperty
@@ -55,13 +57,6 @@ namespace Math
 			};
 		};
 
-		enum Color
-		{
-			Black,
-			White,
-			Gray
-		};
-
 		//Use boost for temp.
 		typedef boost::adjacency_list<boost::vecS,
 			boost::vecS,
@@ -72,8 +67,6 @@ namespace Math
 			boost::listS> GraphImp;
 
 		typedef multimap<long, long> EdgeSet;
-
-		typedef map<long, Color> ColorMap;
 
 	private:
 
@@ -93,6 +86,8 @@ namespace Math
 		//Get "to" vertices that vertex with <id> points to.
 		//////////////////////////////////////////////////////////////////////////
 		vector<shared_ptr<IVertex>> GetAdjacentVertices(const long id) const;
+
+		vector<shared_ptr<IVertex>> GetAllVertices() const;
 
 		bool HasCycle() const;
 
@@ -115,6 +110,11 @@ namespace Math
 		//////////////////////////////////////////////////////////////////////////
 		DirectedGraph::EdgeSet GetAllConnectedEdges(const long id) const;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Get all vertices IDs.
+		//////////////////////////////////////////////////////////////////////////
+		virtual vector<long> QueryVertices() const;
+		virtual vector<long> QueryAdjacentVertices(const long id) const;
 	};
 
 }

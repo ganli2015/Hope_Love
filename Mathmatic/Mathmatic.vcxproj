@@ -157,6 +157,7 @@
     <ClInclude Include="BoostGraphInternal.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="FindSequence.h" />
+    <ClInclude Include="GraphSearchEngine.h" />
     <ClInclude Include="iMatrix.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="MathTool.h" />
@@ -173,6 +174,7 @@
   <ItemGroup>
     <ClCompile Include="FindSequence.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
+    <ClCompile Include="GraphSearchEngine.cpp" />
     <ClCompile Include="iMatrix.cpp" />
     <ClCompile Include="MathTool.cpp" />
     <ClCompile Include="MatrixEigen.cpp" />

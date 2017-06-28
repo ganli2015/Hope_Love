@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "Test_Graph.h"
 
+#include <gmock/gmock.h>
+
 #include "../Mathmatic/DirectedGraph.h"
+
+using namespace testing;
 
 namespace Math
 {
-	TEST(Test_Graph, PointToTwoVertices)
+	TEST_F(Test_Graph, PointToTwoVertices)
 	{
 		//One source vertex, pointing to two vertices.
 
@@ -25,7 +29,7 @@ namespace Math
 		ASSERT_EQ(2, adjVert[1]->GetID());
 	}
 
-	TEST(Test_Graph, PointToOneVerticesAndPointedByAnotherOne)
+	TEST_F(Test_Graph, PointToOneVerticesAndPointedByAnotherOne)
 	{
 		//One center vertex, pointing to one vertex and pointed by another one.
 
@@ -76,6 +80,40 @@ namespace Math
 		ASSERT_FALSE(graph.HasCycle());
 	}
 
+	TEST_F(Test_Graph, GenerateSubGraphOfDisconnectedGraph)
+	{
+		//Generate sub graph containing V4.
+		//4->5,5->6,6->4.
 
+		auto subGraphV4 = _diconnectedGraph.GenerateSubGraph(_v4);
+		auto subVertV4 = subGraphV4->GetAllVertices();
+		ASSERT_EQ(3, subVertV4.size());
+
+		//Check each element.
+		vector<long> subVertIDsV4;
+		for (auto sub : subVertV4)
+		{
+			subVertIDsV4.push_back(sub->GetID());
+		}
+		ASSERT_THAT(subVertIDsV4, ElementsAre(4, 5, 6));
+	}
+
+	TEST_F(Test_Graph, GenerateSubGraphOfDisconnectedGraph2)
+	{
+		//Generate sub graph containing V7.
+		//7->8.
+
+		auto subGraphV7 = _diconnectedGraph.GenerateSubGraph(_v7);
+		auto subVertV7 = subGraphV7->GetAllVertices();
+		ASSERT_EQ(2, subVertV7.size());
+
+		//Check each element.
+		vector<long> subVertIDsV7;
+		for (auto sub : subVertV7)
+		{
+			subVertIDsV7.push_back(sub->GetID());
+		}
+		ASSERT_THAT(subVertIDsV7, ElementsAre(7,8));
+	}
 }
 

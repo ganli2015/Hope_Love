@@ -31,17 +31,11 @@ namespace Math
 
 	vector<shared_ptr<IVertex>> DirectedGraph::GetAdjacentVertices(const long id) const
 	{
-		typename boost::graph_traits<GraphImp>::adjacency_iterator ai;
-		typename boost::graph_traits<GraphImp>::adjacency_iterator ai_end;
-		//Get index map.
-		auto index = boost::get(boost::vertex_index, *_graph);
-
+		auto adjIDs = QueryAdjacentVertices(id);
 		vector<shared_ptr<IVertex>> res;
-		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(id, *_graph);
-			ai != ai_end; ++ai)
+		for (auto id : adjIDs)
 		{
-			auto adjID = index[*ai];
-			res.push_back(GetVertextProperty(adjID).vert);
+			res.push_back(GetVertextProperty(id).vert);
 		}
 
 		return res;
@@ -81,12 +75,10 @@ namespace Math
 
 	DirectedGraph::EdgeSet DirectedGraph::GetAllConnectedEdges(const long id) const
 	{
-		auto color = internal::GetDefaultColorMap<GraphImp>(*_graph);
+		GraphSearchEngine searchEngine;
+		auto result = searchEngine.BFS(this, id);
 
-		internal::edge_collector edgeCollector;
-		boost::depth_first_search(*_graph, edgeCollector, color, id);
-
-		return edgeCollector.GetEdges();
+		return result.GetEdges();
 	}
 
 	shared_ptr<DirectedGraph> DirectedGraph::GenerateSubGraph(const shared_ptr<IVertex> vert) const
@@ -101,6 +93,57 @@ namespace Math
 			auto toVert = GetVertextProperty(edge.second).vert;
 
 			res->AddEdge(fromVert, toVert);
+		}
+
+		return res;
+	}
+
+	vector<long> DirectedGraph::QueryVertices() const
+	{
+		vector<long> res;
+		res.reserve(boost::num_vertices(*_graph));
+
+		typedef boost::graph_traits<GraphImp>::vertex_descriptor Vertex;
+
+		// get the property map for vertex indices
+		typedef boost::property_map<GraphImp, boost::vertex_index_t>::type IndexMap;
+		IndexMap index = boost::get(boost::vertex_index, *_graph);
+
+		typedef boost::graph_traits<GraphImp>::vertex_iterator vertex_iter;
+		std::pair<vertex_iter, vertex_iter> vp;
+		for (vp = boost::vertices(*_graph); vp.first != vp.second; ++vp.first) {
+			Vertex v = *vp.first;
+			res.push_back(v);
+		}
+
+		return res;
+	}
+
+	vector<long> DirectedGraph::QueryAdjacentVertices(const long id) const
+	{
+		typename boost::graph_traits<GraphImp>::adjacency_iterator ai;
+		typename boost::graph_traits<GraphImp>::adjacency_iterator ai_end;
+		//Get index map.
+		auto index = boost::get(boost::vertex_index, *_graph);
+
+		vector<long> res;
+		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(id, *_graph);
+			ai != ai_end; ++ai)
+		{
+			auto adjID = index[*ai];
+			res.push_back(adjID);
+		}
+
+		return res;
+	}
+
+	vector<shared_ptr<IVertex>> DirectedGraph::GetAllVertices() const
+	{
+		auto allIDs = QueryVertices();
+		vector<shared_ptr<IVertex>> res;
+		for (auto id : allIDs)
+		{
+			res.push_back(GetVertextProperty(id).vert);
 		}
 
 		return res;
