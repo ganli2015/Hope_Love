@@ -61,8 +61,11 @@ namespace Math
 		ASSERT_TRUE(_graphWithCycle.HasCycle(_v0));
 		ASSERT_TRUE(_graphWithCycle.HasCycle(_v1));
 		ASSERT_TRUE(_graphWithCycle.HasCycle(_v2));
+	}
 
-		//v3 has no connection to v0,v1,v2.
+	TEST_F(Test_Graph, GraphHasCycleButV3IsNotInCycle)
+	{
+		//v3 has not in the cycle(v0,v1,v2).
 		ASSERT_FALSE(_graphWithCycle.HasCycle(_v3));
 	}
 

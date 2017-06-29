@@ -1,1 +1,1 @@
-Test_Graph.GenerateSubGraphOfDisconnectedGraph
+Test_Graph.*

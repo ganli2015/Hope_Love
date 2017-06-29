@@ -23,7 +23,7 @@ namespace Math
 	class Test_Graph : public testing::Test
 	{
 	protected:
-		//0->1,1->2,2->0,2->3
+		//0->1,1->2,2->0,3->2
 		static DirectedGraph _graphWithCycle;
 		static shared_ptr<SimpleVertex> _v0;
 		static shared_ptr<SimpleVertex> _v1;
@@ -50,7 +50,7 @@ namespace Math
 			_graphWithCycle.AddEdge(_v0, _v1);
 			_graphWithCycle.AddEdge(_v1, _v2);
 			_graphWithCycle.AddEdge(_v2, _v0);
-			_graphWithCycle.AddEdge(_v2, _v3);
+			_graphWithCycle.AddEdge(_v3, _v2);
 
 			//Prepare disconnected graph.
 			_diconnectedGraph.AddEdge(_v4, _v5);
@@ -71,7 +71,7 @@ namespace Math
 	shared_ptr<SimpleVertex> Test_Graph::_v1 = make_shared<SimpleVertex>();
 	shared_ptr<SimpleVertex> Test_Graph::_v2 = make_shared<SimpleVertex>();
 	shared_ptr<SimpleVertex> Test_Graph::_v3 = make_shared<SimpleVertex>();
-	shared_ptr<SimpleVertex> Test_Graph::_v4 = make_shared<SimpleVertex>(700);
+	shared_ptr<SimpleVertex> Test_Graph::_v4 = make_shared<SimpleVertex>();
 	shared_ptr<SimpleVertex> Test_Graph::_v5 = make_shared<SimpleVertex>();
 	shared_ptr<SimpleVertex> Test_Graph::_v6 = make_shared<SimpleVertex>();
 	shared_ptr<SimpleVertex> Test_Graph::_v7 = make_shared<SimpleVertex>();

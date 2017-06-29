@@ -7,7 +7,7 @@
 namespace Math
 {
 
-	DirectedGraph::DirectedGraph(const size_t vertNum)
+	DirectedGraph::DirectedGraph(const size_t vertNum):_maxInnerID(0)
 	{
 		_graph = new GraphImp(vertNum);
 	}
@@ -23,7 +23,11 @@ namespace Math
 	{
 		auto fromID = from->GetID(), toID = to->GetID();
 		assert(fromID != toID);
-		boost::add_edge(fromID, toID, EdgeProperty(fromID, toID), *_graph);
+
+		//Get inner ID from Vertex ID.
+		auto innerFromID = TryGetInnerID(from);
+		auto innerToID = TryGetInnerID(to);
+		boost::add_edge(innerFromID, innerToID, EdgeProperty(innerFromID, innerToID), *_graph);
 		//Set IVertex to property.
 		GetVertextProperty(fromID).vert = from;
 		GetVertextProperty(toID).vert = to;
@@ -43,7 +47,8 @@ namespace Math
 
 	DirectedGraph::VertexProperty& DirectedGraph::GetVertextProperty(const long id) const
 	{
-		return (*_graph)[id];
+		auto innerID = GetInnerID(id);
+		return (*_graph)[innerID];
 	}
 
 	bool DirectedGraph::HasCycle() const
@@ -57,20 +62,11 @@ namespace Math
 
 	bool DirectedGraph::HasCycle(const shared_ptr<IVertex> vert) const
 	{
-		typename boost::graph_traits<GraphImp>::adjacency_iterator ai;
-		typename boost::graph_traits<GraphImp>::adjacency_iterator ai_end;
-		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(vert->GetID(), *_graph);
-			ai != ai_end; ++ai)
-			std::cout << (*_graph)[*ai].vert->GetID() << " ";
+		//FIXME: 
+		//Generate a sub graph containing <vert>.
+		auto subGraph = GenerateSubGraph(vert);
 
-		auto color = internal::GetDefaultColorMap<GraphImp>(*_graph);
-		
-		//Search from vert.
-		bool has_cycle = false;
-		internal::cycle_detector vis(has_cycle);
-		boost::depth_first_search(*_graph, vis, color, vert->GetID());
-
-		return has_cycle;
+		return subGraph->HasCycle();
 	}
 
 	DirectedGraph::EdgeSet DirectedGraph::GetAllConnectedEdges(const long id) const
@@ -101,19 +97,9 @@ namespace Math
 	vector<long> DirectedGraph::QueryVertices() const
 	{
 		vector<long> res;
-		res.reserve(boost::num_vertices(*_graph));
-
-		typedef boost::graph_traits<GraphImp>::vertex_descriptor Vertex;
-
-		// get the property map for vertex indices
-		typedef boost::property_map<GraphImp, boost::vertex_index_t>::type IndexMap;
-		IndexMap index = boost::get(boost::vertex_index, *_graph);
-
-		typedef boost::graph_traits<GraphImp>::vertex_iterator vertex_iter;
-		std::pair<vertex_iter, vertex_iter> vp;
-		for (vp = boost::vertices(*_graph); vp.first != vp.second; ++vp.first) {
-			Vertex v = *vp.first;
-			res.push_back(v);
+		for (auto mapping : _vertID_innerID)
+		{
+			res.push_back(mapping.first);
 		}
 
 		return res;
@@ -126,12 +112,15 @@ namespace Math
 		//Get index map.
 		auto index = boost::get(boost::vertex_index, *_graph);
 
+		auto innerID = GetInnerID(id);
+
 		vector<long> res;
-		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(id, *_graph);
+		for (boost::tie(ai, ai_end) = boost::adjacent_vertices(innerID, *_graph);
 			ai != ai_end; ++ai)
 		{
-			auto adjID = index[*ai];
-			res.push_back(adjID);
+			auto adjID = index[*ai];//It is inner ID.
+			auto vertID = GetVertexID(adjID);
+			res.push_back(vertID);
 		}
 
 		return res;
@@ -147,6 +136,55 @@ namespace Math
 		}
 
 		return res;
+	}
+
+	long DirectedGraph::GetInnerID(const shared_ptr<IVertex> vert) const
+	{
+		return GetInnerID(vert->GetID());
+	}
+
+	long DirectedGraph::GetInnerID(const long vertID) const
+	{
+		return _vertID_innerID.at(vertID);
+	}
+
+	long DirectedGraph::CreateNewInnerID(const shared_ptr<IVertex> vert)
+	{
+		auto newID = _maxInnerID;
+		++_maxInnerID;
+		//Check if the Vertex ID exists.
+		if (_vertID_innerID.find(vert->GetID()) != _vertID_innerID.end())
+		{
+			throw invalid_argument("The id already exists: " + vert->GetID());
+		}
+		_vertID_innerID[vert->GetID()] = newID;
+
+		return newID;
+	}
+
+	long DirectedGraph::TryGetInnerID(const shared_ptr<IVertex> vert)
+	{
+		if (_vertID_innerID.find(vert->GetID()) != _vertID_innerID.end())
+		{
+			return GetInnerID(vert);
+		}
+		else
+		{
+			return CreateNewInnerID(vert);
+		}
+	}
+
+	long DirectedGraph::GetVertexID(const long innerID) const
+	{
+		for (auto mapping : _vertID_innerID)
+		{
+			if (mapping.second == innerID)
+			{
+				return mapping.first;
+			}
+		}
+
+		throw invalid_argument("Cannot find ID in mapping: " + innerID);
 	}
 
 	IVertex::IVertex()
