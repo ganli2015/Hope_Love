@@ -4,6 +4,7 @@
 #include <gmock/gmock.h>
 
 #include "../Mathmatic/DirectedGraph.h"
+#include "../Mathmatic/TraverseData.h"
 
 using namespace testing;
 
@@ -54,21 +55,6 @@ namespace Math
 		ASSERT_TRUE(_graphWithCycle.HasCycle());
 	}
 
-	TEST_F(Test_Graph, HasCycleAroundAVertex)
-	{
-		//Cycle: 0->1->2->0.
-
-		ASSERT_TRUE(_graphWithCycle.HasCycle(_v0));
-		ASSERT_TRUE(_graphWithCycle.HasCycle(_v1));
-		ASSERT_TRUE(_graphWithCycle.HasCycle(_v2));
-	}
-
-	TEST_F(Test_Graph, GraphHasCycleButV3IsNotInCycle)
-	{
-		//v3 has not in the cycle(v0,v1,v2).
-		ASSERT_FALSE(_graphWithCycle.HasCycle(_v3));
-	}
-
 	TEST_F(Test_Graph, HasNoCycle)
 	{
 		DirectedGraph graph(3);
@@ -117,6 +103,111 @@ namespace Math
 			subVertIDsV7.push_back(sub->GetID());
 		}
 		ASSERT_THAT(subVertIDsV7, ElementsAre(7,8));
+	}
+
+	TEST_F(Test_Graph, BFS_HasConnection_DisconnectedGraph)
+	{
+		//Start vertex is v4.
+
+		auto startVert = _v4;
+		auto bfsData = _diconnectedGraph.BFS(startVert);
+		
+		ASSERT_TRUE(bfsData.HasConnection(_v5));
+		ASSERT_TRUE(bfsData.HasConnection(_v6));
+		ASSERT_FALSE(bfsData.HasConnection(_v7));
+		ASSERT_FALSE(bfsData.HasConnection(_v8));
+	}
+
+	TEST_F(Test_Graph, BFS_GetPath_DisconnectedGraph)
+	{
+		//Start vertex is v4.
+
+		auto startVert = _v4;
+		auto bfsData = _diconnectedGraph.BFS(startVert);
+
+		//Get path to v5.
+		auto pathToV5 = bfsData.GetPathTo(_v5);
+		ASSERT_EQ(2, pathToV5.size());
+		ASSERT_EQ(5, pathToV5.back()->GetID());
+
+		//Get path to v6.
+		auto pathToV6 = bfsData.GetPathTo(_v6);
+		ASSERT_EQ(3, pathToV6.size());
+		ASSERT_EQ(6, pathToV6.back()->GetID());
+
+		//Get path to v7.No path.
+		auto pathToV7 = bfsData.GetPathTo(_v7);
+		ASSERT_EQ(0, pathToV7.size());
+
+		//Get path to v8.No path.
+		auto pathToV8 = bfsData.GetPathTo(_v8);
+		ASSERT_EQ(0, pathToV8.size());
+	}
+
+	TEST_F(Test_Graph, BFS_HasConnection_CycleGraph)
+	{
+		//Start vertex is v0.
+
+		auto startVert = _v0;
+		auto bfsData = _graphWithCycle.BFS(startVert);
+
+		ASSERT_TRUE(bfsData.HasConnection(_v1));
+		ASSERT_TRUE(bfsData.HasConnection(_v2));
+		ASSERT_FALSE(bfsData.HasConnection(_v3));
+	}
+
+	TEST_F(Test_Graph, BFS_GetPath_CycleGraph)
+	{
+		//Start vertex is v3.
+
+		auto startVert = _v3;
+		auto bfsData = _graphWithCycle.BFS(startVert);
+
+		//Get path to v5.
+		auto pathToV0 = bfsData.GetPathTo(_v0);
+		ASSERT_EQ(3, pathToV0.size());
+		ASSERT_EQ(0, pathToV0.back()->GetID());
+	}
+
+	TEST_F(Test_Graph, BFS_HasCycle)
+	{
+		//Start vertex is v0.
+		//Cycle : v0->v1->v2->v0.
+
+		auto startVert = _v0;
+		auto bfsData = _graphWithCycle.BFS(startVert);
+
+		list<shared_ptr<IVertex>> cycle;
+		ASSERT_TRUE(bfsData.HasCycle(cycle));
+
+		vector<long> cycleIDs(cycle.size());
+		transform(cycle.begin(), cycle.end(), cycleIDs.begin(), 
+			[](shared_ptr<IVertex> v)->long {return v->GetID(); });
+		ASSERT_THAT(cycleIDs, ElementsAre(0,1,2,0));
+	}
+
+	TEST_F(Test_Graph, BFS_HasNoCycle)
+	{
+		//Start vertex is v3.
+
+		auto startVert = _v3;
+		auto bfsData = _graphWithCycle.BFS(startVert);
+
+		list<shared_ptr<IVertex>> cycle;
+		ASSERT_FALSE(bfsData.HasCycle(cycle));
+	}
+
+	TEST_F(Test_Graph, BFS_HasCycle_GraphWithTwoCycles)
+	{
+		//Start vertex is v9.
+
+		auto startVert = _v9;
+		auto bfsData = _graphWithTwoCycles.BFS(startVert);
+
+		list<shared_ptr<IVertex>> cycle;
+		ASSERT_TRUE(bfsData.HasCycle(cycle));
+
+		ASSERT_EQ(4, cycle.size());
 	}
 }
 

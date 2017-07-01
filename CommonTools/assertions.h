@@ -5,4 +5,5 @@
 #define assert_less(a,b)  assert(a<b)
 #define assert_less_equal(a,b)  assert(a<=b)
 
-#define Check(expression) if((expression)==false) throw runtime_error(__FUNCTION__)
+#define Check(expression) if((expression)==false) \
+	throw runtime_error(#expression+string(" is not satisfied in the location: ")+__FUNCTION__)

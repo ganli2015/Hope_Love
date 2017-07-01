@@ -2,6 +2,8 @@
 #include "InOut.h"
 #include <queue>
 
+#include "../CommonTools/CommonStringFunction.h"
+
 namespace Math
 {
 	class IVertex;
@@ -26,6 +28,8 @@ namespace Math
 
 	//////////////////////////////////////////////////////////////////////////
 	//Result data structure for search.
+	//The ID in <me> is the Vertex ID.
+	//This class is for Internal use.
 	//////////////////////////////////////////////////////////////////////////
 	class SearchResult
 	{
@@ -34,16 +38,35 @@ namespace Math
 
 		EdgeSet _edges;
 		DistanceMap _distanceMap;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Key is vertex id and value is its parent id.
+		//////////////////////////////////////////////////////////////////////////
+		map<long, long> _parentMap;
+
 	public:
 		SearchResult() {};
 		~SearchResult() {};
 
 		multimap<long, long> GetEdges() const { return _edges; }
 		map<long, double> GetDistanceMap() const{ return _distanceMap; }
+		//////////////////////////////////////////////////////////////////////////
+		//Return a parent-child relation map.
+		//Key is vertex id and value is its parent id.
+		//////////////////////////////////////////////////////////////////////////
+		map<long, long> GetParentMap() const { return _parentMap; }
 		double GetDistance(const long id) const { return _distanceMap.at(id); }
 
 		void AddEdge(const long from, const long to) { _edges.insert(make_pair(from, to)); }
 		void SetDistance(const long id, const double distance) { _distanceMap[id] = distance; }
+		//////////////////////////////////////////////////////////////////////////
+		//Set parent id for vertex <id>.
+		//Note! Each vertex has only one parent which is the vertex searching for him!
+		//////////////////////////////////////////////////////////////////////////
+		void SetParent(const long id, const long parentID)
+		{
+			_parentMap[id] = parentID;
+		}
 	};
 
 	//////////////////////////////////////////////////////////////////////////

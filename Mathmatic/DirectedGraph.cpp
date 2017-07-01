@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DirectedGraph.h"
 #include "BoostGraphInternal.h"
+#include "TraverseData.h"
 
 #include "../CommonTools/assertions.h"
 
@@ -58,15 +59,6 @@ namespace Math
 		boost::depth_first_search(*_graph, visitor(vis));
 
 		return has_cycle;
-	}
-
-	bool DirectedGraph::HasCycle(const shared_ptr<IVertex> vert) const
-	{
-		//FIXME: 
-		//Generate a sub graph containing <vert>.
-		auto subGraph = GenerateSubGraph(vert);
-
-		return subGraph->HasCycle();
 	}
 
 	DirectedGraph::EdgeSet DirectedGraph::GetAllConnectedEdges(const long id) const
@@ -185,6 +177,14 @@ namespace Math
 		}
 
 		throw invalid_argument("Cannot find ID in mapping: " + innerID);
+	}
+
+	Math::TraverseData DirectedGraph::BFS(const shared_ptr<IVertex> startVertex) const
+	{
+		GraphSearchEngine searchEngine;
+		auto result = searchEngine.BFS(this, startVertex->GetID());
+
+		return TraverseData(result,startVertex,this);
 	}
 
 	IVertex::IVertex()

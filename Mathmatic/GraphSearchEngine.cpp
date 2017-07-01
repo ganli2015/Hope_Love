@@ -42,10 +42,21 @@ namespace Math
 
 				if (_colorMap[adjVert] == White)
 				{
+					//It is reached for the first time.
 					_colorMap[adjVert] = Gray;
 					double dis = res.GetDistance(curVert) + 1;
 					res.SetDistance(adjVert, dis);
+					res.SetParent(adjVert, curVert);
 					_vertexQueue.push(adjVert);
+				}
+
+				//Check if searched vertex is the start vertex.
+				//If so, it indicates that the start vertex is in a cycle, otherwise it cannot be searched.
+				if (adjVert == startID)
+				{
+					//Then set the parent of the start vertex.
+					//Therefore the cycle can be tracked.
+					res.SetParent(startID, curVert);
 				}
 			}
 			_colorMap[curVert] = Black;
