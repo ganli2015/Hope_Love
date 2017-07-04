@@ -28,15 +28,34 @@ AnalyzeChineseDictionary::~AnalyzeChineseDictionary()
 {
 }
 
-void AnalyzeChineseDictionary::Analyze(const string filePath)
+void AnalyzeChineseDictionary::ExtractBaseWords(const string filePath)
+{
+	ExtractAllDefinitions(filePath);
+
+	DistinguishBaseConceptAndNonBase();
+
+	OutputBaseWords(BASE_WORD_FILE,_baseWordDefs);
+	OutputBaseWords(NON_BASE_WORD_FILE, _nonBaseWordDefs);
+}
+
+void AnalyzeChineseDictionary::BuildConnection(const string filePath)
+{
+	ExtractAllDefinitions(filePath);
+
+	FindConnection();
+
+	OutputWordConnection();
+}
+
+void AnalyzeChineseDictionary::ExtractAllDefinitions(const string filePath)
 {
 	ifstream in(filePath);
 	string line = "";
 
 	//Extract word and meanings from the file.
-	while (getline(in,line))
+	while (getline(in, line))
 	{
-		if(line=="") continue;
+		if (line == "") continue;
 
 		shared_ptr<WordDefinition> wordDef;
 		if (ExtractDefinition(line, wordDef))
@@ -44,10 +63,6 @@ void AnalyzeChineseDictionary::Analyze(const string filePath)
 			_allWordDefs[wordDef->GetWord()] = (wordDef);
 		}
 	}
-
-	DistinguishBaseConceptAndNonBase();
-
-	OutputBaseWords();
 }
 
 bool AnalyzeChineseDictionary::ExtractDefinition(const string line, shared_ptr<WordDefinition>& def) const
@@ -104,23 +119,7 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase()
 
 	//Generate a map with single character string as key and word definition as value.
 	//The map makes convenience for querying concept frequency.
-	multimap<string, shared_ptr<WordDefinition>> char_wordDefs;
-	for (auto wordDef : _allWordDefs)
-	{
-		try
-		{
-			auto chars = GenerateCharacter(wordDef.second);
-			for (auto ch : chars)
-			{
-				char_wordDefs.insert(make_pair(ch, wordDef.second));
-			}
-		}
-		catch (const std::exception& ex)
-		{
-			continue;
-		}
-	}
-
+	multimap<string, shared_ptr<WordDefinition>> char_wordDefs = GenerateCharacterWordDefMap();
 
 	//Find frequency of words in iCerebrum.
 	vector<pair<string, long>> word_freq;
@@ -195,7 +194,29 @@ void AnalyzeChineseDictionary::DistinguishBaseConceptAndNonBase()
 	}
 }
 
-set<string> AnalyzeChineseDictionary::GenerateCharacter(const shared_ptr<WordDefinition> line)
+multimap<string, shared_ptr<WordDefinition>> AnalyzeChineseDictionary::GenerateCharacterWordDefMap() const
+{
+	multimap<string, shared_ptr<WordDefinition>> char_wordDefs;
+	for (auto wordDef : _allWordDefs)
+	{
+		try
+		{
+			auto chars = GenerateCharacter(wordDef.second);
+			for (auto ch : chars)
+			{
+				char_wordDefs.insert(make_pair(ch, wordDef.second));
+			}
+		}
+		catch (const std::exception& ex)
+		{
+			continue;
+		}
+	}
+
+	return char_wordDefs;
+}
+
+set<string> AnalyzeChineseDictionary::GenerateCharacter(const shared_ptr<WordDefinition> line) const
 {
 	set<string> res;
 	for (auto meaning : line->GetMeanings())
@@ -256,13 +277,101 @@ std::string AnalyzeChineseDictionary::ExtractMeaning(const string& line) const
 	return string(line.begin(), beforeColon);
 }
 
-void AnalyzeChineseDictionary::OutputBaseWords() const
+void AnalyzeChineseDictionary::OutputBaseWords(const string filePath,const map<string, shared_ptr<WordDefinition>>& wordMap) const
 {
-	ofstream out("base_words.txt");
+	ofstream out(filePath);
 
-	for (auto baseDef : _baseWordDefs)
+	for (auto baseDef : wordMap)
 	{
 		out << baseDef.first << "  " << baseDef.second->Freq() << endl;
+	}
+
+	out.flush();
+	out.close();
+}
+
+void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap)
+{
+	ifstream in(filePath);
+	string line = "";
+	while (getline(in, line))
+	{
+		if (line == "") continue;
+
+		auto split = SplitString(line, ' ');
+		Check(split.size() == 2);
+
+		auto word = split.front();
+
+		//Append word to wordMap.
+		//Find word in <_allWordDefs>.
+		if (_allWordDefs.find(word) != _allWordDefs.end())
+		{
+			auto wordDef = _allWordDefs[word];
+			wordMap[word] = wordDef;
+		}
+		else
+		{
+			//Create a new one.
+			auto newWordDef = make_shared<WordDefinition>(word);
+			wordMap[word] = newWordDef;
+		}
+	}
+}
+
+void AnalyzeChineseDictionary::FindConnection()
+{
+	auto char_wordDef_map = GenerateCharacterWordDefMap();
+
+	for (auto pair : _allWordDefs)
+	{
+		string word = pair.first;
+		auto wordDef = pair.second;
+
+		FindWhoDependOnMe(word, wordDef, char_wordDef_map);
+	}
+}
+
+void AnalyzeChineseDictionary::FindWhoDependOnMe(const string word, 
+	const shared_ptr<WordDefinition> wordDef,
+	multimap<string, shared_ptr<WordDefinition>>& wordDefMap)
+{
+	auto chars = LanguageFunc::ConvertStringToCharacter(word);
+	//WordDefinition that contains one of <chars>.
+	set<shared_ptr<WordDefinition>> relatedWordDefs;
+	for (auto ch : chars)
+	{
+		if (wordDefMap.find(ch->GetString()) == wordDefMap.end()) continue;
+
+		//Find all word definition containing <ch>.
+		auto allDefs = FindAll(ch->GetString(), wordDefMap);
+
+		relatedWordDefs.insert(allDefs.begin(), allDefs.end());
+	}
+
+	//Find if <relatedWordDefs> contains <word>
+	for (auto related : relatedWordDefs)
+	{
+		for (auto meaning : related->GetMeanings())
+		{
+			if (FindString(meaning, word) != meaning.end())
+			{
+				//TODO : Check for each meaning respectively.
+				//Different meanings correspond to Different concepts.
+				related->AddDependence(wordDef);
+				break;
+			}
+		}
+	}
+}
+
+void AnalyzeChineseDictionary::OutputWordConnection() const
+{
+	ofstream out(WORD_CONNECTION_FILE);
+
+	for (auto pair : _allWordDefs)
+	{
+		pair.second->Write(out);
 	}
 
 	out.flush();

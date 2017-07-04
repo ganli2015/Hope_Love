@@ -97,7 +97,13 @@ TEST(Preparation, RefreshConceptConnection)
 TEST(Preparation, ExtractConnection)
 {
 	AnalyzeChineseDictionary acd;
-	acd.Analyze("E:\\Artificial Intelligence\\Document\\DataBase\\现代汉语词典.txt");
+	acd.ExtractBaseWords("E:\\Artificial Intelligence\\Document\\DataBase\\现代汉语词典.txt");
+}
+
+TEST(Preparation, BuildConnection)
+{
+	AnalyzeChineseDictionary acd;
+	acd.BuildConnection("E:\\Artificial Intelligence\\Document\\DataBase\\现代汉语词典.txt");
 }
 
 TEST(Preparation, TestPOS)
