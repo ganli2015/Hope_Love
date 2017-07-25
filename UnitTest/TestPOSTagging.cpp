@@ -83,6 +83,29 @@ vector<shared_ptr<DataCollection::Word>> TestPOSTagging::POSTagging(const string
 	return grammard;
 }
 
+vector<string> TestPOSTagging::SegmentWord(const string sentence) const
+{
+	string rawSentenceString(sentence);
+	Punctuator punctuator(rawSentenceString);
+	shared_ptr<DataCollection::Sentence> sen(new DataCollection::Sentence(rawSentenceString));
+	punctuator.Punctuate(sen);
+
+	WordSegmentator wordsegmentor(sen);
+	wordsegmentor.SetSegmentMethod(WordSegmentator::Backward);
+	wordsegmentor.Segment();
+	vector<shared_ptr<DataCollection::SegmentedSentence>> segmented = wordsegmentor.GetAllSegementedSentence();
+
+	//Get the first segmentation.
+	auto words = segmented.front()->Get();
+	vector<string> res;
+	for (auto word : words)
+	{
+		res.push_back(word->GetString());
+	}
+
+	return res;
+}
+
 vector<TestPOSTagging::POSSample> TestPOSTagging::ReadSentences(const string filename, const int sentenceCount)
 {
 	ifstream in(filename, ios::binary);

@@ -12,10 +12,26 @@ namespace Mind
 	class iConcept;
 }
 
+class WordMeaning
+{
+	string _meaning;
+	vector<string> _segmentedMeaning;
+
+public:
+	WordMeaning(const string val):_meaning(val) {};
+	~WordMeaning() {};
+
+	string GetMeaning() const { return _meaning; }
+
+	void SetSegmented(const vector<string>& val) { _segmentedMeaning = val; }
+
+};
+
+
 class WordDefinition
 {
 	string _word;
-	vector<string> _meanings;
+	vector<WordMeaning> _meanings;
 	long _freq = 0;
 
 	set<shared_ptr<WordDefinition>> _dependent;
@@ -25,9 +41,31 @@ public:
 	WordDefinition(string w) :_word(w) {};
 	~WordDefinition() {};
 
-	void AddMeaning(const string meaning) { _meanings.push_back(meaning); }
+	void AddMeaning(const string meaning) { _meanings.push_back(WordMeaning(meaning)); }
 
-	vector<string> GetMeanings() const { return _meanings; }
+	vector<string> GetMeanings() const
+	{
+		vector<string> res(_meanings.size());
+		transform(_meanings.begin(), _meanings.end(), res.begin(),
+			[](const WordMeaning& meaning)->string {return meaning.GetMeaning(); });
+
+		return res;
+	}
+
+	void SetMeaningSegment(const string meaningStr, const vector<string>& segment)
+	{
+		auto existMeaning = find_if(_meanings.begin(), _meanings.end(),
+			[meaningStr](const WordMeaning& meaning)->bool {return meaning.GetMeaning() == meaningStr; });
+
+		if (existMeaning != _meanings.end())
+		{
+			existMeaning->SetSegmented(segment);
+		}
+		else
+		{
+			cout << "Cannot find meaning!!" << endl;
+		}
+	}
 	
 	string GetWord() const { return _word; };
 
@@ -118,13 +156,19 @@ private:
 	void OutputBaseWords(const string filePath, const map<string, shared_ptr<WordDefinition>>& wordMap) const;
 
 	//////////////////////////////////////////////////////////////////////////
-	//Read word from the file and append to wordMap.
+	//Read base or non base word from the file and append to wordMap.
 	//////////////////////////////////////////////////////////////////////////
 	void ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap);
 
+	//////////////////////////////////////////////////////////////////////////
+	//WordSegment for each meaning of each word definition.
+	//The result is in the object of word definition.
+	//////////////////////////////////////////////////////////////////////////
+	void SegmentMeanings();
+
 	void FindConnection();
 
-	void FindWhoDependOnMe(const string word, const shared_ptr<WordDefinition> wordDef,multimap<string, shared_ptr<WordDefinition>>& wordDefMap);
+	void FindWhoDependOnMe(const string word, const shared_ptr<WordDefinition> wordDef, const multimap<string, shared_ptr<WordDefinition>>& wordDefMap);
 
 	void OutputWordConnection() const;
 };

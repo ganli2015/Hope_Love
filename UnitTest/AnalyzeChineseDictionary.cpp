@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "AnalyzeChineseDictionary.h"
 #include "FuncForTest.h"
+#include "TestPOSTagging.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/Common.h"
+#include "../CommonTools/LogWriter.h"
 
 #include "../DataCollection/Word.h"
 #include "../DataCollection/Character.h"
@@ -40,7 +42,12 @@ void AnalyzeChineseDictionary::ExtractBaseWords(const string filePath)
 
 void AnalyzeChineseDictionary::BuildConnection(const string filePath)
 {
+	//TODO: Segment each meaning first and then find connections.
 	ExtractAllDefinitions(filePath);
+
+	ReadWordsFromFile(BASE_WORD_FILE, _baseWordDefs);
+
+	SegmentMeanings();
 
 	FindConnection();
 
@@ -299,6 +306,7 @@ void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<stri
 		if (line == "") continue;
 
 		auto split = SplitString(line, ' ');
+		CommonTool::RemoveEmptyString(split);
 		Check(split.size() == 2);
 
 		auto word = split.front();
@@ -319,8 +327,45 @@ void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<stri
 	}
 }
 
+void AnalyzeChineseDictionary::SegmentMeanings()
+{
+	int count = 0;
+
+	TestPOSTagging posTagging;
+	for (auto wordDef : _allWordDefs)
+	{
+		LOG_FORMAT("Word Definition: %s", wordDef.second->GetWord().c_str());
+		for (auto meaning : wordDef.second->GetMeanings())
+		{
+			if (meaning == "") continue;
+			//Filter long meaning.
+			if(meaning.size()>30) continue;
+
+			try
+			{
+				LOG_FORMAT("Begin segment: %s", meaning.c_str());
+				auto segment = posTagging.SegmentWord(meaning);
+				wordDef.second->SetMeaningSegment(meaning, segment);
+			}
+			catch (const std::exception&)
+			{
+				ERROR_FORMAT("Fail to segment meaning: %s.", meaning.c_str());
+			}
+
+		}
+
+		++count;
+		if (count % 1000 == 0)
+		{
+			LOG_FORMAT("Have segmented: %d", count);
+		}
+	}
+}
+
 void AnalyzeChineseDictionary::FindConnection()
 {
+	//Generate a map in which key is single Character and value is related word definition.
+	//And word definitions come from <_allWordDefs>.
 	auto char_wordDef_map = GenerateCharacterWordDefMap();
 
 	for (auto pair : _allWordDefs)
@@ -328,13 +373,35 @@ void AnalyzeChineseDictionary::FindConnection()
 		string word = pair.first;
 		auto wordDef = pair.second;
 
-		FindWhoDependOnMe(word, wordDef, char_wordDef_map);
+		try
+		{
+			FindWhoDependOnMe(word, wordDef, char_wordDef_map);
+		}
+		catch (const std::exception&)
+		{
+			ERROR_FORMAT("Fail to handle word: %s.", word.c_str());
+		}
+	}
+
+	for (auto pair : _baseWordDefs)
+	{
+		string word = pair.first;
+		auto wordDef = pair.second;
+
+		try
+		{
+			FindWhoDependOnMe(word, wordDef, char_wordDef_map);
+		}
+		catch (const std::exception&)
+		{
+			ERROR_FORMAT("Fail to handle word: %s.", word.c_str());
+		}
 	}
 }
 
 void AnalyzeChineseDictionary::FindWhoDependOnMe(const string word, 
 	const shared_ptr<WordDefinition> wordDef,
-	multimap<string, shared_ptr<WordDefinition>>& wordDefMap)
+	const multimap<string, shared_ptr<WordDefinition>>& wordDefMap)
 {
 	auto chars = LanguageFunc::ConvertStringToCharacter(word);
 	//WordDefinition that contains one of <chars>.

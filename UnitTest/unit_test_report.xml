@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="1" failures="1" disabled="0" errors="0" timestamp="2017-07-05T00:52:59" time="127.252" name="AllTests">
-  <testsuite name="Preparation" tests="1" failures="1" disabled="0" errors="0" time="127.249">
-    <testcase name="BuildConnection" status="run" time="127.247" classname="Preparation">
-      <failure message="unknown file&#x0A;C++ exception with description &quot;str.size() % 2 == 0 is not satisfied in the location: DataCollection::LanguageFunc::ConvertStringToCharacter&quot; thrown in the test body." type=""><![CDATA[unknown file
-C++ exception with description "str.size() % 2 == 0 is not satisfied in the location: DataCollection::LanguageFunc::ConvertStringToCharacter" thrown in the test body.]]></failure>
-    </testcase>
+<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-07-05T23:43:24" time="70.798" name="AllTests">
+  <testsuite name="Preparation" tests="1" failures="0" disabled="0" errors="0" time="70.795">
+    <testcase name="BuildConnection" status="run" time="70.794" classname="Preparation" />
   </testsuite>
 </testsuites>

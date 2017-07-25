@@ -27,10 +27,10 @@ public:
 
 	vector<shared_ptr<DataCollection::Word>> POSTagging(const string sentence) const;
 
+	vector<string> SegmentWord(const string sentence) const;
+
 private:
 	vector<TestPOSTagging::POSSample> ReadSentences(const string filename, const int sentenceCount );
-
-	vector<shared_ptr<DataCollection::Word>> ParsePOSTagging(const string line);
 
 	bool IsCorrect(const vector<shared_ptr<DataCollection::Word>>& expect, const vector<shared_ptr<DataCollection::Word>>& result);
 

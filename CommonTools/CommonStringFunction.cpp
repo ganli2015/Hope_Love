@@ -27,6 +27,21 @@ namespace CommonTool
 		return res;
 	}
 
+	void RemoveEmptyString(vector<string>& vec)
+	{
+		for (vector<string>::iterator it=vec.begin();it!=vec.end();)
+		{
+			if (*it == "")
+			{
+				it = vec.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+
 	bool StartWith(const string str, const char tag)
 	{
 		return find(str.begin(), str.end(), tag) == str.begin();
