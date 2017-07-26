@@ -58,6 +58,7 @@ namespace CommonTool
 		//Initialize me with log4cpp.Referenced from http://log4cpp.sourceforge.net.
 		log4cpp::Appender *appender1 = new log4cpp::OstreamAppender("console", &std::cout);
 		appender1->setLayout(new log4cpp::BasicLayout());
+		appender1->setThreshold(600);
 
 		log4cpp::Appender *appender2 = new log4cpp::FileAppender("default", "Log\\loginfo.log");
 		auto fileLayout = new log4cpp::PatternLayout();

@@ -25,6 +25,10 @@ public:
 
 	void SetSegmented(const vector<string>& val) { _segmentedMeaning = val; }
 
+	bool HasWord(const string word)
+	{
+		return find(_segmentedMeaning.begin(), _segmentedMeaning.end(), word) != _segmentedMeaning.end();
+	}
 };
 
 
@@ -52,6 +56,10 @@ public:
 		return res;
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	//Pass one segmented meaning to me.
+	//Each string in <segment> is a word.
+	//////////////////////////////////////////////////////////////////////////
 	void SetMeaningSegment(const string meaningStr, const vector<string>& segment)
 	{
 		auto existMeaning = find_if(_meanings.begin(), _meanings.end(),
@@ -65,6 +73,22 @@ public:
 		{
 			cout << "Cannot find meaning!!" << endl;
 		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//Check if there is a word in the meaning of me.
+	//////////////////////////////////////////////////////////////////////////
+	bool HasWordInMeaning(const string word)
+	{
+		for (auto meaning : _meanings)
+		{
+			if (meaning.HasWord(word))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	string GetWord() const { return _word; };

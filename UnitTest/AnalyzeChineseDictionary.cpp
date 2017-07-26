@@ -345,6 +345,14 @@ void AnalyzeChineseDictionary::SegmentMeanings()
 			{
 				LOG_FORMAT("Begin segment: %s", meaning.c_str());
 				auto segment = posTagging.SegmentWord(meaning);
+
+				string segStr = "";
+				for (auto seg : segment)
+				{
+					segStr += seg + " ";
+				}
+				LOG(segStr);
+
 				wordDef.second->SetMeaningSegment(meaning, segment);
 			}
 			catch (const std::exception&)
@@ -419,15 +427,11 @@ void AnalyzeChineseDictionary::FindWhoDependOnMe(const string word,
 	//Find if <relatedWordDefs> contains <word>
 	for (auto related : relatedWordDefs)
 	{
-		for (auto meaning : related->GetMeanings())
+		if (related->HasWordInMeaning(word))
 		{
-			if (FindString(meaning, word) != meaning.end())
-			{
-				//TODO : Check for each meaning respectively.
-				//Different meanings correspond to Different concepts.
-				related->AddDependence(wordDef);
-				break;
-			}
+			//TODO : Check for each meaning respectively.
+			//Different meanings correspond to Different concepts.
+			related->AddDependence(wordDef);
 		}
 	}
 }
