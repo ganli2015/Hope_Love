@@ -15,9 +15,12 @@
 
 #include "../MindInterface/iConcept.h"
 
+#include "../Mathmatic/DirectedGraph.h"
+
 using namespace Mind;
 using namespace CommonTool;
 using namespace DataCollection;
+using namespace Math;
 
 AnalyzeChineseDictionary::AnalyzeChineseDictionary()
 {
@@ -42,7 +45,6 @@ void AnalyzeChineseDictionary::ExtractBaseWords(const string filePath)
 
 void AnalyzeChineseDictionary::BuildConnection(const string filePath)
 {
-	//TODO: Segment each meaning first and then find connections.
 	ExtractAllDefinitions(filePath);
 
 	ReadWordsFromFile(BASE_WORD_FILE, _baseWordDefs);
@@ -52,6 +54,13 @@ void AnalyzeChineseDictionary::BuildConnection(const string filePath)
 	FindConnection();
 
 	OutputWordConnection();
+}
+
+void AnalyzeChineseDictionary::BuildGraphAndOutput(const string filePath)
+{
+	auto wordConnections = ReadWordConnections(filePath);
+
+	auto wordGraph = BuildGraph(wordConnections);
 }
 
 void AnalyzeChineseDictionary::ExtractAllDefinitions(const string filePath)
@@ -297,7 +306,7 @@ void AnalyzeChineseDictionary::OutputBaseWords(const string filePath,const map<s
 	out.close();
 }
 
-void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap)
+void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap) const
 {
 	ifstream in(filePath);
 	string line = "";
@@ -315,7 +324,7 @@ void AnalyzeChineseDictionary::ReadWordsFromFile(const string filePath, map<stri
 		//Find word in <_allWordDefs>.
 		if (_allWordDefs.find(word) != _allWordDefs.end())
 		{
-			auto wordDef = _allWordDefs[word];
+			auto wordDef = _allWordDefs.at(word);
 			wordMap[word] = wordDef;
 		}
 		else
@@ -448,3 +457,67 @@ void AnalyzeChineseDictionary::OutputWordConnection() const
 	out.flush();
 	out.close();
 }
+
+map<string, shared_ptr<WordConnection>> AnalyzeChineseDictionary::ReadWordConnections(const string filePath) const
+{
+	map<string, shared_ptr<WordConnection>> res;
+
+	//Read non base words. 
+	ifstream in(filePath);
+	string line = "";
+	while (getline(in, line))
+	{
+		auto split = CommonTool::SplitString(line, ' ');
+		CommonTool::RemoveEmptyString(split);
+
+		if(split.size()<=1) continue;
+
+		//Build connection of one word.
+		shared_ptr<WordConnection> wordConnection=make_shared<WordConnection>(split.front());
+		for (size_t i = 1; i < split.size(); ++i)
+		{
+			wordConnection->AddConnection(split[i]);
+		}
+
+		res[split.front()] = wordConnection;
+	}
+
+	//Read base words.
+	map<string, shared_ptr<WordDefinition>> baseWords;
+	ReadWordsFromFile(BASE_WORD_FILE, baseWords);
+
+	for (auto basePair : baseWords)
+	{
+		shared_ptr<WordConnection> wordConnection = make_shared<WordConnection>(basePair.first);
+		res[basePair.first] = wordConnection;
+	}
+
+	return res;
+}
+
+shared_ptr<Math::DirectedGraph> AnalyzeChineseDictionary::BuildGraph(const map<string, shared_ptr<WordConnection>> wordConnections) const
+{
+	shared_ptr<Math::DirectedGraph> wordGraph=make_shared<DirectedGraph>(wordConnections.size());
+	
+	for (auto connection : wordConnections)
+	{
+		auto fromWord = connection.second;
+		//Get to_ID
+		for (auto to : connection.second->GetConnections())
+		{
+			if (wordConnections.find(to) == wordConnections.end())
+			{
+				//Cannot find such word.
+				WARN_FORMAT("Cannot find word '%s' in wordConnections.", to);
+				continue;
+			}
+
+			auto toWord = wordConnections.at(to);
+			wordGraph->AddEdge(fromWord, toWord);
+		}
+	}
+
+	return wordGraph;
+}
+
+long WordConnection::count = 0;

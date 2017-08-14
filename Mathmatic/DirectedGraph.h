@@ -88,6 +88,7 @@ namespace Math
 		//Max inner ID. It will increase by one if a new vertex is added.
 		long _maxInnerID;
 	public:
+		DirectedGraph() {};
 		DirectedGraph(const size_t vertNum);
 		~DirectedGraph();
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "PublicHeader.h"
 
+#include "../Mathmatic/DirectedGraph.h"
 
 namespace DataCollection
 {
@@ -11,6 +12,12 @@ namespace Mind
 {
 	class iConcept;
 }
+
+namespace Math
+{
+	class DirectedGraph;
+}
+
 
 class WordMeaning
 {
@@ -109,6 +116,30 @@ public:
 	}
 };
 
+class WordConnection : public Math::IVertex
+{
+	static long count;
+
+	string _word;
+	vector<string> _connections;
+
+	const long _index;
+
+public:
+
+	WordConnection(const string val) :_word(val), _index(count++) {};
+	~WordConnection() {};
+
+	void AddConnection(const string val) { _connections.push_back(val); }
+	vector<string> GetConnections() const { return _connections; }
+
+	virtual long GetID() const
+	{
+		return _index;
+	}
+
+};
+
 class AnalyzeChineseDictionary
 {
 	//The count of base concepts for extracted word from the file.
@@ -142,9 +173,12 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//Analyze file of Chinese dictionary and read base words from the file.
 	//Then try to find the connection of non base words to other words.
-	//Run <ExtractBaseWords> FIRST!
+	//Finally output word relations to "word_connection.txt".
+	//Run <ExtractBaseWords> FIRST if you have no "non_base_words.txt" and "base_words.txt".
 	//////////////////////////////////////////////////////////////////////////
 	void BuildConnection(const string filePath);
+
+	void BuildGraphAndOutput(const string filePath);
 
 private:
 
@@ -182,7 +216,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	//Read base or non base word from the file and append to wordMap.
 	//////////////////////////////////////////////////////////////////////////
-	void ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap);
+	void ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap) const;
 
 	//////////////////////////////////////////////////////////////////////////
 	//WordSegment for each meaning of each word definition.
@@ -195,5 +229,9 @@ private:
 	void FindWhoDependOnMe(const string word, const shared_ptr<WordDefinition> wordDef, const multimap<string, shared_ptr<WordDefinition>>& wordDefMap);
 
 	void OutputWordConnection() const;
+
+	map<string, shared_ptr<WordConnection>> ReadWordConnections(const string filePath) const;
+
+	shared_ptr<Math::DirectedGraph> BuildGraph(const map<string, shared_ptr<WordConnection>> wordConnections) const;
 };
 

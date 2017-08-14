@@ -106,6 +106,12 @@ TEST(Preparation, BuildConnection)
 	acd.BuildConnection("E:\\Artificial Intelligence\\Document\\DataBase\\ÏÖ´úººÓï´Êµä.txt");
 }
 
+TEST(Preparation, BuildGraphAndOutput)
+{
+	AnalyzeChineseDictionary acd;
+	acd.BuildGraphAndOutput("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt");
+}
+
 TEST(Preparation, TestPOS)
 {
 	CHECK_SKIP;
