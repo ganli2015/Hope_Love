@@ -122,22 +122,27 @@ class WordConnection : public Math::IVertex
 
 	string _word;
 	vector<string> _connections;
+	bool _isBase;
 
 	const long _index;
 
 public:
 
-	WordConnection(const string val) :_word(val), _index(count++) {};
+	WordConnection(const string val) :_word(val), _index(count++), _isBase(false) {};
 	~WordConnection() {};
 
 	void AddConnection(const string val) { _connections.push_back(val); }
 	vector<string> GetConnections() const { return _connections; }
+
+	string GetWord() const { return _word; }
 
 	virtual long GetID() const
 	{
 		return _index;
 	}
 
+	void IsBase() { _isBase = true; }
+	bool IsBaseWord() const { return _isBase; }
 };
 
 class AnalyzeChineseDictionary
@@ -153,6 +158,8 @@ class AnalyzeChineseDictionary
 
 	const string WORD_CONNECTION_FILE = "word_connection.txt";
 
+	const string VALID_CONNECTION_FILE = "valid_connection.txt";
+
 	map<string, shared_ptr<WordDefinition>> _allWordDefs;
 
 	//Base words in Both Chinese Dictionary and iCerebrum.
@@ -166,7 +173,7 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	//Analyze file of Chinese dictionary and extract base words in it.
-	//The base words are output to a file.
+	//The base words are output to a file "non_base_words.txt" and "base_words.txt" .
 	//////////////////////////////////////////////////////////////////////////
 	void ExtractBaseWords(const string filePath);
 
@@ -178,7 +185,13 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void BuildConnection(const string filePath);
 
-	void BuildGraphAndOutput(const string filePath);
+	//////////////////////////////////////////////////////////////////////////
+	//Input word connection file built by <BuildConnection>.
+	//Build graph of all connections and analyze the whole graph.
+	//Try to eliminate sub graph with cycle and contains no base word.
+	//Then collect words which have path to a base word.
+	//Finally output valid words to "valid_connection.txt".
+	void AnalyzeValidConnections(const string filePath);
 
 private:
 
@@ -233,5 +246,15 @@ private:
 	map<string, shared_ptr<WordConnection>> ReadWordConnections(const string filePath) const;
 
 	shared_ptr<Math::DirectedGraph> BuildGraph(const map<string, shared_ptr<WordConnection>> wordConnections) const;
+
+	//////////////////////////////////////////////////////////////////////////
+	//Check each of the sub graph.
+	//Check if the graph does not have cycle and each word in the graph
+	//has a connection path to a base word.
+	//Finally return all valid connection structure of these words.
+	//////////////////////////////////////////////////////////////////////////
+	vector<shared_ptr<WordConnection>> GetValidConnections(const vector<shared_ptr<Math::DirectedGraph>>& graphs);
+
+	void OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const;
 };
 

@@ -106,10 +106,10 @@ TEST(Preparation, BuildConnection)
 	acd.BuildConnection("E:\\Artificial Intelligence\\Document\\DataBase\\ÏÖ´úººÓï´Êµä.txt");
 }
 
-TEST(Preparation, BuildGraphAndOutput)
+TEST(Preparation, AnalyzeValidConnections)
 {
 	AnalyzeChineseDictionary acd;
-	acd.BuildGraphAndOutput("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt");
+	acd.AnalyzeValidConnections("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt");
 }
 
 TEST(Preparation, TestPOS)

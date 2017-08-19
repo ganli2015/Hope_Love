@@ -74,6 +74,7 @@ namespace Math
 
 		typedef multimap<long, long> EdgeSet;
 
+		friend class TraverseData;
 	private:
 
 		GraphImp *_graph;
@@ -99,6 +100,7 @@ namespace Math
 		//If these two vertices do not exists, then they will be added.
 		//////////////////////////////////////////////////////////////////////////
 		void AddEdge(const shared_ptr<IVertex> from, const shared_ptr<IVertex> to);
+		void AddVertex(const shared_ptr<IVertex> vert);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get "to" vertices that vertex with <id> points to.
@@ -114,6 +116,20 @@ namespace Math
 		//The all vertices in the returned graph is connected to <vert>.
 		//////////////////////////////////////////////////////////////////////////
 		shared_ptr<DirectedGraph> GenerateSubGraph(const shared_ptr<IVertex> vert) const;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Split all of me into pieces of sub graphs.
+		//All vertices will be involved in any of pieces and one vertex may appear in several pieces.
+		//For example:
+		//			1		2
+		//			  \   /
+		//				3
+		//				|
+		//				4
+		//The above graph (1->3,2->3,3->4) will generate sub graphs of 
+		//(1->3,3->4) and (2->3,3->4).
+		//////////////////////////////////////////////////////////////////////////
+		vector<shared_ptr<DirectedGraph>> AllSubGraphs();
 	private:
 		//////////////////////////////////////////////////////////////////////////
 		//Get Inner ID from IVertex's ID.
@@ -132,7 +148,12 @@ namespace Math
 		//////////////////////////////////////////////////////////////////////////
 		//Get IVertex's ID from Inner ID.
 		//////////////////////////////////////////////////////////////////////////
-		long GetVertexID(const long innerID) const;
+		bool GetVertexID(const long innerID, long& vertID) const;
+		//////////////////////////////////////////////////////////////////////////
+		//Try to remove innerID of vertex <vert>.
+		//Return true if id of vertex has been found and output removed inner ID <removed>.
+		//////////////////////////////////////////////////////////////////////////
+		bool TryRemoveInnerID(const shared_ptr<IVertex> vert, long& removed);
 
 		VertexProperty& GetVertextProperty(const long id) const;
 

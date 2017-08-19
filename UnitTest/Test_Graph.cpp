@@ -209,5 +209,12 @@ namespace Math
 
 		ASSERT_EQ(4, cycle.size());
 	}
+
+	TEST_F(Test_Graph, GenerateAllSubGraphs)
+	{
+		auto subGraphs = _diconnectedGraph.AllSubGraphs();
+
+		ASSERT_EQ(2, subGraphs.size());
+	}
 }
 

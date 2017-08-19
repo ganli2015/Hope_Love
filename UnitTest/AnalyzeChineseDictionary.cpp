@@ -16,6 +16,7 @@
 #include "../MindInterface/iConcept.h"
 
 #include "../Mathmatic/DirectedGraph.h"
+#include "../Mathmatic/TraverseData.h"
 
 using namespace Mind;
 using namespace CommonTool;
@@ -56,11 +57,18 @@ void AnalyzeChineseDictionary::BuildConnection(const string filePath)
 	OutputWordConnection();
 }
 
-void AnalyzeChineseDictionary::BuildGraphAndOutput(const string filePath)
+void AnalyzeChineseDictionary::AnalyzeValidConnections(const string filePath)
 {
 	auto wordConnections = ReadWordConnections(filePath);
 
 	auto wordGraph = BuildGraph(wordConnections);
+
+	auto subgraphs = wordGraph->AllSubGraphs();
+	cout << subgraphs.size() << endl;
+
+	auto validConnections = GetValidConnections(subgraphs);
+
+	OutputValidConnections(validConnections);
 }
 
 void AnalyzeChineseDictionary::ExtractAllDefinitions(const string filePath)
@@ -489,6 +497,7 @@ map<string, shared_ptr<WordConnection>> AnalyzeChineseDictionary::ReadWordConnec
 	for (auto basePair : baseWords)
 	{
 		shared_ptr<WordConnection> wordConnection = make_shared<WordConnection>(basePair.first);
+		wordConnection->IsBase();
 		res[basePair.first] = wordConnection;
 	}
 
@@ -518,6 +527,72 @@ shared_ptr<Math::DirectedGraph> AnalyzeChineseDictionary::BuildGraph(const map<s
 	}
 
 	return wordGraph;
+}
+
+vector<shared_ptr<WordConnection>> AnalyzeChineseDictionary::GetValidConnections(const vector<shared_ptr<DirectedGraph>>& graphs)
+{
+	vector<shared_ptr<WordConnection>> res;
+
+	for (auto graph : graphs)
+	{
+		//Check if it has cycle.
+		if (graph->HasCycle())
+		{
+			continue;
+		}
+
+		//Check if it contains at least one base word.
+		bool hasBaseWord = false;
+		auto allVerts = graph->GetAllVertices();
+		for (auto vert : allVerts)
+		{
+			auto wordConnection = dynamic_pointer_cast<WordConnection>(vert);
+			if (wordConnection->IsBaseWord())
+			{
+				hasBaseWord = true;
+				break;
+			}
+		}
+		if (!hasBaseWord)
+		{
+			continue;
+		}
+
+		//Check each vertex reaches a base word.
+		for (auto vert : allVerts)
+		{
+			auto wordConnection = dynamic_pointer_cast<WordConnection>(vert);
+
+			auto traverseData = graph->BFS(vert);
+			auto traverseVertice = traverseData.GetAllConnectVertice();
+			//Find if there is a base word in BFS of vert.
+			auto findBase = find_if(traverseVertice.begin(), traverseVertice.end(),
+				[](const shared_ptr<IVertex> tmpVert) -> bool{
+				auto tmpConnection = dynamic_pointer_cast<WordConnection>(tmpVert);
+				return tmpConnection->IsBaseWord();
+			});
+
+			if (findBase != traverseVertice.end())
+			{
+				DEBUG_FORMAT("Push back graph of word: %s", wordConnection->GetWord().c_str());
+				//Has base.
+				res.push_back(wordConnection);
+			}
+		}
+	}
+
+	return res;
+}
+
+void AnalyzeChineseDictionary::OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const
+{
+	ofstream out(VALID_CONNECTION_FILE);
+	for (auto connection : wordConnections)
+	{
+		out << connection->GetWord() << endl;
+	}
+
+	out.close();
 }
 
 long WordConnection::count = 0;

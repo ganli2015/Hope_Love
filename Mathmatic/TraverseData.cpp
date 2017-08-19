@@ -67,5 +67,35 @@ namespace Math
 		return true;
 	}
 
+	shared_ptr<DirectedGraph> TraverseData::GenerateGraph() const
+	{
+		auto allEdges = this->_edges;
+
+		shared_ptr<DirectedGraph> res(new DirectedGraph(allEdges.size() * 2));
+		res->AddVertex(this->_startVert);
+		for (auto edge : allEdges)
+		{
+			auto fromVert = _vertexMap.at(edge.first);
+			auto toVert = _vertexMap.at(edge.second);
+
+			res->AddEdge(fromVert, toVert);
+		}
+
+		return res;
+	}
+
+	vector<shared_ptr<IVertex>> TraverseData::GetAllConnectVertice() const
+	{
+		vector<shared_ptr<IVertex>> res;
+
+		for (auto disPair : _distanceMap)
+		{
+			auto vert = _vertexMap.at(disPair.first);
+			res.push_back(vert);
+		}
+
+		return res;
+	}
+
 }
 

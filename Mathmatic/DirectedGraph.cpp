@@ -4,6 +4,7 @@
 #include "TraverseData.h"
 
 #include "../CommonTools/assertions.h"
+#include "../CommonTools/LogWriter.h"
 
 namespace Math
 {
@@ -32,6 +33,14 @@ namespace Math
 		//Set IVertex to property.
 		GetVertextProperty(fromID).vert = from;
 		GetVertextProperty(toID).vert = to;
+	}
+
+	void DirectedGraph::AddVertex(const shared_ptr<IVertex> vert)
+	{
+		CreateNewInnerID(vert);
+		VertexProperty newProp;
+		newProp.vert = vert;
+		boost::add_vertex(newProp, *_graph);
 	}
 
 	vector<shared_ptr<IVertex>> DirectedGraph::GetAdjacentVertices(const long id) const
@@ -75,6 +84,7 @@ namespace Math
 
 		//Add all edges to the returned graph.
 		shared_ptr<DirectedGraph> res(new DirectedGraph(allConnectedEdges.size() * 2));
+		res->AddVertex(vert);
 		for (auto edge : allConnectedEdges)
 		{
 			auto fromVert = GetVertextProperty(edge.first).vert;
@@ -111,8 +121,11 @@ namespace Math
 			ai != ai_end; ++ai)
 		{
 			auto adjID = index[*ai];//It is inner ID.
-			auto vertID = GetVertexID(adjID);
-			res.push_back(vertID);
+			long vertID;
+			if (GetVertexID(adjID, vertID))
+			{
+				res.push_back(vertID);
+			}
 		}
 
 		return res;
@@ -166,17 +179,18 @@ namespace Math
 		}
 	}
 
-	long DirectedGraph::GetVertexID(const long innerID) const
+	bool DirectedGraph::GetVertexID(const long innerID, long& vertID) const
 	{
 		for (auto mapping : _vertID_innerID)
 		{
 			if (mapping.second == innerID)
 			{
-				return mapping.first;
+				vertID= mapping.first;
+				return true;
 			}
 		}
 
-		throw invalid_argument("Cannot find ID in mapping: " + innerID);
+		return false;
 	}
 
 	Math::TraverseData DirectedGraph::BFS(const shared_ptr<IVertex> startVertex) const
@@ -185,6 +199,44 @@ namespace Math
 		auto result = searchEngine.BFS(this, startVertex->GetID());
 
 		return TraverseData(result,startVertex,this);
+	}
+
+	bool DirectedGraph::TryRemoveInnerID(const shared_ptr<IVertex> vert, long& removed)
+	{
+		if (_vertID_innerID.find(vert->GetID()) != _vertID_innerID.end())
+		{
+			removed = _vertID_innerID[vert->GetID()];
+			_vertID_innerID.erase(vert->GetID());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	vector<shared_ptr<DirectedGraph>> DirectedGraph::AllSubGraphs()
+	{
+		vector<shared_ptr<DirectedGraph>> res;
+		//Backup _vertID_innerID as it will be modified.
+		map<long, long> vertID_innerID_copy = _vertID_innerID;
+
+		while (!vertID_innerID_copy.empty())
+		{
+			//Get first vertex and generate sub graph.
+			auto vert = GetVertextProperty(vertID_innerID_copy.begin()->first).vert;
+			auto subGraph = GenerateSubGraph(vert);
+			res.push_back(subGraph);
+
+			//Remove data in vertID_innerID.
+			auto allVert = subGraph->GetAllVertices();
+			for (auto removedVert : allVert)
+			{
+				vertID_innerID_copy.erase(removedVert->GetID());
+			}
+		}
+
+		return res;
 	}
 
 	IVertex::IVertex()
