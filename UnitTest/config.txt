@@ -1,1 +1,1 @@
-Preparation.BuildGraphAndOutput
+Preparation.OutputConnectionToDatabase

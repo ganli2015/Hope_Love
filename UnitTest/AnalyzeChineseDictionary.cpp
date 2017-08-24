@@ -18,6 +18,10 @@
 #include "../Mathmatic/DirectedGraph.h"
 #include "../Mathmatic/TraverseData.h"
 
+#include "../MindDatabase/ConceptDatabase.h"
+
+#include "../MindElement/Concept.h"
+
 using namespace Mind;
 using namespace CommonTool;
 using namespace DataCollection;
@@ -69,6 +73,17 @@ void AnalyzeChineseDictionary::AnalyzeValidConnections(const string filePath)
 	auto validConnections = GetValidConnections(subgraphs);
 
 	OutputValidConnections(validConnections);
+}
+
+void AnalyzeChineseDictionary::OutputToDB(const string connectionPath, const string validConnectionPath)
+{
+	auto wordConnections = ReadWordConnections(connectionPath);
+
+	auto validWords = ReadValidConnectionWords("valid_connection.txt");
+
+	RemoveInvalidWords(validWords, wordConnections);
+
+	OutputToConceptConnectionToDatabase(wordConnections);
 }
 
 void AnalyzeChineseDictionary::ExtractAllDefinitions(const string filePath)
@@ -595,4 +610,94 @@ void AnalyzeChineseDictionary::OutputValidConnections(const vector<shared_ptr<Wo
 	out.close();
 }
 
+set<string> AnalyzeChineseDictionary::ReadValidConnectionWords(const string filePath) const
+{
+	set<string> res;
+
+	ifstream in(filePath);
+	string line = "";
+	while (getline(in, line))
+	{
+		//One line is one word.
+		res.insert(line);
+	}
+
+	return res;
+}
+
+void AnalyzeChineseDictionary::RemoveInvalidWords(const set<string>& validWords, 
+	map<string, shared_ptr<WordConnection>>& wordConnections) const
+{
+	vector<string> wordToRemove;
+
+	for (map<string, shared_ptr<WordConnection>>::iterator it = wordConnections.begin();
+		it != wordConnections.end(); ++it)
+	{
+		if (validWords.find(it->first) == validWords.end())
+		{
+			//The word is not valid,then remove.
+			wordToRemove.push_back(it->first);
+		}
+		else
+		{
+			//Remove invalid connection in current WordConnection.
+			it->second->RemoveInvalidConnection(validWords);
+		}
+	}
+
+	//Remove keys
+	for (auto toRemove : wordToRemove)
+	{
+		wordConnections.erase(toRemove);
+	}
+}
+
+void AnalyzeChineseDictionary::OutputToConceptConnectionToDatabase(
+	const map<string, shared_ptr<WordConnection>>& wordConnections) const
+{
+	ofstream out("concept_connection.tmp");
+
+	ConceptDatabase *db = new ConceptDatabase(GetDatabasePath());
+	db->Connect();
+	db->BeginTransaction();
+	for (auto connectionPair : wordConnections)
+	{
+		connectionPair.second->WriteToDB(db);
+	}
+
+	db->CommitTransaction();
+	delete db;
+}
+
 long WordConnection::count = 0;
+
+void WordConnection::WriteToDB(Mind::ConceptDatabase* db)
+{
+	if (_connections.empty()) return;
+
+	const int DEFAULT_ID = 0;
+
+	//Query word from database.
+	auto fromConcept = db->GetConcept(_word, DEFAULT_ID);
+	if (fromConcept == NULL)
+	{
+		WARN_FORMAT("Cannot find word '%s' in database.", _word.c_str());
+		return;
+	}
+
+	auto fromWord = fromConcept->GetWord();
+	//Add to database for each connection.
+	for (auto connection : _connections)
+	{
+		//Query word for connection word.
+		auto toConcept = db->GetConcept(connection, DEFAULT_ID);
+		if (toConcept == NULL)
+		{
+			WARN_FORMAT("Cannot find word '%s' in database.", _word.c_str());
+			continue;
+		}
+
+		auto toWord = toConcept->GetWord();
+		db->AddConnection(fromWord, DEFAULT_ID, toWord, DEFAULT_ID);
+	}
+}

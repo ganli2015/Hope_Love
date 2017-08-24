@@ -96,20 +96,31 @@ TEST(Preparation, RefreshConceptConnection)
 
 TEST(Preparation, ExtractConnection)
 {
+	CHECK_SKIP;
 	AnalyzeChineseDictionary acd;
 	acd.ExtractBaseWords("E:\\Artificial Intelligence\\Document\\DataBase\\ÏÖ´úººÓï´Êµä.txt");
 }
 
 TEST(Preparation, BuildConnection)
 {
+	CHECK_SKIP;
 	AnalyzeChineseDictionary acd;
 	acd.BuildConnection("E:\\Artificial Intelligence\\Document\\DataBase\\ÏÖ´úººÓï´Êµä.txt");
 }
 
 TEST(Preparation, AnalyzeValidConnections)
 {
+	CHECK_SKIP;
 	AnalyzeChineseDictionary acd;
 	acd.AnalyzeValidConnections("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt");
+}
+
+TEST(Preparation, OutputConnectionToDatabase)
+{
+	CHECK_SKIP;
+	AnalyzeChineseDictionary acd;
+	acd.OutputToDB("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt",
+		"D:\\Projects\\Hope_Love\\UnitTest\\valid_connection.txt");
 }
 
 TEST(Preparation, TestPOS)

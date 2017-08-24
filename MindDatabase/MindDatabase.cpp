@@ -38,6 +38,16 @@ namespace Mind
 			_db->Disconnect();
 	}
 
+	void MindDatabase::BeginTransaction()
+	{
+		_db->BeginTransaction();
+	}
+
+	void MindDatabase::CommitTransaction()
+	{
+		_db->CommitTransaction();
+	}
+
 	void MindDatabase::CheckConnect()
 	{
 		if (_db == NULL)

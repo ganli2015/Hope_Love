@@ -11,6 +11,7 @@ namespace DataCollection
 namespace Mind
 {
 	class iConcept;
+	class ConceptDatabase;
 }
 
 namespace Math
@@ -143,6 +144,28 @@ public:
 
 	void IsBase() { _isBase = true; }
 	bool IsBaseWord() const { return _isBase; }
+
+	//////////////////////////////////////////////////////////////////////////
+	//Remove invalid connections according to valid connection words.
+	//////////////////////////////////////////////////////////////////////////
+	void RemoveInvalidConnection(const set<string>& validWords)
+	{
+		for (vector<string>::iterator it = _connections.begin(); it != _connections.end();)
+		{
+			if (validWords.find(*it) != validWords.end())
+			{
+				//Is valid word.
+				++it;
+			}
+			else
+			{
+				//Invalid connection.
+				it = _connections.erase(it);
+			}
+		}
+	}
+
+	void WriteToDB(Mind::ConceptDatabase* db);
 };
 
 class AnalyzeChineseDictionary
@@ -192,6 +215,9 @@ public:
 	//Then collect words which have path to a base word.
 	//Finally output valid words to "valid_connection.txt".
 	void AnalyzeValidConnections(const string filePath);
+
+
+	void OutputToDB(const string connectionPath, const string validConnectionPath);
 
 private:
 
@@ -256,5 +282,12 @@ private:
 	vector<shared_ptr<WordConnection>> GetValidConnections(const vector<shared_ptr<Math::DirectedGraph>>& graphs);
 
 	void OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const;
+
+
+	set<string> ReadValidConnectionWords(const string filePath) const;
+
+	void RemoveInvalidWords(const set<string>& validWords, map<string, shared_ptr<WordConnection>>& wordConnections) const;
+
+	void OutputToConceptConnectionToDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
 };
 

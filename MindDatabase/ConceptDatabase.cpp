@@ -636,7 +636,7 @@ namespace Mind
 		}
 	}
 
-void ConceptDatabase::ChangePrimaryKeyToHash()
+	void ConceptDatabase::ChangePrimaryKeyToHash()
 	{
 		//Get all base concepts.
 		auto baseConcepts = GetAllBaseConcepts();
@@ -671,63 +671,63 @@ void ConceptDatabase::ChangePrimaryKeyToHash()
 
 	void ConceptDatabase::ReadConceptConnectionFromFile(const string filePath)
 	{
-		////Clear table "ConceptConnection".
-		//_db->DeleteRowsInTable(ConceptConnectionTable);
-
-		////Read connections from file.
-		//ifstream in(filePath);
-		//vector<Connection_Info> connections;
-		//string str;
-		//while (getline(in, str))
-		//{
-		//	Connection_Info connnection_info = ConceptSetInitializer::ParseStrToSimpleConnectionInfo(str);
-
-		//	connections.push_back(connnection_info);
-		//}
-
-		//_db->BeginTransaction();
-
-		//for (auto connection : connections)
-		//{
-		//	//Current concept.
-		//	auto me_ID = GenerateConceptPrimaryKey(connection.me.str, connection.me.id);
-		//	//Handle edges.
-		//	for (auto edge: connection.edge_infos)
-		//	{
-		//		auto to_ID = GenerateConceptPrimaryKey(edge.to.str, edge.to.id);
-		//		
-		//		string conncetionID = GenerateHash(me_ID + to_ID);
-
-		//		//Handle modification string.
-		//		string modStr = "";
-		//		if (edge.modStr != "")
-		//		{
-		//			auto modSplit = SplitString(edge.modStr, ' ');
-		//			if (IsModTable(modSplit))
-		//			{
-		//				modStr = ConvertModTableString(modSplit.front());
-		//			}
-		//			else
-		//			{
-		//				modStr = ConvertSingleMod(modSplit, to_ID);
-		//			}
-		//		}
-
-		//		//Insert to database.
-		//		string insertCmd = StringFormat("Insert into %s(connectionID,concept, toConcept,modification)\
-		//			VALUES(:connectionID,:concept, :toConcept,:modification) ", ConceptConnectionTable.c_str());
-
-		//		DBCmd cmd(insertCmd, *_db);
-		//		cmd.Bind(":connectionID", conncetionID);
-		//		cmd.Bind(":concept", me_ID);
-		//		cmd.Bind(":toConcept", to_ID);
-		//		cmd.Bind(":modification", AsciiToUtf8(modStr));
-
-		//		cmd.Execute();
-		//	}
-		//}
-
-		//_db->CommitTransaction();
+// 		//Clear table "ConceptConnection".
+// 		_db->DeleteRowsInTable(ConceptConnectionTable);
+// 
+// 		//Read connections from file.
+// 		ifstream in(filePath);
+// 		vector<Connection_Info> connections;
+// 		string str;
+// 		while (getline(in, str))
+// 		{
+// 			Connection_Info connnection_info = ConceptSetInitializer::ParseStrToSimpleConnectionInfo(str);
+// 
+// 			connections.push_back(connnection_info);
+// 		}
+// 
+// 		_db->BeginTransaction();
+// 
+// 		for (auto connection : connections)
+// 		{
+// 			//Current concept.
+// 			auto me_ID = GenerateConceptPrimaryKey(connection.me.str, connection.me.id);
+// 			//Handle edges.
+// 			for (auto edge: connection.edge_infos)
+// 			{
+// 				auto to_ID = GenerateConceptPrimaryKey(edge.to.str, edge.to.id);
+// 				
+// 				string conncetionID = GenerateHash(me_ID + to_ID);
+// 
+// 				//Handle modification string.
+// 				string modStr = "";
+// 				if (edge.modStr != "")
+// 				{
+// 					auto modSplit = SplitString(edge.modStr, ' ');
+// 					if (IsModTable(modSplit))
+// 					{
+// 						modStr = ConvertModTableString(modSplit.front());
+// 					}
+// 					else
+// 					{
+// 						modStr = ConvertSingleMod(modSplit, to_ID);
+// 					}
+// 				}
+// 
+// 				//Insert to database.
+// 				string insertCmd = StringFormat("Insert into %s(connectionID,concept, toConcept,modification)\
+// 					VALUES(:connectionID,:concept, :toConcept,:modification) ", ConceptConnectionTable.c_str());
+// 
+// 				DBCmd cmd(insertCmd, *_db);
+// 				cmd.Bind(":connectionID", conncetionID);
+// 				cmd.Bind(":concept", me_ID);
+// 				cmd.Bind(":toConcept", to_ID);
+// 				cmd.Bind(":modification", AsciiToUtf8(modStr));
+// 
+// 				cmd.Execute();
+// 			}
+// 		}
+// 
+// 		_db->CommitTransaction();
 	}
 
 	std::string ConceptDatabase::ConvertModTableString(const string modTableStr)

@@ -34,6 +34,9 @@ namespace Mind
 		void Connect();
 		void Disconnect();
 
+		void BeginTransaction();
+		void CommitTransaction();
+
 	protected:
 		//////////////////////////////////////////////////////////////////////////
 		//Check if database is connected.
