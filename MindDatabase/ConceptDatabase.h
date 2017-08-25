@@ -51,6 +51,10 @@ namespace Mind
 		//////////////////////////////////////////////////////////////////////////
 		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word);
 		void AddNonBaseConcept(const shared_ptr<DataCollection::Word> word,const int id);
+		void AddNonBaseConcept(const shared_ptr<Concept> concept);
+
+		void DeleteBaseConcept(const string word, const int conceptId);
+		void DeleteNonBaseConcept(const string word, const int id);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Add connection between two concepts.
@@ -204,6 +208,15 @@ namespace Mind
 		static const string Word = "word";
 		static const string POS = "pos";
 		static const string Connection = "connection";
+	};
+
+	namespace BaseConceptField
+	{
+		static const string ConceptID = "conceptID";
+		static const string ID = "id";
+		static const string Word = "word";
+		static const string BaseID = "baseID";
+		static const string POS = "pos";
 	};
 
 	namespace ConceptConnectionField

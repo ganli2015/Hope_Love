@@ -4,6 +4,7 @@
 #include "../CommonTools/DBoperator.h"
 #include "../CommonTools/QueryStatement.h"
 #include "../CommonTools/UpdateStatement.h"
+#include "../CommonTools/DeleteStatement.h"
 
 #include "../MindElement/MindElementCreator.h"
 
@@ -62,6 +63,12 @@ namespace Mind
 	}
 
 	void MindDatabase::UpdateDatabase(const CommonTool::UpdateStatement& statement)
+	{
+		DBCmd cmd(statement.GetString(), *_db);
+		cmd.Execute();
+	}
+
+	void MindDatabase::DeleteRow(const CommonTool::DeleteStatement& statement)
 	{
 		DBCmd cmd(statement.GetString(), *_db);
 		cmd.Execute();

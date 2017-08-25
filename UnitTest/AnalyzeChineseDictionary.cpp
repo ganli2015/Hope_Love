@@ -21,6 +21,7 @@
 #include "../MindDatabase/ConceptDatabase.h"
 
 #include "../MindElement/Concept.h"
+#include "../MindElement/BaseConcept.h"
 
 using namespace Mind;
 using namespace CommonTool;
@@ -82,6 +83,8 @@ void AnalyzeChineseDictionary::OutputToDB(const string connectionPath, const str
 	auto validWords = ReadValidConnectionWords("valid_connection.txt");
 
 	RemoveInvalidWords(validWords, wordConnections);
+
+	RefactorConceptInDatabase(wordConnections);
 
 	OutputToConceptConnectionToDatabase(wordConnections);
 }
@@ -652,11 +655,34 @@ void AnalyzeChineseDictionary::RemoveInvalidWords(const set<string>& validWords,
 	}
 }
 
+void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const
+{
+	ConceptDatabase *db = new ConceptDatabase(GetDatabasePath());
+	db->Connect();
+	db->BeginTransaction();
+	for (auto connectionPair : wordConnections)
+	{
+		auto wordConnection = connectionPair.second;
+		if (!wordConnection->IsBaseWord())
+		{
+			//Remove concept in base concept table if exists and
+			//add to non base concept table.
+			auto conceptInBaseDb = db->GetBaseConcept(0, wordConnection->GetWord());
+
+			if (conceptInBaseDb != NULL)
+			{
+				db->DeleteBaseConcept(wordConnection->GetWord(), 0);
+				db->AddNonBaseConcept(conceptInBaseDb);
+			}
+		}
+	}
+	db->CommitTransaction();
+	delete db;
+}
+
 void AnalyzeChineseDictionary::OutputToConceptConnectionToDatabase(
 	const map<string, shared_ptr<WordConnection>>& wordConnections) const
 {
-	ofstream out("concept_connection.tmp");
-
 	ConceptDatabase *db = new ConceptDatabase(GetDatabasePath());
 	db->Connect();
 	db->BeginTransaction();

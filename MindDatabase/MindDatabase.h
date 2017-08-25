@@ -8,6 +8,7 @@ namespace CommonTool
 	class DBRow;
 	class QueryStatement;
 	class UpdateStatement;
+	class DeleteStatement;
 }
 
 
@@ -48,6 +49,7 @@ namespace Mind
 		vector<CommonTool::DBRow> QueryRows(const string& cmd);
 
 		void UpdateDatabase(const CommonTool::UpdateStatement& statement);
+		void DeleteRow(const CommonTool::DeleteStatement& statement);
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get row from primary key in the table.

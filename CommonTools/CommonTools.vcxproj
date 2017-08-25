@@ -158,6 +158,7 @@
     <ClInclude Include="CommonTranslateFunction.h" />
     <ClInclude Include="ConfigureInfoManager.h" />
     <ClInclude Include="DBoperator.h" />
+    <ClInclude Include="DeleteStatement.h" />
     <ClInclude Include="GeneralFunctor.h" />
     <ClInclude Include="IJob.h" />
     <ClInclude Include="InOut.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="CommonTranslateFunction.cpp" />
     <ClCompile Include="ConfigureInfoManager.cpp" />
     <ClCompile Include="DBoperator.cpp" />
+    <ClCompile Include="DeleteStatement.cpp" />
     <ClCompile Include="IOFunction.cpp" />
     <ClCompile Include="LogWriter.cpp" />
     <ClCompile Include="MemoryDetector.cpp" />

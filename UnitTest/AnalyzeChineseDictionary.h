@@ -288,6 +288,15 @@ private:
 
 	void RemoveInvalidWords(const set<string>& validWords, map<string, shared_ptr<WordConnection>>& wordConnections) const;
 
+	//////////////////////////////////////////////////////////////////////////
+	//Check base concepts and non base concepts in the database.
+	//According to <wordConnections>, move the concepts to the right table.
+	//////////////////////////////////////////////////////////////////////////
+	void RefactorConceptInDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
 	void OutputToConceptConnectionToDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
 };
 

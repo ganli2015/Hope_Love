@@ -14,6 +14,7 @@
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/QueryStatement.h"
 #include "../CommonTools/UpdateStatement.h"
+#include "../CommonTools/DeleteStatement.h"
 #include "../CommonTools/MyException.h"
 
 using namespace CommonTool;
@@ -87,7 +88,30 @@ namespace Mind
 		AddNonBaseConcept(id, word->GetString(), word->Type());
 	}
 
-	void ConceptDatabase::AddConnection(const shared_ptr<DataCollection::Word> fromWord, const int fromId, 
+	void ConceptDatabase::AddNonBaseConcept(const shared_ptr<Concept> concept)
+	{
+		AddNonBaseConcept(concept->GetWord(), concept->GetId());
+	}
+
+	void ConceptDatabase::DeleteBaseConcept(const string word, const int conceptId)
+	{
+		DeleteStatement state(BaseConceptTable);
+		state.EQ(BaseConceptField::Word, word);
+		state.EQ(BaseConceptField::ID, conceptId);
+
+		DeleteRow(state);
+	}
+
+	void ConceptDatabase::DeleteNonBaseConcept(const string word, const int id)
+	{
+		DeleteStatement state(NonBaseConceptTable);
+		state.EQ(NonBaseConceptField::Word, word);
+		state.EQ(NonBaseConceptField::ID, id);
+
+		DeleteRow(state);
+	}
+
+	void ConceptDatabase::AddConnection(const shared_ptr<DataCollection::Word> fromWord, const int fromId,
 		const shared_ptr<DataCollection::Word> toWord, const int toId)
 	{
 		//Generate connection ID.
@@ -125,10 +149,10 @@ namespace Mind
 		string connectionStr = fromConceptRow.HasColumn(NonBaseConceptField::Connection)?
 			fromConceptRow.GetText(NonBaseConceptField::Connection) : "";
 		auto connectionIDs = SplitString(connectionStr, ' ');
-		if (find(connectionIDs.begin(), connectionIDs.end(), fromPk) == connectionIDs.end())
+		if (find(connectionIDs.begin(), connectionIDs.end(), connectionID) == connectionIDs.end())
 		{
 			//If find no existing connection ID, then append it and update NonBaseConceptTable.
-			AppendSegmentToString(fromPk, connectionStr);
+			AppendSegmentToString(connectionID, connectionStr);
 
 			//Update concept table.
 			UpdateStatement updateState(NonBaseConceptTable);
@@ -209,7 +233,8 @@ namespace Mind
 		}
 		else
 		{
-			throw DatabaseException(BaseConceptTable, "Invalid word: " + word);
+			//throw DatabaseException(BaseConceptTable, "Invalid word: " + word);
+			return NULL;
 		}
 	}
 
