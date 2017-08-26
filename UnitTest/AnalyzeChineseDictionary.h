@@ -216,7 +216,12 @@ public:
 	//Finally output valid words to "valid_connection.txt".
 	void AnalyzeValidConnections(const string filePath);
 
-
+	//////////////////////////////////////////////////////////////////////////
+	//Select valid connection words according to data in the file <validConnectionPath>.
+	//Output connection data to the database.
+	//Base concepts and Non base concepts in the database will be adjusted according to 
+	//previous analysis from the Chinese dictionary.
+	//////////////////////////////////////////////////////////////////////////
 	void OutputToDB(const string connectionPath, const string validConnectionPath);
 
 private:
@@ -286,6 +291,12 @@ private:
 
 	set<string> ReadValidConnectionWords(const string filePath) const;
 
+
+
+	//////////////////////////////////////////////////////////////////////////
+	//Remove invalid key words in the <wordConnections>.
+	//And invalid connection words in the WordConnection will be removed as well.
+	//////////////////////////////////////////////////////////////////////////
 	void RemoveInvalidWords(const set<string>& validWords, map<string, shared_ptr<WordConnection>>& wordConnections) const;
 
 	//////////////////////////////////////////////////////////////////////////

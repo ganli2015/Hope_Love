@@ -84,6 +84,8 @@ void AnalyzeChineseDictionary::OutputToDB(const string connectionPath, const str
 
 	RemoveInvalidWords(validWords, wordConnections);
 
+	ReadWordsFromFile(BASE_WORD_FILE, _baseWordDefs);
+
 	RefactorConceptInDatabase(wordConnections);
 
 	OutputToConceptConnectionToDatabase(wordConnections);
@@ -660,6 +662,7 @@ void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, share
 	ConceptDatabase *db = new ConceptDatabase(GetDatabasePath());
 	db->Connect();
 	db->BeginTransaction();
+	//Move some base concepts to non base concept table.
 	for (auto connectionPair : wordConnections)
 	{
 		auto wordConnection = connectionPair.second;
@@ -676,6 +679,19 @@ void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, share
 			}
 		}
 	}
+
+	//Check base concepts match with <_baseWordDefs>, otherwise concepts will be removed from database.
+	auto allBaseConcepts = db->GetAllBaseConcepts();
+	for (auto baseConcept : allBaseConcepts)
+	{
+		if (_baseWordDefs.find(baseConcept->GetWord()->GetString()) == _baseWordDefs.end())
+		{
+			//Cannot find word of base concept in the <_baseWordDefs>.
+			//Remove it from database.
+			db->DeleteBaseConcept(baseConcept->GetWord()->GetString(), baseConcept->GetId());
+		}
+	}
+
 	db->CommitTransaction();
 	delete db;
 }
