@@ -1,6 +1,6 @@
 #pragma once
 #include "InOut.h"
-
+#include <functional>
 
 namespace DataWrapperCPP
 {
@@ -9,7 +9,6 @@ namespace DataWrapperCPP
 
 class _COMMANDINOUT Command : public Obj<Command>
 {
-protected:
 public:
 	Command(void);
 	virtual ~Command(void);
@@ -18,5 +17,6 @@ public:
 
 private:
 	void UpdateConfigureManager() const;
+
 };
 

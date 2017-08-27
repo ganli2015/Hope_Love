@@ -50,7 +50,7 @@ namespace ManageWrapper
 		UpdateDataWrapperCPP(data);
 
 		LOG("Input sentence: "+_datawrappercpp->GetInputSentence());
-		Command* acommand=new SpeakCommand(_datawrappercpp);
+		Command* acommand = SpeakCommand::Create("posTagging", _datawrappercpp);
 		acommand->Update();
 		LOG("Output sentence: "+_datawrappercpp->GetNewOutSentence());
 		LOG("\n\n\n");

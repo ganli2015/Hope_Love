@@ -23,6 +23,12 @@
     <ClInclude Include="InOut.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="POSTaggingCommand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChattingCommand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -32,6 +38,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SpeakCommand.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="POSTaggingCommand.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChattingCommand.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -144,13 +144,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChattingCommand.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="InOut.h" />
+    <ClInclude Include="POSTaggingCommand.h" />
     <ClInclude Include="SpeakCommand.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChattingCommand.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="POSTaggingCommand.cpp" />
     <ClCompile Include="SpeakCommand.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -24,28 +24,28 @@ namespace ManageWrapper
 	{
 		LOG("--------------------------Start-----------------------");
 
-		///ConfigureInfoManager
+		//ConfigureInfoManager
 		shared_ptr<CommonTool::ConfigureInfoManager> cfgInfo=CommonTool::ConfigureInfoManager::GetInstance();
 		cfgInfo->UpdateConfigure();
 
-		///MindElementCreator
+		//MindElementCreator
 		shared_ptr<Mind::MindElementCreator> mindElementCreator(new Mind::MindElementCreator());
 		Mind::iMindElementCreator::SetImp(mindElementCreator);
 
-		///LogicElementCreator
+		//LogicElementCreator
 		shared_ptr<LogicSystem::LogicElementCreator> logicElementCreator(new LogicSystem::LogicElementCreator());
 		LogicSystem::iLogicElementCreator::SetImp(logicElementCreator);
 
-		///iCerebrum
+		//iCerebrum
 		Mind::Cerebrum *brain=Mind::Cerebrum::Instance();
 		Mind::iCerebrum::SetInstance(brain);
 
-		///iLogicKnowledge
-		LogicSystem::LogicKnowledge* knowledge=new LogicSystem::LogicKnowledge();
-		LogicSystem::LogicKnowledgeInitializer knowledgeInit;
-		knowledgeInit.Initialize("HopeLoveData\\LogicStatements.txt",knowledge);
-		LOG("Initialized LogicKnowledge.");
-		brain->SetLogicKnowledge(knowledge);
+		//iLogicKnowledge
+// 		LogicSystem::LogicKnowledge* knowledge=new LogicSystem::LogicKnowledge();
+// 		LogicSystem::LogicKnowledgeInitializer knowledgeInit;
+// 		knowledgeInit.Initialize("HopeLoveData\\LogicStatements.txt",knowledge);
+// 		LOG("Initialized LogicKnowledge.");
+// 		brain->SetLogicKnowledge(knowledge);
 
 	}
 }

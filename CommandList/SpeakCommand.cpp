@@ -1,20 +1,12 @@
 #include "StdAfx.h"
 #include "SpeakCommand.h"
-
-#include "../DataCollection/Sentence.h"
-#include "../DataCollection/LanguageFunc.h"
-
-#include "../DataWrapperCPP/DataWrapper.h"
-
-#include "../ReactionList/SpeakCommand.h"
-
-#include "../SentenceAnalysisAlgorithm/SentenceParser.h"
+#include "ChattingCommand.h"
+#include "POSTaggingCommand.h"
 
 using namespace std;
-SpeakCommand::SpeakCommand(void)
-{
-}
 
+
+map<string, SpeakCommand::CommandCreator> SpeakCommand::commandMap = CreateCommandMap();
 
 SpeakCommand::~SpeakCommand(void)
 {
@@ -25,46 +17,25 @@ SpeakCommand::SpeakCommand(DataWrapperCPP::DataWrapper_Sentence* datawrapper)
 	_datawrapper=datawrapper;
 }
 
-void SpeakCommand::Update()
+Command* SpeakCommand::Create(const string commandName, DataWrapperCPP::DataWrapper_Sentence* data)
 {
-	string sentence=_datawrapper->GetInputSentence();
-	if(sentence=="") return;
-
-	shared_ptr<SentenceParser> sentenceParser(new SentenceParser(sentence));
-	sentenceParser->Execute();
-
-	shared_ptr<DataCollection::Sentence> parsedSentence=sentenceParser->GetParsedSentence();
-	shared_ptr<Mind::iConceptInteractTable> interactTable=sentenceParser->GetInteractTable();
-	_datawrapper->AddParsedInputSentence(parsedSentence);
-
-	//Output POS tagging as result.
-	auto posTagging = ConvertToPOSString(sentenceParser->GetPOSTagging());
-	_datawrapper->AddOutputSentence(posTagging);
-	return;
-
-	vector<shared_ptr<DataCollection::Sentence>> reactInputSentence;
-	reactInputSentence.push_back(parsedSentence);
-	shared_ptr<SpeakReaction> reaction(new SpeakReaction(reactInputSentence,interactTable));
-	reaction->React();
-	shared_ptr<DataCollection::Sentence> reactSentence=reaction->GetReactSentence();
-	if(reactSentence==NULL)
+	if (commandMap.find(commandName) == commandMap.end())
 	{
-		//Add nothing to output when we have no react sentence.
-		_datawrapper->AddOutputSentence("");
-		return;
+		throw invalid_argument("Cannot find command with name : " + commandName);
 	}
-	string reactStr=reactSentence->GetString();
 
-	_datawrapper->AddOutputSentence(reactStr);
+	return commandMap[commandName](data);
 }
 
-std::string SpeakCommand::ConvertToPOSString(const vector<shared_ptr<DataCollection::Word>>& words) const
+map<string, SpeakCommand::CommandCreator> SpeakCommand::CreateCommandMap()
 {
-	string res = "";
-	for (auto word : words)
-	{
-		res += word->GetString() + "/" + DataCollection::LanguageFunc::GetChineseTern(word->Type()) + " ";
-	}
+	map<string, CommandCreator> res;
+
+	res["chatting"] = [](DataWrapperCPP::DataWrapper_Sentence* data)->
+		Command* {return new ChattingCommand(data); };
+
+	res["posTagging"] = [](DataWrapperCPP::DataWrapper_Sentence* data)->
+		Command* {return new POSTaggingCommand(data); };
 
 	return res;
 }

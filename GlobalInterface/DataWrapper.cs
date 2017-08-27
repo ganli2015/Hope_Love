@@ -11,6 +11,13 @@ namespace GlobalInterface
         OutputString
     }
 
+    public enum CommandType
+    {
+        Chatting,
+        POSTagging,
+        FindSimilarWord
+    }
+
     public interface DataWrapper
     {
         object GetData(DataType type);

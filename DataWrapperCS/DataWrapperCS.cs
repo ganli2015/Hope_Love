@@ -8,8 +8,15 @@ namespace DataWrapperCS
 {
     public class DataWrapper_CS : GlobalInterface.DataWrapper
     {
+        public CommandType Command { get; }
+
         string _inputsentence;
         string _outputsentence;
+
+        public DataWrapper_CS(CommandType command = CommandType.Chatting)
+        {
+            this.Command = command;
+        }
 
         public object GetData(DataType type)
         {
