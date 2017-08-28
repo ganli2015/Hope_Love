@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Configuration;
 using GlobalInterface;
 using DataWrapper = GlobalInterface.DataWrapper;
 using System.IO;
@@ -17,6 +18,7 @@ namespace HopeLove
     {
         List<CPPManager> _managers = new List<CPPManager>();
         string _name = "HopeLove";
+        Dictionary<string, string> configParams = new Dictionary<string, string>();
 
         public MainWindow()
         {
@@ -64,6 +66,16 @@ namespace HopeLove
 
             ManageWrapper.Manager_HopeLove manager=new ManageWrapper.Manager_HopeLove();
             Register(manager);
+
+            //Load app.config
+            if (ConfigurationManager.AppSettings.HasKeys())
+            {
+                //循环遍历出配置文件中的所有的键Key
+                foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+                {
+                    configParams.Add(key,ConfigurationManager.AppSettings[key]);
+                }
+            }
         }
 
         private TextBox CreateInputBox()
@@ -104,7 +116,15 @@ namespace HopeLove
 
         private GlobalInterface.DataWrapper CreateDataWrapper(string str)
         {
-            DataWrapperCS.DataWrapper_CS data = new DataWrapperCS.DataWrapper_CS();
+            DataWrapperCS.DataWrapper_CS data = null;
+            if(this.configParams.ContainsKey("CommandName"))
+            {
+                data = new DataWrapperCS.DataWrapper_CS(configParams["CommandName"]);
+            }
+            else
+            {
+                data = new DataWrapperCS.DataWrapper_CS();
+            }
             data.SetData(DataType.InputString, str);
 
             return data;

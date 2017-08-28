@@ -21,6 +21,16 @@ using namespace std;
 
 namespace ManageWrapper
 {
+	string ConvertToString(String^ csStr)
+	{
+		IntPtr pString = Marshal::StringToHGlobalAnsi(csStr);
+
+		char* pchString = static_cast<char*>(pString.ToPointer());
+		string astring(pchString);
+
+		return astring;
+	}
+
 
 	Manager_HopeLove::Manager_HopeLove(void):_datawrappercpp(new DataWrapperCPP::DataWrapper_Sentence)
 	{	
@@ -47,10 +57,13 @@ namespace ManageWrapper
 		CommonTool::LogWriter::ResetStartTime();
 		CommonTool::EfficiencyRecorder::Clear();
 
+		string commandName = ConvertToString(data->GetCommandName());
+		LOG("Command name: " + commandName);
+
 		UpdateDataWrapperCPP(data);
 
 		LOG("Input sentence: "+_datawrappercpp->GetInputSentence());
-		Command* acommand = SpeakCommand::Create("posTagging", _datawrappercpp);
+		Command* acommand = SpeakCommand::Create(commandName, _datawrappercpp);
 		acommand->Update();
 		LOG("Output sentence: "+_datawrappercpp->GetNewOutSentence());
 		LOG("\n\n\n");
@@ -72,10 +85,7 @@ namespace ManageWrapper
 			return ;
 		}
 
-		IntPtr pString=Marshal::StringToHGlobalAnsi(sentence);
-
-		char* pchString=static_cast<char*>(pString.ToPointer());
-		string astring(pchString);
+		string astring = ConvertToString(sentence);
 		_datawrappercpp->AddInputSentence(astring);
 	}
 
