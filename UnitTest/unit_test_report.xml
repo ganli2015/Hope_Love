@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="12" failures="0" disabled="0" errors="0" timestamp="2017-08-30T00:42:09" time="2.712" name="AllTests">
-  <testsuite name="Test_Math/Test_Vector" tests="12" failures="0" disabled="0" errors="0" time="2.709">
-    <testcase name="GetVector/0" value_param="48-byte object &lt;40-3F 85-00 00-00 00-00 30-3F 85-00 00-00 00-00 00-F0 84-00 00-00 00-00 60-F9 84-00 00-00 00-00 74-F9 84-00 00-00 00-00 74-F9 84-00 00-00 00-00&gt;" status="run" time="2.701" classname="Test_Math/Test_Vector" />
-    <testcase name="GetVector/1" value_param="48-byte object &lt;D0-3E 85-00 00-00 00-00 C0-3E 85-00 00-00 00-00 50-F5 84-00 00-00 00-00 C0-F8 84-00 00-00 00-00 D4-F8 84-00 00-00 00-00 D4-F8 84-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="GetVector/2" value_param="48-byte object &lt;B0-3F 85-00 00-00 00-00 A0-3F 85-00 00-00 00-00 00-F0 84-00 00-00 00-00 90-4A 85-00 00-00 00-00 B8-4A 85-00 00-00 00-00 B8-4A 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="GetVector/3" value_param="48-byte object &lt;90-47 85-00 00-00 00-00 80-47 85-00 00-00 00-00 C0-F8 84-00 00-00 00-00 90-4A 85-00 00-00 00-00 B8-4A 85-00 00-00 00-00 B8-4A 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/0" value_param="48-byte object &lt;40-3F 85-00 00-00 00-00 30-3F 85-00 00-00 00-00 50-09 85-00 00-00 00-00 00-F0 84-00 00-00 00-00 14-F0 84-00 00-00 00-00 14-F0 84-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/1" value_param="48-byte object &lt;D0-3E 85-00 00-00 00-00 C0-3E 85-00 00-00 00-00 D0-F7 84-00 00-00 00-00 50-F5 84-00 00-00 00-00 64-F5 84-00 00-00 00-00 64-F5 84-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/2" value_param="48-byte object &lt;B0-3F 85-00 00-00 00-00 A0-3F 85-00 00-00 00-00 50-09 85-00 00-00 00-00 70-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/3" value_param="48-byte object &lt;90-47 85-00 00-00 00-00 80-47 85-00 00-00 00-00 50-F5 84-00 00-00 00-00 70-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/4" value_param="48-byte object &lt;50-49 85-00 00-00 00-00 40-49 85-00 00-00 00-00 D0-F7 84-00 00-00 00-00 70-F8 84-00 00-00 00-00 84-F8 84-00 00-00 00-00 84-F8 84-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/5" value_param="48-byte object &lt;30-4A 85-00 00-00 00-00 20-4A 85-00 00-00 00-00 50-F5 84-00 00-00 00-00 50-09 85-00 00-00 00-00 64-09 85-00 00-00 00-00 64-09 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/6" value_param="48-byte object &lt;C0-49 85-00 00-00 00-00 B0-49 85-00 00-00 00-00 D0-F7 84-00 00-00 00-00 70-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
-    <testcase name="Dimension/7" value_param="48-byte object &lt;A0-4A 85-00 00-00 00-00 90-4A 85-00 00-00 00-00 50-09 85-00 00-00 00-00 70-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00 98-BA 85-00 00-00 00-00&gt;" status="run" time="0" classname="Test_Math/Test_Vector" />
+<testsuites tests="2" failures="0" disabled="0" errors="0" timestamp="2017-08-30T01:29:01" time="0.107" name="AllTests">
+  <testsuite name="Test_NeuralNetworkDesign" tests="2" failures="0" disabled="0" errors="0" time="0.104">
+    <testcase name="MultilayerNetwork" status="run" time="0.046" classname="Test_NeuralNetworkDesign" />
+    <testcase name="MOBP" status="run" time="0.058" classname="Test_NeuralNetworkDesign" />
   </testsuite>
 </testsuites>

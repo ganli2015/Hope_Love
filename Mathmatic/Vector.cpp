@@ -4,6 +4,7 @@
 #include "SparseVector.h"
 #include "iMatrix.h"
 
+#include "../CommonTools/CommonCompareFunction.h"
 
 namespace Math
 {
@@ -32,6 +33,7 @@ namespace Math
 
 	Vector::Vector( const Vector& vec ) 
 	{
+		_type = vec._type;
 		if (vec._type == Dense)
 		{
 			_imp = new VectorEigen(vec.Dimension());
@@ -61,6 +63,14 @@ namespace Math
 
 	Vector::Vector(VectorImp* imp)
 	{
+		if (CommonTool::IsType<VectorEigen>(imp))
+		{
+			_type = Dense;
+		}
+		else if (CommonTool::IsType<SparseVector>(imp))
+		{
+			_type = Sparse;
+		}
 		_imp = imp;
 	}
 
