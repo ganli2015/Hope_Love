@@ -15,23 +15,24 @@ namespace Math
 		Eigen::VectorXf _vec;
 
 		friend class MatrixEigen;
+		friend class SparseVector;
 	public:
 		VectorEigen(const size_t d);
 
 		virtual ~VectorEigen(void);
 
-		VectorEigen(std::vector<double> r);
+		VectorEigen(std::vector<float> r);
 
-		VectorEigen(const int d, const double val);
+		VectorEigen(const int d, const float val);
 
-		virtual std::vector<double> GetVector() const ;
+		virtual std::vector<float> GetVector() const ;
 
 		virtual size_t Dimension() const ;
 
-		virtual double Norm() const;
+		virtual float Norm() const;
 
-		virtual void Set_ithVal(size_t i, double val);
-		virtual double Get_ithVal(size_t i) const ;
+		virtual void Set_ithVal(size_t i, float val);
+		virtual float Get_ithVal(size_t i) const ;
 		virtual float& Get_ithValRef(size_t i);
 
 		virtual VectorImp* Normalized() const;

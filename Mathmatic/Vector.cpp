@@ -1,22 +1,30 @@
 #include "StdAfx.h"
 #include "Vector.h"
 #include "VectorEigen.h"
+#include "SparseVector.h"
 #include "iMatrix.h"
 
 
 namespace Math
 {
-	Math::Vector::Vector( const size_t d ) :_imp(new VectorEigen(d))
+	Math::Vector::Vector(const size_t d, Vector::Type type) : _type(type)
+	{
+		if (type==Dense)
+		{
+			_imp = new VectorEigen(d);
+		}
+		else if (type == Sparse)
+		{
+			_imp = new SparseVector(d);
+		}
+	}
+
+	Math::Vector::Vector(std::vector<float> r) : _imp(new VectorEigen(r)), _type(Dense)
 	{
 
 	}
 
-	Math::Vector::Vector( std::vector<double> r ) : _imp(new VectorEigen(r))
-	{
-
-	}
-
-	Math::Vector::Vector( const int d,const double val ) : _imp(new VectorEigen(d,val))
+	Math::Vector::Vector( const int d,const double val) : _imp(new VectorEigen(d,val)), _type(Dense)
 	{
 
 	}
@@ -24,11 +32,29 @@ namespace Math
 
 	Vector::Vector( const Vector& vec ) 
 	{
-		_imp = new VectorEigen(vec.Dimension());
-
-		for (size_t i = 0; i < vec.Dimension(); ++i)
+		if (vec._type == Dense)
 		{
-			_imp->Set_ithVal(i, vec.Get_ithVal(i));
+			_imp = new VectorEigen(vec.Dimension());
+
+			for (size_t i = 0; i < vec.Dimension(); ++i)
+			{
+				_imp->Set_ithVal(i, vec.Get_ithVal(i));
+			}
+		}
+		else if (vec._type == Sparse)
+		{
+			_imp = new SparseVector(vec.Dimension());
+
+			for (size_t i = 0; i < vec.Dimension(); ++i)
+			{
+				auto val = vec.Get_ithVal(i);
+				if (Math::DoubleCompare(val, 0) != 0)
+				{
+					//Set value only when it is not zero,
+					//otherwise it may break the structure of sparse vector.
+					_imp->Set_ithVal(i, val);
+				}
+			}
 		}
 	}
 
@@ -43,7 +69,7 @@ namespace Math
 		delete _imp;
 	}
 
-	std::vector<double> Math::Vector::GetVector() const
+	std::vector<float> Math::Vector::GetVector() const
 	{
 		return _imp->GetVector();
 	}
@@ -85,7 +111,14 @@ namespace Math
 
 	Vector& Math::Vector::operator=( const Vector& vec )
 	{
-		_imp = ConstructVectorImp(vec);
+		if (vec._type == Dense)
+		{
+			_imp = ConstructDenseVectorImp(vec);
+		}
+		else if (vec._type == Sparse)
+		{
+			_imp = ConstructSparseVectorImp(vec);
+		}
 		return *this;
 	}
 
@@ -94,13 +127,31 @@ namespace Math
 		return _imp->Get_ithValRef(i);
 	}
 
-	VectorImp* Vector::ConstructVectorImp(Vector vec)
+	VectorImp* Vector::ConstructDenseVectorImp(Vector vec)
 	{
 		VectorImp* imp = new VectorEigen(vec.Dimension());
 
 		for (size_t i = 0; i < vec.Dimension(); ++i)
 		{
 			imp->Set_ithVal(i, vec.Get_ithVal(i));
+		}
+
+		return imp;
+	}
+
+	VectorImp* Vector::ConstructSparseVectorImp(Vector vec)
+	{
+		VectorImp* imp = new SparseVector(vec.Dimension());
+
+		for (size_t i = 0; i < vec.Dimension(); ++i)
+		{
+			auto val = vec.Get_ithVal(i);
+			if (Math::DoubleCompare(val, 0) != 0)
+			{
+				//Set value only when it is not zero,
+				//otherwise it may break the structure of sparse vector.
+				imp->Set_ithVal(i, val);
+			}
 		}
 
 		return imp;
@@ -157,7 +208,7 @@ namespace Math
 	{
 		assert_same_int(left.Dimension(), right.Dimension());
 		int n=left.Dimension();
-		vector<double> newvec;
+		vector<float> newvec;
 		newvec.reserve(n);
 		for (int i=0;i<n;++i)
 		{
@@ -170,7 +221,7 @@ namespace Math
 	{
 		assert_same_int(left.Dimension(),right.Dimension());
 		int n=left.Dimension();
-		vector<double> newvec;
+		vector<float> newvec;
 		newvec.reserve(n);
 		for (int i=0;i<n;++i)
 		{
@@ -182,7 +233,7 @@ namespace Math
 	Vector operator*(const Vector& left,const double val) 
 	{
 		int n=left.Dimension();
-		vector<double> newvec;
+		vector<float> newvec;
 		newvec.reserve(n);
 		for (int i=0;i<n;++i)
 		{

@@ -100,6 +100,7 @@
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4305;4838</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +131,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4305;4838</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +163,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CallingConvention>StdCall</CallingConvention>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>4305;4838</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -194,6 +197,7 @@ If NOT exist "Log" mkdir "Log" </Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CallingConvention>StdCall</CallingConvention>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>4305;4838</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -248,6 +252,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClInclude Include="Test_NumericalOptimization.h" />
     <ClInclude Include="Test_ReactionAnalysisAlgorithm.h" />
     <ClInclude Include="Test_SentenceAnalysisAlgorithm.h" />
+    <ClInclude Include="Test_Vector.h" />
     <ClInclude Include="UTInitializer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +289,7 @@ If NOT exist "Log" mkdir "Log" </Command>
     <ClCompile Include="Test_NumericalOptimization.cpp" />
     <ClCompile Include="Test_ReactionAnalysisAlgorithm.cpp" />
     <ClCompile Include="Test_SentenceAnalysisAlgorithm.cpp" />
+    <ClCompile Include="Test_Vector.cpp" />
     <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="UTInitializer.cpp" />
   </ItemGroup>

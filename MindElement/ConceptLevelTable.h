@@ -23,9 +23,11 @@ namespace Mind
 		ConceptLevelTable(const shared_ptr<iConcept> val);
 		virtual ~ConceptLevelTable(void);
 
-
-		//如果_levels没有concept，则添加一个；否则与之前记录的concept的level作比较，选择较小的level。
-		void Insert(const shared_ptr<iConcept> concept,const int level);
+		//Add a distance <level> to a base concept <concept>.
+		//<concept> should be a base concept.
+		//If there already exists <concept> in me, then update the level to <concept> with the smaller one.
+		//Closer to base concept, larger the level is.
+		void Insert(const shared_ptr<iConcept> concept, const int level);
 		//<me>与concept之间的level，如果是同一个concept，返回0.如果两者没有连接关系，返回-1.
 		int LevelTo(const shared_ptr<iConcept> concept) const;
 	private:

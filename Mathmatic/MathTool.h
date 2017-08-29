@@ -9,11 +9,16 @@ namespace Math
 	const double PI=3.1415926;
 	const double e=2.718281828459;
 	const int BigInt=100000000;
-	//////////////////////////////////////////////////////////////////////////
+
 	//If <left> is bigger than <right>, return 1.
 	//If <left> is near <right> within <tol>, return 0.
 	//If <left> is smaller than <right>, return -1.
 	int _MATHMATICINOUT DoubleCompare(double left,double right,double tol=1e-6);
+	//If <left> is bigger than <right>, return 1.
+	//If <left> is near <right> within <tol>, return 0.
+	//If <left> is smaller than <right>, return -1.
+	int _MATHMATICINOUT FloatCompare(float left, float right, double tol = 1e-4);
+
 	vector<double> _MATHMATICINOUT Normalized(const vector<double> val);
 	//获得val的小数部分的数字
 	vector<int> _MATHMATICINOUT GetDicemalDigit(const double val,const int num);
@@ -22,7 +27,7 @@ namespace Math
 
 	double _MATHMATICINOUT RandomDouble(int figure=10);
 
-	Vector _MATHMATICINOUT ToVector(const double val[], const int n);
+	Vector _MATHMATICINOUT ToVector(const float val[], const int n);
 
 	Matrix _MATHMATICINOUT CreateRandomMatrix(size_t i,size_t j);
 

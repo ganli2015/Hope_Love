@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 map<string, SpeakCommand::CommandCreator> SpeakCommand::commandMap = CreateCommandMap();
 
 SpeakCommand::~SpeakCommand(void)

@@ -11,10 +11,12 @@ namespace Math
 		Eigen::MatrixXf _mat;
 
 		friend class VectorEigen;
+		friend class SparseVector;
 	public:
 		MatrixEigen(const int i, const int j);
 		~MatrixEigen(void);
 		MatrixEigen(const std::vector<std::vector<double>> val);
+		MatrixEigen(Eigen::MatrixXf mat);
 
 		MatrixEigen(const std::vector<Vector>& val);
 
@@ -43,7 +45,6 @@ namespace Math
 		virtual MatrixImp* Multiply(const MatrixImp* right) const;
 
 	private: 
-		MatrixEigen(Eigen::MatrixXf mat);
 	};
 }
 

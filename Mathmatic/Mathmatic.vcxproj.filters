@@ -65,6 +65,9 @@
     <ClInclude Include="TraverseData.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SparseVector.h">
+      <Filter>imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -111,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="TraverseData.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SparseVector.cpp">
+      <Filter>imp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

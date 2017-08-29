@@ -13,14 +13,14 @@ namespace Math
 		virtual ~VectorImp();
 
 	public:
-		virtual std::vector<double> GetVector() const =0;
+		virtual std::vector<float> GetVector() const =0;
 
 		virtual size_t Dimension() const = 0;
 
-		virtual double Norm() const = 0;
+		virtual float Norm() const = 0;
 
-		virtual void Set_ithVal(size_t i, double val) = 0;
-		virtual double Get_ithVal(size_t i) const = 0;
+		virtual void Set_ithVal(size_t i, float val) = 0;
+		virtual float Get_ithVal(size_t i) const = 0;
 		//////////////////////////////////////////////////////////////////////////
 		//Get the reference of an element.
 		//////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,9 @@
     <ClInclude Include="WordRelationTableBuilder.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FindSimilarConcept.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -74,6 +77,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WordRelationTableBuilder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FindSimilarConcept.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

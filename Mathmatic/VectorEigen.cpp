@@ -23,7 +23,7 @@ namespace Math
 		}
 	}
 
-	VectorEigen::VectorEigen(std::vector<double> r)
+	VectorEigen::VectorEigen(std::vector<float> r)
 	{
 		if (r.empty()) return;
 
@@ -34,7 +34,7 @@ namespace Math
 		}
 	}
 
-	VectorEigen::VectorEigen(const int d, const double val)
+	VectorEigen::VectorEigen(const int d, const float val)
 	{
 		_vec = VectorXf(d);
 		for (int i = 0; i < d; ++i)
@@ -47,9 +47,9 @@ namespace Math
 	{
 	}
 
-	std::vector<double> VectorEigen::GetVector() const
+	std::vector<float> VectorEigen::GetVector() const
 	{
-		vector<double> res(Dimension());
+		vector<float> res(Dimension());
 
 		for (size_t i=0;i<res.size();++i)
 		{
@@ -64,17 +64,17 @@ namespace Math
 		return _vec.rows();
 	}
 
-	double VectorEigen::Norm() const
+	float VectorEigen::Norm() const
 	{
 		return _vec.norm();
 	}
 
-	void VectorEigen::Set_ithVal(size_t i, double val)
+	void VectorEigen::Set_ithVal(size_t i, float val)
 	{
 		_vec[i] = (float)val;
 	}
 
-	double VectorEigen::Get_ithVal(size_t i) const
+	float VectorEigen::Get_ithVal(size_t i) const
 	{
 		return _vec[i];
 	}
