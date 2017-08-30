@@ -18,7 +18,17 @@ namespace Math
 			return -1;
 	}
 
-	vector<double> _MATHMATICINOUT Normalized( const vector<double> val )
+	int _MATHMATICINOUT FloatCompare(float left, float right, double tol /*= 1e-4*/)
+	{
+		if (left <= right + tol&&left >= right - tol)
+			return 0;
+		else if (left > right + tol)
+			return 1;
+		else
+			return -1;
+	}
+
+	vector<double> _MATHMATICINOUT Normalized(const vector<double> val)
 	{
 		class Norm
 		{
@@ -78,7 +88,7 @@ namespace Math
 		return val;
 	}
 
-	Vector ToVector( const double val[], const int n )
+	Vector ToVector( const float val[], const int n )
 	{
 		Vector vec(Tovector(val,n));
 		return vec;

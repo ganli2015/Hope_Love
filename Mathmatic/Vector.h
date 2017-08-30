@@ -11,21 +11,34 @@ namespace Math
 
 	class _MATHMATICINOUT Vector : public Obj<Vector>
 	{
+	public:
+		enum Type
+		{
+			Dense,
+			Sparse
+		};
+
+	private:
+
 		VectorImp *_imp;
+		Type _type;
 
 		friend class Matrix;
+
 	public:
-		Vector(const size_t d);
+		Vector(const size_t d, Vector::Type type = Vector::Dense);
 
 		~Vector(void);
 
-		Vector(std::vector<double> r);
+		//Always dense vector.
+		Vector(std::vector<float> r);
+
+		//Always dense vector.
+		Vector(const int d, const double val);
 
 		Vector(const Vector& vec);
 
-		Vector(const int d,const double val);
-
-		std::vector<double> GetVector() const;
+		std::vector<float> GetVector() const;
 
 		size_t Dimension() const;
 
@@ -62,7 +75,8 @@ namespace Math
 
 	private:
 		Vector(VectorImp* imp);
-		VectorImp* ConstructVectorImp(Vector vec);
+		VectorImp* ConstructDenseVectorImp(Vector vec);
+		VectorImp* ConstructSparseVectorImp(Vector vec);
 	};
 
 	_MATHMATICINOUT Vector operator+(const Vector& left,const Vector& right) ;

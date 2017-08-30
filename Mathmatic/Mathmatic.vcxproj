@@ -166,6 +166,7 @@
     <ClInclude Include="MyInt.h" />
     <ClInclude Include="NumericalOptimization.h" />
     <ClInclude Include="Rand.h" />
+    <ClInclude Include="SparseVector.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="TraverseData.h" />
     <ClInclude Include="Vector.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="MyInt.cpp" />
     <ClCompile Include="NumericalOptimization.cpp" />
     <ClCompile Include="Rand.cpp" />
+    <ClCompile Include="SparseVector.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

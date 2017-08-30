@@ -27,15 +27,15 @@ using namespace NeuralNetwork;
 
 double ComputeDeviation( const shared_ptr<iDataArray> array1,const shared_ptr<iDataArray> array2 );
 double g(double x);
-shared_ptr<NeuralNetwork::iDataArray> ToDataArray( const double val[], const int n );
+shared_ptr<NeuralNetwork::iDataArray> ToDataArray( const float val[], const int n );
 
 TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork1)
 {
 	//{p1={1,2},t1=1} {p2={-1,2},t2=0} {p3={0,-1},t3=0}
 
-	vector<double> vec1;
-	vector<double> vec2;
-	vector<double> vec3;
+	vector<float> vec1;
+	vector<float> vec2;
+	vector<float> vec3;
 	vec1.push_back(1);
 	vec1.push_back(2);
 	vec2.push_back(-1);
@@ -46,9 +46,9 @@ TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork1)
 	shared_ptr<DataArray> p2(new DataArray(vec2));
 	shared_ptr<DataArray> p3(new DataArray(vec3));
 
-	vector<double> vec11;
-	vector<double> vec22;
-	vector<double> vec33;
+	vector<float> vec11;
+	vector<float> vec22;
+	vector<float> vec33;
 	vec11.push_back(1);
 	vec22.push_back(0);
 	vec33.push_back(0);
@@ -57,8 +57,8 @@ TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork1)
 	shared_ptr<DataArray> t3(new DataArray(vec33));
 
 	typedef iNeuron MyNeoron;
-	double col1[2]={1.0,-0.8};
-	vector<double> vcol1=Tovector(col1,2);
+	float col1[2]={1.0f,-0.8f};
+	vector<float> vcol1=Tovector(col1,2);
 	shared_ptr<MyNeoron> neo(new Neuron(2,1));
 	neo->Set_jthColumn(0,ToVector(col1,2));
 	//		neo->SetFun(shared_ptr<hardlim>());
@@ -72,7 +72,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork1)
 
 TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork2)
 {
-	double a1[3]={1,-1,-1},
+	float a1[3]={1,-1,-1},
 		a2[3]={1,1,-1},
 		a3[1]={0},
 		a4[1]={1},
@@ -98,7 +98,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,PerceptronNetwork2)
 
 TEST(DISABLED_Test_NeuralNetworkDesign,ADALINENetwork)
 {
-	double a1[3]={1,-1,-1},
+	float a1[3]={1,-1,-1},
 		a2[3]={1,1,-1},
 		tt1[1]={-1},
 		tt2[2]={1};
@@ -123,7 +123,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,ADALINENetwork)
 
 TEST(Test_NeuralNetworkDesign,MultilayerNetwork)
 {
-	double a1[1]={1},
+	float a1[1]={1},
 		tt1[1]={g(1)},
 		w1_1[1]={-0.27},
 		w1_2[1]={-0.41},
@@ -162,7 +162,7 @@ TEST(Test_NeuralNetworkDesign,MultilayerNetwork)
 
 TEST(DISABLED_Test_NeuralNetworkDesign,CompetitiveNetwork)
 {
-	double a1[2]={-0.1961,0.9806},
+	float a1[2]={-0.1961,0.9806},
 		a2[2]={0.1961,0.9806},
 		a3[2]={0.9806,0.1961},
 		a4[2]={0.9806,-0.1961},
@@ -206,7 +206,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,CompetitiveNetwork)
 
 TEST(DISABLED_Test_NeuralNetworkDesign,Connectivity)
 {
-	double pp1[4]={1,2,0,0},
+	float pp1[4]={1,2,0,0},
 		tt1[4]={0,1,2,0},
 		pp2[4]={0,1,2,0},
 		tt2[4]={0,0,1,2};
@@ -235,7 +235,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,Connectivity)
 	double sigma1=ComputeDeviation(t1,multilayerNetwork.GetResult(p1));
 	double sigma2=ComputeDeviation(t2,multilayerNetwork.GetResult(p2));
 
-	double pp3[4]={1,2,3,0};
+	float pp3[4]={1,2,3,0};
 	shared_ptr<iDataArray> p3=ToDataArray(pp3,4);
 
 	shared_ptr<iDataArray> o3=multilayerNetwork.GetResult(p3);
@@ -261,7 +261,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,Connectivity)
 
 TEST(DISABLED_Test_NeuralNetworkDesign,SearchingParameter)
 {
-	double pp1[4]={1,2,0,0},
+	float pp1[4]={1,2,0,0},
 		tt1[4]={0,1,2,0},
 		pp2[4]={0,1,2,0},
 		tt2[4]={0,0,1,2};
@@ -300,7 +300,7 @@ TEST(DISABLED_Test_NeuralNetworkDesign,SearchingParameter)
 
 TEST(Test_NeuralNetworkDesign,MOBP)
 {
-	double pp1[4]={1,2,0,0},
+	float pp1[4]={1,2,0,0},
 		tt1[4]={0,1,2,0},
 		pp2[4]={0,1,2,0},
 		tt2[4]={0,0,1,2};
@@ -332,7 +332,7 @@ double g(double x)
 	return 1+sin(PI*x/4);
 }
 
-shared_ptr<NeuralNetwork::iDataArray> ToDataArray( const double val[], const int n )
+shared_ptr<NeuralNetwork::iDataArray> ToDataArray( const float val[], const int n )
 {
 	return shared_ptr<DataArray>(new DataArray(Tovector(val,n)));
 }

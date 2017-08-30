@@ -51,11 +51,19 @@ namespace Mind
 
 		virtual vector<shared_ptr<iConcept>> GetForwardConcepts()const;
 		virtual vector<shared_ptr<iConcept>> GetBackwardConcepts()const;
+		//Add concepts <me> depend on.
+		//<concept> should describe what <me> means.
+		//<sensitivity> is how strong <me> and <concept> are related with.
 		virtual void AddForwardConcept(const shared_ptr<iConcept> concept,const double sensitivity=1);
-		virtual void AddBackwardConcept(const shared_ptr<iConcept> concept,const double sensitivity=1);
+		//Add concepts that depend on <me>.
+		virtual void AddBackwardConcept(const shared_ptr<iConcept> concept, const double sensitivity = 1);
 		//添加与toConcept关联的修饰词
 		virtual void AddForwardModification(const shared_ptr<iConcept> toConcept,const shared_ptr<iConcept> modification);
+		//Add modification of relationship between <me> and <toConcept>.
+		//<modification> describe more detailed  information about how <me> depends on <toConcept>.
 		virtual void AddForwardModification(const shared_ptr<iConcept> toConcept,const shared_ptr<iConceptInteractTable> modification) ;
+		//Add modification of relationship between <me> and <toConcept>.
+		//<modification> is a concept interaction table and  describe more complicated information about how <me> depends on <toConcept>.
 		virtual void AddBackwardModification(const shared_ptr<iConcept> toConcept,const shared_ptr<iConcept> modification);
 
 		virtual DataCollection::PartOfSpeech GetPartOfSpeech() const {return _partofspeech;}

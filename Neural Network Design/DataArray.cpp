@@ -16,9 +16,14 @@ namespace NeuralNetwork
 
 	}
 
-	NeuralNetwork::DataArray::DataArray( const std::vector<double>& vec ) :_vec(new Math::Vector(vec)),_n(vec.size())
+	NeuralNetwork::DataArray::DataArray( const std::vector<double>& vec ) :_n(vec.size())
 	{
-
+		vector<float> floatVec;
+		for (auto dou : vec)
+		{
+			floatVec.push_back(dou);
+		}
+		_vec = make_shared<Math::Vector>(floatVec);
 	}
 
 	NeuralNetwork::DataArray::DataArray( const DataArray& data ) :_n(data._n)
@@ -28,7 +33,14 @@ namespace NeuralNetwork
 
 	const std::vector<double> DataArray::GetVector() const 
 	{
-		return _vec->GetVector();
+		auto fvec = _vec->GetVector();
+		vector<double> res;
+		for (auto f : fvec)
+		{
+			res.push_back(f);
+		}
+
+		return res;
 	}
 
 	double NeuralNetwork::DataArray::Norm()

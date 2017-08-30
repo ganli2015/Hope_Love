@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="1" failures="0" disabled="0" errors="0" timestamp="2017-08-26T01:07:27" time="280.882" name="AllTests">
-  <testsuite name="Preparation" tests="1" failures="0" disabled="0" errors="0" time="280.881">
-    <testcase name="OutputConnectionToDatabase" status="run" time="280.88" classname="Preparation" />
+<testsuites tests="2" failures="0" disabled="0" errors="0" timestamp="2017-08-30T01:29:01" time="0.107" name="AllTests">
+  <testsuite name="Test_NeuralNetworkDesign" tests="2" failures="0" disabled="0" errors="0" time="0.104">
+    <testcase name="MultilayerNetwork" status="run" time="0.046" classname="Test_NeuralNetworkDesign" />
+    <testcase name="MOBP" status="run" time="0.058" classname="Test_NeuralNetworkDesign" />
   </testsuite>
 </testsuites>

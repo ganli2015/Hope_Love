@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="ContextAnalyzer.h" />
     <ClInclude Include="EmotionAnalyzer.h" />
+    <ClInclude Include="FindSimilarConcept.h" />
     <ClInclude Include="GrammarAnalyzer.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="Punctuator.h" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="ContextAnalyzer.cpp" />
     <ClCompile Include="EmotionAnalyzer.cpp" />
+    <ClCompile Include="FindSimilarConcept.cpp" />
     <ClCompile Include="GrammarAnalyzer.cpp" />
     <ClCompile Include="Punctuator.cpp" />
     <ClCompile Include="SentenceAnalyzer.cpp" />

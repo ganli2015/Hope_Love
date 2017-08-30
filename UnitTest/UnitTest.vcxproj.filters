@@ -131,6 +131,9 @@
     <ClInclude Include="Test_Graph.h">
       <Filter>Mathmatic</Filter>
     </ClInclude>
+    <ClInclude Include="Test_Vector.h">
+      <Filter>Mathmatic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -221,6 +224,9 @@
       <Filter>TestAndPreparation</Filter>
     </ClCompile>
     <ClCompile Include="Test_Graph.cpp">
+      <Filter>Mathmatic</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Vector.cpp">
       <Filter>Mathmatic</Filter>
     </ClCompile>
   </ItemGroup>

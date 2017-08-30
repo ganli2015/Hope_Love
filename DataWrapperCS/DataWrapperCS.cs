@@ -8,12 +8,12 @@ namespace DataWrapperCS
 {
     public class DataWrapper_CS : GlobalInterface.DataWrapper
     {
-        public CommandType Command { get; }
+        public string Command { get; }
 
         string _inputsentence;
         string _outputsentence;
 
-        public DataWrapper_CS(CommandType command = CommandType.Chatting)
+        public DataWrapper_CS(string command = "chatting")
         {
             this.Command = command;
         }
@@ -58,6 +58,11 @@ namespace DataWrapperCS
                         break;
                     }
             }
+        }
+
+        public string GetCommandName()
+        {
+            return this.Command;
         }
     }
 }
