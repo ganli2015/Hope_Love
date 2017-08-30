@@ -4,7 +4,6 @@
 #include "iMatrix.h"
 #include "Rand.h"
 
-#include <numeric>
 
 namespace Math
 {
@@ -26,28 +25,6 @@ namespace Math
 			return 1;
 		else
 			return -1;
-	}
-
-	vector<double> _MATHMATICINOUT Normalized(const vector<double> val)
-	{
-		class Norm
-		{
-			double _sum;
-		public:
-			Norm(double sum):_sum(sum){}
-			~Norm(){}
-
-			double operator()(const double val)
-			{
-				return val/_sum;
-			}
-		};
-
-		double sum=accumulate(val.begin(),val.end(),0.);
-		vector<double> res(val.size());
-		transform(val.begin(),val.end(),res.begin(),Norm(sum));
-
-		return res;
 	}
 
 	vector<int> _MATHMATICINOUT GetDicemalDigit( const double val ,const int num)
