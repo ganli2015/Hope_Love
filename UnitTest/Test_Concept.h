@@ -2,6 +2,7 @@
 #include "PublicHeader.h"
 
 #include "../MindInterface/CommonFunction.h"
+#include "../CommonTools/Common.h"
 
 namespace Mind
 {
@@ -20,4 +21,10 @@ namespace Mind
 	};
 }
 
+ostream& operator<<(ostream& out, const Mind::Param_DeepInteraction& s)
+{
+	out << "from:" << s.from << " to:" << s.to <<
+		" expect:" << s.expect;
 
+	return out;
+}

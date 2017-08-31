@@ -73,6 +73,8 @@ namespace Math
 
 		_MATHMATICINOUT friend Vector operator/(const Vector& left,const double& right);
 
+		_MATHMATICINOUT friend ostream& operator<<(ostream& out, const Vector& s);
+
 	private:
 		Vector(VectorImp* imp);
 		VectorImp* ConstructDenseVectorImp(Vector vec);

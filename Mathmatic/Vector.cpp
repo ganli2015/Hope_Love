@@ -137,6 +137,23 @@ namespace Math
 		return _imp->Get_ithValRef(i);
 	}
 
+	ostream& operator<<(ostream& out, const Vector& s)
+	{
+		out << "{";
+		size_t outSize = s.Dimension() > 10 ? 10 : s.Dimension();
+		for (size_t i = 0; i < outSize; ++i)
+		{
+			out << s.Get_ithVal(i);
+			if (i != outSize - 1)
+			{
+				out << " ";
+			}
+		}
+
+		out << "}";
+		return out;
+	}
+
 	VectorImp* Vector::ConstructDenseVectorImp(Vector vec)
 	{
 		VectorImp* imp = new VectorEigen(vec.Dimension());

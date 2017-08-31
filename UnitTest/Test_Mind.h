@@ -24,6 +24,15 @@ namespace Mind
 	{
 		string conditionTable;
 		string resultTable;
+
+
+		friend ostream& operator<<(ostream& out, const Param_LogicStatementInitialized& s)
+		{
+			out << "condition table:" << s.conditionTable <<
+				" result table:" << s.resultTable;
+
+			return out;
+		}
 	};
 
 	class Test_LogicStatementInitialized: public::testing::TestWithParam<Param_LogicStatementInitialized> 

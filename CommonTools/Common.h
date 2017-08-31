@@ -35,4 +35,27 @@ namespace CommonTool
 	}
 }
 
+template<class Key, class Value>
+ostream& operator<<(ostream& out, const pair<Key, Value>& p)
+{
+	out << p.first << " " << p.second;
+	return out;
+}
 
+template<class T>
+ostream& operator<<(ostream& out, const vector<T>& vec)
+{
+	out << "{";
+	size_t outSize = vec.size() > 10 ? 10 : vec.size();
+	for (size_t i = 0; i < outSize; ++i)
+	{
+		out << vec[i];
+		if (i != outSize - 1)
+		{
+			out << " ";
+		}
+	}
+
+	out << "}";
+	return out;
+}

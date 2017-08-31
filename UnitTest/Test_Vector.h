@@ -16,9 +16,10 @@ struct Param_Vector
 	shared_ptr<Math::Vector> vec;
 	vector<float> fvec;
 
-	Param_Vector(size_t size, Math::Vector::Type type) :vec(make_shared<Math::Vector>(size, type))
+	friend ostream& operator<<(ostream& out, const Param_Vector& s)
 	{
-
+		out << "vec:" << *s.vec;
+		return out;
 	}
 };
 
@@ -40,6 +41,13 @@ struct Param_DoubleVector
 	shared_ptr<Math::Vector> vec2;
 	double dot;
 	double angle;
+
+	friend ostream& operator<<(ostream& out, const Param_DoubleVector& s)
+	{
+		out << "vec1:" << *s.vec1 << " vec2:" << *s.vec2 <<
+			" dot:" << s.dot << " angle:" << s.angle;
+		return out;
+	}
 };
 
 class Test_DoubleVector : public::testing::TestWithParam<Param_DoubleVector>, protected TestVectorBase

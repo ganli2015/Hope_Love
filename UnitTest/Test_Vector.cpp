@@ -128,7 +128,7 @@ vector<Param_Vector> Test_Vector::GenerateSamples()
 
 void Test_Vector::AddSample(float array[], size_t size, Vector::Type type)
 {
-	Param_Vector param(size, type);
+	Param_Vector param;
 
 	auto fvec = Tovector(array, size);
 	param.fvec = fvec;
