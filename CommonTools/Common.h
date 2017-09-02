@@ -1,5 +1,6 @@
 #pragma once
 #include "InOut.h"
+#include <set>
 
 namespace CommonTool
 {
@@ -15,9 +16,7 @@ namespace CommonTool
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	//Find all values with key in the multimap <myMap>.
-	//////////////////////////////////////////////////////////////////////////
 	template<class KeyType,class ValueType>
 	vector<ValueType> FindAll(const KeyType& key,const multimap<KeyType, ValueType>& myMap)
 	{
@@ -29,6 +28,24 @@ namespace CommonTool
 		{
 			res.push_back(beg->second);
 			beg++;
+		}
+
+		return res;
+	}
+
+	//Find same elements in two vectors.
+	template<class T>
+	vector<T> FindSameInVectors(const vector<T>& v1, const vector<T>& v2)
+	{
+		set<T> v2Set(v2.begin(), v2.end());
+
+		vector<T> res;
+		for (auto elem1 : v1)
+		{
+			if (v2Set.find(elem1) != v2Set.end())
+			{
+				res.push_back(elem1);
+			}
 		}
 
 		return res;

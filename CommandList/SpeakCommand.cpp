@@ -2,6 +2,7 @@
 #include "SpeakCommand.h"
 #include "ChattingCommand.h"
 #include "POSTaggingCommand.h"
+#include "FindSimilarWordsCommand.h"
 
 using namespace std;
 
@@ -35,6 +36,9 @@ map<string, SpeakCommand::CommandCreator> SpeakCommand::CreateCommandMap()
 
 	res["posTagging"] = [](DataWrapperCPP::DataWrapper_Sentence* data)->
 		Command* {return new POSTaggingCommand(data); };
+
+	res["findSimilar"] = [](DataWrapperCPP::DataWrapper_Sentence* data)->
+		Command* {return new FindSimilarWordsCommand(data); };
 
 	return res;
 }

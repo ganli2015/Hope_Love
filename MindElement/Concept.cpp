@@ -7,6 +7,7 @@
 #include "../DataCollection/LanguageFunc.h"
 
 #include "../CommonTools/LogWriter.h"
+#include "../CommonTools/CommonStringFunction.h"
 
 using namespace DataCollection;
 using namespace std;
@@ -286,6 +287,13 @@ namespace Mind
 		{
 			return false;
 		}
+	}
+
+	const char* Concept::Print() const
+	{
+		string res = "{ id: " + CommonTool::ToString(this->GetId()) +
+			" word: " + this->GetString() + " }";
+		return res.c_str();
 	}
 
 	shared_ptr<iConceptLevelTable> Concept::GetLevelTable() const

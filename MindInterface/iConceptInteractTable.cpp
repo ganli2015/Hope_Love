@@ -20,7 +20,9 @@ namespace Mind
 		vector<MindType::ConceptPair> pairs=GetAllRelations();
 		for (size_t i=0;i<pairs.size();++i)
 		{
-			res+=pairs[i].first->GetString()+" "+pairs[i].second->GetString()+"\n";
+			string firstStr = pairs[i].first->GetString();
+			string secondStr = pairs[i].second->GetString();
+			res += firstStr +" " + secondStr + "\n";
 		}
 
 		return res;

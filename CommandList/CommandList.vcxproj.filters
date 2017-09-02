@@ -29,6 +29,9 @@
     <ClInclude Include="ChattingCommand.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FindSimilarWordsCommand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Stdafx.cpp">
@@ -44,6 +47,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ChattingCommand.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FindSimilarWordsCommand.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
