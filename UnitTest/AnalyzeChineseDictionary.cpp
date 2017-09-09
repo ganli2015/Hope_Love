@@ -692,6 +692,34 @@ void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, share
 		}
 	}
 
+	//Consider words with connections as non base concept,
+	//and append them to non base concept table.
+	for (auto connectionPair : wordConnections)
+	{
+		auto connection = connectionPair.second;
+		if (!connection->GetConnections().empty())
+		{
+			auto nonBaseConcept = db->GetNonBaseConcept(0, connection->GetWord());
+			if (nonBaseConcept != NULL)
+			{
+				//Already exists this word.
+				continue;
+			}
+
+			//Check if the word is in the base concept table.
+			//If so, then move it to non base concept table.
+			auto conceptInBaseDb = db->GetBaseConcept(0, connection->GetWord());
+			if (conceptInBaseDb != NULL)
+			{
+				db->DeleteBaseConcept(connection->GetWord(), 0);
+				db->AddNonBaseConcept(conceptInBaseDb);
+			}
+			else
+			{
+			}
+		}
+	}
+
 	db->CommitTransaction();
 	delete db;
 }

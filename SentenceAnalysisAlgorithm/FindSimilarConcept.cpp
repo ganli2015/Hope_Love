@@ -11,7 +11,7 @@
 using namespace Mind;
 using namespace CommonTool;
 
-FindSimilarConcept::FindSimilarConcept():_sizeOfResult(DEFAULT_SIZEOF_RETURN)
+FindSimilarConcept::FindSimilarConcept() :_sizeOfResult(DEFAULT_SIZEOF_RETURN), _builtConceptVectors(false)
 {
 	_brain = iCerebrum::Instance();
 }
@@ -25,12 +25,18 @@ vector<shared_ptr<Mind::iConcept>> FindSimilarConcept::Find(const shared_ptr<Min
 {
 	NDC_SECTION("FindSimilarConcept");
 
-	vector<shared_ptr<Mind::iConcept>> allConcepts = _brain->GetAllConcepts();
-	PrepareIndexOfConcepts(allConcepts);
-	DEBUG_FORMAT2("Size of _index_concept : %d ; Size of _concept_index : %d", _index_concept.size(), _concept_index.size());
+	if (!_builtConceptVectors)
+	{
+		vector<shared_ptr<Mind::iConcept>> allConcepts = _brain->GetAllConcepts();
+		LOG("Finish read all concepts.");
+		PrepareIndexOfConcepts(allConcepts);
+		DEBUG_FORMAT2("Size of _index_concept : %d ; Size of _concept_index : %d", _index_concept.size(), _concept_index.size());
 
-	BuildAllConceptVectors(allConcepts);
-	DEBUGLOG("Finish build concept vectors.");
+		BuildAllConceptVectors(allConcepts);
+		DEBUGLOG("Finish build concept vectors.");
+
+		_builtConceptVectors = true;
+	}
 
 	vector<pair<float, shared_ptr<Mind::iConcept>>> similarityMap;
 	ComputeSimilarityOfConcepts(concept, similarityMap);
@@ -49,7 +55,7 @@ vector<string> FindSimilarConcept::Find(const string word)
 
 		auto similar = Find(concept);
 
-		DEBUG_FORMAT("Size of similar concepts: %s.", similar.size());
+		DEBUG_FORMAT("Size of similar concepts: %d.", similar.size());
 
 		for (auto similarConcept :similar)
 		{
@@ -101,6 +107,7 @@ void FindSimilarConcept::Recursive_MappingConceptToVector(const shared_ptr<Mind:
 
 void FindSimilarConcept::BuildAllConceptVectors(const vector<shared_ptr<Mind::iConcept>>& concepts)
 {
+	_conceptVectors.clear();
 	for (auto concept : concepts)
 	{
 		auto conceptVector = MappingConceptToVector(concept);
@@ -117,13 +124,16 @@ void FindSimilarConcept::ComputeSimilarityOfConcepts(const shared_ptr<Mind::iCon
 
 	for (auto conceptVector : _conceptVectors)
 	{
+		NDC_SECTION(conceptVector.first->GetString().c_str());
 		float simi = ComputeSimilarity(conceptVector.second, myConceptVector);
 		if (simi != 0.f)
 		{
-			DEBUG_FORMAT("'%s' has some similarity.", conceptVector.first->Print());
+			DEBUG_FORMAT2("'%s' has some similarity: %f", conceptVector.first->Print(), simi);
 			similarityMap.push_back(make_pair(simi, conceptVector.first));
 		}
 	}
+
+	LOG("Finish computing similarity.");
 
 	//Sort by similarity from large to small.
 	sort(similarityMap.begin(), similarityMap.end(),
@@ -141,6 +151,7 @@ float FindSimilarConcept::ComputeSimilarity(const ConceptVector& conceptVector,
 	float res = 0.f;
 	for (auto sameIndex : sameIndices)
 	{
+		//Compute each distance of the same concept and then compute difference of distances.
 		shared_ptr<iConcept> concept;
 		int distance;
 		conceptVector.GetConcept(sameIndex, concept, distance);
@@ -152,7 +163,6 @@ float FindSimilarConcept::ComputeSimilarity(const ConceptVector& conceptVector,
 		auto diff = ComputeDistanceDiff(distance, myDistance);
 
 		DEBUG_FORMAT("Same concept: %s", myConcept->Print());
-		DEBUG_FORMAT("Distance diff: %f", diff);
 
 		res += diff;
 	}
@@ -168,7 +178,7 @@ float FindSimilarConcept::ComputeDistanceDiff(const float dis1, const float dis2
 vector<shared_ptr<Mind::iConcept>> FindSimilarConcept::SelectConceptsForReturn(
 	const vector<pair<float, shared_ptr<Mind::iConcept>>>& similarityMap) const
 {
-	size_t sizeOfResult = max(similarityMap.size(), _sizeOfResult);
+	size_t sizeOfResult = min(similarityMap.size(), _sizeOfResult);
 
 	vector<pair<float, shared_ptr<Mind::iConcept>>> returnedSimiMap(similarityMap.begin(), similarityMap.begin() + sizeOfResult);
 	vector<shared_ptr<Mind::iConcept>> res;
@@ -204,7 +214,7 @@ void ConceptVector::AddConcept(const int index, const shared_ptr<Mind::iConcept>
 
 	if (_conceptMap.find(index) != _conceptMap.end())
 	{
-		throw invalid_argument(StringFormat("index already exists. index: %d; concept: %s", index, concept->Print()));
+		//throw invalid_argument(StringFormat("index already exists. index: %d; concept: %s", index, concept->Print()));
 	}
 
 	ConceptInfo info;

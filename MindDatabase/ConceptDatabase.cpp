@@ -16,6 +16,7 @@
 #include "../CommonTools/UpdateStatement.h"
 #include "../CommonTools/DeleteStatement.h"
 #include "../CommonTools/MyException.h"
+#include "../CommonTools/LogWriter.h"
 
 using namespace CommonTool;
 using namespace DataCollection;
@@ -534,7 +535,8 @@ namespace Mind
 		vector<shared_ptr<BaseConcept>> res;
 		for (auto row : allrows)
 		{
-			res.push_back(_elemCreator->CreateBaseConcept(row));
+			auto concept = _elemCreator->CreateBaseConcept(row);
+			res.push_back(concept);
 		}
 
 		return res;
@@ -548,7 +550,8 @@ namespace Mind
 		vector<shared_ptr<Concept>> res;
 		for (auto row : allrows)
 		{
-			res.push_back(ConvertRowToConcept(row));
+			auto concept = ConvertRowToConcept(row);
+			res.push_back(concept);
 		}
 
 		return res;

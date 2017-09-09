@@ -23,6 +23,8 @@ class _SENTENCEANALYSISALGORITHMINOUT FindSimilarConcept
 
 	size_t _sizeOfResult;
 
+	bool _builtConceptVectors;
+
 public:
 	FindSimilarConcept();
 	~FindSimilarConcept();

@@ -7,7 +7,10 @@
 
 #include "../CommonTools/LogWriter.h"
 
-FindSimilarWordsCommand::FindSimilarWordsCommand(DataWrapperCPP::DataWrapper_Sentence* datawrapper) :SpeakCommand(datawrapper)
+FindSimilarConcept * FindSimilarWordsCommand::findSimilarConcept = NULL;
+
+FindSimilarWordsCommand::FindSimilarWordsCommand(DataWrapperCPP::DataWrapper_Sentence* datawrapper) :
+	SpeakCommand(datawrapper)
 {
 }
 
@@ -23,10 +26,25 @@ void FindSimilarWordsCommand::Update()
 
 	LOG_FORMAT("Word to find simialr: %s", sentence);
 
-	FindSimilarConcept findConcept;
-	auto similar = findConcept.Find(sentence);
-	auto output = ConstructOutput(similar);
-	_datawrapper->AddOutputSentence(output);
+	if (findSimilarConcept == NULL)
+	{
+		findSimilarConcept = new FindSimilarConcept();
+	}
+
+	try
+	{
+		auto similar = findSimilarConcept->Find(sentence);
+		LOG("Finish finding similar words.");
+		auto output = ConstructOutput(similar);
+		LOG("Finish ConstructOutput.");
+		LOG(output);
+		_datawrapper->AddOutputSentence(output);
+	}
+	catch (const std::exception& ex)
+	{
+		LOG_EXCEPTION(ex);
+	}
+	
 }
 
 std::string FindSimilarWordsCommand::ConstructOutput(const vector<string>& similarWords) const

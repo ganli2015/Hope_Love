@@ -94,7 +94,7 @@ TEST(Preparation, RefreshConceptConnection)
 	delete conceptDB;
 }
 
-TEST(Preparation, ExtractConnection)
+TEST(Preparation, ExtractBaseWords)
 {
 	CHECK_SKIP;
 	AnalyzeChineseDictionary acd;

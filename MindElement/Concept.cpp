@@ -289,11 +289,12 @@ namespace Mind
 		}
 	}
 
-	const char* Concept::Print() const
+	string Concept::Print() const
 	{
-		string res = "{ id: " + CommonTool::ToString(this->GetId()) +
-			" word: " + this->GetString() + " }";
-		return res.c_str();
+		string res = "( id: ";
+		res = res + CommonTool::ToString(this->GetId()) +
+			" word: " + this->GetString() + " )";
+		return res;
 	}
 
 	shared_ptr<iConceptLevelTable> Concept::GetLevelTable() const
