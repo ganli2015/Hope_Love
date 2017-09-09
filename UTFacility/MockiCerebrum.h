@@ -102,6 +102,10 @@ namespace Mind
 	
 		MOCK_CONST_METHOD0(GetAllBaseConcepts, vector<shared_ptr<iConcept>>());
 
+		MOCK_CONST_METHOD0(GetAllConcepts, vector<shared_ptr<iConcept>>());
+
+		MOCK_CONST_METHOD1(GetConcepts, vector<shared_ptr<iConcept>>(const string));
+
 	private:
 
 		void AddFindMatchedConceptExpectCall(const string conceptTableStr, const string matchedConceptStr, 

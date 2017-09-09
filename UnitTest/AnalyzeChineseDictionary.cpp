@@ -2,6 +2,7 @@
 #include "AnalyzeChineseDictionary.h"
 #include "FuncForTest.h"
 #include "TestPOSTagging.h"
+#include "ChinesePOSDictionary.h"
 
 #include "../CommonTools/CommonStringFunction.h"
 #include "../CommonTools/Common.h"
@@ -699,8 +700,7 @@ void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, share
 		auto connection = connectionPair.second;
 		if (!connection->GetConnections().empty())
 		{
-			auto nonBaseConcept = db->GetNonBaseConcept(0, connection->GetWord());
-			if (nonBaseConcept != NULL)
+			if (db->HasString(connection->GetWord()))
 			{
 				//Already exists this word.
 				continue;
@@ -716,6 +716,13 @@ void AnalyzeChineseDictionary::RefactorConceptInDatabase(const map<string, share
 			}
 			else
 			{
+				//It is a new concept.
+				auto POSs = ChinesePOSDictionary::Instance()->GetPOS(connection->GetWord());
+				if (!POSs.empty())
+				{
+					auto word = LanguageFunc::GetParticularWord(connection->GetWord(), POSs.front());
+					db->AddNonBaseConcept(word);
+				}
 			}
 		}
 	}
@@ -729,6 +736,9 @@ void AnalyzeChineseDictionary::OutputToConceptConnectionToDatabase(
 {
 	ConceptDatabase *db = new ConceptDatabase(GetDatabasePath());
 	db->Connect();
+	db->DeleteConnectionTable();
+	db->ClearConnectionOfNonBaseConcept();
+
 	db->BeginTransaction();
 	for (auto connectionPair : wordConnections)
 	{

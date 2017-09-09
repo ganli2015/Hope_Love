@@ -243,9 +243,15 @@ namespace Mind
 	{
 		CheckConnect();
 
-		auto row = GetNonBaseConceptRow(id, word);
-
-		return ConvertRowToConcept(row);
+		DBRow row;
+		if (GetNonBaseConceptRow(id, word, row))
+		{
+			return ConvertRowToConcept(row);
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 
 	shared_ptr<Concept> ConceptDatabase::GetConcept(const shared_ptr<DataCollection::Word> word)
@@ -409,6 +415,19 @@ namespace Mind
 		return res;
 	}
 
+	void ConceptDatabase::DeleteConnectionTable()
+	{
+		_db->DeleteRowsInTable(ConceptConnectionTable);
+	}
+
+	void ConceptDatabase::ClearConnectionOfNonBaseConcept()
+	{
+		UpdateStatement state(NonBaseConceptTable);
+		state.Update(NonBaseConceptField::Connection, "");
+
+		UpdateDatabase(state);
+	}
+
 	void ConceptDatabase::AddBaseConcept(const long baseID, const int id, const string word, const DataCollection::PartOfSpeech pos)
 	{
 		CheckConnect();
@@ -465,7 +484,8 @@ namespace Mind
 	}
 
 
-	CommonTool::DBRow ConceptDatabase::GetNonBaseConceptRow(const int id, const string word)
+	bool ConceptDatabase::GetNonBaseConceptRow(const int id, const string word, 
+		 CommonTool::DBRow& row)
 	{
 		QueryStatement state(NonBaseConceptTable);
 		state.EQ("id", id);
@@ -475,11 +495,12 @@ namespace Mind
 		if (rows.size() == 1)
 		{
 			//get unique value.
-			return rows.front();
+			row= rows.front();
+			return true;
 		}
 		else
 		{
-			throw DatabaseException(NonBaseConceptTable,"Invalid word: " + word);
+			return false;
 		}
 	}
 
@@ -593,6 +614,8 @@ namespace Mind
 		auto connectionIDs = SplitString(connectionStr, ' ');//There may be many connections.
 		for (auto id : connectionIDs)
 		{
+			if(id=="") continue;
+
 			//There must be only one row.
 			auto row = GetRow(id, ConceptConnectionField::ConnectionID,ConceptConnectionTable);
 			//Get 'to concept'.

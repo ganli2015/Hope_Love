@@ -64,10 +64,8 @@ public:
 		return res;
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	//Pass one segmented meaning to me.
 	//Each string in <segment> is a word.
-	//////////////////////////////////////////////////////////////////////////
 	void SetMeaningSegment(const string meaningStr, const vector<string>& segment)
 	{
 		auto existMeaning = find_if(_meanings.begin(), _meanings.end(),
@@ -83,9 +81,7 @@ public:
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	//Check if there is a word in the meaning of me.
-	//////////////////////////////////////////////////////////////////////////
 	bool HasWordInMeaning(const string word)
 	{
 		for (auto meaning : _meanings)
@@ -145,9 +141,7 @@ public:
 	void IsBase() { _isBase = true; }
 	bool IsBaseWord() const { return _isBase; }
 
-	//////////////////////////////////////////////////////////////////////////
 	//Remove invalid connections according to valid connection words.
-	//////////////////////////////////////////////////////////////////////////
 	void RemoveInvalidConnection(const set<string>& validWords)
 	{
 		for (vector<string>::iterator it = _connections.begin(); it != _connections.end();)
@@ -194,21 +188,16 @@ public:
 	AnalyzeChineseDictionary();
 	~AnalyzeChineseDictionary();
 
-	//////////////////////////////////////////////////////////////////////////
 	//Analyze file of Chinese dictionary and extract base words in it.
 	//The base words are output to a file "non_base_words.txt" and "base_words.txt" .
-	//////////////////////////////////////////////////////////////////////////
 	void ExtractBaseWords(const string filePath);
 
-	//////////////////////////////////////////////////////////////////////////
 	//Analyze file of Chinese dictionary and read base words from the file.
 	//Then try to find the connection of non base words to other words.
 	//Finally output word relations to "word_connection.txt".
 	//Run <ExtractBaseWords> FIRST if you have no "non_base_words.txt" and "base_words.txt".
-	//////////////////////////////////////////////////////////////////////////
 	void BuildConnection(const string filePath);
 
-	//////////////////////////////////////////////////////////////////////////
 	//Input word connection file built by <BuildConnection>.
 	//Build graph of all connections and analyze the whole graph.
 	//Try to eliminate sub graph with cycle and contains no base word.
@@ -216,12 +205,10 @@ public:
 	//Finally output valid words to "valid_connection.txt".
 	void AnalyzeValidConnections(const string filePath);
 
-	//////////////////////////////////////////////////////////////////////////
 	//Select valid connection words according to data in the file <validConnectionPath>.
 	//Output connection data to the database.
 	//Base concepts and Non base concepts in the database will be adjusted according to 
 	//previous analysis from the Chinese dictionary.
-	//////////////////////////////////////////////////////////////////////////
 	void OutputToDB(const string connectionPath, const string validConnectionPath);
 
 private:
@@ -234,38 +221,28 @@ private:
 
 	void DistinguishBaseConceptAndNonBase();
 
-	//////////////////////////////////////////////////////////////////////////
 	//Generate a map with single character string as key and word definition as value.
 	//It contains all word definitions.
-	//////////////////////////////////////////////////////////////////////////
 	multimap<string, shared_ptr<WordDefinition>> GenerateCharacterWordDefMap() const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//Split meaning sentences into characters.
 	//No duplicated!
-	//////////////////////////////////////////////////////////////////////////
 	set<string> GenerateCharacter(const shared_ptr<WordDefinition> line) const;
 
 	long ComputeFreq(const string word, multimap<string, shared_ptr<WordDefinition>>& wordDefMap) const;
 
 	bool MeaningHasWord(const shared_ptr<WordDefinition>& wordDef, const string word) const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//Remove example sentence.
-	//////////////////////////////////////////////////////////////////////////
 	string ExtractMeaning(const string& line) const;
 
 	void OutputBaseWords(const string filePath, const map<string, shared_ptr<WordDefinition>>& wordMap) const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//Read base or non base word from the file and append to wordMap.
-	//////////////////////////////////////////////////////////////////////////
 	void ReadWordsFromFile(const string filePath, map<string, shared_ptr<WordDefinition>>& wordMap) const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//WordSegment for each meaning of each word definition.
 	//The result is in the object of word definition.
-	//////////////////////////////////////////////////////////////////////////
 	void SegmentMeanings();
 
 	void FindConnection();
@@ -278,12 +255,10 @@ private:
 
 	shared_ptr<Math::DirectedGraph> BuildGraph(const map<string, shared_ptr<WordConnection>> wordConnections) const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//Check each of the sub graph.
 	//Check if the graph does not have cycle and each word in the graph
 	//has a connection path to a base word.
 	//Finally return all valid connection structure of these words.
-	//////////////////////////////////////////////////////////////////////////
 	vector<shared_ptr<WordConnection>> GetValidConnections(const vector<shared_ptr<Math::DirectedGraph>>& graphs);
 
 	void OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const;
@@ -292,22 +267,17 @@ private:
 	set<string> ReadValidConnectionWords(const string filePath) const;
 
 
-
-	//////////////////////////////////////////////////////////////////////////
 	//Remove invalid key words in the <wordConnections>.
 	//And invalid connection words in the WordConnection will be removed as well.
-	//////////////////////////////////////////////////////////////////////////
 	void RemoveInvalidWords(const set<string>& validWords, map<string, shared_ptr<WordConnection>>& wordConnections) const;
 
-	//////////////////////////////////////////////////////////////////////////
 	//Check base concepts and non base concepts in the database.
 	//According to <wordConnections>, move the concepts to the right table.
-	//////////////////////////////////////////////////////////////////////////
 	void RefactorConceptInDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
 
-	//////////////////////////////////////////////////////////////////////////
-	//
-	//////////////////////////////////////////////////////////////////////////
+	//Output connection to hope_love database
 	void OutputToConceptConnectionToDatabase(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
+
+
 };
 
