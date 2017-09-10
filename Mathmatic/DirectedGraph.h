@@ -93,6 +93,8 @@ namespace Math
 		DirectedGraph(const size_t vertNum);
 		~DirectedGraph();
 
+		string Print() const;
+
 		TraverseData BFS(const shared_ptr<IVertex> startVertex) const;
 
 		//////////////////////////////////////////////////////////////////////////
@@ -130,6 +132,11 @@ namespace Math
 		//(1->3,3->4) and (2->3,3->4).
 		//////////////////////////////////////////////////////////////////////////
 		vector<shared_ptr<DirectedGraph>> AllSubGraphs();
+
+		//Get all edges in this graph.
+		vector<pair<shared_ptr<IVertex>, shared_ptr<IVertex>>> GetAllVertexEdges() const;
+
+		void RemoveEdge(const shared_ptr<IVertex> from, const shared_ptr<IVertex> to);
 	private:
 		//////////////////////////////////////////////////////////////////////////
 		//Get Inner ID from IVertex's ID.
@@ -161,6 +168,9 @@ namespace Math
 		//Get all edges connecting directly or indirectly to vertex with <id>.
 		//////////////////////////////////////////////////////////////////////////
 		DirectedGraph::EdgeSet GetAllConnectedEdges(const long id) const;
+
+		//Get all edges in this graph.
+		DirectedGraph::EdgeSet GetAllEdges() const;
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get all vertices IDs.

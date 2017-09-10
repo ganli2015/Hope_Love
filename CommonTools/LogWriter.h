@@ -156,7 +156,7 @@ namespace CommonTool
 		template<>
 		static void OutFormat(const char *format, const LogLevel level, string var1)
 		{
-			int bufferSize = 255;
+			int bufferSize = max((int)var1.size()*2, 255);
 			char* ch = new char[bufferSize];
 			sprintf_s(ch, bufferSize, format, var1.c_str());
 			Output(string(ch), level);

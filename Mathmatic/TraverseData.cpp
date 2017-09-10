@@ -53,6 +53,7 @@ namespace Math
 
 	bool TraverseData::HasCycle(list<shared_ptr<IVertex>>& cycle) const
 	{
+		cycle.clear();
 		if (!HasConnection(_startVert)) return false;
 
 		//Get the parent of start.
@@ -65,6 +66,16 @@ namespace Math
 		cycle.push_back(_startVert);
 
 		return true;
+	}
+
+	bool TraverseData::HasCycle(vector<shared_ptr<IVertex>>& cycle) const
+	{
+		list<shared_ptr<IVertex>> res;
+		bool has = HasCycle(res);
+
+		cycle.clear();
+		cycle.insert(cycle.end(), res.begin(), res.end());
+		return has;
 	}
 
 	shared_ptr<DirectedGraph> TraverseData::GenerateGraph() const

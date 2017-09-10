@@ -130,6 +130,14 @@ public:
 
 	void AddConnection(const string val) { _connections.push_back(val); }
 	vector<string> GetConnections() const { return _connections; }
+	void RemoveConnection(const string val) 
+	{
+		auto connection = find(_connections.begin(), _connections.end(), val);
+		if (connection != _connections.end())
+		{
+			_connections.erase(connection);
+		}
+	}
 
 	string GetWord() const { return _word; }
 
@@ -259,9 +267,15 @@ private:
 	//Check if the graph does not have cycle and each word in the graph
 	//has a connection path to a base word.
 	//Finally return all valid connection structure of these words.
-	vector<shared_ptr<WordConnection>> GetValidConnections(const vector<shared_ptr<Math::DirectedGraph>>& graphs);
+	map<string,shared_ptr<WordConnection>> GetValidConnections(const vector<shared_ptr<Math::DirectedGraph>>& graphs);
 
-	void OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const;
+	//Remove cycle in the graph.
+	bool RemoveCycle(shared_ptr<Math::DirectedGraph> graph) const;
+
+	//Remove connection that is the same word with the current one.
+	void FixBadConnection(map<string, shared_ptr<WordConnection>>& words) const;
+
+	void OutputValidConnections(const map<string, shared_ptr<WordConnection>>& wordConnections) const;
 
 
 	set<string> ReadValidConnectionWords(const string filePath) const;

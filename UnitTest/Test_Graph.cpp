@@ -216,5 +216,27 @@ namespace Math
 
 		ASSERT_EQ(2, subGraphs.size());
 	}
+
+	TEST_F(Test_Graph, GetAllEdges)
+	{
+		auto allEdge = _graphWithCycle.GetAllVertexEdges();
+		ASSERT_EQ(4, allEdge.size());
+	}
+
+	TEST_F(Test_Graph, RemoveEdge)
+	{
+		_graphWithCycle.RemoveEdge(_v1, _v2);
+		auto allEdge = _graphWithCycle.GetAllVertexEdges();
+		ASSERT_EQ(3, allEdge.size());
+		ASSERT_FALSE(_graphWithCycle.HasCycle());
+		ASSERT_EQ(4, _graphWithCycle.GetAllVertices().size());
+	}
+
+	TEST_F(Test_Graph, RemoveEdge2)
+	{
+		_diconnectedGraph.RemoveEdge(_v7, _v8);
+		auto allEdge = _graphWithCycle.GetAllVertexEdges();
+		ASSERT_EQ(3, allEdge.size());
+	}
 }
 

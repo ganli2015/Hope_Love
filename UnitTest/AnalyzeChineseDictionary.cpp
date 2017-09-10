@@ -74,22 +74,36 @@ void AnalyzeChineseDictionary::AnalyzeValidConnections(const string filePath)
 
 	auto validConnections = GetValidConnections(subgraphs);
 
+	FixBadConnection(validConnections);
+
 	OutputValidConnections(validConnections);
 }
 
 void AnalyzeChineseDictionary::OutputToDB(const string connectionPath, const string validConnectionPath)
 {
-	auto wordConnections = ReadWordConnections(connectionPath);
+	try
+	{
+		auto wordConnections = ReadWordConnections(validConnectionPath);
+		LOG("Read word connections.");
 
-	auto validWords = ReadValidConnectionWords("valid_connection.txt");
+		//auto validWords = ReadValidConnectionWords(validConnectionPath);
 
-	RemoveInvalidWords(validWords, wordConnections);
+		//RemoveInvalidWords(validWords, wordConnections);
 
-	ReadWordsFromFile(BASE_WORD_FILE, _baseWordDefs);
+		ReadWordsFromFile(BASE_WORD_FILE, _baseWordDefs);
+		LOG("Read base words from file.");
 
-	RefactorConceptInDatabase(wordConnections);
+		RefactorConceptInDatabase(wordConnections);
+		LOG("Refactor concepts in database.");
 
-	OutputToConceptConnectionToDatabase(wordConnections);
+		OutputToConceptConnectionToDatabase(wordConnections);
+		LOG("Output concept connection to database.");
+	}
+	catch (const std::exception& ex)
+	{
+		LOG_EXCEPTION(ex);
+	}
+
 }
 
 void AnalyzeChineseDictionary::ExtractAllDefinitions(const string filePath)
@@ -538,7 +552,7 @@ shared_ptr<Math::DirectedGraph> AnalyzeChineseDictionary::BuildGraph(const map<s
 			if (wordConnections.find(to) == wordConnections.end())
 			{
 				//Cannot find such word.
-				WARN_FORMAT("Cannot find word '%s' in wordConnections.", to);
+//				WARN_FORMAT("Cannot find word '%s' in wordConnections.", to);
 				continue;
 			}
 
@@ -550,16 +564,54 @@ shared_ptr<Math::DirectedGraph> AnalyzeChineseDictionary::BuildGraph(const map<s
 	return wordGraph;
 }
 
-vector<shared_ptr<WordConnection>> AnalyzeChineseDictionary::GetValidConnections(const vector<shared_ptr<DirectedGraph>>& graphs)
+map<string, shared_ptr<WordConnection>> AnalyzeChineseDictionary::GetValidConnections(const vector<shared_ptr<DirectedGraph>>& graphs)
 {
-	vector<shared_ptr<WordConnection>> res;
+	map<string, shared_ptr<WordConnection>> res;
 
 	for (auto graph : graphs)
 	{
 		//Check if it has cycle.
 		if (graph->HasCycle())
 		{
-			continue;
+			//test
+// 			auto allVerts = graph->GetAllVertices();
+// 			for (auto vert : allVerts)
+// 			{
+// 				auto wordConnection = dynamic_pointer_cast<WordConnection>(vert);
+// 				if (wordConnection->GetWord() == "ºÃ¿´")
+// 				{
+// 					//Output
+// 					DEBUGLOG("Has cycle");
+// 					DEBUG_FORMAT("Graph: %s", graph->Print());
+// 
+// 					auto allVertsCopy = graph->GetAllVertices();
+// 					string vertStr = "";
+// 					for (auto vert2 : allVertsCopy)
+// 					{
+// 						auto wordConnection2 = dynamic_pointer_cast<WordConnection>(vert2);
+// 						vertStr += "(" + ToString(vert2->GetID()) + "," + wordConnection2->GetWord() + ")";
+// 					}
+// 					DEBUGLOG(vertStr);
+// 
+// 					auto trav = graph->BFS(vert);
+// 					list<shared_ptr<IVertex>> cycle;
+// 					trav.HasCycle(cycle);
+// 					string cycleStr = "";
+// 					for (auto cc : cycle)
+// 					{
+// 						cycleStr += ToString(cc->GetID()) + ",";
+// 					}
+// 					DEBUG_FORMAT("Cycle: %s", cycleStr);
+// 
+// 					break;
+// 				}
+// 			}
+
+			if (!RemoveCycle(graph))
+			{
+				LOG("Fail to remove cycle.");
+				continue;
+			}
 		}
 
 		//Check if it contains at least one base word.
@@ -595,9 +647,9 @@ vector<shared_ptr<WordConnection>> AnalyzeChineseDictionary::GetValidConnections
 
 			if (findBase != traverseVertice.end())
 			{
-				DEBUG_FORMAT("Push back graph of word: %s", wordConnection->GetWord().c_str());
+				//DEBUG_FORMAT("Push back graph of word: %s", wordConnection->GetWord().c_str());
 				//Has base.
-				res.push_back(wordConnection);
+				res[wordConnection->GetWord()] = wordConnection;
 			}
 		}
 	}
@@ -605,12 +657,106 @@ vector<shared_ptr<WordConnection>> AnalyzeChineseDictionary::GetValidConnections
 	return res;
 }
 
-void AnalyzeChineseDictionary::OutputValidConnections(const vector<shared_ptr<WordConnection>>& wordConnections) const
+bool AnalyzeChineseDictionary::RemoveCycle(shared_ptr<Math::DirectedGraph> graph) const
+{
+	int iterCount = 0;
+	const int MAX_ITER_COUNT = 10;
+
+	vector<shared_ptr<IVertex>> cycle;
+	bool hasCycle = true;
+	do 
+	{
+		if (iterCount >= MAX_ITER_COUNT)
+		{
+			break;
+		}
+
+		auto allVert = graph->GetAllVertices();
+		if (allVert.empty())
+		{
+			break;
+		}
+
+		//Get a cycle.
+		hasCycle = graph->HasCycle();
+		if (hasCycle)
+		{
+			//Find start vertex that traverses with a cycle. 
+			shared_ptr<IVertex> start;
+			for (auto vert : allVert)
+			{
+				auto transData = graph->BFS(vert);
+				if (transData.HasCycle(cycle))
+				{
+					start = vert;
+					break;
+				}
+			}
+
+			if (start == NULL)
+			{
+				//Cannot find a vertex with cycle.
+				//It's impossible!
+				break;
+			}
+
+			//Get the start vertex and previous vertex.
+			auto prev = cycle[cycle.size() - 2];
+			auto startWord = dynamic_pointer_cast<WordConnection>(start);
+			auto prevWord = dynamic_pointer_cast<WordConnection>(prev);
+
+			//Check the size of words that each connection depends on.
+			//Select a word with more connections 
+			//and remove edge from it to its connection(which results in a cycle).
+			auto startConnection = startWord->GetConnections();
+			auto prevConnection = prevWord->GetConnections();
+			int maxSize = max(startConnection.size(), prevConnection.size());
+			bool removeStart = maxSize == startConnection.size();
+			if (removeStart)
+			{
+				//Remove connection between start vertex and the next vertex.
+				auto next = cycle[1];
+				auto nextWord = dynamic_pointer_cast<WordConnection>(next);
+				graph->RemoveEdge(startWord, next);
+				startWord->RemoveConnection(nextWord->GetWord());
+			}
+			else
+			{
+				//Remove connection between previous vertex and the start vertex.
+				graph->RemoveEdge(prevWord, startWord);
+				prevWord->RemoveConnection(startWord->GetWord());
+			}
+		}
+	} while (hasCycle);
+
+	return !hasCycle;
+}
+
+void AnalyzeChineseDictionary::FixBadConnection(map<string, shared_ptr<WordConnection>>& words) const
+{
+	for (auto word : words)
+	{
+		//Remove connection that is the same word with the current one.
+		auto connections = word.second->GetConnections();
+		auto sameWord = find(connections.begin(), connections.end(), word.first);
+		if (sameWord != connections.end())
+		{
+			word.second->RemoveConnection(*sameWord);
+		}
+	}
+}
+
+void AnalyzeChineseDictionary::OutputValidConnections(const map<string, shared_ptr<WordConnection>>& wordConnections) const
 {
 	ofstream out(VALID_CONNECTION_FILE);
-	for (auto connection : wordConnections)
+	for (auto word : wordConnections)
 	{
-		out << connection->GetWord() << endl;
+		out << word.first << " ";
+		for (auto connection : word.second->GetConnections())
+		{
+			out << connection << " ";
+		}
+		out << endl;
 	}
 
 	out.close();
