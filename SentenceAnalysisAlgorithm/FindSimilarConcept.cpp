@@ -122,8 +122,16 @@ void FindSimilarConcept::ComputeSimilarityOfConcepts(const shared_ptr<Mind::iCon
 
 	auto myConceptVector = MappingConceptToVector(concept);
 
+	DataCollection::PartOfSpeech myPOS = concept->GetPartOfSpeech();
 	for (auto conceptVector : _conceptVectors)
 	{
+		//Filter words which have different POS.
+		auto pos = conceptVector.first->GetPartOfSpeech();
+		if (pos != myPOS)
+		{
+			continue;
+		}
+
 		NDC_SECTION(conceptVector.first->GetString().c_str());
 		float simi = ComputeSimilarity(conceptVector.second, myConceptVector);
 		if (simi != 0.f)

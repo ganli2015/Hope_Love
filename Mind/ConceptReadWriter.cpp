@@ -56,32 +56,59 @@ namespace Mind
 
 	void ConceptReadWriter::AddConceptToCache(const shared_ptr<Concept> concept)
 	{
-		string key = concept->GetWord()->GetString() + "_" + CommonTool::ToString(concept->GetId());
-		Add(CommonTool::ToString(++_conceptIndex), concept);
+		string key = GetKey(concept->GetWord()->GetString(), concept->GetId());
+		Add(key, concept);
 	}
 
 	shared_ptr<Concept> ConceptReadWriter::GetNonBaseConcept(const int id, const string word)
 	{
-		auto concept = ConceptDatabase::GetNonBaseConcept(id, word);
-		AddConceptToCache(concept);
-		return concept;
+		string key = GetKey(word, id);
+		auto cached = Get(key);
+		if (cached != NULL)
+		{
+			return cached;
+		}
+		else
+		{
+			auto concept = ConceptDatabase::GetNonBaseConcept(id, word);
+			AddConceptToCache(concept);
+			return concept;
+		}
 	}
 
 	shared_ptr<Concept> ConceptReadWriter::GetConcept(const shared_ptr<DataCollection::Word> word)
 	{
-		auto concept = ConceptDatabase::GetConcept(word);
-		if (concept != NULL)
+		string key = GetKey(word->GetString(), 0);
+		auto cached = Get(key);
+		if (cached != NULL)
 		{
-			AddConceptToCache(concept);
+			return cached;
 		}
-		return concept;
+		else
+		{
+			auto concept = ConceptDatabase::GetConcept(word);
+			if (concept != NULL)
+			{
+				AddConceptToCache(concept);
+			}
+			return concept;
+		}
 	}
 
 	shared_ptr<Concept> ConceptReadWriter::GetConcept(const string word, const int id)
 	{
-		auto concept = ConceptDatabase::GetConcept(word,id);
-		AddConceptToCache(concept);
-		return concept;
+		string key = GetKey(word, id);
+		auto cached = Get(key);
+		if (cached != NULL)
+		{
+			return cached;
+		}
+		else
+		{
+			auto concept = ConceptDatabase::GetConcept(word, id);
+			AddConceptToCache(concept);
+			return concept;
+		}
 	}
 
 	shared_ptr<Concept> ConceptReadWriter::GetConcept(const string conceptID)
@@ -119,6 +146,12 @@ namespace Mind
 			AddConceptToCache(concept);
 		}
 		return concepts;
+	}
+
+	std::string ConceptReadWriter::GetKey(const string word, const int id) const
+	{
+		string key = word + "_" + CommonTool::ToString(id);
+		return key;
 	}
 
 }

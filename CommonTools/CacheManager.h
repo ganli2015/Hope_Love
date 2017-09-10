@@ -51,7 +51,15 @@ namespace CommonTool
 
 		shared_ptr<ObjType> Get(const string key) const
 		{
-			return _objs.at(key);
+			auto obj = _objs.find(key);
+			if (obj != _objs.end())
+			{
+				return (*obj).second;
+			}
+			else
+			{
+				return NULL;
+			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////

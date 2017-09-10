@@ -59,6 +59,8 @@ namespace Mind
 		virtual void OnMonitor();
 
 		void AddConceptToCache(const shared_ptr<Concept> concept);
+
+		string GetKey(const string word, const int id) const;
 	};
 }
 

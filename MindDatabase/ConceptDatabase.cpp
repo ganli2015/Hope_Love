@@ -667,7 +667,6 @@ namespace Mind
 	{
 		//Get a concept with no connection.
 		auto concept = _elemCreator->CreateConcept(row);
-		DEBUG_FORMAT("concept: %s.", concept->GetString());
 		//Append connection.
 		AddConnectionToConcept(row, concept);
 
