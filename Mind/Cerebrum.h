@@ -69,6 +69,10 @@ namespace Mind
 
 		virtual vector<shared_ptr<iConcept>> GetAllBaseConcepts() const ;
 
+		virtual vector<shared_ptr<iConcept>> GetAllConcepts() const ;
+
+		virtual vector<shared_ptr<iConcept>> GetConcepts(const string str) const ;
+
 		//Grammar Related Functions
 		//搜索<pattern>所包含的子pattern.
 		virtual std::vector<DataCollection::GrammarPattern> ContainSubsequence(const DataCollection::GrammarPattern& pattern) const;

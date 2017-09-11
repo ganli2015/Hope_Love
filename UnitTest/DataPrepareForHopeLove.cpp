@@ -94,7 +94,7 @@ TEST(Preparation, RefreshConceptConnection)
 	delete conceptDB;
 }
 
-TEST(Preparation, ExtractConnection)
+TEST(Preparation, ExtractBaseWords)
 {
 	CHECK_SKIP;
 	AnalyzeChineseDictionary acd;
@@ -117,7 +117,7 @@ TEST(Preparation, AnalyzeValidConnections)
 
 TEST(Preparation, OutputConnectionToDatabase)
 {
-	CHECK_SKIP;
+	//CHECK_SKIP;
 	AnalyzeChineseDictionary acd;
 	acd.OutputToDB("D:\\Projects\\Hope_Love\\UnitTest\\word_connection.txt",
 		"D:\\Projects\\Hope_Love\\UnitTest\\valid_connection.txt");

@@ -35,6 +35,8 @@ namespace Mind
 
 		//Get the string of the word.
 		virtual std::string GetString() const =0;
+		//Get char array for print information of me.
+		virtual string Print() const = 0;
 
 		//Get ID of <me>.
 		//Refer to <Identity> for the meaning of ID.

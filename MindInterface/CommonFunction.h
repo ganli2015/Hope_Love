@@ -50,6 +50,12 @@ namespace Mind
 				return false;
 			}
 		}
+
+		friend ostream& operator<<(ostream& out, const Identity& s)
+		{
+			out << "id:" << s.id << " word:" << s.str;
+			return out;
+		}
 	};
 
 	class iConcept;

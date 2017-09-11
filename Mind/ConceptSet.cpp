@@ -285,6 +285,29 @@ namespace Mind
 		return res;
 	}
 
+	vector<shared_ptr<iConcept>> ConceptSet::GetAllConcepts() const
+	{
+		vector<shared_ptr<iConcept>> res = GetAllBaseConcepts();
+
+		auto nonbaseConcepts = _conceptDB->GetAllNonBaseConcepts();
+		for (auto concept : nonbaseConcepts)
+		{
+			res.push_back(concept);
+		}
+
+		return res;
+	}
+
+	vector<shared_ptr<iConcept>> ConceptSet::GetConcepts(const string str) const
+	{
+		vector<shared_ptr<iConcept>> res;
+		for(auto concept : _conceptDB->GetConceptsWithWord(str))
+		{
+			res.push_back(concept);
+		}
+		return res;
+	}
+
 	vector<shared_ptr<DataCollection::Word>> ConceptSet::GetAllWordsOfPOS(const PartOfSpeech pos) const
 	{
 		vector<shared_ptr<Word>> res;

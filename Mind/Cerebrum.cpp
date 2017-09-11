@@ -238,6 +238,16 @@ namespace Mind
 		return _conceptset->GetAllBaseConcepts();
 	}
 
+	vector<shared_ptr<iConcept>> Cerebrum::GetAllConcepts() const
+	{
+		return _conceptset->GetAllConcepts();
+	}
+
+	vector<shared_ptr<iConcept>> Cerebrum::GetConcepts(const string str) const
+	{
+		return _conceptset->GetConcepts(str);
+	}
+
 }
 
 

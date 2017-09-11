@@ -223,6 +223,7 @@ If NOT exist "Log" mkdir "Log" </Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnalyzeChineseDictionary.h" />
+    <ClInclude Include="ChinesePOSDictionary.h" />
     <ClInclude Include="DataPrepareForHopeLove.h" />
     <ClInclude Include="FuncForTest.h" />
     <ClInclude Include="IntegrationTest.h" />
@@ -257,6 +258,7 @@ If NOT exist "Log" mkdir "Log" </Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalyzeChineseDictionary.cpp" />
+    <ClCompile Include="ChinesePOSDictionary.cpp" />
     <ClCompile Include="DataPrepareForHopeLove.cpp" />
     <ClCompile Include="FuncForTest.cpp" />
     <ClCompile Include="IntegrationTest.cpp" />

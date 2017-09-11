@@ -45,6 +45,7 @@ namespace Mind
 		virtual bool Same(const shared_ptr<iConcept> concept) const;
 
 		virtual std::string GetString() const {return _identity.str;}
+		virtual string Print() const;
 		virtual int GetId() const { return _identity.id; }
 		virtual void SetId(int val) { _identity.id = val; }
 		virtual Identity GetIdentity() const ; 

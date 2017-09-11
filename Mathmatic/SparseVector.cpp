@@ -40,7 +40,7 @@ namespace Math
 
 	void SparseVector::Set_ithVal(size_t i, float val)
 	{
-		_vec.insert(i) = val;
+		_vec.coeffRef(i) = val;
 	}
 
 	float SparseVector::Get_ithVal(size_t i) const
@@ -79,10 +79,9 @@ namespace Math
 	{
 		SparseVector *res = new SparseVector(_size);
 
-		auto norm = this->Norm();
 		for (size_t i = 0; i < _size; ++i)
 		{
-			res->Set_ithVal(i, -this->Get_ithVal(i) / norm);;
+			res->Set_ithVal(i, -this->Get_ithVal(i));;
 		}
 
 		return res;

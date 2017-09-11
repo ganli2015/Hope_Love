@@ -5,6 +5,9 @@
 
 #include "../CommonTools/assertions.h"
 #include "../CommonTools/LogWriter.h"
+#include "../CommonTools/CommonStringFunction.h"
+
+using namespace  CommonTool;
 
 namespace Math
 {
@@ -237,6 +240,65 @@ namespace Math
 		}
 
 		return res;
+	}
+
+	std::string DirectedGraph::Print() const
+	{
+		string res = "";
+
+		auto allEdges = GetAllEdges();
+
+		for (auto edge : allEdges)
+		{
+			string edgeStr = "(" + ToString(edge.first) + "->" + ToString(edge.second) + ") ";
+			res += edgeStr;
+		}
+
+		return res;
+	}
+
+	DirectedGraph::EdgeSet DirectedGraph::GetAllEdges() const
+	{
+		typename boost::graph_traits<GraphImp>::edge_iterator ai;
+		typename boost::graph_traits<GraphImp>::edge_iterator ai_end;
+
+		DirectedGraph::EdgeSet res;
+		for (boost::tie(ai, ai_end) = boost::edges(*_graph);
+			ai != ai_end; ++ai)
+		{
+			auto src = boost::source(*ai, *_graph);
+			auto target = boost::target(*ai, *_graph);
+
+			long vertSrc, vertTarget;
+			if (GetVertexID(src, vertSrc) && GetVertexID(target, vertTarget))
+			{
+				res.insert(make_pair(vertSrc, vertTarget));
+			}
+		}
+
+		return res;
+	}
+
+	vector<pair<shared_ptr<IVertex>, shared_ptr<IVertex>>> DirectedGraph::GetAllVertexEdges() const
+	{
+		auto edgeIndex = GetAllEdges();
+		vector<pair<shared_ptr<IVertex>, shared_ptr<IVertex>>> res;
+		for (auto edge : edgeIndex)
+		{
+			auto vertFrom = GetVertextProperty(edge.first).vert;
+			auto vertTo = GetVertextProperty(edge.second).vert;
+			res.push_back(make_pair(vertFrom, vertTo));
+		}
+
+		return res;
+	}
+
+	void DirectedGraph::RemoveEdge(const shared_ptr<IVertex> from, const shared_ptr<IVertex> to)
+	{
+		auto innerFrom = GetInnerID(from->GetID());
+		auto innerTo = GetInnerID(to->GetID());
+
+		boost::remove_edge(innerFrom, innerTo, *_graph);
 	}
 
 	IVertex::IVertex()

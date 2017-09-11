@@ -140,7 +140,7 @@ namespace CommonTool
 			for_each(objects.begin(), objects.end(), output);
 		}
 
-		///Output with format.
+		//Output with format.
 		template<class T>
 		static void OutFormat(const char *format,const LogLevel level, T var1)
 		{
@@ -152,13 +152,49 @@ namespace CommonTool
 			delete[] ch;
 		}
 
-		///Output with format.
+		//String format
+		template<>
+		static void OutFormat(const char *format, const LogLevel level, string var1)
+		{
+			int bufferSize = max((int)var1.size()*2, 255);
+			char* ch = new char[bufferSize];
+			sprintf_s(ch, bufferSize, format, var1.c_str());
+			Output(string(ch), level);
+
+			delete[] ch;
+		}
+
+		//Output with format.
 		template<class T1,class T2>
 		static void OutFormat(const char *format, const LogLevel level, T1 var1, T2 var2)
 		{
 			int bufferSize = 1024;
 			char* ch = new char[bufferSize];
 			sprintf_s(ch, bufferSize, format, var1,var2);
+			Output(string(ch), level);
+
+			delete[] ch;
+		}
+
+		//String format
+		template<class T2>
+		static void OutFormat(const char *format, const LogLevel level, string var1, T2 var2)
+		{
+			int bufferSize = 1024;
+			char* ch = new char[bufferSize];
+			sprintf_s(ch, bufferSize, format, var1.c_str(), var2);
+			Output(string(ch), level);
+
+			delete[] ch;
+		}
+
+		//String format
+		template<class T1>
+		static void OutFormat(const char *format, const LogLevel level, T1 var1, string var2)
+		{
+			int bufferSize = 1024;
+			char* ch = new char[bufferSize];
+			sprintf_s(ch, bufferSize, format, var1, var2.c_str());
 			Output(string(ch), level);
 
 			delete[] ch;

@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="ChattingCommand.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="FindSimilarWordsCommand.h" />
     <ClInclude Include="InOut.h" />
     <ClInclude Include="POSTaggingCommand.h" />
     <ClInclude Include="SpeakCommand.h" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="ChattingCommand.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="FindSimilarWordsCommand.cpp" />
     <ClCompile Include="POSTaggingCommand.cpp" />
     <ClCompile Include="SpeakCommand.cpp" />
     <ClCompile Include="Stdafx.cpp">

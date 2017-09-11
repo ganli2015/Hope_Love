@@ -26,13 +26,6 @@ namespace Math
 				Base::back_edge(e, g);
 			}
 
-// 			template <class Vertex, class Graph>
-// 			void discover_vertex(Vertex u, Graph g)
-// 			{
-// 				assert("");
-// 				Base::discover_vertex(u, g);
-// 			}
-
 			template <class Edge, class Graph>
 			void examine_edge(Edge e, Graph& g) {
 				assert("");

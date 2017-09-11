@@ -1,6 +1,8 @@
 #pragma once
 #include "InOut.h"
 
+#include <numeric>
+
 namespace Math
 {
 	class Vector;
@@ -19,7 +21,6 @@ namespace Math
 	//If <left> is smaller than <right>, return -1.
 	int _MATHMATICINOUT FloatCompare(float left, float right, double tol = 1e-4);
 
-	vector<double> _MATHMATICINOUT Normalized(const vector<double> val);
 	//获得val的小数部分的数字
 	vector<int> _MATHMATICINOUT GetDicemalDigit(const double val,const int num);
 	
@@ -81,4 +82,54 @@ namespace Math
 		return vec;
 	}
 
+	//Note!! The returned vector (v1,v2,v3...) is normalized for that 
+	//v1+v2+v3+... = 1. 
+	template<class T>
+	vector<T> Normalized(const vector<T> val)
+	{
+		class Norm
+		{
+			T _sum;
+		public:
+			Norm(T sum) :_sum(sum) {}
+			~Norm() {}
+
+			T operator()(const T val)
+			{
+				return val / _sum;
+			}
+		};
+
+		T sum = accumulate(val.begin(), val.end(), 0.);
+		vector<T> res(val.size());
+		transform(val.begin(), val.end(), res.begin(), Norm(sum));
+
+		return res;
+	}
+
+	//Note!! The returned vector (v1,v2,v3...) is normalized for that 
+	//v1*v1 + v2*v2 + v3*v3 +... = 1. 
+	template<class T>
+	vector<T> SquareNormalized(const vector<T> val)
+	{
+		class Norm
+		{
+			T _sum;
+		public:
+			Norm(T sum) :_sum(sum) {}
+			~Norm() {}
+
+			T operator()(const T val)
+			{
+				return val / _sum;
+			}
+		};
+
+		T sum = accumulate(val.begin(), val.end(), 0., [](T value, T newValue) {return value + newValue*newValue; });
+		sum = sqrt(sum);
+		vector<T> res(val.size());
+		transform(val.begin(), val.end(), res.begin(), Norm(sum));
+
+		return res;
+	}
 }

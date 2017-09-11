@@ -57,6 +57,7 @@ namespace Math
 		//If true, then output the cycle in which head and tail are both the start vertex.
 		//////////////////////////////////////////////////////////////////////////
 		bool HasCycle(list<shared_ptr<IVertex>>& cycle) const;
+		bool HasCycle(vector<shared_ptr<IVertex>>& cycle) const;
 
 		shared_ptr<DirectedGraph> GenerateGraph() const;
 
